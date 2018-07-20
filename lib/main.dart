@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:piggy_flutter/ui/page/login/login_page.dart';
 import 'package:piggy_flutter/utils/uidata.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() => runApp(new MyApp());
 
@@ -51,6 +52,15 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
+  String _token = '';
+
+  void _getToken() async {
+    final prefs = await SharedPreferences.getInstance();
+// set value
+    setState(() {
+      _token = prefs.getString(UIData.authToken);
+    });
+  }
 
   void _incrementCounter() {
     setState(() {
@@ -61,6 +71,8 @@ class _MyHomePageState extends State<MyHomePage> {
       // called again, and so nothing would appear to happen.
       _counter++;
     });
+
+    _getToken();
   }
 
   @override
@@ -97,7 +109,7 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             new Text(
-              'You have pushed the button this many times:',
+              'Token is $_token',
             ),
             new Text(
               '$_counter',

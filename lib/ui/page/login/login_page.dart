@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:piggy_flutter/utils/uidata.dart';
 import 'package:piggy_flutter/main.dart';
 import 'dart:convert';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatelessWidget {
   final TextEditingController tenantNameController =
@@ -118,7 +119,7 @@ class LoginPage extends StatelessWidget {
         ),
       );
 
-  login(BuildContext context) {
+  login(BuildContext context) async {
 //    print('family is ${tenantNameController.text}');
 
     var url = 'http://piggyvault.in/api/Account/Authenticate';
@@ -131,9 +132,12 @@ class LoginPage extends StatelessWidget {
     http.post(url, body: input, headers: {
       'Content-type': 'application/json',
       'Accept': 'application/json',
-    }).then((response) {
+    }).then((response) async {
       var res = json.decode(response.body);
       if (res["success"]) {
+        final prefs = await SharedPreferences.getInstance();
+// set value
+        await prefs.setString(UIData.authToken, res["result"]);
         Navigator.push(
           context,
           MaterialPageRoute(

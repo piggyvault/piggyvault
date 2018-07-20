@@ -12,6 +12,7 @@ class UIData {
 
   //strings
   static const String appName = "Piggy";
+  static const String authToken = "authToken";
 
   //fonts
   static const String quickFont = "Quicksand";

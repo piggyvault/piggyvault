@@ -51,6 +51,16 @@ class LoginPage extends StatelessWidget {
           child: TextField(
             maxLines: 1,
             decoration: InputDecoration(
+              hintText: "Enter your family name",
+              labelText: "Family",
+            ),
+          ),
+        ),
+        Container(
+          padding: EdgeInsets.symmetric(vertical: 16.0, horizontal: 30.0),
+          child: TextField(
+            maxLines: 1,
+            decoration: InputDecoration(
               hintText: "Enter your username",
               labelText: "Username",
             ),
@@ -87,10 +97,10 @@ class LoginPage extends StatelessWidget {
         SizedBox(
           height: 5.0,
         ),
-        Text(
-          "SIGN UP FOR AN ACCOUNT",
-          style: TextStyle(color: Colors.grey),
-        ),
+//        Text(
+//          "SIGN UP FOR AN ACCOUNT",
+//          style: TextStyle(color: Colors.grey),
+//        ),
       ],
     ),
   );

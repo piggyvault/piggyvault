@@ -23,7 +23,7 @@ class UIData {
   static const String dashboardTwoRoute = "/Dashboard 2";
 
   //strings
-  static const String appName = "Flutter UIKit";
+  static const String appName = "Piggy";
 
   //fonts
   static const String quickFont = "Quicksand";

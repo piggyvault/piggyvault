@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:piggy_flutter/ui/page/login/login_page.dart';
+import 'package:piggy_flutter/utils/uidata.dart';
 
 void main() => runApp(new MyApp());
 
@@ -22,6 +23,10 @@ class MyApp extends StatelessWidget {
       ),
       home: new LoginPage(),
 //      home: new MyHomePage(title: 'Dashboard'),
+    routes: <String, WidgetBuilder>{
+      UIData.loginRoute: (BuildContext context) => LoginPage(),
+      UIData.dashboardRoute: (BuildContext context) => MyHomePage(title: 'Dashboard'),
+    },
     );
   }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:piggy_flutter/utils/uidata.dart';
+import 'package:piggy_flutter/main.dart';
 
 class LoginPage extends StatelessWidget {
   @override
@@ -7,14 +8,14 @@ class LoginPage extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       body: Center(
-        child: loginBody(),
+        child: loginBody(context),
       ),
     );
   }
 
-  loginBody() => Column(
+  loginBody(BuildContext context) => Column(
     mainAxisAlignment: MainAxisAlignment.spaceAround,
-    children: <Widget>[loginHeader(), loginFields()],
+    children: <Widget>[loginHeader(), loginFields(context)],
   );
 
   loginHeader() => Column(
@@ -41,7 +42,7 @@ class LoginPage extends StatelessWidget {
     ],
   );
 
-  loginFields() => Container(
+  loginFields(BuildContext context) => Container(
     child: Column(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       mainAxisSize: MainAxisSize.min,
@@ -91,7 +92,12 @@ class LoginPage extends StatelessWidget {
               style: TextStyle(color: Colors.white),
             ),
             color: Colors.green,
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => MyHomePage(title: 'Dashboard',)),
+              );
+            },
           ),
         ),
         SizedBox(

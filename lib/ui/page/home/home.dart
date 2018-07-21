@@ -3,6 +3,7 @@
 // found in the LICENSE file.
 
 import 'package:flutter/material.dart';
+import 'package:piggy_flutter/ui/page/home/recent.dart';
 
 class NavigationIconView {
   NavigationIconView({
@@ -71,32 +72,32 @@ class NavigationIconView {
   }
 }
 
-class CustomIcon extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    final IconThemeData iconTheme = IconTheme.of(context);
-    return new Container(
-      margin: const EdgeInsets.all(4.0),
-      width: iconTheme.size - 8.0,
-      height: iconTheme.size - 8.0,
-      color: iconTheme.color,
-    );
-  }
-}
-
-class CustomInactiveIcon extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    final IconThemeData iconTheme = IconTheme.of(context);
-    return new Container(
-        margin: const EdgeInsets.all(4.0),
-        width: iconTheme.size - 8.0,
-        height: iconTheme.size - 8.0,
-        decoration: new BoxDecoration(
-          border: new Border.all(color: iconTheme.color, width: 2.0),
-        ));
-  }
-}
+//class CustomIcon extends StatelessWidget {
+//  @override
+//  Widget build(BuildContext context) {
+//    final IconThemeData iconTheme = IconTheme.of(context);
+//    return new Container(
+//      margin: const EdgeInsets.all(4.0),
+//      width: iconTheme.size - 8.0,
+//      height: iconTheme.size - 8.0,
+//      color: iconTheme.color,
+//    );
+//  }
+//}
+//
+//class CustomInactiveIcon extends StatelessWidget {
+//  @override
+//  Widget build(BuildContext context) {
+//    final IconThemeData iconTheme = IconTheme.of(context);
+//    return new Container(
+//        margin: const EdgeInsets.all(4.0),
+//        width: iconTheme.size - 8.0,
+//        height: iconTheme.size - 8.0,
+//        decoration: new BoxDecoration(
+//          border: new Border.all(color: iconTheme.color, width: 2.0),
+//        ));
+//  }
+//}
 
 class HomePage extends StatefulWidget {
   static const String routeName = '/material/bottom_navigation';
@@ -253,7 +254,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
 //      body: new Center(
 //          child: _buildTransitionsStack()),
       body: new PageView(children: [
-        new Container(color: Colors.red),
+        new RecentPage(),
         new Container(color: Colors.blue),
         new Container(color: Colors.grey)
       ], controller: _pageController, onPageChanged: onPageChanged),

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:piggy_flutter/ui/page/login/login_page.dart';
 import 'package:piggy_flutter/utils/uidata.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+//import 'package:shared_preferences/shared_preferences.dart';
+import 'package:piggy_flutter/ui/page/home/home.dart';
 
 void main() => runApp(new MyApp());
 
@@ -26,7 +27,8 @@ class MyApp extends StatelessWidget {
 //      home: new MyHomePage(title: 'Dashboard'),
     routes: <String, WidgetBuilder>{
       UIData.loginRoute: (BuildContext context) => LoginPage(),
-      UIData.dashboardRoute: (BuildContext context) => MyHomePage(title: 'Dashboard'),
+      UIData.dashboardRoute: (BuildContext context) => HomePage(),
+//      UIData.dashboardRoute: (BuildContext context) => MyHomePage(title: 'Dashboard'),
     },
     );
   }
@@ -54,13 +56,7 @@ class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
   String _token = '';
 
-  void _getToken() async {
-    final prefs = await SharedPreferences.getInstance();
-// set value
-    setState(() {
-      _token = prefs.getString(UIData.authToken);
-    });
-  }
+
 
   void _incrementCounter() {
     setState(() {
@@ -71,8 +67,6 @@ class _MyHomePageState extends State<MyHomePage> {
       // called again, and so nothing would appear to happen.
       _counter++;
     });
-
-    _getToken();
   }
 
   @override

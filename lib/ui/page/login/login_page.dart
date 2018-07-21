@@ -1,15 +1,45 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:piggy_flutter/ui/page/home/home.dart';
 import 'package:piggy_flutter/utils/uidata.dart';
 import 'package:piggy_flutter/main.dart';
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class LoginPage extends StatelessWidget {
+class LoginPage extends StatefulWidget {
+  @override
+  _LoginPageState createState() => new _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
   final TextEditingController tenantNameController =
       new TextEditingController();
   final TextEditingController userNameController = new TextEditingController();
   final TextEditingController passwordController = new TextEditingController();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    authCheck();
+  }
+
+  void authCheck() async {
+    print('auth check');
+    final prefs = await SharedPreferences.getInstance();
+
+    var token = prefs.getString(UIData.authToken);
+
+    print('token is $token');
+
+    if (token != null && token.length > 0) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => HomePage()),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -141,9 +171,7 @@ class LoginPage extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) => MyHomePage(
-                    title: 'Dashboard',
-                  )),
+              builder: (context) => HomePage()),
         );
       } else {}
 //          print(res);

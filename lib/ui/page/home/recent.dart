@@ -30,10 +30,10 @@ class _RecentPageState extends State<RecentPage> {
     var input = json.encode({
       "type": "tenant",
       "accountId": null,
-      "startDate": new DateTime.now().add(new Duration(days: -90)).toString(),
+      "startDate": new DateTime.now().add(new Duration(days: -100)).toString(),
       "endDate": new DateTime.now().add(new Duration(days: 1)).toString()
     });
-    print('input is $input');
+    print('getRecentTransactions input is $input');
     http.post(url, body: input, headers: {
       'Content-type': 'application/json',
       'Accept': 'application/json',
@@ -50,9 +50,8 @@ class _RecentPageState extends State<RecentPage> {
           recentTransactions = res["result"]["items"];
         });
       } else {}
-print('recentTransactions are $recentTransactions');
-print('recentTransaction[0] are ${recentTransactions[0]['description']}');
-
+      print('recentTransactions are $recentTransactions');
+      print('recentTransaction[0] are ${recentTransactions[0]['description']}');
     });
   }
 
@@ -60,11 +59,17 @@ print('recentTransaction[0] are ${recentTransactions[0]['description']}');
   Widget build(BuildContext context) {
     return new ListView.builder(
         itemCount: recentTransactions.length,
-        padding: const EdgeInsets.all(16.0),
+        padding: new EdgeInsets.symmetric(vertical: 4.0),
+
         itemBuilder: (BuildContext context, int position) {
           return new ListTile(
             title: Text(recentTransactions[position]['category']['name']),
-            subtitle: Text(recentTransactions[position]['description']),);
+            subtitle: new Text(
+                "${recentTransactions[position]['description']}\n${recentTransactions[position]['creatorUserName']}'s ${recentTransactions[position]['account']['name']} on ${recentTransactions[position]['transactionTime']}"),
+            isThreeLine: true,
+            trailing: Text('${recentTransactions[position]['amount'].toString()} ${recentTransactions[position]['account']['currency']['symbol']}'),
+            leading: CircleAvatar(backgroundColor: recentTransactions[position]['amount'] > 0 ? Theme.of(context).primaryColor : Theme.of(context).disabledColor ,),
+          );
         });
   }
 }

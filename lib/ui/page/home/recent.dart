@@ -22,7 +22,6 @@ class _RecentPageState extends State<RecentPage> {
 
   void getRecentTransactions() async {
     final prefs = await SharedPreferences.getInstance();
-
     var token = prefs.getString(UIData.authToken);
 
     var url =

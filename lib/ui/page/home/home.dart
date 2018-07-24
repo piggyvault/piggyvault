@@ -3,6 +3,7 @@
 // found in the LICENSE file.
 
 import 'package:flutter/material.dart';
+import 'package:piggy_flutter/ui/page/account/account_list.dart';
 import 'package:piggy_flutter/ui/page/home/recent.dart';
 
 class NavigationIconView {
@@ -255,7 +256,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
 //          child: _buildTransitionsStack()),
       body: new PageView(children: [
         new RecentPage(),
-        new Container(color: Colors.blue),
+        new AccountListPage(),
         new Container(color: Colors.grey)
       ], controller: _pageController, onPageChanged: onPageChanged),
 

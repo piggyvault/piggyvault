@@ -8,18 +8,18 @@ class SummaryPage extends StatefulWidget {
 
 class _SummaryPageState extends State<SummaryPage> {
   TransactionService _transactionService = new TransactionService();
-  double tenantNetWorth,
-      userNetWorth,
-      tenantIncome,
-      userIncome,
-      userExprense,
-      tenantExpense,
-      tenantSaved,
-      userSaved;
+  bool isLoading = true;
+  double tenantNetWorth = 0.0,
+      userNetWorth = 0.0,
+      tenantIncome = 0.0,
+      userIncome = 0.0,
+      userExprense = 0.0,
+      tenantExpense = 0.0,
+      tenantSaved = 0.0,
+      userSaved = 0.0;
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
 
     _transactionService.getTransactionSummary("month").then((res) {
@@ -34,6 +34,7 @@ class _SummaryPageState extends State<SummaryPage> {
         tenantExpense = result['tenantExpense'];
         tenantSaved = result['tenantSaved'];
         userSaved = result['userSaved'];
+        isLoading = false;
       });
     });
   }
@@ -44,25 +45,11 @@ class _SummaryPageState extends State<SummaryPage> {
       body: Stack(
         fit: StackFit.expand,
         children: <Widget>[
-//          LoginBackground(
-//            showIcon: false,
-//          ),
           SingleChildScrollView(
             child: Column(
               children: <Widget>[
-//          appBarColumn(context),
-//          SizedBox(
-//            height: deviceSize.height * 0.01,
-//          ),
-//          searchCard(),
-//          SizedBox(
-//            height: deviceSize.height * 0.01,
-//          ),
-//          actionMenuCard(),
-//          SizedBox(
-//            height: deviceSize.height * 0.01,
-//          ),
-                userNetWorth == null ? loadingIndicator() : null,
+                //
+                isLoading ? LinearProgressIndicator() : null,
                 balanceCard(
                     'Net Worth', userNetWorth, tenantNetWorth, Colors.green),
                 balanceCard('Monthly Income', userIncome, tenantIncome,
@@ -79,16 +66,6 @@ class _SummaryPageState extends State<SummaryPage> {
     );
   }
 
-  Widget loadingIndicator() {
-    return new Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: <Widget>[
-          SizedBox(
-              width: MediaQuery.of(context).size.width,
-              child: LinearProgressIndicator())
-        ]);
-  }
-
   Widget balanceCard(
           String title, double userValue, double tenantValue, textColor) =>
       Padding(
@@ -103,10 +80,7 @@ class _SummaryPageState extends State<SummaryPage> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
-                    Text(
-                      title,
-//                  style: TextStyle(fontFamily: UIData.ralewayFont),
-                    ),
+                    Text(title),
                     Material(
                       color: Colors.black,
                       shape: StadiumBorder(),
@@ -116,7 +90,6 @@ class _SummaryPageState extends State<SummaryPage> {
                           "Family: ${tenantValue.toString()}",
                           style: TextStyle(
                             color: Colors.white,
-//                          fontFamily: UIData.ralewayFont
                           ),
                         ),
                       ),
@@ -126,7 +99,6 @@ class _SummaryPageState extends State<SummaryPage> {
                 Text(
                   "₹ ${userValue.toString()}",
                   style: TextStyle(
-//                  fontFamily: UIData.ralewayFont,
                       fontWeight: FontWeight.w700,
                       color: textColor,
                       fontSize: 25.0),

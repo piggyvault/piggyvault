@@ -1,7 +1,3 @@
-// Copyright 2016 The Chromium Authors. All rights reserved.
-// Use of this source code is governed by a BSD-style license that can be
-// found in the LICENSE file.
-
 import 'package:flutter/material.dart';
 import 'package:piggy_flutter/ui/page/account/account_list.dart';
 import 'package:piggy_flutter/ui/page/home/recent.dart';
@@ -87,13 +83,26 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   BottomNavigationBarType _type = BottomNavigationBarType.shifting;
   List<NavigationIconView> _navigationViews;
 
+  final Key keyRecentPage = PageStorageKey('recent');
+  final Key keyAccountsPage = PageStorageKey('accounts');
+  final Key keySummaryPage = PageStorageKey('summary');
+
+  RecentPage recent;
+  SummaryPage summary;
+  AccountListPage accounts;
+
+  List<Widget> pages;
+
+//  Widget currentPage;
+
+  final PageStorageBucket bucket = PageStorageBucket();
+
   /// This controller can be used to programmatically
   /// set the current displayed page
   PageController _pageController;
 
   @override
   void initState() {
-    super.initState();
     _navigationViews = <NavigationIconView>[
       new NavigationIconView(
         icon: const Icon(Icons.format_list_bulleted),
@@ -101,13 +110,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
         color: Colors.deepPurple,
         vsync: this,
       ),
-//      new NavigationIconView(
-//        activeIcon: new CustomIcon(),
-//        icon: new CustomInactiveIcon(),
-//        title: 'Box',
-//        color: Colors.deepOrange,
-//        vsync: this,
-//      ),
       new NavigationIconView(
         activeIcon: const Icon(Icons.account_box),
         icon: const Icon(Icons.account_circle),
@@ -122,20 +124,26 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
         color: Colors.indigo,
         vsync: this,
       ),
-//      new NavigationIconView(
-//        icon: const Icon(Icons.event_available),
-//        title: 'Event',
-//        color: Colors.pink,
-//        vsync: this,
-//      )
     ];
 
     for (NavigationIconView view in _navigationViews)
       view.controller.addListener(_rebuild);
-
     _navigationViews[_currentIndex].controller.value = 1.0;
 
+    summary = new SummaryPage(key: keySummaryPage);
+    recent = new RecentPage(
+      key: keyRecentPage,
+    );
+    accounts = new AccountListPage(
+      key: keyAccountsPage,
+    );
+
     _pageController = new PageController();
+
+    pages = [recent, accounts, summary];
+
+//    currentPage = recent;
+    super.initState();
   }
 
   @override
@@ -190,22 +198,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    final BottomNavigationBar botNavBar = new BottomNavigationBar(
-      items: _navigationViews
-          .map((NavigationIconView navigationView) => navigationView.item)
-          .toList(),
-      currentIndex: _currentIndex,
-      type: _type,
-//      onTap: (int index) {
-//        setState(() {
-//          _navigationViews[_currentIndex].controller.reverse();
-//          _currentIndex = index;
-//          _navigationViews[_currentIndex].controller.forward();
-//        });
-//      },
-      onTap: navigationTapped,
-    );
-
     return new Scaffold(
       appBar: new AppBar(
         title: Text(_title),
@@ -230,15 +222,18 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
           )
         ],
       ),
-//      body: new Center(
-//          child: _buildTransitionsStack()),
-      body: new PageView(children: [
-        new RecentPage(),
-        new AccountListPage(),
-        new SummaryPage()
-      ], controller: _pageController, onPageChanged: onPageChanged),
-
-      bottomNavigationBar: botNavBar,
+      body: new PageView(
+          children: pages,
+          controller: _pageController,
+          onPageChanged: onPageChanged),
+      bottomNavigationBar: new BottomNavigationBar(
+        items: _navigationViews
+            .map((NavigationIconView navigationView) => navigationView.item)
+            .toList(),
+        currentIndex: _currentIndex,
+        type: _type,
+        onTap: navigationTapped,
+      ),
     );
   }
 }

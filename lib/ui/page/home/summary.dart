@@ -26,6 +26,7 @@ class _SummaryPageState extends State<SummaryPage> {
       setState(() {
         var result = res.content;
         userNetWorth = result['userNetWorth'];
+//        userNetWorth = null;
         tenantNetWorth = result['tenantNetWorth'];
         tenantIncome = result['tenantIncome'];
         userIncome = result['userIncome'];
@@ -61,11 +62,16 @@ class _SummaryPageState extends State<SummaryPage> {
 //          SizedBox(
 //            height: deviceSize.height * 0.01,
 //          ),
-                balanceCard('Net Worth', userNetWorth, tenantNetWorth, Colors.green),
-                balanceCard('Monthly Income', userIncome, tenantIncome, Theme.of(context).primaryColor),
-                balanceCard('Monthly Expense', userExprense, tenantExpense, Colors.redAccent),
-                balanceCard('Monthly Savings', userSaved, tenantSaved, Colors.lightGreen),
-              ],
+                userNetWorth == null ? loadingIndicator() : null,
+                balanceCard(
+                    'Net Worth', userNetWorth, tenantNetWorth, Colors.green),
+                balanceCard('Monthly Income', userIncome, tenantIncome,
+                    Theme.of(context).primaryColor),
+                balanceCard('Monthly Expense', userExprense, tenantExpense,
+                    Colors.redAccent),
+                balanceCard('Monthly Savings', userSaved, tenantSaved,
+                    Colors.lightGreen),
+              ].where((child) => child != null).toList(),
             ),
           ),
         ],
@@ -73,7 +79,18 @@ class _SummaryPageState extends State<SummaryPage> {
     );
   }
 
-  Widget balanceCard(String title, double userValue, double tenantValue, textColor) =>
+  Widget loadingIndicator() {
+    return new Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: <Widget>[
+          SizedBox(
+              width: MediaQuery.of(context).size.width,
+              child: LinearProgressIndicator())
+        ]);
+  }
+
+  Widget balanceCard(
+          String title, double userValue, double tenantValue, textColor) =>
       Padding(
         padding: const EdgeInsets.all(8.0),
         child: Card(

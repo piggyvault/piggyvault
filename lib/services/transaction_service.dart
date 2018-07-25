@@ -42,4 +42,24 @@ class TransactionService extends AppServiceBase {
         success: result.networkServiceResponse.success,
         message: result.networkServiceResponse.message);
   }
+
+  Future<NetworkServiceResponse<dynamic>> getTransactionSummary(
+      String duration) async {
+    var result = await rest
+        .postAsync<dynamic>('services/app/tenantDashboard/GetTransactionSummary', {
+      "duration": duration,
+    });
+
+    print('getTransactionSummary result is ${result.mappedResult}');
+
+    if (result.mappedResult != null) {
+      return new NetworkServiceResponse(
+        content: result.mappedResult["result"],
+        success: result.networkServiceResponse.success,
+      );
+    }
+    return new NetworkServiceResponse(
+        success: result.networkServiceResponse.success,
+        message: result.networkServiceResponse.message);
+  }
 }

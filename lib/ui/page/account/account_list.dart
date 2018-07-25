@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:piggy_flutter/services/account_service.dart';
 
 class AccountListPage extends StatefulWidget {
+  AccountListPage({Key key}) : super(key: key);
+
   @override
   _AccountListPageState createState() => new _AccountListPageState();
 }

@@ -4,6 +4,9 @@ import 'package:piggy_flutter/services/transaction_service.dart';
 class SummaryPage extends StatefulWidget {
   @override
   _SummaryPageState createState() => new _SummaryPageState();
+
+  SummaryPage({Key key}) : super(key: key);
+
 }
 
 class _SummaryPageState extends State<SummaryPage> {

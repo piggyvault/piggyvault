@@ -5,6 +5,8 @@ import 'package:intl/intl.dart';
 class RecentPage extends StatefulWidget {
   @override
   _RecentPageState createState() => new _RecentPageState();
+
+  RecentPage({Key key}) : super(key: key);
 }
 
 class _RecentPageState extends State<RecentPage> {

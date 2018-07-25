@@ -5,6 +5,7 @@
 import 'package:flutter/material.dart';
 import 'package:piggy_flutter/ui/page/account/account_list.dart';
 import 'package:piggy_flutter/ui/page/home/recent.dart';
+import 'package:piggy_flutter/ui/page/home/summary.dart';
 
 class NavigationIconView {
   NavigationIconView({
@@ -73,33 +74,6 @@ class NavigationIconView {
   }
 }
 
-//class CustomIcon extends StatelessWidget {
-//  @override
-//  Widget build(BuildContext context) {
-//    final IconThemeData iconTheme = IconTheme.of(context);
-//    return new Container(
-//      margin: const EdgeInsets.all(4.0),
-//      width: iconTheme.size - 8.0,
-//      height: iconTheme.size - 8.0,
-//      color: iconTheme.color,
-//    );
-//  }
-//}
-//
-//class CustomInactiveIcon extends StatelessWidget {
-//  @override
-//  Widget build(BuildContext context) {
-//    final IconThemeData iconTheme = IconTheme.of(context);
-//    return new Container(
-//        margin: const EdgeInsets.all(4.0),
-//        width: iconTheme.size - 8.0,
-//        height: iconTheme.size - 8.0,
-//        decoration: new BoxDecoration(
-//          border: new Border.all(color: iconTheme.color, width: 2.0),
-//        ));
-//  }
-//}
-
 class HomePage extends StatefulWidget {
   static const String routeName = '/material/bottom_navigation';
 
@@ -109,6 +83,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   int _currentIndex = 0;
+  String _title = 'Recent Transactions';
   BottomNavigationBarType _type = BottomNavigationBarType.shifting;
   List<NavigationIconView> _navigationViews;
 
@@ -176,24 +151,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     });
   }
 
-//  Widget _buildTransitionsStack() {
-//    final List<FadeTransition> transitions = <FadeTransition>[];
-//
-//    for (NavigationIconView view in _navigationViews)
-//      transitions.add(view.transition(_type, context));
-//
-//    // We want to have the newly animating (fading in) views on top.
-//    transitions.sort((FadeTransition a, FadeTransition b) {
-//      final Animation<double> aAnimation = a.opacity;
-//      final Animation<double> bAnimation = b.opacity;
-//      final double aValue = aAnimation.value;
-//      final double bValue = bAnimation.value;
-//      return aValue.compareTo(bValue);
-//    });
-//
-//    return new Stack(children: transitions);
-//  }
-
   /// Called when the user presses on of the
   /// [BottomNavigationBarItem] with corresponding
   /// page index
@@ -207,6 +164,27 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   void onPageChanged(int page) {
     setState(() {
       this._currentIndex = page;
+      switch (page) {
+        case 0:
+          {
+            this._title = 'Recent Transactions';
+          }
+          break;
+        case 1:
+          {
+            this._title = 'Accounts';
+          }
+          break;
+        case 2:
+          {
+            this._title = 'Summary';
+          }
+          break;
+        default:
+          {
+            this._title = 'Piggy';
+          }
+      }
     });
   }
 
@@ -230,7 +208,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
     return new Scaffold(
       appBar: new AppBar(
-        title: const Text('Piggy'),
+        title: Text(_title),
         actions: <Widget>[
           new PopupMenuButton<BottomNavigationBarType>(
             onSelected: (BottomNavigationBarType value) {
@@ -257,7 +235,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       body: new PageView(children: [
         new RecentPage(),
         new AccountListPage(),
-        new Container(color: Colors.grey)
+        new SummaryPage()
       ], controller: _pageController, onPageChanged: onPageChanged),
 
       bottomNavigationBar: botNavBar,

@@ -61,10 +61,10 @@ class _SummaryPageState extends State<SummaryPage> {
 //          SizedBox(
 //            height: deviceSize.height * 0.01,
 //          ),
-                balanceCard('Net Worth', userNetWorth, tenantNetWorth),
-                balanceCard('Monthly Income', userIncome, tenantIncome),
-                balanceCard('Monthly Expense', userExprense, tenantExpense),
-                balanceCard('Monthly Savings', userSaved, tenantSaved),
+                balanceCard('Net Worth', userNetWorth, tenantNetWorth, Colors.green),
+                balanceCard('Monthly Income', userIncome, tenantIncome, Theme.of(context).primaryColor),
+                balanceCard('Monthly Expense', userExprense, tenantExpense, Colors.redAccent),
+                balanceCard('Monthly Savings', userSaved, tenantSaved, Colors.lightGreen),
               ],
             ),
           ),
@@ -73,7 +73,7 @@ class _SummaryPageState extends State<SummaryPage> {
     );
   }
 
-  Widget balanceCard(String title, double userValue, double tenantValue) =>
+  Widget balanceCard(String title, double userValue, double tenantValue, textColor) =>
       Padding(
         padding: const EdgeInsets.all(8.0),
         child: Card(
@@ -111,7 +111,7 @@ class _SummaryPageState extends State<SummaryPage> {
                   style: TextStyle(
 //                  fontFamily: UIData.ralewayFont,
                       fontWeight: FontWeight.w700,
-                      color: Colors.green,
+                      color: textColor,
                       fontSize: 25.0),
                 ),
               ],

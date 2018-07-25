@@ -3,10 +3,10 @@ import 'package:piggy_flutter/services/transaction_service.dart';
 import 'package:intl/intl.dart';
 
 class RecentPage extends StatefulWidget {
+  RecentPage({Key key}) : super(key: key);
+
   @override
   _RecentPageState createState() => new _RecentPageState();
-
-  RecentPage({Key key}) : super(key: key);
 }
 
 class _RecentPageState extends State<RecentPage> {
@@ -63,7 +63,7 @@ class _RecentPageState extends State<RecentPage> {
         transactions.add(items[i]);
       }
 
-      print(groupedItems);
+//      print(groupedItems);
     }
 
     setState(() {
@@ -126,12 +126,12 @@ class _RecentPageState extends State<RecentPage> {
     Iterable<Widget> transactionList = dayTransactions.map(
         (dynamic transaction) => buildTransactionList(context, transaction));
 
-   return new ExpansionTile(
-      title: Text(item['title']),
-      initiallyExpanded: true,
-      backgroundColor: Theme.of(context).accentColor.withOpacity(0.025),
-        children: transactionList.toList()
-    );
+    return new ExpansionTile(
+        key: PageStorageKey(item['index']),
+        title: Text(item['title']),
+        initiallyExpanded: true,
+        backgroundColor: Theme.of(context).accentColor.withOpacity(0.025),
+        children: transactionList.toList());
   }
 
   buildTransactionList(BuildContext context, transaction) {

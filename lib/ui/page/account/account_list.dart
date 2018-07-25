@@ -11,19 +11,17 @@ class AccountListPage extends StatefulWidget {
 class _AccountListPageState extends State<AccountListPage> {
   List<dynamic> userAccounts = [];
   List<dynamic> familyAccounts = [];
-
   AccountService _accountService = new AccountService();
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _accountService.getTenantAccounts().then((result) {
       setState(() {
         userAccounts = result.content['userAccounts']['items'];
         familyAccounts = result.content['otherMembersAccounts']['items'];
       });
-      print('accounts are ${result.content}');
+//      print('accounts are ${result.content}');
     });
   }
 
@@ -36,11 +34,13 @@ class _AccountListPageState extends State<AccountListPage> {
 
     return new ListView(children: <Widget>[
       new ExpansionTile(
+          key: PageStorageKey('YourAccounts'),
           title: const Text('Your Accounts'),
           initiallyExpanded: true,
           backgroundColor: Theme.of(context).accentColor.withOpacity(0.025),
           children: userAccountsTiles.toList()),
       new ExpansionTile(
+          key: PageStorageKey('FamilyAccounts'),
           title: const Text('Family Accounts'),
           backgroundColor: Theme.of(context).accentColor.withOpacity(0.075),
           initiallyExpanded: true,

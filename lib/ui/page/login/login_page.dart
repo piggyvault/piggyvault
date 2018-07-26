@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:piggy_flutter/ui/page/home/home.dart';
 import 'package:piggy_flutter/utils/uidata.dart';
-import 'package:piggy_flutter/main.dart';
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -19,24 +18,21 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     authCheck();
   }
 
   void authCheck() async {
-    print('auth check');
+//    print('auth check');
     final prefs = await SharedPreferences.getInstance();
-
     var token = prefs.getString(UIData.authToken);
 
-    print('token is $token');
+//    print('token is $token');
 
     if (token != null && token.length > 0) {
-      Navigator.push(
+      Navigator.pushReplacement(
         context,
-        MaterialPageRoute(
-            builder: (context) => HomePage()),
+        MaterialPageRoute(builder: (context) => HomePage()),
       );
     }
   }
@@ -150,15 +146,13 @@ class _LoginPageState extends State<LoginPage> {
       );
 
   login(BuildContext context) async {
-//    print('family is ${tenantNameController.text}');
-
     var url = 'http://piggyvault.in/api/Account/Authenticate';
     var input = json.encode({
       "tenancyName": tenantNameController.text,
       "usernameOrEmailAddress": userNameController.text,
       "password": passwordController.text
     });
-//print('input is $input');
+
     http.post(url, body: input, headers: {
       'Content-type': 'application/json',
       'Accept': 'application/json',
@@ -166,19 +160,12 @@ class _LoginPageState extends State<LoginPage> {
       var res = json.decode(response.body);
       if (res["success"]) {
         final prefs = await SharedPreferences.getInstance();
-// set value
         await prefs.setString(UIData.authToken, res["result"]);
         Navigator.push(
           context,
-          MaterialPageRoute(
-              builder: (context) => HomePage()),
+          MaterialPageRoute(builder: (context) => HomePage()),
         );
       } else {}
-//          print(res);
-//          print(res["success"]);
-//          print(res["result"]);
-//      print("Response status: ${response.statusCode}");
-//      print("Response body: ${response.body}");
     });
   }
 }

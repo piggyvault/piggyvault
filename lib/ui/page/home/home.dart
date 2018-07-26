@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:piggy_flutter/ui/page/account/account_list.dart';
 import 'package:piggy_flutter/ui/page/home/recent.dart';
 import 'package:piggy_flutter/ui/page/home/summary.dart';
+import 'package:piggy_flutter/ui/widgets/common/common_drawer.dart';
 
 class NavigationIconView {
   NavigationIconView({
@@ -234,6 +235,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
         type: _type,
         onTap: navigationTapped,
       ),
+      drawer: CommonDrawer(),
     );
   }
 }

@@ -5,13 +5,12 @@ import 'package:flutter/material.dart';
 
 class UIData {
   //routes
-
   static const String loginRoute = "/login";
   static const String dashboardRoute = "/dashboard";
 
-
   //strings
   static const String appName = "Piggy";
+  static const String appVersion = "0.0.1";
   static const String authToken = "authToken";
 
   //fonts

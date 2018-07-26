@@ -3,23 +3,21 @@ import 'package:piggy_flutter/bloc/transaction_bloc.dart';
 import 'package:piggy_flutter/model/transaction.dart';
 import 'package:piggy_flutter/model/transaction_group_item.dart';
 import 'package:piggy_flutter/services/transaction_service.dart';
-import 'package:piggy_flutter/viewmodel/recent_transactions_view_model.dart';
+
 
 class RecentPage extends StatelessWidget {
   RecentPage({Key key}) : super(key: key);
-  final TransactionService _transactionService = new TransactionService();
+
   final TransactionBloc transactionBloc = new TransactionBloc();
 
   @override
   Widget build(BuildContext context) {
-    transactionBloc.recentTransactionSink.add(RecentTransactionsViewModel(
-        GetTransactionsInput(
-            'tenant',
-            null,
-            new DateTime.now().add(new Duration(days: -100)).toString(),
-            new DateTime.now().add(new Duration(days: 1)).toString(),
-            'recent'),
-        _transactionService));
+    transactionBloc.recentTransactionSink.add(GetTransactionsInput(
+        'tenant',
+        null,
+        new DateTime.now().add(new Duration(days: -100)).toString(),
+        new DateTime.now().add(new Duration(days: 1)).toString(),
+        'recent'));
 
     return Scaffold(body: transactionListBuilder());
   }

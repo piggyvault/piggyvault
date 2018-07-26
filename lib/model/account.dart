@@ -10,5 +10,5 @@ class Account {
         name = json['name'],
         accountType = json['accountType'],
         currencySymbol = json['currency']['symbol'],
-        currentBalance = json['currentBalance'];
+        currentBalance = json['currentBalance '];
 }

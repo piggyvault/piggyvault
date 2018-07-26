@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:piggy_flutter/model/transaction.dart';
 import 'package:piggy_flutter/model/transaction_group_item.dart';
+import 'package:piggy_flutter/model/transaction_summary.dart';
 import 'package:piggy_flutter/services/app_service_base.dart';
 import 'package:piggy_flutter/services/network_service_response.dart';
 import 'package:intl/intl.dart';
@@ -20,6 +21,7 @@ class GetTransactionsInput {
 
 class TransactionService extends AppServiceBase {
   List<TransactionGroupItem> recentTransactions;
+  TransactionSummary transactionSummary;
 
   Future<Null> getTransactions(GetTransactionsInput input) async {
     List<Transaction> transactions = [];
@@ -44,8 +46,7 @@ class TransactionService extends AppServiceBase {
     }
   }
 
-  Future<NetworkServiceResponse<dynamic>> getTransactionSummary(
-      String duration) async {
+  Future<Null> getTransactionSummary(String duration) async {
     var result = await rest.postAsync<dynamic>(
         'services/app/tenantDashboard/GetTransactionSummary', {
       "duration": duration,
@@ -54,14 +55,9 @@ class TransactionService extends AppServiceBase {
     print('getTransactionSummary result is ${result.mappedResult}');
 
     if (result.mappedResult != null) {
-      return new NetworkServiceResponse(
-        content: result.mappedResult,
-        success: result.networkServiceResponse.success,
-      );
+      this.transactionSummary =
+          TransactionSummary.fromJson(result.mappedResult);
     }
-    return new NetworkServiceResponse(
-        success: result.networkServiceResponse.success,
-        message: result.networkServiceResponse.message);
   }
 
   List<TransactionGroupItem> groupTransactions(List<Transaction> items,

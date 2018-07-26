@@ -1,72 +1,56 @@
 import 'package:flutter/material.dart';
+import 'package:piggy_flutter/bloc/transaction_bloc.dart';
+import 'package:piggy_flutter/model/transaction_summary.dart';
 import 'package:piggy_flutter/services/transaction_service.dart';
 
-class SummaryPage extends StatefulWidget {
-  @override
-  _SummaryPageState createState() => new _SummaryPageState();
-
+class SummaryPage extends StatelessWidget {
   SummaryPage({Key key}) : super(key: key);
-
-}
-
-class _SummaryPageState extends State<SummaryPage> {
-  TransactionService _transactionService = new TransactionService();
-  bool isLoading = true;
-  double tenantNetWorth = 0.0,
-      userNetWorth = 0.0,
-      tenantIncome = 0.0,
-      userIncome = 0.0,
-      userExprense = 0.0,
-      tenantExpense = 0.0,
-      tenantSaved = 0.0,
-      userSaved = 0.0;
-
-  @override
-  void initState() {
-    super.initState();
-
-    _transactionService.getTransactionSummary("month").then((res) {
-      setState(() {
-        var result = res.content;
-        userNetWorth = result['userNetWorth'];
-//        userNetWorth = null;
-        tenantNetWorth = result['tenantNetWorth'];
-        tenantIncome = result['tenantIncome'];
-        userIncome = result['userIncome'];
-        userExprense = result['userExprense'];
-        tenantExpense = result['tenantExpense'];
-        tenantSaved = result['tenantSaved'];
-        userSaved = result['userSaved'];
-        isLoading = false;
-      });
-    });
-  }
+  final TransactionBloc transactionBloc = new TransactionBloc();
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Stack(
+    transactionBloc.transactionSummarySink.add("month");
+    return Scaffold(body: _buildBody());
+  }
+
+  Widget _buildBody() => StreamBuilder<TransactionSummary>(
+      stream: transactionBloc.transactionSummary,
+      initialData: null,
+      builder: (context, snapshot) =>
+          SummaryPageWidget(snapshot.hasData ? snapshot.data : null));
+}
+
+class SummaryPageWidget extends StatelessWidget {
+  final TransactionSummary transactionSummary;
+
+  @override
+  Widget build(BuildContext context) {
+    if (transactionSummary == null) {
+      return Center(child: CircularProgressIndicator());
+    } else {
+      return Stack(
         fit: StackFit.expand,
         children: <Widget>[
           SingleChildScrollView(
             child: Column(
               children: <Widget>[
-                //
-                isLoading ? LinearProgressIndicator() : null,
+                balanceCard('Net Worth', transactionSummary.userNetWorth,
+                    transactionSummary.tenantNetWorth, Colors.green),
                 balanceCard(
-                    'Net Worth', userNetWorth, tenantNetWorth, Colors.green),
-                balanceCard('Monthly Income', userIncome, tenantIncome,
+                    'Monthly Income',
+                    transactionSummary.userIncome,
+                    transactionSummary.tenantIncome,
                     Theme.of(context).primaryColor),
-                balanceCard('Monthly Expense', userExprense, tenantExpense,
-                    Colors.redAccent),
-                balanceCard('Monthly Savings', userSaved, tenantSaved,
-                    Colors.lightGreen),
-              ].where((child) => child != null).toList(),
+                balanceCard('Monthly Expense', transactionSummary.userExpense,
+                    transactionSummary.tenantExpense, Colors.redAccent),
+                balanceCard('Monthly Savings', transactionSummary.userSaved,
+                    transactionSummary.tenantSaved, Colors.lightGreen),
+              ],
             ),
           ),
         ],
-      ),
-    );
+      );
+    }
   }
 
   Widget balanceCard(
@@ -111,4 +95,6 @@ class _SummaryPageState extends State<SummaryPage> {
           ),
         ),
       );
+
+  SummaryPageWidget(this.transactionSummary);
 }

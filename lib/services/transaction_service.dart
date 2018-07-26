@@ -91,8 +91,10 @@ class TransactionService extends AppServiceBase {
 //         }
         day.transactions.add(items[i]);
       }
-      return groupedItems;
+
 //      print(groupedItems);
     }
+
+    return groupedItems;
   }
 }

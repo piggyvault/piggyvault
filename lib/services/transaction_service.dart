@@ -1,7 +1,10 @@
 import 'dart:async';
 
+import 'package:piggy_flutter/model/transaction.dart';
+import 'package:piggy_flutter/model/transaction_group_item.dart';
 import 'package:piggy_flutter/services/app_service_base.dart';
 import 'package:piggy_flutter/services/network_service_response.dart';
+import 'package:intl/intl.dart';
 
 class GetTransactionsInput {
   String type;
@@ -9,19 +12,17 @@ class GetTransactionsInput {
   String startDate;
   String endDate;
   String query;
+  String view;
 
-  GetTransactionsInput(
-      String _type, String _accountId, String _startDate, String _endDate) {
-    type = _type;
-    accountId = _accountId;
-    startDate = _startDate;
-    endDate = _endDate;
-  }
+  GetTransactionsInput(this.type, this.accountId, this.startDate, this.endDate,
+      this.view); // where the data is showing
 }
 
 class TransactionService extends AppServiceBase {
-  Future<NetworkServiceResponse<dynamic>> getTransactions(
-      GetTransactionsInput input) async {
+  List<TransactionGroupItem> recentTransactions;
+
+  Future<Null> getTransactions(GetTransactionsInput input) async {
+    List<Transaction> transactions = [];
     var result = await rest
         .postAsync<dynamic>('services/app/transaction/GetTransactionsAsync', {
       "type": input.type,
@@ -33,20 +34,20 @@ class TransactionService extends AppServiceBase {
 //    print('getTransactions result is ${result.mappedResult}');
 
     if (result.mappedResult != null) {
-      return new NetworkServiceResponse(
-        content: result.mappedResult,
-        success: result.networkServiceResponse.success,
-      );
+      result.mappedResult['items'].forEach((transaction) {
+        transactions.add(Transaction.fromJson(transaction));
+      });
     }
-    return new NetworkServiceResponse(
-        success: result.networkServiceResponse.success,
-        message: result.networkServiceResponse.message);
+
+    if (input.view == 'recent') {
+      this.recentTransactions = groupTransactions(transactions);
+    }
   }
 
   Future<NetworkServiceResponse<dynamic>> getTransactionSummary(
       String duration) async {
-    var result = await rest
-        .postAsync<dynamic>('services/app/tenantDashboard/GetTransactionSummary', {
+    var result = await rest.postAsync<dynamic>(
+        'services/app/tenantDashboard/GetTransactionSummary', {
       "duration": duration,
     });
 
@@ -61,5 +62,37 @@ class TransactionService extends AppServiceBase {
     return new NetworkServiceResponse(
         success: result.networkServiceResponse.success,
         message: result.networkServiceResponse.message);
+  }
+
+  List<TransactionGroupItem> groupTransactions(List<Transaction> items,
+      [String groupBy = 'transactionTime']) {
+    List<TransactionGroupItem> groupedItems = [];
+
+    if (groupBy == 'transactionTime') {
+      for (var i = 0; i < items.length; i++) {
+        var date = DateTime.parse(items[i].transactionTime);
+        var index = date.year * 10000 + (date.month * 100) + date.day;
+//         print('$date $index');
+
+        var day = groupedItems.firstWhere((o) => o.index == index,
+            orElse: () => null);
+
+        if (day == null) {
+          var formatter = new DateFormat("EEE, MMM d, ''yy");
+          day = new TransactionGroupItem(index, formatter.format(date));
+
+          groupedItems.add(day);
+        }
+
+//         if (items[i]['amountInDefaultCurrency'] > 0) {
+//           day['totalInflow'] += items[i]['amountInDefaultCurrency'];
+//         } else {
+//           day['totalOutflow'] += items[i]['amountInDefaultCurrency'];
+//         }
+        day.transactions.add(items[i]);
+      }
+      return groupedItems;
+//      print(groupedItems);
+    }
   }
 }

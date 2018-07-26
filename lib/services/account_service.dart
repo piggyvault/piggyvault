@@ -11,7 +11,7 @@ class AccountService extends AppServiceBase {
     List<Account> familyAccountItems = [];
     var result = await rest.postAsync<dynamic>(
         'services/app/account/GetTenantAccountsAsync', null);
-    print('getTenantAccounts result is ${result.mappedResult}');
+//    print('getTenantAccounts result is ${result.mappedResult}');
 
     if (result.mappedResult != null) {
       result.mappedResult['userAccounts']['items'].forEach((account) {

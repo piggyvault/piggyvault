@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:piggy_flutter/ui/page/category/category_list.dart';
+import 'package:piggy_flutter/ui/page/home/home.dart';
 import 'package:piggy_flutter/ui/widgets/about_tile.dart';
-
 
 class CommonDrawer extends StatelessWidget {
   @override
@@ -18,7 +19,7 @@ class CommonDrawer extends StatelessWidget {
             ),
             currentAccountPicture: new CircleAvatar(
 //              backgroundImage: new AssetImage(UIData.pkImage),
-            ),
+                ),
           ),
           new ListTile(
             title: Text(
@@ -29,17 +30,21 @@ class CommonDrawer extends StatelessWidget {
               Icons.home,
               color: Colors.red,
             ),
+            onTap: (() => Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => HomePage()),
+                )),
           ),
-          new ListTile(
-            title: Text(
-              "Accounts",
-              style: TextStyle(fontWeight: FontWeight.w700, fontSize: 18.0),
-            ),
-            leading: Icon(
-              Icons.account_balance_wallet,
-              color: Colors.green,
-            ),
-          ),
+//          new ListTile(
+//            title: Text(
+//              "Accounts",
+//              style: TextStyle(fontWeight: FontWeight.w700, fontSize: 18.0),
+//            ),
+//            leading: Icon(
+//              Icons.account_balance_wallet,
+//              color: Colors.green,
+//            ),
+//          ),
           new ListTile(
             title: Text(
               "Categories",
@@ -49,31 +54,32 @@ class CommonDrawer extends StatelessWidget {
               Icons.category,
               color: Colors.cyan,
             ),
+            onTap: (() => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => CategoryListPage()),
+            )),
           ),
-          new ListTile(
-            title: Text(
-              "Profile",
-              style: TextStyle(fontWeight: FontWeight.w700, fontSize: 18.0),
-            ),
-            leading: Icon(
-              Icons.person,
-              color: Colors.blue,
-            ),
-          ),
-
-
-
+//          new ListTile(
+//            title: Text(
+//              "Profile",
+//              style: TextStyle(fontWeight: FontWeight.w700, fontSize: 18.0),
+//            ),
+//            leading: Icon(
+//              Icons.person,
+//              color: Colors.blue,
+//            ),
+//          ),
           Divider(),
-          new ListTile(
-            title: Text(
-              "Settings",
-              style: TextStyle(fontWeight: FontWeight.w700, fontSize: 18.0),
-            ),
-            leading: Icon(
-              Icons.settings,
-              color: Colors.brown,
-            ),
-          ),
+//          new ListTile(
+//            title: Text(
+//              "Settings",
+//              style: TextStyle(fontWeight: FontWeight.w700, fontSize: 18.0),
+//            ),
+//            leading: Icon(
+//              Icons.settings,
+//              color: Colors.brown,
+//            ),
+//          ),
           Divider(),
           MyAboutTile()
         ],

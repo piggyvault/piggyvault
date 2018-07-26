@@ -4,7 +4,6 @@ import 'package:piggy_flutter/model/transaction.dart';
 import 'package:piggy_flutter/model/transaction_group_item.dart';
 import 'package:piggy_flutter/model/transaction_summary.dart';
 import 'package:piggy_flutter/services/app_service_base.dart';
-import 'package:piggy_flutter/services/network_service_response.dart';
 import 'package:intl/intl.dart';
 
 class GetTransactionsInput {
@@ -52,7 +51,7 @@ class TransactionService extends AppServiceBase {
       "duration": duration,
     });
 
-    print('getTransactionSummary result is ${result.mappedResult}');
+//    print('getTransactionSummary result is ${result.mappedResult}');
 
     if (result.mappedResult != null) {
       this.transactionSummary =
@@ -68,8 +67,6 @@ class TransactionService extends AppServiceBase {
       for (var i = 0; i < items.length; i++) {
         var date = DateTime.parse(items[i].transactionTime);
         var index = date.year * 10000 + (date.month * 100) + date.day;
-//         print('$date $index');
-
         var day = groupedItems.firstWhere((o) => o.index == index,
             orElse: () => null);
 
@@ -87,8 +84,6 @@ class TransactionService extends AppServiceBase {
 //         }
         day.transactions.add(items[i]);
       }
-
-//      print(groupedItems);
     }
 
     return groupedItems;

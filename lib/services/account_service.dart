@@ -1,23 +1,29 @@
 import 'dart:async';
-
+import 'package:piggy_flutter/model/account.dart';
 import 'package:piggy_flutter/services/app_service_base.dart';
-import 'package:piggy_flutter/services/network_service_response.dart';
 
 class AccountService extends AppServiceBase {
-  Future<NetworkServiceResponse<dynamic>> getTenantAccounts() async {
+  List<Account> userAccounts;
+  List<Account> familyAccounts;
+
+  Future<Null> getTenantAccounts() async {
+    List<Account> userAccountItems = [];
+    List<Account> familyAccountItems = [];
     var result = await rest.postAsync<dynamic>(
         'services/app/account/GetTenantAccountsAsync', null);
-
     print('getTenantAccounts result is ${result.mappedResult}');
 
     if (result.mappedResult != null) {
-      return new NetworkServiceResponse(
-        content: result.mappedResult["result"],
-        success: result.networkServiceResponse.success,
-      );
+      result.mappedResult['userAccounts']['items'].forEach((account) {
+        userAccountItems.add(Account.fromJson(account));
+      });
+      result.mappedResult['otherMembersAccounts']['items']
+          .forEach((account) {
+        familyAccountItems.add(Account.fromJson(account));
+      });
     }
-    return new NetworkServiceResponse(
-        success: result.networkServiceResponse.success,
-        message: result.networkServiceResponse.message);
+
+    this.userAccounts = userAccountItems;
+    this.familyAccounts = familyAccountItems;
   }
 }

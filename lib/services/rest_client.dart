@@ -37,7 +37,7 @@ class RestClient {
       dynamic resultClass = jsonDecode(jsonResult);
 
       return new MappedNetworkServiceResponse<T>(
-          mappedResult: resultClass,
+          mappedResult: resultClass["result"],
           networkServiceResponse: new NetworkServiceResponse<T>(success: true));
     } else {
       var errorResponse = response.body;

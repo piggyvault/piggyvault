@@ -34,7 +34,7 @@ class TransactionService extends AppServiceBase {
 
     if (result.mappedResult != null) {
       return new NetworkServiceResponse(
-        content: result.mappedResult["result"],
+        content: result.mappedResult,
         success: result.networkServiceResponse.success,
       );
     }
@@ -54,7 +54,7 @@ class TransactionService extends AppServiceBase {
 
     if (result.mappedResult != null) {
       return new NetworkServiceResponse(
-        content: result.mappedResult["result"],
+        content: result.mappedResult,
         success: result.networkServiceResponse.success,
       );
     }

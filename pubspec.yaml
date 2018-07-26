@@ -10,6 +10,7 @@ dependencies:
   cupertino_icons: ^0.1.2
   shared_preferences: ^0.4.2
   intl: ^0.15.7
+  rxdart: ^0.18.1
 
 dev_dependencies:
   flutter_test:

@@ -5,14 +5,11 @@ import 'package:piggy_flutter/services/account_service.dart';
 
 class AccountBloc {
   final accountController = StreamController<AccountService>();
+  Sink<AccountService> get accounts => accountController.sink;
 
   final userAccountResultController = BehaviorSubject<List<Account>>();
   final familyAccountResultController = BehaviorSubject<List<Account>>();
-
-  Sink<AccountService> get accounts => accountController.sink;
-
   Stream<List<Account>> get userAccounts => userAccountResultController.stream;
-
   Stream<List<Account>> get familyAccounts =>
       familyAccountResultController.stream;
 

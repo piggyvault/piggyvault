@@ -32,7 +32,7 @@ class TransactionService extends AppServiceBase {
       "endDate": input.endDate
     });
 
-//    print('getTransactions result is ${result.mappedResult}');
+    print('getTransactions result is ${result.mappedResult}');
 
     if (result.mappedResult != null) {
       result.mappedResult['items'].forEach((transaction) {

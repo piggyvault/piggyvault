@@ -22,7 +22,7 @@ class TransactionService extends AppServiceBase {
   List<TransactionGroupItem> recentTransactions;
   TransactionSummary transactionSummary;
 
-  Future<Null> getTransactions(GetTransactionsInput input) async {
+  Future<List<TransactionGroupItem>> getTransactions(GetTransactionsInput input) async {
     List<Transaction> transactions = [];
     var result = await rest
         .postAsync<dynamic>('services/app/transaction/GetTransactionsAsync', {
@@ -40,9 +40,13 @@ class TransactionService extends AppServiceBase {
       });
     }
 
+    var groupedTransactions = groupTransactions(transactions);
+
     if (input.view == 'recent') {
-      this.recentTransactions = groupTransactions(transactions);
+      this.recentTransactions = groupedTransactions;
     }
+
+    return groupedTransactions;
   }
 
   Future<Null> getTransactionSummary(String duration) async {

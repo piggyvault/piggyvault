@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:piggy_flutter/model/account.dart';
+import 'package:piggy_flutter/ui/page/account/account_details.dart';
 import 'package:piggy_flutter/ui/widgets/common/message_placeholder.dart';
 
 class AccountGroupList extends StatelessWidget {
@@ -44,6 +45,15 @@ class AccountGroupList extends StatelessWidget {
         subtitle: new Text(item.accountType),
         trailing: new Text('${item.currentBalance
             .toString()} ${item.currencySymbol}'),
+        onTap: (() => Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => AccountDetailsPage(
+                      item.id,
+                      item.name,
+                      '${item.currentBalance
+                      .toString()} ${item.currencySymbol}')),
+            )),
       ),
     );
   }

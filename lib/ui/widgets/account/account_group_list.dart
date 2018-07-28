@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:piggy_flutter/model/account.dart';
 import 'package:piggy_flutter/ui/page/account/account_details.dart';
-import 'package:piggy_flutter/ui/widgets/common/message_placeholder.dart';
 
 class AccountGroupList extends StatelessWidget {
   final List<Account> accounts;
@@ -9,31 +8,23 @@ class AccountGroupList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
+    Iterable<Widget> accountTiles;
     if (accounts == null) {
-      return Center(child: CircularProgressIndicator());
+      accountTiles = [new Center(child: LinearProgressIndicator())];
     } else {
-      if (accounts.length > 0) {
-        return _buildList(context);
-      } else {
-        return MessagePlaceholder();
-      }
+      accountTiles =
+          accounts.map((dynamic item) => buildAccountListTile(context, item));
     }
-  }
 
-  AccountGroupList(this.accounts, this.title);
-
-  Widget _buildList(BuildContext context) {
-    Iterable<Widget> userAccountsTiles =
-        accounts.map((dynamic item) => buildAccountListTile(context, item));
-
-    return ExpansionTile(
+    return new ExpansionTile(
         key: PageStorageKey('YourAccounts'),
         title: Text(this.title),
         initiallyExpanded: true,
         backgroundColor: Theme.of(context).accentColor.withOpacity(0.025),
-        children: userAccountsTiles.toList());
+        children: accountTiles.toList());
   }
+
+  AccountGroupList(this.accounts, this.title);
 
   buildAccountListTile(BuildContext context, Account item) {
     return new MergeSemantics(
@@ -52,7 +43,7 @@ class AccountGroupList extends StatelessWidget {
                       item.id,
                       item.name,
                       '${item.currentBalance
-                      .toString()} ${item.currencySymbol}')),
+                              .toString()} ${item.currencySymbol}')),
             )),
       ),
     );

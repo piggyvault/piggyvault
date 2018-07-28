@@ -10,17 +10,43 @@ class MessagePlaceholder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-        child: Column(
+    return new Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Icon(
+            Icons.sentiment_dissatisfied,
+            size: 100.0,
+//              color: iconColor,
+          ),
+          SizedBox(
+            height: 20.0,
+          ),
+          Column(
+            // crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Text(title,
-                  style: TextStyle(fontSize: 32.0, color: Colors.black54),
-                  textAlign: TextAlign.center),
-              Text(message,
-                  style: TextStyle(fontSize: 16.0, color: Colors.black54),
-                  textAlign: TextAlign.center),
-            ]));
+            children: <Widget>[
+              Text(
+                title,
+                style: TextStyle(
+                  fontSize: 20.0, fontWeight: FontWeight.w700,
+//                  color: textColor
+                ),
+              ),
+              SizedBox(
+                height: 5.0,
+              ),
+              Text(
+                message,
+                style: TextStyle(
+                  fontSize: 15.0, fontWeight: FontWeight.normal,
+//                  color: textColor
+                ),
+              ),
+            ],
+          )
+        ],
+      ),
+    );
   }
 }

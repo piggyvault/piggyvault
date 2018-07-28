@@ -6,7 +6,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:piggy_flutter/utils/uidata.dart';
 
 class RestClient {
-
   Future<MappedNetworkServiceResponse<T>> getAsync<T>(
       String resourcePath) async {
     var response = await http.get(resourcePath);
@@ -15,17 +14,17 @@ class RestClient {
 
   Future<MappedNetworkServiceResponse<T>> postAsync<T>(
       String resourcePath, dynamic data) async {
-
     final prefs = await SharedPreferences.getInstance();
-    var token=  prefs.getString(UIData.authToken);
+    var token = prefs.getString(UIData.authToken);
 
     var content = json.encoder.convert(data);
-    var response =
-    await http.post('http://piggyvault.in/api/$resourcePath', body: content, headers: {
-      'Content-type': 'application/json',
-      'Accept': 'application/json',
-      'Authorization': 'Bearer $token'
-    });
+    var response = await http.post('http://piggyvault.in/api/$resourcePath',
+        body: content,
+        headers: {
+          'Content-type': 'application/json',
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $token'
+        });
     return processResponse<T>(response);
   }
 

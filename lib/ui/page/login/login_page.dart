@@ -23,12 +23,8 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void authCheck() async {
-//    print('auth check');
     final prefs = await SharedPreferences.getInstance();
     var token = prefs.getString(UIData.authToken);
-
-//    print('token is $token');
-
     if (token != null && token.length > 0) {
       Navigator.pushReplacement(
         context,

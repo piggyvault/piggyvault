@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:piggy_flutter/services/auth_service.dart';
 import 'package:piggy_flutter/ui/page/category/category_list.dart';
 import 'package:piggy_flutter/ui/page/home/home.dart';
+import 'package:piggy_flutter/ui/page/login/login_page.dart';
 import 'package:piggy_flutter/ui/widgets/about_tile.dart';
 
 class CommonDrawer extends StatelessWidget {
+  final AuthService _authService = new AuthService();
+
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -28,7 +32,7 @@ class CommonDrawer extends StatelessWidget {
             ),
             leading: Icon(
               Icons.home,
-              color: Colors.red,
+              color: Colors.blue,
             ),
             onTap: (() => Navigator.push(
                   context,
@@ -55,31 +59,26 @@ class CommonDrawer extends StatelessWidget {
               color: Colors.cyan,
             ),
             onTap: (() => Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => CategoryListPage()),
-            )),
+                  context,
+                  MaterialPageRoute(builder: (context) => CategoryListPage()),
+                )),
           ),
-//          new ListTile(
-//            title: Text(
-//              "Profile",
-//              style: TextStyle(fontWeight: FontWeight.w700, fontSize: 18.0),
-//            ),
-//            leading: Icon(
-//              Icons.person,
-//              color: Colors.blue,
-//            ),
-//          ),
           Divider(),
-//          new ListTile(
-//            title: Text(
-//              "Settings",
-//              style: TextStyle(fontWeight: FontWeight.w700, fontSize: 18.0),
-//            ),
-//            leading: Icon(
-//              Icons.settings,
-//              color: Colors.brown,
-//            ),
-//          ),
+          new ListTile(
+            title: Text(
+              "Logout",
+            ),
+            leading: Icon(
+              Icons.exit_to_app,
+              color: Colors.red,
+            ),
+            onTap: (() {
+              _authService.onLogout().then((done) => Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => LoginPage()),
+                  ));
+            }),
+          ),
           Divider(),
           MyAboutTile()
         ],

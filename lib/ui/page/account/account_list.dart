@@ -19,13 +19,11 @@ class AccountListPage extends StatelessWidget {
 
   Widget userAccountsBuilder() => StreamBuilder<List<Account>>(
       stream: accountBloc.userAccounts,
-      initialData: [],
       builder: (context, snapshot) => AccountGroupList(
           snapshot.hasData ? snapshot.data : null, 'Your Accounts'));
 
   Widget familyAccountsBuilder() => StreamBuilder<List<Account>>(
       stream: accountBloc.familyAccounts,
-      initialData: [],
       builder: (context, snapshot) => AccountGroupList(
           snapshot.hasData ? snapshot.data : null, 'Family Accounts'));
 

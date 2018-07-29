@@ -1,6 +1,7 @@
 class Category {
-  final String name, icon;
+  final String name;
   final int id;
+//  String icon;
 
   Category(this.id, this.name);
 

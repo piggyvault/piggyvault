@@ -18,11 +18,21 @@ class GetTransactionsInput {
       this.view); // where the data is showing
 }
 
+class SaveTransactionInput {
+  final String id, description, accountId, transactionTime;
+  final double amount;
+  final int categoryId;
+
+  SaveTransactionInput(this.id, this.description, this.accountId,
+      this.transactionTime, this.amount, this.categoryId);
+}
+
 class TransactionService extends AppServiceBase {
   List<TransactionGroupItem> recentTransactions;
   TransactionSummary transactionSummary;
 
-  Future<List<TransactionGroupItem>> getTransactions(GetTransactionsInput input) async {
+  Future<List<TransactionGroupItem>> getTransactions(
+      GetTransactionsInput input) async {
     List<Transaction> transactions = [];
     var result = await rest
         .postAsync<dynamic>('services/app/transaction/GetTransactionsAsync', {
@@ -32,7 +42,7 @@ class TransactionService extends AppServiceBase {
       "endDate": input.endDate
     });
 
-    print('getTransactions result is ${result.mappedResult}');
+    print('getTransactions========= result is ${result.mappedResult}');
 
     if (result.mappedResult != null) {
       result.mappedResult['items'].forEach((transaction) {
@@ -61,6 +71,17 @@ class TransactionService extends AppServiceBase {
       this.transactionSummary =
           TransactionSummary.fromJson(result.mappedResult);
     }
+  }
+
+  Future<Null> createOrUpdateTransaction(SaveTransactionInput input) async {
+    var restult = await rest.postAsync('services/app/transaction/CreateOrUpdateTransaction', {
+      "id": input.id,
+      "description": input.description,
+      "amount": input.amount,
+      "categoryId": input.categoryId,
+      "accountId": input.accountId,
+      "transactionTime": input.transactionTime
+    });
   }
 
   List<TransactionGroupItem> groupTransactions(List<Transaction> items,

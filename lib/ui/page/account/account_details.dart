@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:piggy_flutter/model/account.dart';
 import 'package:piggy_flutter/model/transaction_group_item.dart';
 import 'package:piggy_flutter/services/transaction_service.dart';
+import 'package:piggy_flutter/ui/page/transaction/transaction_form.dart';
 import 'package:piggy_flutter/ui/widgets/transaction_list.dart';
 
 enum TabsDemoStyle { iconsAndText, iconsOnly, textOnly }
@@ -11,6 +11,7 @@ class _Page {
   String title;
   final int monthDifferenceIndex;
   List<TransactionGroupItem> transactions;
+
   _Page(this.title, this.monthDifferenceIndex);
 }
 
@@ -133,6 +134,19 @@ class AccountDetailsPageState extends State<AccountDetailsPage>
           children: _allPages.map((_Page page) {
             return new TransactionList(page.transactions);
           }).toList()),
+      floatingActionButton: new FloatingActionButton(
+          key: new ValueKey<Color>(Theme.of(context).primaryColor),
+          tooltip: 'Add new transaction',
+          backgroundColor: Theme.of(context).primaryColor,
+          child: new Icon(Icons.add_circle_outline),
+          onPressed: () {
+            Navigator.push(
+                context,
+                new MaterialPageRoute<DismissDialogAction>(
+                  builder: (BuildContext context) => new TransactionFormPage(),
+                  fullscreenDialog: true,
+                ));
+          }),
     );
   }
 }

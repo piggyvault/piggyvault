@@ -4,9 +4,10 @@ import 'package:piggy_flutter/model/account.dart';
 import 'package:piggy_flutter/services/account_service.dart';
 
 class AccountBloc {
-  final accountController = StreamController<AccountService>();
+  final accountController = StreamController<bool>();
+  final AccountService _accountService = new AccountService();
 
-  Sink<AccountService> get accounts => accountController.sink;
+  Sink<bool> get refreshAccounts => accountController.sink;
 
   final userAccountResultController = BehaviorSubject<List<Account>>();
   final familyAccountResultController = BehaviorSubject<List<Account>>();
@@ -17,13 +18,15 @@ class AccountBloc {
       familyAccountResultController.stream;
 
   AccountBloc() {
+    print("########## AccountBloc");
     accountController.stream.listen(getTenantAccounts);
   }
 
-  void getTenantAccounts(AccountService accountService) async {
-    await accountService.getTenantAccounts();
-    userAccountResultController.add(accountService.userAccounts);
-    familyAccountResultController.add(accountService.familyAccounts);
+  void getTenantAccounts(bool done) async {
+    print("########## AccountBloc getTenantAccounts");
+    await _accountService.getTenantAccounts();
+    userAccountResultController.add(_accountService.userAccounts);
+    familyAccountResultController.add(_accountService.familyAccounts);
   }
 
   void dispose() {

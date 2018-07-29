@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:piggy_flutter/bloc/account_bloc.dart';
 import 'package:piggy_flutter/bloc/category_bloc.dart';
+import 'package:piggy_flutter/bloc/category_provider.dart';
 import 'package:piggy_flutter/bloc/transaction_bloc.dart';
 import 'package:piggy_flutter/model/account.dart';
 import 'package:piggy_flutter/model/category.dart';
@@ -74,7 +75,6 @@ class TransactionFormPage extends StatefulWidget {
 }
 
 class TransactionFormPageState extends State<TransactionFormPage> {
-  final CategoryBloc categoryBloc = new CategoryBloc();
   final AccountBloc accountBloc = new AccountBloc();
   final TransactionBloc transactionBloc = new TransactionBloc();
 
@@ -118,28 +118,29 @@ class TransactionFormPageState extends State<TransactionFormPage> {
         false;
   }
 
-  Widget buildCategoryList() => new StreamBuilder<List<Category>>(
-      stream: categoryBloc.categories,
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          return new DropdownButton<int>(
-            value: _categoryId,
-            onChanged: (int newValue) {
-              setState(() {
-                _categoryId = newValue;
-              });
-            },
-            items: snapshot.data.map((Category category) {
-              return new DropdownMenuItem<int>(
-                value: category.id,
-                child: new Text(category.name),
+  Widget buildCategoryList(CategoryBloc categoryBloc) =>
+      new StreamBuilder<List<Category>>(
+          stream: categoryBloc.categories,
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              return new DropdownButton<int>(
+                value: _categoryId,
+                onChanged: (int newValue) {
+                  setState(() {
+                    _categoryId = newValue;
+                  });
+                },
+                items: snapshot.data.map((Category category) {
+                  return new DropdownMenuItem<int>(
+                    value: category.id,
+                    child: new Text(category.name),
+                  );
+                }).toList(),
               );
-            }).toList(),
-          );
-        } else {
-          return new CircularProgressIndicator();
-        }
-      });
+            } else {
+              return new CircularProgressIndicator();
+            }
+          });
 
   Widget buildAccountList() => new StreamBuilder<List<Account>>(
       stream: accountBloc.userAccounts,
@@ -185,6 +186,7 @@ class TransactionFormPageState extends State<TransactionFormPage> {
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
+    final CategoryBloc categoryBloc = CategoryProvider.of(context);
 
     return new Scaffold(
       appBar: new AppBar(title: new Text('New Transaction'), actions: <Widget>[
@@ -235,7 +237,7 @@ class TransactionFormPageState extends State<TransactionFormPage> {
                 new ListTile(
                   contentPadding: const EdgeInsets.symmetric(vertical: 8.0),
                   title: const Text('Category'),
-                  trailing: buildCategoryList(),
+                  trailing: buildCategoryList(categoryBloc),
                 ),
                 new Container(
                     padding: const EdgeInsets.symmetric(vertical: 8.0),

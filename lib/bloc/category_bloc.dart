@@ -2,16 +2,22 @@ import 'dart:async';
 
 import 'package:piggy_flutter/model/category.dart';
 import 'package:piggy_flutter/services/category_service.dart';
+import 'package:rxdart/rxdart.dart';
 
 class CategoryBloc {
+  List<Category> allCategories;
+
   final CategoryService _categoryService = new CategoryService();
-  final categoryController = StreamController<List<Category>>();
-  Stream<List<Category>> get categories => categoryController.stream;
+  final categorySubject = BehaviorSubject<List<Category>>();
+
+  Stream<List<Category>> get categories => categorySubject.stream;
 
   CategoryBloc() {
-    _categoryService
-        .getTenantCategories()
-        .then((res) => categoryController.add(_categoryService.categories));
+    print("########## CategoryBloc");
+    _categoryService.getTenantCategories().then((result) {
+      allCategories = result;
+      categorySubject.add(allCategories);
+    });
   }
 
 //  void getCategories() async {
@@ -21,6 +27,6 @@ class CategoryBloc {
 //  }
 
   void dispose() {
-    categoryController.close();
+    categorySubject.close();
   }
 }

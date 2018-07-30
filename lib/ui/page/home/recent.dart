@@ -10,10 +10,8 @@ class RecentPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final TransactionBloc transactionBloc = TransactionProvider.of(context);
-
     print('########## RecentPage build');
-    transactionBloc.refreshRecentTransactionsSink.add(true);
+    final TransactionBloc transactionBloc = TransactionProvider.of(context);
 
     return Scaffold(
       body: transactionListBuilder(transactionBloc),
@@ -36,7 +34,6 @@ class RecentPage extends StatelessWidget {
   Widget transactionListBuilder(TransactionBloc transactionBloc) =>
       StreamBuilder<List<TransactionGroupItem>>(
         stream: transactionBloc.recentTransactions,
-        initialData: [],
         builder: (context, snapshot) =>
             TransactionList(snapshot.hasData ? snapshot.data : null),
       );

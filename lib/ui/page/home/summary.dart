@@ -9,7 +9,6 @@ class SummaryPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final TransactionBloc transactionBloc = TransactionProvider.of(context);
-    transactionBloc.transactionSummarySink.add("month");
     return Scaffold(body: _buildBody(transactionBloc));
   }
 

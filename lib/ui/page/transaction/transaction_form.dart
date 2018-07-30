@@ -196,7 +196,7 @@ class TransactionFormPageState extends State<TransactionFormPage> {
                 }).toList(),
               );
             } else {
-              return new CircularProgressIndicator();
+              return new LinearProgressIndicator();
             }
           });
 
@@ -220,7 +220,7 @@ class TransactionFormPageState extends State<TransactionFormPage> {
                 }).toList(),
               );
             } else {
-              return new CircularProgressIndicator();
+              return new LinearProgressIndicator();
             }
           });
 
@@ -356,10 +356,8 @@ class TransactionFormPageState extends State<TransactionFormPage> {
                   child: buildAccountList(accountBloc),
                 ),
                 const SizedBox(height: 24.0),
-                new Text(
-                    '* all fields are mandatory',
-                    style: Theme.of(context).textTheme.caption
-                ),
+                new Text('* all fields are mandatory',
+                    style: Theme.of(context).textTheme.caption),
               ],
             ),
           ),

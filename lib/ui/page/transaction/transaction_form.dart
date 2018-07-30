@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:piggy_flutter/bloc/account_bloc.dart';
@@ -135,6 +134,14 @@ class TransactionFormPageState extends State<TransactionFormPage> {
   final TextEditingController _amountFieldController =
       new TextEditingController();
 
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
+  bool _autovalidate = false;
+  bool _formWasEdited = false;
+
+  String _categoryErrorText;
+  String _accountErrorText;
+
   DateTime _transactionDate = new DateTime.now();
   TimeOfDay _transactionTime;
 
@@ -142,11 +149,9 @@ class TransactionFormPageState extends State<TransactionFormPage> {
 
   int _categoryId;
   String _accountId;
-  bool _saveNeeded = false;
 
   Future<bool> _onWillPop() async {
-//    _saveNeeded = _hasLocation || _hasName || _saveNeeded;
-    if (!_saveNeeded) return true;
+    if (!_formWasEdited) return true;
 
     final ThemeData theme = Theme.of(context);
     final TextStyle dialogTextStyle =
@@ -156,7 +161,8 @@ class TransactionFormPageState extends State<TransactionFormPage> {
           context: context,
           builder: (BuildContext context) {
             return new AlertDialog(
-              content: new Text('Discard new event?', style: dialogTextStyle),
+              content:
+                  new Text('Discard unsaved changes?', style: dialogTextStyle),
               actions: <Widget>[
                 new FlatButton(
                     child: const Text('CANCEL'),
@@ -225,34 +231,47 @@ class TransactionFormPageState extends State<TransactionFormPage> {
             }
           });
 
+  void showInSnackBar(String value) {
+    _scaffoldKey.currentState.showSnackBar(new SnackBar(
+      content: new Text(value),
+      backgroundColor: Colors.red,
+    ));
+  }
+
   void onSave(TransactionBloc transactionBloc, AccountBloc accountBloc) {
-    if (_transactionType == UIData.transaction_type_transfer) {
+    final FormState form = _formKey.currentState;
 
+    if (!form.validate() || !_isValidAccount() || !_isValidCategory()) {
+      _autovalidate = true; // Start validating on every change.
+      showInSnackBar('Please fix the errors before submitting.');
     } else {
-      double amount = double.parse(_amountFieldController.text);
-      if (_transactionType == UIData.transaction_type_expense && amount > 0) {
-        amount *= -1;
-      }
-      if (_transactionType == UIData.transaction_type_income && amount < 0) {
-        amount *= -1;
-      }
+      if (_transactionType == UIData.transaction_type_transfer) {
+      } else {
+        double amount = double.parse(_amountFieldController.text);
+        if (_transactionType == UIData.transaction_type_expense && amount > 0) {
+          amount *= -1;
+        }
+        if (_transactionType == UIData.transaction_type_income && amount < 0) {
+          amount *= -1;
+        }
 
-      transactionBloc.saveTransaction.add(new SaveTransactionInput(
-          null,
-          _descriptionFieldController.text,
-          _accountId,
-          new DateTime(
-                  _transactionDate.year,
-                  _transactionDate.month,
-                  _transactionDate.day,
-                  _transactionTime.hour,
-                  _transactionTime.minute)
-              .toString(),
-          amount,
-          _categoryId,
-          accountBloc));
+        transactionBloc.saveTransaction.add(new SaveTransactionInput(
+            null,
+            _descriptionFieldController.text,
+            _accountId,
+            new DateTime(
+                    _transactionDate.year,
+                    _transactionDate.month,
+                    _transactionDate.day,
+                    _transactionTime.hour,
+                    _transactionTime.minute)
+                .toString(),
+            amount,
+            _categoryId,
+            accountBloc));
 
-      Navigator.pop(context, DismissDialogAction.save);
+        Navigator.pop(context, DismissDialogAction.save);
+      }
     }
   }
 
@@ -271,6 +290,7 @@ class TransactionFormPageState extends State<TransactionFormPage> {
     final TransactionBloc transactionBloc = TransactionProvider.of(context);
 
     return new Scaffold(
+      key: _scaffoldKey,
       appBar: new AppBar(title: new Text('New Transaction'), actions: <Widget>[
         new FlatButton(
             child: new Text('SAVE',
@@ -284,6 +304,8 @@ class TransactionFormPageState extends State<TransactionFormPage> {
           top: false,
           bottom: false,
           child: new Form(
+            key: _formKey,
+            autovalidate: _autovalidate,
             onWillPop: _onWillPop,
             child: new ListView(
               padding: const EdgeInsets.all(16.0),
@@ -313,6 +335,14 @@ class TransactionFormPageState extends State<TransactionFormPage> {
                         );
                       }).toList(),
                     )),
+                new InputDecorator(
+                  decoration: const InputDecoration(
+                    labelText: 'Account',
+                    hintText: 'Choose an account',
+                  ),
+                  isEmpty: _accountId == null,
+                  child: buildAccountList(accountBloc),
+                ),
                 const SizedBox(height: 24.0),
                 new TextFormField(
                   keyboardType: TextInputType.numberWithOptions(decimal: true),
@@ -324,12 +354,13 @@ class TransactionFormPageState extends State<TransactionFormPage> {
                       suffixStyle: const TextStyle(color: Colors.green)),
                   maxLines: 1,
                   controller: _amountFieldController,
+                  validator: _validateAmount,
                 ),
-//                        const SizedBox(height: 24.0),
                 new InputDecorator(
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     labelText: 'Category',
                     hintText: 'Choose a category',
+                    errorText: _categoryErrorText,
                   ),
                   isEmpty: _categoryId == null,
                   child: buildCategoryList(categoryBloc),
@@ -345,6 +376,7 @@ class TransactionFormPageState extends State<TransactionFormPage> {
                   maxLines: 3,
                   keyboardType: TextInputType.multiline,
                   controller: _descriptionFieldController,
+                  validator: _validateDescription,
                 ),
                 const SizedBox(height: 24.0),
                 new _DateTimePicker(
@@ -362,15 +394,6 @@ class TransactionFormPageState extends State<TransactionFormPage> {
                     });
                   },
                 ),
-//                        const SizedBox(height: 24.0),
-                new InputDecorator(
-                  decoration: const InputDecoration(
-                    labelText: 'Account',
-                    hintText: 'Choose an account',
-                  ),
-                  isEmpty: _accountId == null,
-                  child: buildAccountList(accountBloc),
-                ),
                 const SizedBox(height: 24.0),
                 new Text('* all fields are mandatory',
                     style: Theme.of(context).textTheme.caption),
@@ -380,5 +403,56 @@ class TransactionFormPageState extends State<TransactionFormPage> {
         ),
       ),
     );
+  }
+
+  String _validateAmount(String value) {
+    _formWasEdited = true;
+    if (value.isEmpty) return 'Amount is required.';
+    if (double.tryParse(value) == null) {
+      return 'Please enter a valid amount.';
+    }
+    return null;
+  }
+
+  bool _isValidCategory() {
+    if (_categoryId == null) {
+      String error = 'Category is required.';
+      showInSnackBar(error);
+      setState(() {
+        _categoryErrorText = error;
+      });
+      return false;
+    } else {
+      if (_categoryErrorText != null) {
+        setState(() {
+          _categoryErrorText = null;
+        });
+      }
+      return true;
+    }
+  }
+
+  bool _isValidAccount() {
+    if (_accountId == null) {
+      String error = 'Account is required.';
+      showInSnackBar(error);
+      setState(() {
+        _accountErrorText = error;
+      });
+      return false;
+    } else {
+      if (_accountErrorText != null) {
+        setState(() {
+          _accountErrorText = null;
+        });
+      }
+      return true;
+    }
+  }
+
+  String _validateDescription(String value) {
+    _formWasEdited = true;
+    if (value.isEmpty) return 'Description is required.';
+    return null;
   }
 }

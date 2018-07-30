@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:piggy_flutter/bloc/account_bloc.dart';
 import 'package:piggy_flutter/bloc/category_bloc.dart';
-
 import 'package:piggy_flutter/bloc/transaction_bloc.dart';
 import 'package:piggy_flutter/model/account.dart';
 import 'package:piggy_flutter/model/category.dart';
@@ -13,62 +12,114 @@ import 'package:piggy_flutter/providers/category_provider.dart';
 import 'package:piggy_flutter/providers/transaction_provider.dart';
 import 'package:piggy_flutter/services/transaction_service.dart';
 
-// This is based on
-// https://material.google.com/components/dialogs.html#dialogs-full-screen-dialogs
-
 enum DismissDialogAction {
   cancel,
   discard,
   save,
 }
 
-class DateTimeItem extends StatelessWidget {
-  DateTimeItem({Key key, DateTime dateTime, @required this.onChanged})
-      : assert(onChanged != null),
-        date = new DateTime(dateTime.year, dateTime.month, dateTime.day),
-        time = new TimeOfDay(hour: dateTime.hour, minute: dateTime.minute),
-        super(key: key);
+class _InputDropdown extends StatelessWidget {
+  const _InputDropdown(
+      {Key key,
+      this.child,
+      this.labelText,
+      this.valueText,
+      this.valueStyle,
+      this.onPressed})
+      : super(key: key);
 
-  final DateTime date;
-  final TimeOfDay time;
-  final ValueChanged<DateTime> onChanged;
+  final String labelText;
+  final String valueText;
+  final TextStyle valueStyle;
+  final VoidCallback onPressed;
+  final Widget child;
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
+    return new InkWell(
+      onTap: onPressed,
+      child: new InputDecorator(
+        decoration: new InputDecoration(
+          labelText: labelText,
+        ),
+        baseStyle: valueStyle,
+        child: new Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            new Text(valueText, style: valueStyle),
+            new Icon(Icons.arrow_drop_down,
+                color: Theme.of(context).brightness == Brightness.light
+                    ? Colors.grey.shade700
+                    : Colors.white70),
+          ],
+        ),
+      ),
+    );
+  }
+}
 
-    return new DefaultTextStyle(
-        style: theme.textTheme.subhead,
-        child: new Row(children: <Widget>[
-          new Expanded(
-              child: new Container(
-                  padding: const EdgeInsets.symmetric(vertical: 8.0),
-                  decoration: new BoxDecoration(
-                      border: new Border(
-                          bottom: new BorderSide(color: theme.dividerColor))),
-                  child: new InkWell(
-                      onTap: () {
-                        showDatePicker(
-                            context: context,
-                            initialDate: date,
-                            firstDate: date.subtract(const Duration(days: 30)),
-                            lastDate:
-                                date.add(const Duration(days: 30))).then<Null>(
-                            (DateTime value) {
-                          if (value != null)
-                            onChanged(new DateTime(value.year, value.month,
-                                value.day, time.hour, time.minute));
-                        });
-                      },
-                      child: new Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget>[
-                            new Text(
-                                new DateFormat('EEE, MMM d yyyy').format(date)),
-                            const Icon(Icons.arrow_drop_down,
-                                color: Colors.black54),
-                          ])))),
-        ]));
+class _DateTimePicker extends StatelessWidget {
+  const _DateTimePicker(
+      {Key key,
+      this.labelText,
+      this.selectedDate,
+      this.selectedTime,
+      this.selectDate,
+      this.selectTime})
+      : super(key: key);
+
+  final String labelText;
+  final DateTime selectedDate;
+  final TimeOfDay selectedTime;
+  final ValueChanged<DateTime> selectDate;
+  final ValueChanged<TimeOfDay> selectTime;
+
+  Future<Null> _selectDate(BuildContext context) async {
+    final DateTime picked = await showDatePicker(
+        context: context,
+        initialDate: selectedDate,
+        firstDate: new DateTime(2015, 8),
+        lastDate: new DateTime(2101));
+    if (picked != null && picked != selectedDate) selectDate(picked);
+  }
+
+  Future<Null> _selectTime(BuildContext context) async {
+    final TimeOfDay picked =
+        await showTimePicker(context: context, initialTime: selectedTime);
+    if (picked != null && picked != selectedTime) selectTime(picked);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final TextStyle valueStyle = Theme.of(context).textTheme.title;
+    return new Row(
+      crossAxisAlignment: CrossAxisAlignment.end,
+      children: <Widget>[
+        new Expanded(
+          flex: 4,
+          child: new _InputDropdown(
+            labelText: labelText,
+            valueText: new DateFormat.yMMMd().format(selectedDate),
+            valueStyle: valueStyle,
+            onPressed: () {
+              _selectDate(context);
+            },
+          ),
+        ),
+        const SizedBox(width: 12.0),
+        new Expanded(
+          flex: 3,
+          child: new _InputDropdown(
+            valueText: selectedTime.format(context),
+            valueStyle: valueStyle,
+            onPressed: () {
+              _selectTime(context);
+            },
+          ),
+        ),
+      ],
+    );
   }
 }
 
@@ -78,11 +129,18 @@ class TransactionFormPage extends StatefulWidget {
 }
 
 class TransactionFormPageState extends State<TransactionFormPage> {
-  DateTime _transactionTime = new DateTime.now();
+  final TextEditingController _descriptionFieldController =
+      new TextEditingController();
+  final TextEditingController _amountFieldController =
+      new TextEditingController();
+
+  DateTime _transactionDate = new DateTime.now();
+  TimeOfDay _transactionTime;
+
   String _transactionType = 'Expense';
-  double _amount;
+
   int _categoryId;
-  String _description, _accountId;
+  String _accountId;
   bool _saveNeeded = false;
 
   Future<bool> _onWillPop() async {
@@ -169,14 +227,27 @@ class TransactionFormPageState extends State<TransactionFormPage> {
   void onSave(TransactionBloc transactionBloc, AccountBloc accountBloc) {
     transactionBloc.saveTransaction.add(new SaveTransactionInput(
         null,
-        _description,
+        _descriptionFieldController.text,
         _accountId,
-        _transactionTime.toString(),
-        _amount,
+        new DateTime(
+                _transactionDate.year,
+                _transactionDate.month,
+                _transactionDate.day,
+                _transactionTime.hour,
+                _transactionTime.minute)
+            .toString(),
+        double.parse(_amountFieldController.text),
         _categoryId,
         accountBloc));
 
     Navigator.pop(context, DismissDialogAction.save);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _transactionTime =
+        TimeOfDay(hour: _transactionDate.hour, minute: _transactionDate.minute);
   }
 
   @override
@@ -195,88 +266,100 @@ class TransactionFormPageState extends State<TransactionFormPage> {
               onSave(transactionBloc, accountBloc);
             })
       ]),
-      body: new Form(
-          onWillPop: _onWillPop,
-          child: new ListView(
+      body: new DropdownButtonHideUnderline(
+        child: new SafeArea(
+          top: false,
+          bottom: false,
+          child: new Form(
+            onWillPop: _onWillPop,
+            child: new ListView(
               padding: const EdgeInsets.all(16.0),
               children: <Widget>[
-                new ListTile(
-                  title: const Text('Type'),
-                  trailing: new DropdownButton<String>(
-                    value: _transactionType,
-                    onChanged: (String newValue) {
-                      setState(() {
-                        _transactionType = newValue;
-                      });
-                    },
-                    items: <String>['Expense', 'Income', 'Transfer']
-                        .map((String value) {
-                      return new DropdownMenuItem<String>(
-                        value: value,
-                        child: new Text(value),
-                      );
-                    }).toList(),
+                new InputDecorator(
+                    decoration: const InputDecoration(
+                      labelText: 'Transaction Type',
+                      hintText: 'Choose the type of transaction',
+                    ),
+                    isEmpty: _transactionType == null,
+                    child: new DropdownButton<String>(
+                      value: _transactionType,
+                      isDense: true,
+                      onChanged: (String newValue) {
+                        setState(() {
+                          _transactionType = newValue;
+                        });
+                      },
+                      items: <String>['Expense', 'Income', 'Transfer']
+                          .map((String value) {
+                        return new DropdownMenuItem<String>(
+                          value: value,
+                          child: new Text(value),
+                        );
+                      }).toList(),
+                    )),
+                const SizedBox(height: 24.0),
+                new TextFormField(
+                  keyboardType: TextInputType.numberWithOptions(decimal: true),
+                  decoration: const InputDecoration(
+                      border: const OutlineInputBorder(),
+                      labelText: 'Amount',
+                      prefixText: '\$',
+                      suffixText: 'USD',
+                      suffixStyle: const TextStyle(color: Colors.green)),
+                  maxLines: 1,
+                  controller: _amountFieldController,
+                ),
+//                        const SizedBox(height: 24.0),
+                new InputDecorator(
+                  decoration: const InputDecoration(
+                    labelText: 'Category',
+                    hintText: 'Choose a category',
                   ),
+                  isEmpty: _categoryId == null,
+                  child: buildCategoryList(categoryBloc),
                 ),
-                new Container(
-                    padding: const EdgeInsets.symmetric(vertical: 8.0),
-                    alignment: Alignment.bottomLeft,
-                    child: new TextField(
-                        decoration: const InputDecoration(
-                            labelText: 'Amount', filled: true),
-                        style: theme.textTheme.subhead,
-                        keyboardType:
-                            TextInputType.numberWithOptions(decimal: true),
-                        onChanged: (String value) {
-                          setState(() {
-                            _amount = double.parse(value);
-                          });
-                        })),
-                new ListTile(
-                  contentPadding: const EdgeInsets.symmetric(vertical: 8.0),
-                  title: const Text('Category'),
-                  trailing: buildCategoryList(categoryBloc),
+                const SizedBox(height: 24.0),
+                new TextFormField(
+                  decoration: const InputDecoration(
+                    border: const OutlineInputBorder(),
+                    hintText: 'Tell us about the transaction',
+//                            helperText: 'Keep it short but meaningful',
+                    labelText: 'Description',
+                  ),
+                  maxLines: 3,
+                  keyboardType: TextInputType.multiline,
+                  controller: _descriptionFieldController,
                 ),
-                new Container(
-                    padding: const EdgeInsets.symmetric(vertical: 8.0),
-                    alignment: Alignment.topLeft,
-                    child: new TextField(
-                        decoration: const InputDecoration(
-                            labelText: 'Description', filled: true),
-//                        style: theme.textTheme.body1,
-                        keyboardType: TextInputType.multiline,
-                        maxLines: 2,
-                        onChanged: (String value) {
-                          setState(() {
-//                            _hasName = value.isNotEmpty;
-//                            if (_hasName) {
-                            _description = value;
-//                            }
-                          });
-                        })),
-                new Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      new Text('From', style: theme.textTheme.caption),
-                      new DateTimeItem(
-                          dateTime: _transactionTime,
-                          onChanged: (DateTime value) {
-                            setState(() {
-                              _transactionTime = value;
-                              _saveNeeded = true;
-                            });
-                          })
-                    ]),
-                new ListTile(
-                  title: const Text('Account'),
-                  trailing: buildAccountList(accountBloc),
+                const SizedBox(height: 24.0),
+                new _DateTimePicker(
+                  labelText: 'To',
+                  selectedDate: _transactionDate,
+                  selectedTime: _transactionTime,
+                  selectDate: (DateTime date) {
+                    setState(() {
+                      _transactionDate = date;
+                    });
+                  },
+                  selectTime: (TimeOfDay time) {
+                    setState(() {
+                      _transactionTime = time;
+                    });
+                  },
                 ),
-              ].map((Widget child) {
-                return new Container(
-                    padding: const EdgeInsets.symmetric(vertical: 8.0),
-                    height: 96.0,
-                    child: child);
-              }).toList())),
+//                        const SizedBox(height: 24.0),
+                new InputDecorator(
+                  decoration: const InputDecoration(
+                    labelText: 'Account',
+                    hintText: 'Choose an account',
+                  ),
+                  isEmpty: _accountId == null,
+                  child: buildAccountList(accountBloc),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

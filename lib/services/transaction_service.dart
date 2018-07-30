@@ -30,9 +30,6 @@ class SaveTransactionInput {
 }
 
 class TransactionService extends AppServiceBase {
-  List<TransactionGroupItem> recentTransactions;
-  TransactionSummary transactionSummary;
-
   Future<List<TransactionGroupItem>> getTransactions(
       GetTransactionsInput input) async {
     List<Transaction> transactions = [];
@@ -44,35 +41,26 @@ class TransactionService extends AppServiceBase {
       "endDate": input.endDate
     });
 
-    print('getTransactions========= result is ${result.mappedResult}');
-
     if (result.mappedResult != null) {
       result.mappedResult['items'].forEach((transaction) {
         transactions.add(Transaction.fromJson(transaction));
       });
     }
-
     var groupedTransactions = groupTransactions(transactions);
-
-    if (input.view == 'recent') {
-      this.recentTransactions = groupedTransactions;
-    }
-
     return groupedTransactions;
   }
 
-  Future<Null> getTransactionSummary(String duration) async {
+  Future<TransactionSummary> getTransactionSummary(String duration) async {
     var result = await rest.postAsync<dynamic>(
         'services/app/tenantDashboard/GetTransactionSummary', {
       "duration": duration,
     });
 
-//    print('getTransactionSummary result is ${result.mappedResult}');
-
     if (result.mappedResult != null) {
-      this.transactionSummary =
-          TransactionSummary.fromJson(result.mappedResult);
+      return TransactionSummary.fromJson(result.mappedResult);
     }
+
+    return null;
   }
 
   Future<Null> createOrUpdateTransaction(SaveTransactionInput input) async {

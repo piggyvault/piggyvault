@@ -6,73 +6,78 @@ import 'package:piggy_flutter/model/transaction_group_item.dart';
 
 class TransactionBloc {
   final TransactionService _transactionService = new TransactionService();
+  List<TransactionGroupItem> _recentTransactionItems;
+  TransactionSummary _transactionSummaryItem;
 
-  final recentTransactionsController = StreamController<bool>();
+  final recentTransactionsRefreshController = StreamController<bool>();
 
-  final transactionController = StreamController<GetTransactionsInput>();
-  final transactionSummaryController = StreamController<String>();
-  final saveTransactionController = StreamController<SaveTransactionInput>();
+  Sink<bool> get recentTransactionsRefresh =>
+      recentTransactionsRefreshController.sink;
 
-  final recentTransactionsResultController =
-      BehaviorSubject<List<TransactionGroupItem>>();
-  final transactionSummaryResultController =
-      BehaviorSubject<TransactionSummary>();
+  final _transactionSummary = BehaviorSubject<TransactionSummary>();
 
   Stream<TransactionSummary> get transactionSummary =>
-      transactionSummaryResultController.stream;
+      _transactionSummary.stream;
+
+  final _recentTransactions = BehaviorSubject<List<TransactionGroupItem>>();
 
   Stream<List<TransactionGroupItem>> get recentTransactions =>
-      recentTransactionsResultController.stream;
+      _recentTransactions.stream;
 
-  Sink<bool> get refreshRecentTransactionsSink =>
-      recentTransactionsController.sink;
+  final transactionSummaryRefreshController = StreamController<String>();
 
-  Sink<String> get transactionSummarySink => transactionSummaryController.sink;
+  Sink<String> get transactionSummaryRefresh =>
+      transactionSummaryRefreshController.sink;
+
+  final saveTransactionController = StreamController<SaveTransactionInput>();
 
   Sink<SaveTransactionInput> get saveTransaction =>
       saveTransactionController.sink;
 
   TransactionBloc() {
     print("########## TransactionBloc");
+    getRecentTransactions(true);
+    getTransactionSummary('month');
     saveTransactionController.stream.listen(createOrUpdateTransaction);
-    recentTransactionsController.stream.listen(getRecentTransactions);
-    transactionSummaryController.stream.listen(getTransactionSummary);
+    recentTransactionsRefreshController.stream.listen(getRecentTransactions);
+    transactionSummaryRefreshController.stream.listen(getTransactionSummary);
   }
 
   void getRecentTransactions(bool done) async {
     print("########## TransactionBloc getRecentTransactions");
-    await _transactionService.getTransactions(GetTransactionsInput(
+    var result = await _transactionService.getTransactions(GetTransactionsInput(
         'tenant',
         null,
         new DateTime.now().add(new Duration(days: -30)).toString(),
         new DateTime.now().add(new Duration(days: 1)).toString(),
         'recent'));
-    recentTransactionsResultController
-        .add(_transactionService.recentTransactions);
+    _recentTransactionItems = result;
+    _recentTransactions.add(_recentTransactionItems);
   }
 
   void getTransactionSummary(String duration) async {
     print("########## TransactionBloc getTransactionSummary");
-    await _transactionService.getTransactionSummary(duration);
-    transactionSummaryResultController
-        .add(_transactionService.transactionSummary);
+    _transactionSummaryItem =
+        await _transactionService.getTransactionSummary(duration);
+    _transactionSummary.add(_transactionSummaryItem);
   }
 
   void createOrUpdateTransaction(SaveTransactionInput input) async {
     print("########## TransactionBloc createOrUpdateTransaction");
     var result = await _transactionService.createOrUpdateTransaction(input);
     input.accountBloc.accountsRefresh.add(true);
+    recentTransactionsRefresh.add(true);
+    transactionSummaryRefresh.add("month");
 //        .then((result) =>
 //        refreshRecentTransactionsSink.add(true)
 //    );
   }
 
   void dispose() {
-    transactionController.close();
-    recentTransactionsResultController.close();
-    transactionSummaryController.close();
-    transactionSummaryResultController.close();
+    _transactionSummary.close();
+    transactionSummaryRefreshController.close();
+    _recentTransactions.close();
     saveTransactionController.close();
-    recentTransactionsController.close();
+    recentTransactionsRefreshController.close();
   }
 }

@@ -1,7 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:piggy_flutter/bloc/category_provider.dart';
+
 import 'package:piggy_flutter/model/category.dart';
+import 'package:piggy_flutter/providers/category_provider.dart';
 import 'package:piggy_flutter/ui/widgets/common/common_drawer.dart';
 import 'package:piggy_flutter/ui/widgets/common/message_placeholder.dart';
 

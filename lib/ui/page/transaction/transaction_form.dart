@@ -355,6 +355,11 @@ class TransactionFormPageState extends State<TransactionFormPage> {
                   isEmpty: _accountId == null,
                   child: buildAccountList(accountBloc),
                 ),
+                const SizedBox(height: 24.0),
+                new Text(
+                    '* all fields are mandatory',
+                    style: Theme.of(context).textTheme.caption
+                ),
               ],
             ),
           ),

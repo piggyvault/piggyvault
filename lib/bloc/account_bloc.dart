@@ -4,34 +4,42 @@ import 'package:piggy_flutter/model/account.dart';
 import 'package:piggy_flutter/services/account_service.dart';
 
 class AccountBloc {
-  final accountController = StreamController<bool>();
+  List<Account> userAccountList;
+  List<Account> familyAccountList;
   final AccountService _accountService = new AccountService();
+
+  final accountController = StreamController<bool>();
 
   Sink<bool> get refreshAccounts => accountController.sink;
 
-  final userAccountResultController = BehaviorSubject<List<Account>>();
-  final familyAccountResultController = BehaviorSubject<List<Account>>();
+  final _userAccounts = BehaviorSubject<List<Account>>();
+  final _familyAccounts = BehaviorSubject<List<Account>>();
 
-  Stream<List<Account>> get userAccounts => userAccountResultController.stream;
+  Stream<List<Account>> get userAccounts => _userAccounts.stream;
 
-  Stream<List<Account>> get familyAccounts =>
-      familyAccountResultController.stream;
+  Stream<List<Account>> get familyAccounts => _familyAccounts.stream;
 
   AccountBloc() {
     print("########## AccountBloc");
-    accountController.stream.listen(getTenantAccounts);
+    _accountService.getTenantAccounts().then((result) {
+      userAccountList = _accountService.userAccounts;
+      familyAccountList = _accountService.familyAccounts;
+      _userAccounts.add(userAccountList);
+      _familyAccounts.add(familyAccountList);
+    });
+//    accountController.stream.listen(getTenantAccounts);
   }
 
-  void getTenantAccounts(bool done) async {
-    print("########## AccountBloc getTenantAccounts");
-    await _accountService.getTenantAccounts();
-    userAccountResultController.add(_accountService.userAccounts);
-    familyAccountResultController.add(_accountService.familyAccounts);
-  }
+//  void getTenantAccounts(bool done) async {
+//    print("########## AccountBloc getTenantAccounts");
+//    await _accountService.getTenantAccounts();
+//    _userAccounts.add(_accountService.userAccounts);
+//    _familyAccounts.add(_accountService.familyAccounts);
+//  }
 
   void dispose() {
     accountController.close();
-    userAccountResultController.close();
-    familyAccountResultController.close();
+    _userAccounts.close();
+    _familyAccounts.close();
   }
 }

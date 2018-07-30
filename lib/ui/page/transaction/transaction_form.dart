@@ -4,10 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:piggy_flutter/bloc/account_bloc.dart';
 import 'package:piggy_flutter/bloc/category_bloc.dart';
-import 'package:piggy_flutter/bloc/category_provider.dart';
+
 import 'package:piggy_flutter/bloc/transaction_bloc.dart';
 import 'package:piggy_flutter/model/account.dart';
 import 'package:piggy_flutter/model/category.dart';
+import 'package:piggy_flutter/providers/account_provider.dart';
+import 'package:piggy_flutter/providers/category_provider.dart';
 import 'package:piggy_flutter/services/transaction_service.dart';
 
 // This is based on
@@ -75,7 +77,6 @@ class TransactionFormPage extends StatefulWidget {
 }
 
 class TransactionFormPageState extends State<TransactionFormPage> {
-  final AccountBloc accountBloc = new AccountBloc();
   final TransactionBloc transactionBloc = new TransactionBloc();
 
   DateTime _transactionTime = new DateTime.now();
@@ -142,34 +143,35 @@ class TransactionFormPageState extends State<TransactionFormPage> {
             }
           });
 
-  Widget buildAccountList() => new StreamBuilder<List<Account>>(
-      stream: accountBloc.userAccounts,
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          return new DropdownButton<String>(
-            value: _accountId,
-            onChanged: (String newValue) {
-              setState(() {
-                _accountId = newValue;
-              });
-            },
-            items: snapshot.data.map((Account account) {
-              return new DropdownMenuItem<String>(
-                value: account.id,
-                child: new Text(account.name),
+  Widget buildAccountList(AccountBloc accountBloc) =>
+      new StreamBuilder<List<Account>>(
+          stream: accountBloc.userAccounts,
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              return new DropdownButton<String>(
+                value: _accountId,
+                onChanged: (String newValue) {
+                  setState(() {
+                    _accountId = newValue;
+                  });
+                },
+                items: snapshot.data.map((Account account) {
+                  return new DropdownMenuItem<String>(
+                    value: account.id,
+                    child: new Text(account.name),
+                  );
+                }).toList(),
               );
-            }).toList(),
-          );
-        } else {
-          return new CircularProgressIndicator();
-        }
-      });
+            } else {
+              return new CircularProgressIndicator();
+            }
+          });
 
-  @override
-  void initState() {
-    super.initState();
-    accountBloc.refreshAccounts.add(true);
-  }
+//  @override
+//  void initState() {
+//    super.initState();
+//    accountBloc.refreshAccounts.add(true);
+//  }
 
   void onSave() {
     transactionBloc.saveTransaction.add(new SaveTransactionInput(
@@ -187,6 +189,7 @@ class TransactionFormPageState extends State<TransactionFormPage> {
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
     final CategoryBloc categoryBloc = CategoryProvider.of(context);
+    final AccountBloc accountBloc = AccountProvider.of(context);
 
     return new Scaffold(
       appBar: new AppBar(title: new Text('New Transaction'), actions: <Widget>[
@@ -271,7 +274,7 @@ class TransactionFormPageState extends State<TransactionFormPage> {
                     ]),
                 new ListTile(
                   title: const Text('Account'),
-                  trailing: buildAccountList(),
+                  trailing: buildAccountList(accountBloc),
                 ),
               ].map((Widget child) {
                 return new Container(

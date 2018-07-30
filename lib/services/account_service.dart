@@ -18,8 +18,7 @@ class AccountService extends AppServiceBase {
       result.mappedResult['userAccounts']['items'].forEach((account) {
         userAccountItems.add(Account.fromJson(account));
       });
-      result.mappedResult['otherMembersAccounts']['items']
-          .forEach((account) {
+      result.mappedResult['otherMembersAccounts']['items'].forEach((account) {
         familyAccountItems.add(Account.fromJson(account));
       });
     }

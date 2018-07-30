@@ -166,20 +166,15 @@ class TransactionFormPageState extends State<TransactionFormPage> {
             }
           });
 
-//  @override
-//  void initState() {
-//    super.initState();
-//    accountBloc.refreshAccounts.add(true);
-//  }
-
-  void onSave(TransactionBloc transactionBloc) {
+  void onSave(TransactionBloc transactionBloc, AccountBloc accountBloc) {
     transactionBloc.saveTransaction.add(new SaveTransactionInput(
         null,
         _description,
         _accountId,
         _transactionTime.toString(),
         _amount,
-        _categoryId));
+        _categoryId,
+        accountBloc));
 
     Navigator.pop(context, DismissDialogAction.save);
   }
@@ -197,7 +192,7 @@ class TransactionFormPageState extends State<TransactionFormPage> {
             child: new Text('SAVE',
                 style: theme.textTheme.body1.copyWith(color: Colors.white)),
             onPressed: () {
-              onSave(transactionBloc);
+              onSave(transactionBloc, accountBloc);
             })
       ]),
       body: new Form(

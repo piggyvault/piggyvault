@@ -60,9 +60,8 @@ class TransactionBloc {
 
   void createOrUpdateTransaction(SaveTransactionInput input) async {
     print("########## TransactionBloc createOrUpdateTransaction");
-    await
-    _transactionService
-        .createOrUpdateTransaction(input);
+    var result = await _transactionService.createOrUpdateTransaction(input);
+    input.accountBloc.accountsRefresh.add(true);
 //        .then((result) =>
 //        refreshRecentTransactionsSink.add(true)
 //    );

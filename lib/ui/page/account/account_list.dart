@@ -10,7 +10,6 @@ class AccountListPage extends StatelessWidget {
   Widget build(BuildContext context) {
     print("########## AccountListPage  build");
     final AccountBloc accountBloc = AccountProvider.of(context);
-//    accountBloc.refreshAccounts.add(true);
 
     return Scaffold(
       body: new ListView(children: <Widget>[

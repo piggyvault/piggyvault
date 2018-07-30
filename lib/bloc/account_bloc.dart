@@ -8,9 +8,9 @@ class AccountBloc {
   List<Account> familyAccountList;
   final AccountService _accountService = new AccountService();
 
-  final accountController = StreamController<bool>();
+  final accountsRefreshController = StreamController<bool>();
 
-  Sink<bool> get refreshAccounts => accountController.sink;
+  Sink<bool> get accountsRefresh => accountsRefreshController.sink;
 
   final _userAccounts = BehaviorSubject<List<Account>>();
   final _familyAccounts = BehaviorSubject<List<Account>>();
@@ -21,24 +21,21 @@ class AccountBloc {
 
   AccountBloc() {
     print("########## AccountBloc");
-    _accountService.getTenantAccounts().then((result) {
-      userAccountList = _accountService.userAccounts;
-      familyAccountList = _accountService.familyAccounts;
-      _userAccounts.add(userAccountList);
-      _familyAccounts.add(familyAccountList);
-    });
-//    accountController.stream.listen(getTenantAccounts);
+    getTenantAccounts(true);
+    accountsRefreshController.stream.listen(getTenantAccounts);
   }
 
-//  void getTenantAccounts(bool done) async {
-//    print("########## AccountBloc getTenantAccounts");
-//    await _accountService.getTenantAccounts();
-//    _userAccounts.add(_accountService.userAccounts);
-//    _familyAccounts.add(_accountService.familyAccounts);
-//  }
+  void getTenantAccounts(bool done) async {
+    print("########## AccountBloc getTenantAccounts");
+    await _accountService.getTenantAccounts();
+    userAccountList = _accountService.userAccounts;
+    familyAccountList = _accountService.familyAccounts;
+    _userAccounts.add(userAccountList);
+    _familyAccounts.add(familyAccountList);
+  }
 
   void dispose() {
-    accountController.close();
+    accountsRefreshController.close();
     _userAccounts.close();
     _familyAccounts.close();
   }

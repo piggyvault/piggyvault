@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:piggy_flutter/bloc/account_bloc.dart';
 import 'package:piggy_flutter/model/transaction.dart';
 import 'package:piggy_flutter/model/transaction_group_item.dart';
 import 'package:piggy_flutter/model/transaction_summary.dart';
@@ -22,9 +23,10 @@ class SaveTransactionInput {
   final String id, description, accountId, transactionTime;
   final double amount;
   final int categoryId;
+  final AccountBloc accountBloc;
 
   SaveTransactionInput(this.id, this.description, this.accountId,
-      this.transactionTime, this.amount, this.categoryId);
+      this.transactionTime, this.amount, this.categoryId, this.accountBloc);
 }
 
 class TransactionService extends AppServiceBase {
@@ -74,7 +76,8 @@ class TransactionService extends AppServiceBase {
   }
 
   Future<Null> createOrUpdateTransaction(SaveTransactionInput input) async {
-    var restult = await rest.postAsync('services/app/transaction/CreateOrUpdateTransaction', {
+    var restult = await rest
+        .postAsync('services/app/transaction/CreateOrUpdateTransaction', {
       "id": input.id,
       "description": input.description,
       "amount": input.amount,

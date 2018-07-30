@@ -1,23 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:piggy_flutter/bloc/transaction_bloc.dart';
 import 'package:piggy_flutter/model/transaction_summary.dart';
-import 'package:piggy_flutter/services/transaction_service.dart';
+import 'package:piggy_flutter/providers/transaction_provider.dart';
 
 class SummaryPage extends StatelessWidget {
   SummaryPage({Key key}) : super(key: key);
-  final TransactionBloc transactionBloc = new TransactionBloc();
 
   @override
   Widget build(BuildContext context) {
+    final TransactionBloc transactionBloc = TransactionProvider.of(context);
     transactionBloc.transactionSummarySink.add("month");
-    return Scaffold(body: _buildBody());
+    return Scaffold(body: _buildBody(transactionBloc));
   }
 
-  Widget _buildBody() => StreamBuilder<TransactionSummary>(
-      stream: transactionBloc.transactionSummary,
-      initialData: null,
-      builder: (context, snapshot) =>
-          SummaryPageWidget(snapshot.hasData ? snapshot.data : null));
+  Widget _buildBody(TransactionBloc transactionBloc) =>
+      StreamBuilder<TransactionSummary>(
+          stream: transactionBloc.transactionSummary,
+          initialData: null,
+          builder: (context, snapshot) =>
+              SummaryPageWidget(snapshot.hasData ? snapshot.data : null));
 }
 
 class SummaryPageWidget extends StatelessWidget {

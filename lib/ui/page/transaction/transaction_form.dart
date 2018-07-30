@@ -10,6 +10,7 @@ import 'package:piggy_flutter/model/account.dart';
 import 'package:piggy_flutter/model/category.dart';
 import 'package:piggy_flutter/providers/account_provider.dart';
 import 'package:piggy_flutter/providers/category_provider.dart';
+import 'package:piggy_flutter/providers/transaction_provider.dart';
 import 'package:piggy_flutter/services/transaction_service.dart';
 
 // This is based on
@@ -77,8 +78,6 @@ class TransactionFormPage extends StatefulWidget {
 }
 
 class TransactionFormPageState extends State<TransactionFormPage> {
-  final TransactionBloc transactionBloc = new TransactionBloc();
-
   DateTime _transactionTime = new DateTime.now();
   String _transactionType = 'Expense';
   double _amount;
@@ -173,7 +172,7 @@ class TransactionFormPageState extends State<TransactionFormPage> {
 //    accountBloc.refreshAccounts.add(true);
 //  }
 
-  void onSave() {
+  void onSave(TransactionBloc transactionBloc) {
     transactionBloc.saveTransaction.add(new SaveTransactionInput(
         null,
         _description,
@@ -190,6 +189,7 @@ class TransactionFormPageState extends State<TransactionFormPage> {
     final ThemeData theme = Theme.of(context);
     final CategoryBloc categoryBloc = CategoryProvider.of(context);
     final AccountBloc accountBloc = AccountProvider.of(context);
+    final TransactionBloc transactionBloc = TransactionProvider.of(context);
 
     return new Scaffold(
       appBar: new AppBar(title: new Text('New Transaction'), actions: <Widget>[
@@ -197,7 +197,7 @@ class TransactionFormPageState extends State<TransactionFormPage> {
             child: new Text('SAVE',
                 style: theme.textTheme.body1.copyWith(color: Colors.white)),
             onPressed: () {
-              onSave();
+              onSave(transactionBloc);
             })
       ]),
       body: new Form(

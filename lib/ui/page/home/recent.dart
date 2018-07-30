@@ -1,21 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:piggy_flutter/bloc/transaction_bloc.dart';
 import 'package:piggy_flutter/model/transaction_group_item.dart';
+import 'package:piggy_flutter/providers/transaction_provider.dart';
 import 'package:piggy_flutter/ui/page/transaction/transaction_form.dart';
 import 'package:piggy_flutter/ui/widgets/transaction_list.dart';
 
 class RecentPage extends StatelessWidget {
   RecentPage({Key key}) : super(key: key);
 
-  final TransactionBloc transactionBloc = new TransactionBloc();
-
   @override
   Widget build(BuildContext context) {
+    final TransactionBloc transactionBloc = TransactionProvider.of(context);
+
     print('########## RecentPage build');
     transactionBloc.refreshRecentTransactionsSink.add(true);
 
     return Scaffold(
-      body: transactionListBuilder(),
+      body: transactionListBuilder(transactionBloc),
       floatingActionButton: new FloatingActionButton(
           key: new ValueKey<Color>(Theme.of(context).primaryColor),
           tooltip: 'Add new transaction',
@@ -32,7 +33,8 @@ class RecentPage extends StatelessWidget {
     );
   }
 
-  Widget transactionListBuilder() => StreamBuilder<List<TransactionGroupItem>>(
+  Widget transactionListBuilder(TransactionBloc transactionBloc) =>
+      StreamBuilder<List<TransactionGroupItem>>(
         stream: transactionBloc.recentTransactions,
         initialData: [],
         builder: (context, snapshot) =>

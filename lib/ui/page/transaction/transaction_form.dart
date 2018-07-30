@@ -11,6 +11,7 @@ import 'package:piggy_flutter/providers/account_provider.dart';
 import 'package:piggy_flutter/providers/category_provider.dart';
 import 'package:piggy_flutter/providers/transaction_provider.dart';
 import 'package:piggy_flutter/services/transaction_service.dart';
+import 'package:piggy_flutter/utils/uidata.dart';
 
 enum DismissDialogAction {
   cancel,
@@ -137,7 +138,7 @@ class TransactionFormPageState extends State<TransactionFormPage> {
   DateTime _transactionDate = new DateTime.now();
   TimeOfDay _transactionTime;
 
-  String _transactionType = 'Expense';
+  String _transactionType = UIData.transaction_type_expense;
 
   int _categoryId;
   String _accountId;
@@ -225,22 +226,34 @@ class TransactionFormPageState extends State<TransactionFormPage> {
           });
 
   void onSave(TransactionBloc transactionBloc, AccountBloc accountBloc) {
-    transactionBloc.saveTransaction.add(new SaveTransactionInput(
-        null,
-        _descriptionFieldController.text,
-        _accountId,
-        new DateTime(
-                _transactionDate.year,
-                _transactionDate.month,
-                _transactionDate.day,
-                _transactionTime.hour,
-                _transactionTime.minute)
-            .toString(),
-        double.parse(_amountFieldController.text),
-        _categoryId,
-        accountBloc));
+    if (_transactionType == UIData.transaction_type_transfer) {
 
-    Navigator.pop(context, DismissDialogAction.save);
+    } else {
+      double amount = double.parse(_amountFieldController.text);
+      if (_transactionType == UIData.transaction_type_expense && amount > 0) {
+        amount *= -1;
+      }
+      if (_transactionType == UIData.transaction_type_income && amount < 0) {
+        amount *= -1;
+      }
+
+      transactionBloc.saveTransaction.add(new SaveTransactionInput(
+          null,
+          _descriptionFieldController.text,
+          _accountId,
+          new DateTime(
+                  _transactionDate.year,
+                  _transactionDate.month,
+                  _transactionDate.day,
+                  _transactionTime.hour,
+                  _transactionTime.minute)
+              .toString(),
+          amount,
+          _categoryId,
+          accountBloc));
+
+      Navigator.pop(context, DismissDialogAction.save);
+    }
   }
 
   @override
@@ -289,8 +302,11 @@ class TransactionFormPageState extends State<TransactionFormPage> {
                           _transactionType = newValue;
                         });
                       },
-                      items: <String>['Expense', 'Income', 'Transfer']
-                          .map((String value) {
+                      items: <String>[
+                        UIData.transaction_type_expense,
+                        UIData.transaction_type_income,
+                        UIData.transaction_type_transfer
+                      ].map((String value) {
                         return new DropdownMenuItem<String>(
                           value: value,
                           child: new Text(value),

@@ -5,7 +5,6 @@ import 'package:piggy_flutter/providers/transaction_provider.dart';
 
 class SummaryPage extends StatelessWidget {
   SummaryPage({Key key}) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     final TransactionBloc transactionBloc = TransactionProvider.of(context);

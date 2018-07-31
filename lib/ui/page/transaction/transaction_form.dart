@@ -20,6 +20,10 @@ enum DismissDialogAction {
 }
 
 class TransactionFormPage extends StatefulWidget {
+  final Account account;
+
+  TransactionFormPage({Key key, this.account}) : super(key: key);
+
   @override
   TransactionFormPageState createState() => new TransactionFormPageState();
 }
@@ -211,6 +215,7 @@ class TransactionFormPageState extends State<TransactionFormPage> {
     super.initState();
     _transactionTime =
         TimeOfDay(hour: _transactionDate.hour, minute: _transactionDate.minute);
+    _account = widget.account;
   }
 
   void manageTransferView() {

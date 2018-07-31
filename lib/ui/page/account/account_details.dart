@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:piggy_flutter/model/account.dart';
 import 'package:piggy_flutter/model/transaction_group_item.dart';
 import 'package:piggy_flutter/services/transaction_service.dart';
 import 'package:piggy_flutter/ui/page/transaction/transaction_form.dart';
@@ -26,14 +27,12 @@ List<_Page> _allPages = [
 
 class AccountDetailsPage extends StatefulWidget {
   static const String routeName = '/account/details';
-
-  final String title, accountId;
-  final String currentBalance;
+  final Account account;
 
   @override
   AccountDetailsPageState createState() => new AccountDetailsPageState();
 
-  AccountDetailsPage(this.accountId, this.title, this.currentBalance);
+  AccountDetailsPage({Key key, this.account}) : super(key: key);
 }
 
 class AccountDetailsPageState extends State<AccountDetailsPage>
@@ -79,7 +78,7 @@ class AccountDetailsPageState extends State<AccountDetailsPage>
 
       var formatter = new DateFormat("MMM, ''yy");
 
-      var input = GetTransactionsInput('account', widget.accountId,
+      var input = GetTransactionsInput('account', widget.account.id,
           startDate.toString(), endDate.toString(), 'account');
 
       _transactionService.getTransactions(input).then((result) {
@@ -119,7 +118,7 @@ class AccountDetailsPageState extends State<AccountDetailsPage>
   Widget build(BuildContext context) {
     return new Scaffold(
       appBar: new AppBar(
-        title: new Text(widget.title),
+        title: new Text(widget.account.name),
         bottom: new TabBar(
           controller: _controller,
           isScrollable: true,
@@ -143,7 +142,9 @@ class AccountDetailsPageState extends State<AccountDetailsPage>
             Navigator.push(
                 context,
                 new MaterialPageRoute<DismissDialogAction>(
-                  builder: (BuildContext context) => new TransactionFormPage(),
+                  builder: (BuildContext context) => new TransactionFormPage(
+                        account: widget.account,
+                      ),
                   fullscreenDialog: true,
                 ));
           }),

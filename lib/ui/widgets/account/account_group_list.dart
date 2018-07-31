@@ -26,24 +26,22 @@ class AccountGroupList extends StatelessWidget {
 
   AccountGroupList(this.accounts, this.title);
 
-  buildAccountListTile(BuildContext context, Account item) {
+  buildAccountListTile(BuildContext context, Account account) {
     return new MergeSemantics(
       child: new ListTile(
         dense: true,
         leading: new Icon(Icons.account_balance_wallet,
             color: Theme.of(context).disabledColor),
-        title: new Text(item.name),
-        subtitle: new Text(item.accountType),
-        trailing: new Text('${item.currentBalance
-            .toString()} ${item.currencySymbol}'),
+        title: new Text(account.name),
+        subtitle: new Text(account.accountType),
+        trailing: new Text('${account.currentBalance
+            .toString()} ${account.currencySymbol}'),
         onTap: (() => Navigator.push(
               context,
               MaterialPageRoute(
                   builder: (context) => AccountDetailsPage(
-                      item.id,
-                      item.name,
-                      '${item.currentBalance
-                              .toString()} ${item.currencySymbol}')),
+                        account: account,
+                      )),
             )),
       ),
     );

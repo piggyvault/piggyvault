@@ -12,6 +12,8 @@ import 'package:piggy_flutter/providers/transaction_provider.dart';
 import 'package:piggy_flutter/services/transaction_service.dart';
 import 'package:piggy_flutter/utils/uidata.dart';
 
+// TODO: BLoC
+
 enum DismissDialogAction {
   cancel,
   discard,
@@ -140,6 +142,7 @@ class TransactionFormPageState extends State<TransactionFormPage> {
   final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
   bool _autovalidate = false;
   bool _formWasEdited = false;
+  bool _showTransferToAmount = false;
 
   String _categoryErrorText;
   String _accountErrorText;
@@ -209,32 +212,31 @@ class TransactionFormPageState extends State<TransactionFormPage> {
             }
           });
 
-  Widget buildAccountList(AccountBloc accountBloc,
-          [bool isToAccount = false]) =>
-      new StreamBuilder<List<Account>>(
-          stream: accountBloc.userAccounts,
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              return new DropdownButton<String>(
-                value: isToAccount ? _toAccountId : _accountId,
-                onChanged: (String newValue) {
-                  setState(() {
-                    isToAccount
-                        ? _toAccountId = newValue
-                        : _accountId = newValue;
-                  });
-                },
-                items: snapshot.data.map((Account account) {
-                  return new DropdownMenuItem<String>(
-                    value: account.id,
-                    child: new Text(account.name),
-                  );
-                }).toList(),
-              );
-            } else {
-              return new LinearProgressIndicator();
-            }
-          });
+  Widget buildAccountList(AccountBloc accountBloc, [bool isToAccount = false]) {
+    return new StreamBuilder<List<Account>>(
+        stream: accountBloc.userAccounts,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return new DropdownButton<String>(
+              value: isToAccount ? _toAccountId : _accountId,
+              onChanged: (String newValue) {
+                setState(() {
+                  isToAccount ? _toAccountId = newValue : _accountId = newValue;
+                });
+                manageTransferView(accountBloc);
+              },
+              items: snapshot.data.map((Account account) {
+                return new DropdownMenuItem<String>(
+                  value: account.id,
+                  child: new Text(account.name),
+                );
+              }).toList(),
+            );
+          } else {
+            return new LinearProgressIndicator();
+          }
+        });
+  }
 
   void showInSnackBar(String value) {
     _scaffoldKey.currentState.showSnackBar(new SnackBar(
@@ -259,7 +261,13 @@ class TransactionFormPageState extends State<TransactionFormPage> {
           return;
         } else {
           double amount = double.parse(_amountFieldController.text);
-          double toAmount = double.parse(_convertedAmountFieldController.text);
+          double toAmount;
+
+          if (_showTransferToAmount) {
+            toAmount = double.parse(_convertedAmountFieldController.text);
+          } else {
+            toAmount = amount;
+          }
 
           transactionBloc.doTransfer.add(new TransferInput(
               null,
@@ -316,6 +324,27 @@ class TransactionFormPageState extends State<TransactionFormPage> {
         TimeOfDay(hour: _transactionDate.hour, minute: _transactionDate.minute);
   }
 
+  void manageTransferView(AccountBloc accountBloc) {
+    if (_transactionType == UIData.transaction_type_transfer &&
+        _accountId != null &&
+        _toAccountId != null) {
+      //check whether both accounts currency is same or not
+      Account fromAccount =
+          accountBloc.userAccountList.firstWhere((x) => x.id == _accountId);
+      Account toAccount =
+          accountBloc.userAccountList.firstWhere((x) => x.id == _toAccountId);
+
+      if (fromAccount.currencyCode == toAccount.currencyCode) {
+        setState(() {
+          _showTransferToAmount = false;
+        });
+      } else {
+        // if not same, show converted amount field
+        _showTransferToAmount = true;
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
@@ -356,6 +385,7 @@ class TransactionFormPageState extends State<TransactionFormPage> {
                       onChanged: (String newValue) {
                         setState(() {
                           _transactionType = newValue;
+                          manageTransferView(accountBloc);
                         });
                       },
                       items: <String>[
@@ -438,10 +468,8 @@ class TransactionFormPageState extends State<TransactionFormPage> {
                         child: buildAccountList(accountBloc, true),
                       )
                     : null,
-                _transactionType == UIData.transaction_type_transfer
-                    ? const SizedBox(height: 24.0)
-                    : null,
-                _transactionType == UIData.transaction_type_transfer
+                _showTransferToAmount ? const SizedBox(height: 24.0) : null,
+                _showTransferToAmount
                     ? new TextFormField(
                         keyboardType:
                             TextInputType.numberWithOptions(decimal: true),

@@ -29,6 +29,24 @@ class SaveTransactionInput {
       this.transactionTime, this.amount, this.categoryId, this.accountBloc);
 }
 
+class TransferInput {
+  final String id, description, accountId, toAccountId, transactionTime;
+  final double amount, toAmount;
+  final int categoryId;
+  final AccountBloc accountBloc;
+
+  TransferInput(
+      this.id,
+      this.description,
+      this.accountId,
+      this.transactionTime,
+      this.amount,
+      this.categoryId,
+      this.accountBloc,
+      this.toAmount,
+      this.toAccountId);
+}
+
 class TransactionService extends AppServiceBase {
   Future<List<TransactionGroupItem>> getTransactions(
       GetTransactionsInput input) async {
@@ -64,13 +82,25 @@ class TransactionService extends AppServiceBase {
   }
 
   Future<Null> createOrUpdateTransaction(SaveTransactionInput input) async {
-    var restult = await rest
-        .postAsync('services/app/transaction/CreateOrUpdateTransaction', {
+    await rest.postAsync('services/app/transaction/CreateOrUpdateTransaction', {
       "id": input.id,
       "description": input.description,
       "amount": input.amount,
       "categoryId": input.categoryId,
       "accountId": input.accountId,
+      "transactionTime": input.transactionTime
+    });
+  }
+
+  Future<Null> transfer(TransferInput input) async {
+    await rest.postAsync('services/app/transaction/TransferAsync', {
+      "id": input.id,
+      "description": input.description,
+      "amount": input.amount,
+      "toAmount": input.toAmount,
+      "categoryId": input.categoryId,
+      "accountId": input.accountId,
+      "toAccountId": input.toAccountId,
       "transactionTime": input.transactionTime
     });
   }

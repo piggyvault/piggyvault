@@ -34,6 +34,10 @@ class TransactionBloc {
   Sink<SaveTransactionInput> get saveTransaction =>
       saveTransactionController.sink;
 
+  final transferController = StreamController<TransferInput>();
+
+  Sink<TransferInput> get doTransfer => transferController.sink;
+
   TransactionBloc() {
     print("########## TransactionBloc");
     getRecentTransactions(true);
@@ -41,6 +45,7 @@ class TransactionBloc {
     saveTransactionController.stream.listen(createOrUpdateTransaction);
     recentTransactionsRefreshController.stream.listen(getRecentTransactions);
     transactionSummaryRefreshController.stream.listen(getTransactionSummary);
+    transferController.stream.listen(transfer);
   }
 
   void getRecentTransactions(bool done) async {
@@ -64,7 +69,18 @@ class TransactionBloc {
 
   void createOrUpdateTransaction(SaveTransactionInput input) async {
     print("########## TransactionBloc createOrUpdateTransaction");
-    var result = await _transactionService.createOrUpdateTransaction(input);
+    await _transactionService.createOrUpdateTransaction(input);
+    input.accountBloc.accountsRefresh.add(true);
+    recentTransactionsRefresh.add(true);
+    transactionSummaryRefresh.add("month");
+//        .then((result) =>
+//        refreshRecentTransactionsSink.add(true)
+//    );
+  }
+
+  void transfer(TransferInput input) async {
+    print("########## TransactionBloc transfer");
+    await _transactionService.transfer(input);
     input.accountBloc.accountsRefresh.add(true);
     recentTransactionsRefresh.add(true);
     transactionSummaryRefresh.add("month");
@@ -79,5 +95,6 @@ class TransactionBloc {
     _recentTransactions.close();
     saveTransactionController.close();
     recentTransactionsRefreshController.close();
+    transferController.close();
   }
 }

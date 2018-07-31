@@ -133,6 +133,8 @@ class TransactionFormPageState extends State<TransactionFormPage> {
       new TextEditingController();
   final TextEditingController _amountFieldController =
       new TextEditingController();
+  final TextEditingController _convertedAmountFieldController =
+      new TextEditingController();
 
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
@@ -148,7 +150,7 @@ class TransactionFormPageState extends State<TransactionFormPage> {
   String _transactionType = UIData.transaction_type_expense;
 
   int _categoryId;
-  String _accountId;
+  String _accountId, _toAccountId;
 
   Future<bool> _onWillPop() async {
     if (!_formWasEdited) return true;
@@ -207,16 +209,19 @@ class TransactionFormPageState extends State<TransactionFormPage> {
             }
           });
 
-  Widget buildAccountList(AccountBloc accountBloc) =>
+  Widget buildAccountList(AccountBloc accountBloc,
+          [bool isToAccount = false]) =>
       new StreamBuilder<List<Account>>(
           stream: accountBloc.userAccounts,
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               return new DropdownButton<String>(
-                value: _accountId,
+                value: isToAccount ? _toAccountId : _accountId,
                 onChanged: (String newValue) {
                   setState(() {
-                    _accountId = newValue;
+                    isToAccount
+                        ? _toAccountId = newValue
+                        : _accountId = newValue;
                   });
                 },
                 items: snapshot.data.map((Account account) {
@@ -241,11 +246,40 @@ class TransactionFormPageState extends State<TransactionFormPage> {
   void onSave(TransactionBloc transactionBloc, AccountBloc accountBloc) {
     final FormState form = _formKey.currentState;
 
-    if (!form.validate() || !_isValidAccount() || !_isValidCategory()) {
+    if (!form.validate()) {
       _autovalidate = true; // Start validating on every change.
       showInSnackBar('Please fix the errors before submitting.');
     } else {
+      if (!_isValidAccount() || !_isValidCategory()) {
+        return;
+      }
+
       if (_transactionType == UIData.transaction_type_transfer) {
+        if (!_isValidToAccount()) {
+          return;
+        } else {
+          double amount = double.parse(_amountFieldController.text);
+          double toAmount = double.parse(_convertedAmountFieldController.text);
+
+          transactionBloc.doTransfer.add(new TransferInput(
+              null,
+              _descriptionFieldController.text,
+              _accountId,
+              new DateTime(
+                      _transactionDate.year,
+                      _transactionDate.month,
+                      _transactionDate.day,
+                      _transactionTime.hour,
+                      _transactionTime.minute)
+                  .toString(),
+              amount,
+              _categoryId,
+              accountBloc,
+              toAmount,
+              _toAccountId));
+
+          Navigator.pop(context, DismissDialogAction.save);
+        }
       } else {
         double amount = double.parse(_amountFieldController.text);
         if (_transactionType == UIData.transaction_type_expense && amount > 0) {
@@ -373,14 +407,14 @@ class TransactionFormPageState extends State<TransactionFormPage> {
 //                            helperText: 'Keep it short but meaningful',
                     labelText: 'Description',
                   ),
-                  maxLines: 3,
+                  maxLines: 2,
                   keyboardType: TextInputType.multiline,
                   controller: _descriptionFieldController,
                   validator: _validateDescription,
                 ),
-                const SizedBox(height: 24.0),
+//                const SizedBox(height: 24.0),
                 new _DateTimePicker(
-                  labelText: 'To',
+                  labelText: 'Date',
                   selectedDate: _transactionDate,
                   selectedTime: _transactionTime,
                   selectDate: (DateTime date) {
@@ -394,10 +428,38 @@ class TransactionFormPageState extends State<TransactionFormPage> {
                     });
                   },
                 ),
+                _transactionType == UIData.transaction_type_transfer
+                    ? new InputDecorator(
+                        decoration: const InputDecoration(
+                          labelText: 'To Account',
+                          hintText: 'Choose an account',
+                        ),
+                        isEmpty: _toAccountId == null,
+                        child: buildAccountList(accountBloc, true),
+                      )
+                    : null,
+                _transactionType == UIData.transaction_type_transfer
+                    ? const SizedBox(height: 24.0)
+                    : null,
+                _transactionType == UIData.transaction_type_transfer
+                    ? new TextFormField(
+                        keyboardType:
+                            TextInputType.numberWithOptions(decimal: true),
+                        decoration: const InputDecoration(
+                            border: const OutlineInputBorder(),
+                            labelText: 'Converted Amount',
+                            prefixText: '\$',
+                            suffixText: 'USD',
+                            suffixStyle: const TextStyle(color: Colors.green)),
+                        maxLines: 1,
+                        controller: _convertedAmountFieldController,
+                        validator: _validateAmount,
+                      )
+                    : null,
                 const SizedBox(height: 24.0),
                 new Text('* all fields are mandatory',
                     style: Theme.of(context).textTheme.caption),
-              ],
+              ].where((child) => child != null).toList(),
             ),
           ),
         ),
@@ -446,6 +508,16 @@ class TransactionFormPageState extends State<TransactionFormPage> {
           _accountErrorText = null;
         });
       }
+      return true;
+    }
+  }
+
+  bool _isValidToAccount() {
+    if (_toAccountId == null) {
+      String error = 'Please select receiving account.';
+      showInSnackBar(error);
+      return false;
+    } else {
       return true;
     }
   }

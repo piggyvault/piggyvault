@@ -138,22 +138,17 @@ class TransactionFormPageState extends State<TransactionFormPage> {
   final TextEditingController _convertedAmountFieldController =
       new TextEditingController();
 
+  Account _account, _toAccount;
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
   bool _autovalidate = false;
   bool _formWasEdited = false;
   bool _showTransferToAmount = false;
-
-  String _categoryErrorText;
-  String _accountErrorText;
-
+  String _categoryErrorText, _accountErrorText;
   DateTime _transactionDate = new DateTime.now();
   TimeOfDay _transactionTime;
-
   String _transactionType = UIData.transaction_type_expense;
-
   int _categoryId;
-  String _accountId, _toAccountId;
 
   Future<bool> _onWillPop() async {
     if (!_formWasEdited) return true;
@@ -217,17 +212,17 @@ class TransactionFormPageState extends State<TransactionFormPage> {
         stream: accountBloc.userAccounts,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            return new DropdownButton<String>(
-              value: isToAccount ? _toAccountId : _accountId,
-              onChanged: (String newValue) {
+            return new DropdownButton<Account>(
+              value: isToAccount ? _toAccount : _account,
+              onChanged: (Account newValue) {
                 setState(() {
-                  isToAccount ? _toAccountId = newValue : _accountId = newValue;
+                  isToAccount ? _toAccount = newValue : _account = newValue;
                 });
-                manageTransferView(accountBloc);
+                manageTransferView();
               },
               items: snapshot.data.map((Account account) {
-                return new DropdownMenuItem<String>(
-                  value: account.id,
+                return new DropdownMenuItem<Account>(
+                  value: account,
                   child: new Text(account.name),
                 );
               }).toList(),
@@ -272,7 +267,7 @@ class TransactionFormPageState extends State<TransactionFormPage> {
           transactionBloc.doTransfer.add(new TransferInput(
               null,
               _descriptionFieldController.text,
-              _accountId,
+              _account.id,
               new DateTime(
                       _transactionDate.year,
                       _transactionDate.month,
@@ -284,7 +279,7 @@ class TransactionFormPageState extends State<TransactionFormPage> {
               _categoryId,
               accountBloc,
               toAmount,
-              _toAccountId));
+              _toAccount.id));
 
           Navigator.pop(context, DismissDialogAction.save);
         }
@@ -300,7 +295,7 @@ class TransactionFormPageState extends State<TransactionFormPage> {
         transactionBloc.saveTransaction.add(new SaveTransactionInput(
             null,
             _descriptionFieldController.text,
-            _accountId,
+            _account.id,
             new DateTime(
                     _transactionDate.year,
                     _transactionDate.month,
@@ -324,17 +319,12 @@ class TransactionFormPageState extends State<TransactionFormPage> {
         TimeOfDay(hour: _transactionDate.hour, minute: _transactionDate.minute);
   }
 
-  void manageTransferView(AccountBloc accountBloc) {
+  void manageTransferView() {
     if (_transactionType == UIData.transaction_type_transfer &&
-        _accountId != null &&
-        _toAccountId != null) {
-      //check whether both accounts currency is same or not
-      Account fromAccount =
-          accountBloc.userAccountList.firstWhere((x) => x.id == _accountId);
-      Account toAccount =
-          accountBloc.userAccountList.firstWhere((x) => x.id == _toAccountId);
-
-      if (fromAccount.currencyCode == toAccount.currencyCode) {
+        _account != null &&
+        _toAccount != null) {
+      // check whether both accounts currency is same or not
+      if (_account.currencyCode == _toAccount.currencyCode) {
         setState(() {
           _showTransferToAmount = false;
         });
@@ -385,7 +375,7 @@ class TransactionFormPageState extends State<TransactionFormPage> {
                       onChanged: (String newValue) {
                         setState(() {
                           _transactionType = newValue;
-                          manageTransferView(accountBloc);
+                          manageTransferView();
                         });
                       },
                       items: <String>[
@@ -404,17 +394,19 @@ class TransactionFormPageState extends State<TransactionFormPage> {
                     labelText: 'Account',
                     hintText: 'Choose an account',
                   ),
-                  isEmpty: _accountId == null,
+                  isEmpty: _account == null,
                   child: buildAccountList(accountBloc),
                 ),
                 const SizedBox(height: 24.0),
                 new TextFormField(
                   keyboardType: TextInputType.numberWithOptions(decimal: true),
-                  decoration: const InputDecoration(
-                      border: const OutlineInputBorder(),
+                  decoration: new InputDecoration(
+                      border: new OutlineInputBorder(),
                       labelText: 'Amount',
-                      prefixText: '\$',
-                      suffixText: 'USD',
+                      prefixText:
+                          _account == null ? '\$' : _account.currencySymbol,
+                      suffixText:
+                          _account == null ? 'INR' : _account.currencyCode,
                       suffixStyle: const TextStyle(color: Colors.green)),
                   maxLines: 1,
                   controller: _amountFieldController,
@@ -464,7 +456,7 @@ class TransactionFormPageState extends State<TransactionFormPage> {
                           labelText: 'To Account',
                           hintText: 'Choose an account',
                         ),
-                        isEmpty: _toAccountId == null,
+                        isEmpty: _toAccount == null,
                         child: buildAccountList(accountBloc, true),
                       )
                     : null,
@@ -473,11 +465,15 @@ class TransactionFormPageState extends State<TransactionFormPage> {
                     ? new TextFormField(
                         keyboardType:
                             TextInputType.numberWithOptions(decimal: true),
-                        decoration: const InputDecoration(
-                            border: const OutlineInputBorder(),
+                        decoration: new InputDecoration(
+                            border: new OutlineInputBorder(),
                             labelText: 'Converted Amount',
-                            prefixText: '\$',
-                            suffixText: 'USD',
+                            prefixText: _toAccount == null
+                                ? '\$'
+                                : _toAccount.currencySymbol,
+                            suffixText: _toAccount == null
+                                ? 'INR'
+                                : _toAccount.currencyCode,
                             suffixStyle: const TextStyle(color: Colors.green)),
                         maxLines: 1,
                         controller: _convertedAmountFieldController,
@@ -523,7 +519,7 @@ class TransactionFormPageState extends State<TransactionFormPage> {
   }
 
   bool _isValidAccount() {
-    if (_accountId == null) {
+    if (_account == null) {
       String error = 'Account is required.';
       showInSnackBar(error);
       setState(() {
@@ -541,7 +537,7 @@ class TransactionFormPageState extends State<TransactionFormPage> {
   }
 
   bool _isValidToAccount() {
-    if (_toAccountId == null) {
+    if (_toAccount == null) {
       String error = 'Please select receiving account.';
       showInSnackBar(error);
       return false;

@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:piggy_flutter/bloc/account_bloc.dart';
 import 'package:piggy_flutter/model/transaction.dart';
+import 'package:piggy_flutter/model/transaction_edit_dto.dart';
 import 'package:piggy_flutter/model/transaction_group_item.dart';
 import 'package:piggy_flutter/model/transaction_summary.dart';
 import 'package:piggy_flutter/services/app_service_base.dart';
@@ -17,16 +18,6 @@ class GetTransactionsInput {
 
   GetTransactionsInput(this.type, this.accountId, this.startDate, this.endDate,
       this.view); // where the data is showing
-}
-
-class SaveTransactionInput {
-  final String id, description, accountId, transactionTime;
-  final double amount;
-  final int categoryId;
-  final AccountBloc accountBloc;
-
-  SaveTransactionInput(this.id, this.description, this.accountId,
-      this.transactionTime, this.amount, this.categoryId, this.accountBloc);
 }
 
 class TransferInput {
@@ -81,7 +72,21 @@ class TransactionService extends AppServiceBase {
     return null;
   }
 
-  Future<Null> createOrUpdateTransaction(SaveTransactionInput input) async {
+  Future<TransactionEditDto> getTransactionForEdit(String id) async {
+    var result = await rest
+        .postAsync<dynamic>('services/app/transaction/GetTransactionForEdit', {
+      "id": id,
+    });
+
+    if (result.mappedResult != null) {
+      print(result.mappedResult);
+      return TransactionEditDto.fromJson(result.mappedResult);
+    }
+
+    return null;
+  }
+
+  Future<Null> createOrUpdateTransaction(TransactionEditDto input) async {
     await rest.postAsync('services/app/transaction/CreateOrUpdateTransaction', {
       "id": input.id,
       "description": input.description,

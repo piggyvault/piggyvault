@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:piggy_flutter/model/transaction_edit_dto.dart';
 import 'package:piggy_flutter/model/transaction_summary.dart';
 import 'package:piggy_flutter/services/transaction_service.dart';
 import 'package:rxdart/rxdart.dart';
@@ -29,9 +30,9 @@ class TransactionBloc {
   Sink<String> get transactionSummaryRefresh =>
       transactionSummaryRefreshController.sink;
 
-  final saveTransactionController = StreamController<SaveTransactionInput>();
+  final saveTransactionController = StreamController<TransactionEditDto>();
 
-  Sink<SaveTransactionInput> get saveTransaction =>
+  Sink<TransactionEditDto> get saveTransaction =>
       saveTransactionController.sink;
 
   final transferController = StreamController<TransferInput>();
@@ -67,7 +68,7 @@ class TransactionBloc {
     _transactionSummary.add(_transactionSummaryItem);
   }
 
-  void createOrUpdateTransaction(SaveTransactionInput input) async {
+  void createOrUpdateTransaction(TransactionEditDto input) async {
     print("########## TransactionBloc createOrUpdateTransaction");
     await _transactionService.createOrUpdateTransaction(input);
     input.accountBloc.accountsRefresh.add(true);

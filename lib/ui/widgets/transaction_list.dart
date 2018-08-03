@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:piggy_flutter/model/transaction.dart';
 import 'package:piggy_flutter/model/transaction_group_item.dart';
+import 'package:piggy_flutter/ui/page/transaction/transaction_detail.dart';
 import 'package:piggy_flutter/ui/widgets/common/message_placeholder.dart';
 
 class TransactionList extends StatelessWidget {
@@ -37,21 +38,31 @@ class TransactionList extends StatelessWidget {
 
   buildTransactionList(BuildContext context, Transaction transaction) {
     return MergeSemantics(
-        child: new ListTile(
-      dense: true,
-      title: Text(transaction.categoryName),
-      subtitle: new Text("${transaction.description}\n${transaction
+      child: new ListTile(
+          dense: true,
+          title: Text(transaction.categoryName),
+          subtitle: new Text("${transaction.description}\n${transaction
               .creatorUserName}'s ${transaction.accountName}"),
-      isThreeLine: true,
-      trailing: Text('${transaction.amount
+          isThreeLine: true,
+          trailing: Text('${transaction.amount
               .toString()} ${transaction.accountCurrencySymbol}'),
-      leading: CircleAvatar(
-        backgroundColor: transaction.amount > 0
-            ? Theme.of(context).primaryColor
-            : Theme.of(context).disabledColor,
-      ),
-    ));
+          leading: CircleAvatar(
+            backgroundColor: transaction.amount > 0
+                ? Theme.of(context).primaryColor
+                : Theme.of(context).disabledColor,
+          ),
+          onTap: () {
+            Navigator.push(
+                context,
+                new MaterialPageRoute(
+                  builder: (BuildContext context) => new TransactionDetailPage(
+                        transaction: transaction,
+                      ),
+                  fullscreenDialog: true,
+                ));
+          }),
+    );
   }
 
-  TransactionList(this.transactions);
+  TransactionList({Key key, this.transactions}) : super(key: key);
 }

@@ -34,7 +34,7 @@ class RecentPage extends StatelessWidget {
   Widget transactionListBuilder(TransactionBloc transactionBloc) =>
       StreamBuilder<List<TransactionGroupItem>>(
         stream: transactionBloc.recentTransactions,
-        builder: (context, snapshot) =>
-            TransactionList(snapshot.hasData ? snapshot.data : null),
+        builder: (context, snapshot) => TransactionList(
+            transactions: snapshot.hasData ? snapshot.data : null),
       );
 }

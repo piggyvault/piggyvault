@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:piggy_flutter/model/transaction.dart';
+import 'package:piggy_flutter/ui/page/transaction/transaction_form.dart';
 
 class TransactionDetailPage extends StatelessWidget {
   final Transaction transaction;
@@ -16,7 +17,17 @@ class TransactionDetailPage extends StatelessWidget {
           actions: <Widget>[
             new IconButton(
               icon: const Icon(Icons.edit),
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    new MaterialPageRoute(
+                      builder: (BuildContext context) =>
+                          new TransactionFormPage(
+                            transaction: transaction,
+                          ),
+                      fullscreenDialog: true,
+                    ));
+              },
             ),
             new IconButton(
               icon: const Icon(Icons.content_copy),

@@ -24,8 +24,15 @@ enum DismissDialogAction {
 class TransactionFormPage extends StatefulWidget {
   final Account account;
   final Transaction transaction;
+  final String title;
+  final bool isCopy;
 
-  TransactionFormPage({Key key, this.account, this.transaction})
+  TransactionFormPage(
+      {Key key,
+      this.title,
+      this.account,
+      this.transaction,
+      this.isCopy = false})
       : super(key: key);
 
   @override
@@ -58,6 +65,7 @@ class TransactionFormPageState extends State<TransactionFormPage> {
     super.initState();
     _transactionTime =
         TimeOfDay(hour: _transactionDate.hour, minute: _transactionDate.minute);
+
     if (widget.transaction == null) {
       _descriptionFieldController = new TextEditingController();
       _amountFieldController = new TextEditingController();
@@ -68,18 +76,25 @@ class TransactionFormPageState extends State<TransactionFormPage> {
           .then((result) {
         setState(() {
           transactionEditDto = result;
+          if (widget.isCopy) {
+            transactionEditDto.id = null;
+          }else{
+            _transactionDate = DateTime.parse(transactionEditDto.transactionTime);
+            _transactionTime = TimeOfDay(
+                hour: _transactionDate.hour, minute: _transactionDate.minute);
+          }
+
           if (transactionEditDto.amount > 0) {
             _transactionType = UIData.transaction_type_income;
           } else {
             _transactionType = UIData.transaction_type_expense;
           }
+
           _descriptionFieldController =
               new TextEditingController(text: transactionEditDto.description);
           _amountFieldController = new TextEditingController(
               text: transactionEditDto.amount.toString());
-          _transactionDate = DateTime.parse(transactionEditDto.transactionTime);
-          _transactionTime = TimeOfDay(
-              hour: _transactionDate.hour, minute: _transactionDate.minute);
+
         });
       });
     }
@@ -95,9 +110,8 @@ class TransactionFormPageState extends State<TransactionFormPage> {
     return new Scaffold(
       key: _scaffoldKey,
       appBar: new AppBar(
-          title: widget.transaction == null
-              ? new Text('New Transaction')
-              : new Text('Edit Transaction'),
+          title:
+              new Text(widget.title == null ? 'New Transaction' : widget.title),
           actions: <Widget>[
             new FlatButton(
                 child: new Text('SAVE',

@@ -19,19 +19,32 @@ class TransactionDetailPage extends StatelessWidget {
               icon: const Icon(Icons.edit),
               onPressed: () {
                 Navigator.push(
-                    context,
-                    new MaterialPageRoute(
-                      builder: (BuildContext context) =>
-                          new TransactionFormPage(
-                            transaction: transaction,
-                          ),
-                      fullscreenDialog: true,
-                    ));
+                  context,
+                  new MaterialPageRoute(
+                    builder: (BuildContext context) => new TransactionFormPage(
+                          transaction: transaction,
+                          title: 'Edit Transaction',
+                        ),
+                    fullscreenDialog: true,
+                  ),
+                );
               },
             ),
             new IconButton(
               icon: const Icon(Icons.content_copy),
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  new MaterialPageRoute(
+                    builder: (BuildContext context) => new TransactionFormPage(
+                          transaction: transaction,
+                          title: 'Copy Transaction',
+                          isCopy: true,
+                        ),
+                    fullscreenDialog: true,
+                  ),
+                );
+              },
             ),
             new IconButton(
               icon: const Icon(Icons.delete_forever),

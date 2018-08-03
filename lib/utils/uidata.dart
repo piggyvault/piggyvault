@@ -13,6 +13,7 @@ class UIData {
   static const String transaction_type_expense = "Expense";
   static const String transaction_type_income = "Income";
   static const String transaction_type_transfer = "Transfer";
+  static const String adjust_balance = "Adjust Balance";
 
 
   //images

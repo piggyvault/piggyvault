@@ -5,6 +5,7 @@ import 'package:piggy_flutter/model/transaction_group_item.dart';
 import 'package:piggy_flutter/services/transaction_service.dart';
 import 'package:piggy_flutter/ui/page/transaction/transaction_form.dart';
 import 'package:piggy_flutter/ui/widgets/transaction_list.dart';
+import 'package:piggy_flutter/utils/uidata.dart';
 
 enum TabsDemoStyle { iconsAndText, iconsOnly, textOnly }
 
@@ -127,11 +128,43 @@ class AccountDetailsPageState extends State<AccountDetailsPage>
             return new Tab(text: page.title);
           }).toList(),
         ),
+        actions: <Widget>[
+          new PopupMenuButton<String>(
+            padding: EdgeInsets.zero,
+//            onSelected: showMenuSelection,
+            itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+                  const PopupMenuItem<String>(
+                    value: UIData.adjust_balance,
+                    child: const ListTile(
+                      leading: const Icon(Icons.account_balance),
+                      title: const Text(UIData.adjust_balance),
+                    ),
+                  ),
+//                  const PopupMenuItem<String>(
+//                      value: 'Share',
+//                      child: const ListTile(
+//                          leading: const Icon(Icons.person_add),
+//                          title: const Text('Share'))),
+//                  const PopupMenuItem<String>(
+//                      value: 'Get Link',
+//                      child: const ListTile(
+//                          leading: const Icon(Icons.link),
+//                          title: const Text('Get link'))),
+//                  const PopupMenuDivider(),
+//                  // ignore: list_element_type_not_assignable, https://github.com/flutter/flutter/issues/5771
+//                  const PopupMenuItem<String>(
+//                      value: 'Remove',
+//                      child: const ListTile(
+//                          leading: const Icon(Icons.delete),
+//                          title: const Text('Remove')))
+                ],
+          ),
+        ],
       ),
       body: new TabBarView(
           controller: _controller,
           children: _allPages.map((_Page page) {
-            return new TransactionList(page.transactions);
+            return new TransactionList(transactions: page.transactions);
           }).toList()),
       floatingActionButton: new FloatingActionButton(
           key: new ValueKey<Color>(Theme.of(context).primaryColor),

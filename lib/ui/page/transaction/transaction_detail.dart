@@ -83,25 +83,6 @@ class TransactionDetailPage extends StatelessWidget {
                 leading: const Icon(Icons.account_circle),
                 title: new Text(transaction.creatorUserName),
               ),
-//          new ButtonTheme.bar(
-//            // make buttons use the appropriate styles for cards
-//            child: new ButtonBar(
-//              children: <Widget>[
-//                new FlatButton(
-//                  child: const Text('BUY TICKETS'),
-//                  onPressed: () {
-//                    /* ... */
-//                  },
-//                ),
-//                new FlatButton(
-//                  child: const Text('LISTEN'),
-//                  onPressed: () {
-//                    /* ... */
-//                  },
-//                ),
-//              ],
-//            ),
-//          ),
             ],
           ),
         ));

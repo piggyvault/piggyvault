@@ -1,5 +1,6 @@
 class Transaction {
-  final String categoryName,
+  final String id,
+      categoryName,
       description,
       creatorUserName,
       accountName,
@@ -8,6 +9,7 @@ class Transaction {
   final double amount;
 
   Transaction(
+      this.id,
       this.categoryName,
       this.description,
       this.creatorUserName,
@@ -17,7 +19,8 @@ class Transaction {
       this.transactionTime);
 
   Transaction.fromJson(Map<String, dynamic> json)
-      : categoryName = json['category']['name'],
+      : id = json['id'],
+        categoryName = json['category']['name'],
         description = json['description'],
         creatorUserName = json['creatorUserName'],
         accountName = json['account']['name'],

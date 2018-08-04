@@ -12,9 +12,46 @@ class TransactionDetailPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: new AppBar(
-          title: Text('Transaction Details'),
-          actions: <Widget>[
+      appBar: new AppBar(
+        title: Text('Transaction Details'),
+      ),
+      body: new Card(
+        child: new Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            ListTile(
+              leading: const Icon(Icons.category),
+              title: new Text(transaction.categoryName),
+            ),
+            ListTile(
+              leading: const Icon(Icons.attach_money),
+              title: new Text('${transaction.amount.toString()} ${transaction
+                  .accountCurrencySymbol}'),
+            ),
+            ListTile(
+              leading: const Icon(Icons.event_note),
+              subtitle: new Text(transaction.description),
+              isThreeLine: true,
+            ),
+            ListTile(
+              leading: const Icon(Icons.access_time),
+              title: new Text('${formatter.format(
+                  DateTime.parse(transaction.transactionTime))}'),
+            ),
+            ListTile(
+              leading: const Icon(Icons.account_balance_wallet),
+              title: new Text(transaction.accountName),
+            ),
+            ListTile(
+              leading: const Icon(Icons.account_circle),
+              title: new Text(transaction.creatorUserName),
+            ),
+          ],
+        ),
+      ),
+      bottomNavigationBar: BottomAppBar(
+        child: new Row(
+          children: <Widget>[
             new IconButton(
               icon: const Icon(Icons.edit),
               onPressed: () {
@@ -52,39 +89,7 @@ class TransactionDetailPage extends StatelessWidget {
             ),
           ],
         ),
-        body: new Card(
-          child: new Column(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              ListTile(
-                leading: const Icon(Icons.category),
-                title: new Text(transaction.categoryName),
-              ),
-              ListTile(
-                leading: const Icon(Icons.attach_money),
-                title: new Text('${transaction.amount.toString()} ${transaction
-                    .accountCurrencySymbol}'),
-              ),
-              ListTile(
-                leading: const Icon(Icons.event_note),
-                subtitle: new Text(transaction.description),
-                isThreeLine: true,
-              ),
-              ListTile(
-                leading: const Icon(Icons.access_time),
-                title: new Text('${formatter.format(
-                    DateTime.parse(transaction.transactionTime))}'),
-              ),
-              ListTile(
-                leading: const Icon(Icons.account_balance_wallet),
-                title: new Text(transaction.accountName),
-              ),
-              ListTile(
-                leading: const Icon(Icons.account_circle),
-                title: new Text(transaction.creatorUserName),
-              ),
-            ],
-          ),
-        ));
+      ),
+    );
   }
 }

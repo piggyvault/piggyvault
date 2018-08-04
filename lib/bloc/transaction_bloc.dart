@@ -49,7 +49,7 @@ class TransactionBloc {
     transferController.stream.listen(transfer);
   }
 
-  void getRecentTransactions(bool done) async {
+  Future<Null> getRecentTransactions(bool done) async {
     print("########## TransactionBloc getRecentTransactions");
     var result = await _transactionService.getTransactions(GetTransactionsInput(
         'tenant',

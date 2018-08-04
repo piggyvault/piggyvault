@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:piggy_flutter/bloc/transaction_bloc.dart';
 import 'package:piggy_flutter/model/transaction_group_item.dart';
@@ -7,14 +9,22 @@ import 'package:piggy_flutter/ui/widgets/transaction_list.dart';
 
 class RecentPage extends StatelessWidget {
   RecentPage({Key key}) : super(key: key);
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
+      new GlobalKey<RefreshIndicatorState>();
 
   @override
   Widget build(BuildContext context) {
-    print('########## RecentPage build');
+//    print('########## RecentPage build');
     final TransactionBloc transactionBloc = TransactionProvider.of(context);
 
     return Scaffold(
-      body: transactionListBuilder(transactionBloc),
+      key: _scaffoldKey,
+      body: new RefreshIndicator(
+        key: _refreshIndicatorKey,
+        onRefresh: (() => _handleRefresh(transactionBloc)),
+        child: transactionListBuilder(transactionBloc),
+      ),
       floatingActionButton: new FloatingActionButton(
           key: new ValueKey<Color>(Theme.of(context).primaryColor),
           tooltip: 'Add new transaction',
@@ -29,6 +39,18 @@ class RecentPage extends StatelessWidget {
                 ));
           }),
     );
+  }
+
+  Future<Null> _handleRefresh(TransactionBloc transactionBloc) {
+    return transactionBloc.getRecentTransactions(true).then((_) {
+      _scaffoldKey.currentState?.showSnackBar(new SnackBar(
+          content: const Text('Refresh complete'),
+          action: new SnackBarAction(
+              label: 'RETRY',
+              onPressed: () {
+                _refreshIndicatorKey.currentState.show();
+              })));
+    });
   }
 
   Widget transactionListBuilder(TransactionBloc transactionBloc) =>

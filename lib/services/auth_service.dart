@@ -4,9 +4,23 @@ import 'package:piggy_flutter/services/app_service_base.dart';
 import 'package:piggy_flutter/utils/uidata.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+class LoginInput {
+  String tenancyName, usernameOrEmailAddress, password;
+}
+
 class AuthService extends AppServiceBase {
   Future<bool> onLogout() async {
     final prefs = await SharedPreferences.getInstance();
     return await prefs.remove(UIData.authToken);
+  }
+
+  Future<String> authenticate(LoginInput input) async {
+    var result = await rest.postAsync('Account/Authenticate', {
+      "tenancyName": input.tenancyName,
+      "usernameOrEmailAddress": input.usernameOrEmailAddress,
+      "password": input.password
+    });
+
+    return result.mappedResult;
   }
 }

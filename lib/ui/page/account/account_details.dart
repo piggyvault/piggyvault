@@ -39,7 +39,6 @@ class AccountDetailsPage extends StatefulWidget {
 class AccountDetailsPageState extends State<AccountDetailsPage>
     with SingleTickerProviderStateMixin {
   TabController _controller;
-  bool _customIndicator = false;
   final TransactionService _transactionService = new TransactionService();
 
   @override
@@ -74,9 +73,6 @@ class AccountDetailsPageState extends State<AccountDetailsPage>
       var startDate = new DateTime(startYear, startMonth, 1);
       var endDate = new DateTime(endYear, endMonth, 1)
           .add(new Duration(milliseconds: -1));
-
-      print('index is ${page.monthDifferenceIndex}, $startDate - $endDate');
-
       var formatter = new DateFormat("MMM, ''yy");
 
       var input = GetTransactionsInput('account', widget.account.id,
@@ -97,9 +93,7 @@ class AccountDetailsPageState extends State<AccountDetailsPage>
   }
 
   Decoration getIndicator() {
-    if (!_customIndicator) return const UnderlineTabIndicator();
-
-    return new ShapeDecoration(
+0    return new ShapeDecoration(
       shape: const StadiumBorder(
             side: const BorderSide(
               color: Colors.white24,
@@ -140,23 +134,6 @@ class AccountDetailsPageState extends State<AccountDetailsPage>
                       title: const Text(UIData.adjust_balance),
                     ),
                   ),
-//                  const PopupMenuItem<String>(
-//                      value: 'Share',
-//                      child: const ListTile(
-//                          leading: const Icon(Icons.person_add),
-//                          title: const Text('Share'))),
-//                  const PopupMenuItem<String>(
-//                      value: 'Get Link',
-//                      child: const ListTile(
-//                          leading: const Icon(Icons.link),
-//                          title: const Text('Get link'))),
-//                  const PopupMenuDivider(),
-//                  // ignore: list_element_type_not_assignable, https://github.com/flutter/flutter/issues/5771
-//                  const PopupMenuItem<String>(
-//                      value: 'Remove',
-//                      child: const ListTile(
-//                          leading: const Icon(Icons.delete),
-//                          title: const Text('Remove')))
                 ],
           ),
         ],

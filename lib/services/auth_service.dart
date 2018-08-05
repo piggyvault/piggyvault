@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:piggy_flutter/model/user.dart';
 import 'package:piggy_flutter/services/app_service_base.dart';
 import 'package:piggy_flutter/utils/uidata.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -24,5 +25,12 @@ class AuthService extends AppServiceBase {
     });
 
     return result.mappedResult;
+  }
+
+  Future<User> getCurrentLoginInformation() async {
+    var result = await rest.postAsync(
+        'services/app/session/GetCurrentLoginInformations', null);
+
+    return User.fromJson(result.mappedResult['user']);
   }
 }

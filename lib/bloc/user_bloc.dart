@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:piggy_flutter/model/user.dart';
 import 'package:piggy_flutter/services/auth_service.dart';
 import 'package:piggy_flutter/utils/uidata.dart';
 import 'package:rxdart/rxdart.dart';
@@ -13,6 +14,8 @@ class UserBloc {
   final _password = BehaviorSubject<String>();
   final _isAuthenticating = BehaviorSubject<bool>();
   final _isAuthenticated = BehaviorSubject<bool>();
+  final _user = BehaviorSubject<User>();
+  final _userRefresh = PublishSubject<bool>();
 
 // retrieve data from stream
   Stream<String> get tenancyName =>
@@ -30,13 +33,28 @@ class UserBloc {
   Stream<bool> get submitValid => Observable.combineLatest3(
       tenancyName, usernameOrEmailAddress, password, (t, u, p) => true);
 
+  Stream<User> get user => _user.stream;
+
   // add data to stream
+  Function(bool) get userRefresh => _userRefresh.sink.add;
+
   Function(String) get changeTenancyName => _tenancyName.sink.add;
 
   Function(String) get changeUsernameOrEmailAddress =>
       _usernameOrEmailAddress.sink.add;
 
   Function(String) get changePassword => _password.sink.add;
+
+  UserBloc() {
+    _userRefresh.stream.listen(refresh);
+  }
+
+  refresh(bool done) {
+//    print("########## UserBloc refresh");
+    _authService.getCurrentLoginInformation().then((user) {
+      _user.add(user);
+    });
+  }
 
   submit() {
     final validTenancyName = _tenancyName.value;
@@ -62,12 +80,17 @@ class UserBloc {
     });
   }
 
+  logout() async {
+    await _authService.onLogout();
+  }
+
   dispose() {
     _tenancyName.close();
     _usernameOrEmailAddress.close();
     _password.close();
     _isAuthenticating.close();
     _isAuthenticated.close();
+    _userRefresh.close();
   }
 
   final validateTenancyName = StreamTransformer<String, String>.fromHandlers(

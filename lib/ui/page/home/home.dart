@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:piggy_flutter/bloc/user_bloc.dart';
+import 'package:piggy_flutter/providers/user_provider.dart';
 import 'package:piggy_flutter/ui/page/account/account_list.dart';
 import 'package:piggy_flutter/ui/page/home/recent.dart';
 import 'package:piggy_flutter/ui/page/home/summary.dart';
@@ -72,7 +74,9 @@ class NavigationIconView {
 }
 
 class HomePage extends StatefulWidget {
-  static const String routeName = '/material/bottom_navigation';
+  final bool isInitialLoading;
+
+  HomePage({Key key, this.isInitialLoading = false}) : super(key: key);
 
   @override
   _HomePageState createState() => new _HomePageState();
@@ -93,8 +97,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   AccountListPage accounts;
 
   List<Widget> pages;
-
-//  Widget currentPage;
+  bool isSyncRequired;
 
   final PageStorageBucket bucket = PageStorageBucket();
 
@@ -143,8 +146,55 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
     pages = [recent, accounts, summary];
 
-//    currentPage = recent;
+    isSyncRequired = widget.isInitialLoading;
     super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final UserBloc userBloc = UserProvider.of(context);
+    if (isSyncRequired) {
+      userBloc.userRefresh(true);
+      isSyncRequired = false;
+    }
+    return new Scaffold(
+      appBar: new AppBar(
+        title: Text(_title),
+        actions: <Widget>[
+          new PopupMenuButton<BottomNavigationBarType>(
+            onSelected: (BottomNavigationBarType value) {
+              setState(() {
+                _type = value;
+              });
+            },
+            itemBuilder: (BuildContext context) =>
+                <PopupMenuItem<BottomNavigationBarType>>[
+                  const PopupMenuItem<BottomNavigationBarType>(
+                    value: BottomNavigationBarType.fixed,
+                    child: const Text('Fixed'),
+                  ),
+                  const PopupMenuItem<BottomNavigationBarType>(
+                    value: BottomNavigationBarType.shifting,
+                    child: const Text('Shifting'),
+                  )
+                ],
+          )
+        ],
+      ),
+      body: new PageView(
+          children: pages,
+          controller: _pageController,
+          onPageChanged: onPageChanged),
+      bottomNavigationBar: new BottomNavigationBar(
+        items: _navigationViews
+            .map((NavigationIconView navigationView) => navigationView.item)
+            .toList(),
+        currentIndex: _currentIndex,
+        type: _type,
+        onTap: navigationTapped,
+      ),
+      drawer: CommonDrawer(),
+    );
   }
 
   @override
@@ -195,47 +245,5 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
           }
       }
     });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return new Scaffold(
-      appBar: new AppBar(
-        title: Text(_title),
-        actions: <Widget>[
-          new PopupMenuButton<BottomNavigationBarType>(
-            onSelected: (BottomNavigationBarType value) {
-              setState(() {
-                _type = value;
-              });
-            },
-            itemBuilder: (BuildContext context) =>
-                <PopupMenuItem<BottomNavigationBarType>>[
-                  const PopupMenuItem<BottomNavigationBarType>(
-                    value: BottomNavigationBarType.fixed,
-                    child: const Text('Fixed'),
-                  ),
-                  const PopupMenuItem<BottomNavigationBarType>(
-                    value: BottomNavigationBarType.shifting,
-                    child: const Text('Shifting'),
-                  )
-                ],
-          )
-        ],
-      ),
-      body: new PageView(
-          children: pages,
-          controller: _pageController,
-          onPageChanged: onPageChanged),
-      bottomNavigationBar: new BottomNavigationBar(
-        items: _navigationViews
-            .map((NavigationIconView navigationView) => navigationView.item)
-            .toList(),
-        currentIndex: _currentIndex,
-        type: _type,
-        onTap: navigationTapped,
-      ),
-      drawer: CommonDrawer(),
-    );
   }
 }

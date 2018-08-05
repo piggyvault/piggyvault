@@ -26,7 +26,11 @@ class _LoginPageState extends State<LoginPage> {
     if (token != null && token.length > 0) {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => HomePage()),
+        MaterialPageRoute(
+          builder: (context) => HomePage(
+                isInitialLoading: true,
+              ),
+        ),
       );
     }
   }
@@ -201,7 +205,10 @@ class _LoginPageState extends State<LoginPage> {
     if (isAuthenticated) {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => HomePage()),
+        MaterialPageRoute(
+            builder: (context) => HomePage(
+                  isInitialLoading: true,
+                )),
       );
     } else {
       _scaffoldKey.currentState?.showSnackBar(

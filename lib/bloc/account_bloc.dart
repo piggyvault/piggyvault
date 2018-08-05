@@ -20,13 +20,11 @@ class AccountBloc {
   Stream<List<Account>> get familyAccounts => _familyAccounts.stream;
 
   AccountBloc() {
-    print("########## AccountBloc");
     getTenantAccounts(true);
     accountsRefreshController.stream.listen(getTenantAccounts);
   }
 
-  void getTenantAccounts(bool done) async {
-    print("########## AccountBloc getTenantAccounts");
+  Future<Null> getTenantAccounts(bool done) async {
     await _accountService.getTenantAccounts();
     userAccountList = _accountService.userAccounts;
     familyAccountList = _accountService.familyAccounts;

@@ -40,7 +40,7 @@ class TransactionBloc {
   Sink<TransferInput> get doTransfer => transferController.sink;
 
   TransactionBloc() {
-    print("########## TransactionBloc");
+//    print("########## TransactionBloc");
     getRecentTransactions(true);
     getTransactionSummary('month');
     saveTransactionController.stream.listen(createOrUpdateTransaction);
@@ -50,7 +50,7 @@ class TransactionBloc {
   }
 
   Future<Null> getRecentTransactions(bool done) async {
-    print("########## TransactionBloc getRecentTransactions");
+//    print("########## TransactionBloc getRecentTransactions");
     var result = await _transactionService.getTransactions(GetTransactionsInput(
         'tenant',
         null,
@@ -62,32 +62,26 @@ class TransactionBloc {
   }
 
   void getTransactionSummary(String duration) async {
-    print("########## TransactionBloc getTransactionSummary");
+//    print("########## TransactionBloc getTransactionSummary");
     _transactionSummaryItem =
         await _transactionService.getTransactionSummary(duration);
     _transactionSummary.add(_transactionSummaryItem);
   }
 
   void createOrUpdateTransaction(TransactionEditDto input) async {
-    print("########## TransactionBloc createOrUpdateTransaction");
+//    print("########## TransactionBloc createOrUpdateTransaction");
     await _transactionService.createOrUpdateTransaction(input);
     input.accountBloc.accountsRefresh.add(true);
     recentTransactionsRefresh.add(true);
     transactionSummaryRefresh.add("month");
-//        .then((result) =>
-//        refreshRecentTransactionsSink.add(true)
-//    );
   }
 
   void transfer(TransferInput input) async {
-    print("########## TransactionBloc transfer");
+//    print("########## TransactionBloc transfer");
     await _transactionService.transfer(input);
     input.accountBloc.accountsRefresh.add(true);
     recentTransactionsRefresh.add(true);
     transactionSummaryRefresh.add("month");
-//        .then((result) =>
-//        refreshRecentTransactionsSink.add(true)
-//    );
   }
 
   void dispose() {

@@ -13,18 +13,12 @@ class CategoryBloc {
   Stream<List<Category>> get categories => categorySubject.stream;
 
   CategoryBloc() {
-    print("########## CategoryBloc");
+//    print("########## CategoryBloc");
     _categoryService.getTenantCategories().then((result) {
       allCategories = result;
       categorySubject.add(allCategories);
     });
   }
-
-//  void getCategories() async {
-//    print('getCategories');
-//    await _categoryService.getTenantCategories();
-//    categoryController.add(_categoryService.categories);
-//  }
 
   void dispose() {
     categorySubject.close();

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:piggy_flutter/bloc/account_bloc.dart';
 import 'package:piggy_flutter/bloc/transaction_bloc.dart';
 import 'package:piggy_flutter/bloc/user_bloc.dart';
+import 'package:piggy_flutter/providers/account_provider.dart';
 import 'package:piggy_flutter/providers/transaction_provider.dart';
 import 'package:piggy_flutter/providers/user_provider.dart';
 import 'package:piggy_flutter/ui/page/account/account_list.dart';
@@ -156,10 +158,12 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     final UserBloc userBloc = UserProvider.of(context);
     final TransactionBloc transactionBloc = TransactionProvider.of(context);
+    final AccountBloc accountBloc = AccountProvider.of(context);
     if (isSyncRequired) {
       userBloc.userRefresh(true);
       transactionBloc.recentTransactionsRefresh(true);
       transactionBloc.transactionSummaryRefresh('month');
+      accountBloc.accountsRefresh(true);
       isSyncRequired = false;
     }
 

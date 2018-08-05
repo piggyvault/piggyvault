@@ -10,10 +10,13 @@ class TransactionBloc {
   List<TransactionGroupItem> _recentTransactionItems;
   TransactionSummary _transactionSummaryItem;
 
-  final recentTransactionsRefreshController = StreamController<bool>();
+  final _recentTransactionsRefresh = PublishSubject<bool>();
+  final _transactionSummaryRefresh = PublishSubject<String>();
 
-  Sink<bool> get recentTransactionsRefresh =>
-      recentTransactionsRefreshController.sink;
+  Function(bool) get recentTransactionsRefresh =>
+      _recentTransactionsRefresh.sink.add;
+  Function(String) get transactionSummaryRefresh =>
+      _transactionSummaryRefresh.sink.add;
 
   final _transactionSummary = BehaviorSubject<TransactionSummary>();
 
@@ -25,10 +28,7 @@ class TransactionBloc {
   Stream<List<TransactionGroupItem>> get recentTransactions =>
       _recentTransactions.stream;
 
-  final transactionSummaryRefreshController = StreamController<String>();
 
-  Sink<String> get transactionSummaryRefresh =>
-      transactionSummaryRefreshController.sink;
 
   final saveTransactionController = StreamController<TransactionEditDto>();
 
@@ -41,11 +41,9 @@ class TransactionBloc {
 
   TransactionBloc() {
 //    print("########## TransactionBloc");
-    getRecentTransactions(true);
-    getTransactionSummary('month');
     saveTransactionController.stream.listen(createOrUpdateTransaction);
-    recentTransactionsRefreshController.stream.listen(getRecentTransactions);
-    transactionSummaryRefreshController.stream.listen(getTransactionSummary);
+    _recentTransactionsRefresh.stream.listen(getRecentTransactions);
+    _transactionSummaryRefresh.stream.listen(getTransactionSummary);
     transferController.stream.listen(transfer);
   }
 
@@ -72,24 +70,24 @@ class TransactionBloc {
 //    print("########## TransactionBloc createOrUpdateTransaction");
     await _transactionService.createOrUpdateTransaction(input);
     input.accountBloc.accountsRefresh(true);
-    recentTransactionsRefresh.add(true);
-    transactionSummaryRefresh.add("month");
+    recentTransactionsRefresh(true);
+    transactionSummaryRefresh("month");
   }
 
   void transfer(TransferInput input) async {
 //    print("########## TransactionBloc transfer");
     await _transactionService.transfer(input);
     input.accountBloc.accountsRefresh(true);
-    recentTransactionsRefresh.add(true);
-    transactionSummaryRefresh.add("month");
+    recentTransactionsRefresh(true);
+    transactionSummaryRefresh("month");
   }
 
   void dispose() {
     _transactionSummary.close();
-    transactionSummaryRefreshController.close();
+    _transactionSummaryRefresh.close();
     _recentTransactions.close();
     saveTransactionController.close();
-    recentTransactionsRefreshController.close();
+    _recentTransactionsRefresh.close();
     transferController.close();
   }
 }

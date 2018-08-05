@@ -93,7 +93,7 @@ class AccountDetailsPageState extends State<AccountDetailsPage>
   }
 
   Decoration getIndicator() {
-0    return new ShapeDecoration(
+   return new ShapeDecoration(
       shape: const StadiumBorder(
             side: const BorderSide(
               color: Colors.white24,

@@ -5,22 +5,19 @@ import 'package:piggy_flutter/services/category_service.dart';
 import 'package:rxdart/rxdart.dart';
 
 class CategoryBloc {
-  List<Category> allCategories;
-
   final CategoryService _categoryService = new CategoryService();
-  final categorySubject = BehaviorSubject<List<Category>>();
+  final _categories = BehaviorSubject<List<Category>>();
 
-  Stream<List<Category>> get categories => categorySubject.stream;
+  Stream<List<Category>> get categories => _categories.stream;
 
   CategoryBloc() {
 //    print("########## CategoryBloc");
     _categoryService.getTenantCategories().then((result) {
-      allCategories = result;
-      categorySubject.add(allCategories);
+      _categories.add(result);
     });
   }
 
   void dispose() {
-    categorySubject.close();
+    _categories.close();
   }
 }

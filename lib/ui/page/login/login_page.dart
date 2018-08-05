@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
+import 'package:piggy_flutter/bloc/user_bloc.dart';
 import 'package:piggy_flutter/ui/page/home/home.dart';
 import 'package:piggy_flutter/utils/uidata.dart';
-import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatefulWidget {
@@ -11,14 +10,13 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  final TextEditingController tenantNameController =
-      new TextEditingController();
-  final TextEditingController userNameController = new TextEditingController();
-  final TextEditingController passwordController = new TextEditingController();
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  final UserBloc _userBloc = new UserBloc();
 
   @override
   void initState() {
     super.initState();
+    _userBloc.isAuthenticated.listen(onLoginResult);
     authCheck();
   }
 
@@ -36,19 +34,25 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       backgroundColor: Colors.white,
       body: Center(
-        child: loginBody(context),
+        child: loginBody(_userBloc),
       ),
     );
   }
 
-  loginBody(BuildContext context) => Column(
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
+  loginBody(UserBloc userBloc) => Column(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: <Widget>[loginHeader(), loginFields(context)],
+        children: <Widget>[loginHeader(userBloc), loginFields(userBloc)],
       );
 
-  loginHeader() => Column(
+  loginHeader(UserBloc userBloc) => Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
           FlutterLogo(
@@ -65,71 +69,22 @@ class _LoginPageState extends State<LoginPage> {
           SizedBox(
             height: 5.0,
           ),
-          Text(
-            "Sign in to continue",
-            style: TextStyle(color: Colors.grey),
-          ),
+          subHeading(userBloc),
         ],
       );
 
-  loginFields(BuildContext context) => Container(
+  loginFields(UserBloc userBloc) => Container(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
-            Container(
-              padding: EdgeInsets.symmetric(vertical: 16.0, horizontal: 30.0),
-              child: TextField(
-                maxLines: 1,
-                decoration: InputDecoration(
-                  hintText: "Enter your family name",
-                  labelText: "Family",
-                ),
-                controller: tenantNameController,
-              ),
-            ),
-            Container(
-              padding: EdgeInsets.symmetric(vertical: 16.0, horizontal: 30.0),
-              child: TextField(
-                maxLines: 1,
-                decoration: InputDecoration(
-                  hintText: "Enter your username",
-                  labelText: "Username",
-                ),
-                controller: userNameController,
-              ),
-            ),
-            Container(
-              padding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 30.0),
-              child: TextField(
-                maxLines: 1,
-                obscureText: true,
-                decoration: InputDecoration(
-                  hintText: "Enter your password",
-                  labelText: "Password",
-                ),
-                controller: passwordController,
-              ),
-            ),
+            familyField(userBloc),
+            usernameField(userBloc),
+            passwordField(userBloc),
             SizedBox(
               height: 30.0,
             ),
-            Container(
-              padding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 30.0),
-              width: double.infinity,
-              child: RaisedButton(
-                padding: EdgeInsets.all(12.0),
-                shape: StadiumBorder(),
-                child: Text(
-                  "SIGN IN",
-                  style: TextStyle(color: Colors.white),
-                ),
-                color: Colors.green,
-                onPressed: () {
-                  login(context);
-                },
-              ),
-            ),
+            submitButton(userBloc),
             SizedBox(
               height: 5.0,
             ),
@@ -141,28 +96,121 @@ class _LoginPageState extends State<LoginPage> {
         ),
       );
 
-// TODO: BLoC
-  login(BuildContext context) async {
-    var url = 'http://piggyvault.in/api/Account/Authenticate';
-    var input = json.encode({
-      "tenancyName": tenantNameController.text,
-      "usernameOrEmailAddress": userNameController.text,
-      "password": passwordController.text
-    });
+  Widget subHeading(UserBloc userBloc) {
+    return StreamBuilder(
+      stream: userBloc.isAuthenticating,
+      builder: (context, snapshot) {
+        if (!snapshot.hasData || !snapshot.data) {
+          return Text(
+            "Sign in to continue",
+            style: TextStyle(color: Colors.grey),
+          );
+        } else {
+          return CircularProgressIndicator();
+        }
+      },
+    );
+  }
 
-    http.post(url, body: input, headers: {
-      'Content-type': 'application/json',
-      'Accept': 'application/json',
-    }).then((response) async {
-      var res = json.decode(response.body);
-      if (res["success"]) {
-        final prefs = await SharedPreferences.getInstance();
-        await prefs.setString(UIData.authToken, res["result"]);
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => HomePage()),
+  Widget familyField(UserBloc userBloc) {
+    return StreamBuilder(
+      stream: userBloc.tenancyName,
+      builder: (context, snapshot) {
+        return Container(
+          padding: EdgeInsets.symmetric(vertical: 16.0, horizontal: 30.0),
+          child: TextField(
+            maxLines: 1,
+            decoration: InputDecoration(
+              hintText: "Enter your family name",
+              labelText: "Family",
+              errorText: snapshot.error,
+            ),
+            onChanged: userBloc.changeTenancyName,
+            keyboardType: TextInputType.emailAddress,
+          ),
         );
-      } else {}
-    });
+      },
+    );
+  }
+
+  Widget usernameField(UserBloc userBloc) {
+    return StreamBuilder(
+      stream: userBloc.usernameOrEmailAddress,
+      builder: (context, snapshot) {
+        return Container(
+          padding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 30.0),
+          child: TextField(
+            maxLines: 1,
+            decoration: InputDecoration(
+              hintText: "Enter your username",
+              labelText: "Username",
+              errorText: snapshot.error,
+            ),
+            onChanged: userBloc.changeUsernameOrEmailAddress,
+            keyboardType: TextInputType.emailAddress,
+          ),
+        );
+      },
+    );
+  }
+
+  Widget passwordField(UserBloc userBloc) {
+    return StreamBuilder(
+      stream: userBloc.password,
+      builder: (context, snapshot) {
+        return Container(
+          padding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 30.0),
+          child: TextField(
+            maxLines: 1,
+            obscureText: true,
+            decoration: InputDecoration(
+              hintText: "Enter your password",
+              labelText: "Password",
+              errorText: snapshot.error,
+            ),
+            onChanged: userBloc.changePassword,
+          ),
+        );
+      },
+    );
+  }
+
+  Widget submitButton(UserBloc userBloc) {
+    return StreamBuilder(
+      stream: userBloc.submitValid,
+      builder: (context, snapshot) {
+        return Container(
+          padding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 30.0),
+          width: double.infinity,
+          child: RaisedButton(
+            padding: EdgeInsets.all(12.0),
+            shape: StadiumBorder(),
+            child: Text(
+              "SIGN IN",
+              style: TextStyle(color: Colors.white),
+            ),
+            color: Colors.green,
+            onPressed: snapshot.hasData ? userBloc.submit : null,
+          ),
+        );
+      },
+    );
+  }
+
+  onLoginResult(bool isAuthenticated) {
+    if (isAuthenticated) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => HomePage()),
+      );
+    } else {
+      _scaffoldKey.currentState?.showSnackBar(
+        new SnackBar(
+          backgroundColor: Colors.red,
+          content: const Text(
+              'Something went wrong, check the credentials and try again.'),
+        ),
+      );
+    }
   }
 }

@@ -6,6 +6,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginInput {
   String tenancyName, usernameOrEmailAddress, password;
+
+  LoginInput({this.tenancyName, this.usernameOrEmailAddress, this.password});
 }
 
 class AuthService extends AppServiceBase {

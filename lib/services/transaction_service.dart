@@ -79,7 +79,6 @@ class TransactionService extends AppServiceBase {
     });
 
     if (result.mappedResult != null) {
-      print(result.mappedResult);
       return TransactionEditDto.fromJson(result.mappedResult);
     }
 

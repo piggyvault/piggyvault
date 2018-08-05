@@ -71,7 +71,7 @@ class TransactionBloc {
   void createOrUpdateTransaction(TransactionEditDto input) async {
 //    print("########## TransactionBloc createOrUpdateTransaction");
     await _transactionService.createOrUpdateTransaction(input);
-    input.accountBloc.accountsRefresh.add(true);
+    input.accountBloc.accountsRefresh(true);
     recentTransactionsRefresh.add(true);
     transactionSummaryRefresh.add("month");
   }
@@ -79,7 +79,7 @@ class TransactionBloc {
   void transfer(TransferInput input) async {
 //    print("########## TransactionBloc transfer");
     await _transactionService.transfer(input);
-    input.accountBloc.accountsRefresh.add(true);
+    input.accountBloc.accountsRefresh(true);
     recentTransactionsRefresh.add(true);
     transactionSummaryRefresh.add("month");
   }

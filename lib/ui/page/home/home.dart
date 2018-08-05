@@ -153,6 +153,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     final UserBloc userBloc = UserProvider.of(context);
+
     if (isSyncRequired) {
       userBloc.userRefresh(true);
       isSyncRequired = false;

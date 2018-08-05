@@ -6,11 +6,12 @@ import 'package:piggy_flutter/services/account_service.dart';
 class AccountBloc {
   List<Account> userAccountList;
   List<Account> familyAccountList;
+
   final AccountService _accountService = new AccountService();
 
-  final accountsRefreshController = StreamController<bool>();
+  final _accountsRefresh = PublishSubject<bool>();
 
-  Sink<bool> get accountsRefresh => accountsRefreshController.sink;
+  Function(bool) get accountsRefresh => _accountsRefresh.sink.add;
 
   final _userAccounts = BehaviorSubject<List<Account>>();
   final _familyAccounts = BehaviorSubject<List<Account>>();
@@ -20,8 +21,7 @@ class AccountBloc {
   Stream<List<Account>> get familyAccounts => _familyAccounts.stream;
 
   AccountBloc() {
-    getTenantAccounts(true);
-    accountsRefreshController.stream.listen(getTenantAccounts);
+    _accountsRefresh.stream.listen(getTenantAccounts);
   }
 
   Future<Null> getTenantAccounts(bool done) async {
@@ -33,7 +33,7 @@ class AccountBloc {
   }
 
   void dispose() {
-    accountsRefreshController.close();
+    _accountsRefresh.close();
     _userAccounts.close();
     _familyAccounts.close();
   }

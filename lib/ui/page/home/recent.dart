@@ -43,13 +43,16 @@ class RecentPage extends StatelessWidget {
 
   Future<Null> _handleRefresh(TransactionBloc transactionBloc) {
     return transactionBloc.getRecentTransactions(true).then((_) {
-      _scaffoldKey.currentState?.showSnackBar(new SnackBar(
+      _scaffoldKey.currentState?.showSnackBar(
+        new SnackBar(
           content: const Text('Refresh complete'),
           action: new SnackBarAction(
               label: 'RETRY',
               onPressed: () {
                 _refreshIndicatorKey.currentState.show();
-              })));
+              }),
+        ),
+      );
     });
   }
 

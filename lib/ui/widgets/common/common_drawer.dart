@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:piggy_flutter/bloc/category_bloc.dart';
 import 'package:piggy_flutter/bloc/user_bloc.dart';
+import 'package:piggy_flutter/model/category.dart';
 import 'package:piggy_flutter/model/user.dart';
+import 'package:piggy_flutter/providers/category_provider.dart';
 import 'package:piggy_flutter/providers/user_provider.dart';
 import 'package:piggy_flutter/ui/page/category/category_list.dart';
 import 'package:piggy_flutter/ui/page/home/home.dart';
@@ -11,6 +14,7 @@ class CommonDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final UserBloc userBloc = UserProvider.of(context);
+    final CategoryBloc categoryBloc = CategoryProvider.of(context);
     return Drawer(
       child: ListView(
         padding: EdgeInsets.zero,
@@ -40,20 +44,7 @@ class CommonDrawer extends StatelessWidget {
 //              color: Colors.green,
 //            ),
 //          ),
-          ListTile(
-            title: Text(
-              "Categories",
-              style: TextStyle(fontWeight: FontWeight.w700, fontSize: 18.0),
-            ),
-            leading: Icon(
-              Icons.category,
-              color: Colors.cyan,
-            ),
-            onTap: (() => Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => CategoryListPage()),
-                )),
-          ),
+          categoriesTile(categoryBloc),
           Divider(),
           ListTile(
             title: Text(
@@ -77,6 +68,37 @@ class CommonDrawer extends StatelessWidget {
     );
   }
 
+  Widget categoriesTile(CategoryBloc categoryBloc) {
+    return StreamBuilder<List<Category>>(
+      stream: categoryBloc.categories,
+      builder: (context, snapshot) {
+        return ListTile(
+          title: Text(
+            "Categories",
+            style: TextStyle(fontWeight: FontWeight.w700, fontSize: 18.0),
+          ),
+          leading: Icon(
+            Icons.category,
+            color: Colors.cyan,
+          ),
+          onTap: (() => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => CategoryListPage()),
+              )),
+          trailing: snapshot.hasData
+              ? Chip(
+                  key: ValueKey<String>(snapshot.data.length.toString()),
+                  backgroundColor: Colors.cyan,
+                  label: Text(snapshot.data.length.toString()),
+                )
+              : Chip(
+                  label: Icon(Icons.hourglass_empty),
+                ),
+        );
+      },
+    );
+  }
+
   Widget drawerHeader(UserBloc userBloc) {
     return StreamBuilder<User>(
       stream: userBloc.user,
@@ -94,7 +116,9 @@ class CommonDrawer extends StatelessWidget {
                 ),
           );
         } else {
-          return DrawerHeader(child: Text('User not logged in'),);
+          return DrawerHeader(
+            child: Text('User not logged in'),
+          );
         }
       },
     );

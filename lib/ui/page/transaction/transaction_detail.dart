@@ -10,13 +10,16 @@ class TransactionDetailPage extends StatelessWidget {
   final Transaction transaction;
   final formatter = DateFormat("EEE, MMM d, ''yy");
   final commentTimeFormatter = DateFormat("h:mm a, EEE, MMM d, ''yy");
-
+  final TextEditingController _commentController = new TextEditingController();
   TransactionDetailPage({Key key, this.transaction}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final TransactionBloc transactionBloc = TransactionProvider.of(context);
+
+    // TODO - not the ideal place
     transactionBloc.transactionCommentsRefresh(transaction.id);
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Transaction Details'),
@@ -31,6 +34,7 @@ class TransactionDetailPage extends StatelessWidget {
               style: Theme.of(context).textTheme.headline,
             ),
           ),
+          commentTile(transactionBloc),
           transactionComments(transactionBloc),
         ],
       ),
@@ -75,6 +79,32 @@ class TransactionDetailPage extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+
+  Widget commentTile(TransactionBloc transactionBloc) {
+    return StreamBuilder<String>(
+      stream: transactionBloc.comment,
+      builder: (context, snapshot) {
+        return ListTile(
+          title: TextField(
+            controller: _commentController,
+            decoration: new InputDecoration(
+                labelText: 'Write a comment...', errorText: snapshot.error),
+            onChanged: transactionBloc.changeComment,
+          ),
+          trailing: new OutlineButton(
+            onPressed: (() {
+              if (snapshot.hasData && snapshot.data != null) {
+                transactionBloc.submitComment(transaction.id);
+                _commentController.clear();
+              }
+            }),
+            borderSide: BorderSide.none,
+            child: new Text("Post"),
+          ),
+        );
+      },
     );
   }
 

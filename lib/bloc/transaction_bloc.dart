@@ -13,7 +13,11 @@ class TransactionBloc {
   final _transactionSummaryRefresh = PublishSubject<String>();
   final _transactionCommentsRefresh = PublishSubject<String>();
   final _transactionComments = PublishSubject<List<TransactionComment>>();
+  final _comment = BehaviorSubject<String>();
 
+  Stream<String> get comment => _comment.stream.transform(validateComment);
+
+  Function(String) get changeComment => _comment.sink.add;
   Function(bool) get recentTransactionsRefresh =>
       _recentTransactionsRefresh.sink.add;
   Function(String) get transactionSummaryRefresh =>
@@ -51,6 +55,15 @@ class TransactionBloc {
     _transactionSummaryRefresh.stream.listen(getTransactionSummary);
     transferController.stream.listen(transfer);
     _transactionCommentsRefresh.stream.listen(getTransactionComments);
+  }
+
+  submitComment(String transactionId) async {
+    // print("########## TransactionBloc submitComment");
+    final validComment = _comment.value;
+    await _transactionService.saveTransactionComment(
+        transactionId, validComment);
+    transactionCommentsRefresh(transactionId);
+    changeComment('');
   }
 
   Future<Null> getTransactionComments(String id) async {
@@ -92,6 +105,16 @@ class TransactionBloc {
     transactionSummaryRefresh("month");
   }
 
+  final validateComment = StreamTransformer<String, String>.fromHandlers(
+      handleData: (comment, sink) {
+    // TODO
+    // if (comment.isEmpty) {
+    //   sink.addError('Comment cannot be empty');
+    // } else {
+    sink.add(comment);
+    // }
+  });
+
   void dispose() {
     _transactionSummary.close();
     _transactionSummaryRefresh.close();
@@ -101,5 +124,6 @@ class TransactionBloc {
     transferController.close();
     _transactionComments.close();
     _transactionCommentsRefresh.close();
+    _comment.close();
   }
 }

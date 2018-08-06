@@ -113,6 +113,15 @@ class TransactionService extends AppServiceBase {
     });
   }
 
+  Future<Null> saveTransactionComment(
+      String transactionId, String content) async {
+    await rest.postAsync(
+        'services/app/transaction/CreateOrUpdateTransactionCommentAsync', {
+      "transactionId": transactionId,
+      "content": content,
+    });
+  }
+
   Future<Null> transfer(TransferInput input) async {
     await rest.postAsync('services/app/transaction/TransferAsync', {
       "id": input.id,

@@ -31,6 +31,10 @@ class AuthService extends AppServiceBase {
     var result = await rest.postAsync(
         'services/app/session/GetCurrentLoginInformations', null);
 
-    return User.fromJson(result.mappedResult['user']);
+    if (result.mappedResult != null) {
+      return User.fromJson(result.mappedResult['user']);
+    }
+
+    return null;
   }
 }

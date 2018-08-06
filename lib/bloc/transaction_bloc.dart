@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:piggy_flutter/model/transaction_comment.dart';
 import 'package:piggy_flutter/model/transaction_edit_dto.dart';
 import 'package:piggy_flutter/model/transaction_summary.dart';
 import 'package:piggy_flutter/services/transaction_service.dart';
@@ -12,13 +13,21 @@ class TransactionBloc {
 
   final _recentTransactionsRefresh = PublishSubject<bool>();
   final _transactionSummaryRefresh = PublishSubject<String>();
+  final _transactionCommentsRefresh = PublishSubject<String>();
+  final _transactionComments = PublishSubject<List<TransactionComment>>();
 
   Function(bool) get recentTransactionsRefresh =>
       _recentTransactionsRefresh.sink.add;
   Function(String) get transactionSummaryRefresh =>
       _transactionSummaryRefresh.sink.add;
 
+  Function(String) get transactionCommentsRefresh =>
+      _transactionCommentsRefresh.sink.add;
+
   final _transactionSummary = BehaviorSubject<TransactionSummary>();
+
+  Stream<List<TransactionComment>> get transactionComments =>
+      _transactionComments.stream;
 
   Stream<TransactionSummary> get transactionSummary =>
       _transactionSummary.stream;
@@ -27,8 +36,6 @@ class TransactionBloc {
 
   Stream<List<TransactionGroupItem>> get recentTransactions =>
       _recentTransactions.stream;
-
-
 
   final saveTransactionController = StreamController<TransactionEditDto>();
 
@@ -45,6 +52,13 @@ class TransactionBloc {
     _recentTransactionsRefresh.stream.listen(getRecentTransactions);
     _transactionSummaryRefresh.stream.listen(getTransactionSummary);
     transferController.stream.listen(transfer);
+    _transactionCommentsRefresh.stream.listen(getTransactionComments);
+  }
+
+  Future<Null> getTransactionComments(String id) async {
+    // print("########## TransactionBloc getTransactionComments");
+    var result = await _transactionService.getTransactionComments(id);
+    _transactionComments.add(result);
   }
 
   Future<Null> getRecentTransactions(bool done) async {
@@ -89,5 +103,7 @@ class TransactionBloc {
     saveTransactionController.close();
     _recentTransactionsRefresh.close();
     transferController.close();
+    _transactionComments.close();
+    _transactionCommentsRefresh.close();
   }
 }

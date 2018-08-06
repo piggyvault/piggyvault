@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:piggy_flutter/bloc/account_bloc.dart';
 import 'package:piggy_flutter/model/transaction.dart';
+import 'package:piggy_flutter/model/transaction_comment.dart';
 import 'package:piggy_flutter/model/transaction_edit_dto.dart';
 import 'package:piggy_flutter/model/transaction_group_item.dart';
 import 'package:piggy_flutter/model/transaction_summary.dart';
@@ -83,6 +84,22 @@ class TransactionService extends AppServiceBase {
     }
 
     return null;
+  }
+
+  Future<List<TransactionComment>> getTransactionComments(String id) async {
+    var comments = List<TransactionComment>();
+    var result = await rest
+        .postAsync<dynamic>('services/app/transaction/GetTransactionComments', {
+      "id": id,
+    });
+    print(result.mappedResult);
+    if (result.mappedResult != null) {
+      result.mappedResult['items'].forEach((comment) {
+        comments.add(TransactionComment.fromJson(comment));
+      });
+    }
+
+    return comments;
   }
 
   Future<Null> createOrUpdateTransaction(TransactionEditDto input) async {

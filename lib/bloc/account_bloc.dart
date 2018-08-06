@@ -4,8 +4,8 @@ import 'package:piggy_flutter/model/account.dart';
 import 'package:piggy_flutter/services/account_service.dart';
 
 class AccountBloc {
+
   List<Account> userAccountList;
-  List<Account> familyAccountList;
 
   final AccountService _accountService = new AccountService();
 
@@ -28,9 +28,8 @@ class AccountBloc {
 //    print("########## AccountBloc getTenantAccounts");
     await _accountService.getTenantAccounts();
     userAccountList = _accountService.userAccounts;
-    familyAccountList = _accountService.familyAccounts;
     _userAccounts.add(userAccountList);
-    _familyAccounts.add(familyAccountList);
+    _familyAccounts.add(_accountService.familyAccounts);
   }
 
   void dispose() {

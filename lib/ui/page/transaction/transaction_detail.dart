@@ -5,60 +5,60 @@ import 'package:piggy_flutter/ui/page/transaction/transaction_form.dart';
 
 class TransactionDetailPage extends StatelessWidget {
   final Transaction transaction;
-  final formatter = new DateFormat("EEE, MMM d, ''yy");
+  final formatter = DateFormat("EEE, MMM d, ''yy");
 
   TransactionDetailPage({Key key, this.transaction}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: new AppBar(
+      appBar: AppBar(
         title: Text('Transaction Details'),
       ),
-      body: new Card(
-        child: new Column(
+      body: Card(
+        child: Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             ListTile(
               leading: const Icon(Icons.category),
-              title: new Text(transaction.categoryName),
+              title: Text(transaction.categoryName),
             ),
             ListTile(
               leading: const Icon(Icons.attach_money),
-              title: new Text('${transaction.amount.toString()} ${transaction
+              title: Text('${transaction.amount.toString()} ${transaction
                   .accountCurrencySymbol}'),
             ),
             ListTile(
               leading: const Icon(Icons.event_note),
-              subtitle: new Text(transaction.description),
+              subtitle: Text(transaction.description),
               isThreeLine: true,
             ),
             ListTile(
               leading: const Icon(Icons.access_time),
-              title: new Text('${formatter.format(
+              title: Text('${formatter.format(
                   DateTime.parse(transaction.transactionTime))}'),
             ),
             ListTile(
               leading: const Icon(Icons.account_balance_wallet),
-              title: new Text(transaction.accountName),
+              title: Text(transaction.accountName),
             ),
             ListTile(
               leading: const Icon(Icons.account_circle),
-              title: new Text(transaction.creatorUserName),
+              title: Text(transaction.creatorUserName),
             ),
           ],
         ),
       ),
       bottomNavigationBar: BottomAppBar(
-        child: new Row(
+        child: Row(
           children: <Widget>[
-            new IconButton(
+            IconButton(
               icon: const Icon(Icons.edit),
               onPressed: () {
                 Navigator.push(
                   context,
-                  new MaterialPageRoute(
-                    builder: (BuildContext context) => new TransactionFormPage(
+                  MaterialPageRoute(
+                    builder: (BuildContext context) => TransactionFormPage(
                           transaction: transaction,
                           title: 'Edit Transaction',
                         ),
@@ -67,13 +67,13 @@ class TransactionDetailPage extends StatelessWidget {
                 );
               },
             ),
-            new IconButton(
+            IconButton(
               icon: const Icon(Icons.content_copy),
               onPressed: () {
                 Navigator.push(
                   context,
-                  new MaterialPageRoute(
-                    builder: (BuildContext context) => new TransactionFormPage(
+                  MaterialPageRoute(
+                    builder: (BuildContext context) => TransactionFormPage(
                           transaction: transaction,
                           title: 'Copy Transaction',
                           isCopy: true,
@@ -83,7 +83,7 @@ class TransactionDetailPage extends StatelessWidget {
                 );
               },
             ),
-            new IconButton(
+            IconButton(
               icon: const Icon(Icons.delete_forever),
               onPressed: () {},
             ),

@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:piggy_flutter/bloc/account_bloc.dart';
 import 'package:piggy_flutter/bloc/category_bloc.dart';
 import 'package:piggy_flutter/bloc/user_bloc.dart';
+import 'package:piggy_flutter/model/account.dart';
 import 'package:piggy_flutter/model/category.dart';
 import 'package:piggy_flutter/model/user.dart';
+import 'package:piggy_flutter/providers/account_provider.dart';
 import 'package:piggy_flutter/providers/category_provider.dart';
 import 'package:piggy_flutter/providers/user_provider.dart';
 import 'package:piggy_flutter/ui/page/category/category_list.dart';
@@ -15,6 +18,7 @@ class CommonDrawer extends StatelessWidget {
   Widget build(BuildContext context) {
     final UserBloc userBloc = UserProvider.of(context);
     final CategoryBloc categoryBloc = CategoryProvider.of(context);
+    final AccountBloc accountBloc = AccountProvider.of(context);
     return Drawer(
       child: ListView(
         padding: EdgeInsets.zero,
@@ -34,16 +38,7 @@ class CommonDrawer extends StatelessWidget {
                   MaterialPageRoute(builder: (context) => HomePage()),
                 )),
           ),
-//          new ListTile(
-//            title: Text(
-//              "Accounts",
-//              style: TextStyle(fontWeight: FontWeight.w700, fontSize: 18.0),
-//            ),
-//            leading: Icon(
-//              Icons.account_balance_wallet,
-//              color: Colors.green,
-//            ),
-//          ),
+          accountsTile(accountBloc),
           categoriesTile(categoryBloc),
           Divider(),
           ListTile(
@@ -89,6 +84,40 @@ class CommonDrawer extends StatelessWidget {
               ? Chip(
                   key: ValueKey<String>(snapshot.data.length.toString()),
                   backgroundColor: Colors.cyan,
+                  label: Text(snapshot.data.length.toString()),
+                )
+              : Chip(
+                  label: Icon(Icons.hourglass_empty),
+                ),
+        );
+      },
+    );
+  }
+
+  Widget accountsTile(AccountBloc accountBloc) {
+    return StreamBuilder<List<Account>>(
+      stream: accountBloc.userAccounts,
+      builder: (context, snapshot) {
+        return ListTile(
+          title: Text(
+            "Accounts",
+            style: TextStyle(fontWeight: FontWeight.w700, fontSize: 18.0),
+          ),
+          leading: Icon(
+            Icons.account_balance_wallet,
+            color: Colors.green,
+          ),
+          onTap: (() => Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => HomePage(
+                          startpage: StartPage.Accounts,
+                        )),
+              )),
+          trailing: snapshot.hasData
+              ? Chip(
+                  key: ValueKey<String>(snapshot.data.length.toString()),
+                  backgroundColor: Colors.green,
                   label: Text(snapshot.data.length.toString()),
                 )
               : Chip(

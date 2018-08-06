@@ -9,7 +9,6 @@ import 'package:piggy_flutter/model/transaction_group_item.dart';
 class TransactionBloc {
   final TransactionService _transactionService = new TransactionService();
   List<TransactionGroupItem> _recentTransactionItems;
-  TransactionSummary _transactionSummaryItem;
 
   final _recentTransactionsRefresh = PublishSubject<bool>();
   final _transactionSummaryRefresh = PublishSubject<String>();
@@ -75,9 +74,8 @@ class TransactionBloc {
 
   void getTransactionSummary(String duration) async {
 //    print("########## TransactionBloc getTransactionSummary");
-    _transactionSummaryItem =
-        await _transactionService.getTransactionSummary(duration);
-    _transactionSummary.add(_transactionSummaryItem);
+    var result = await _transactionService.getTransactionSummary(duration);
+    _transactionSummary.add(result);
   }
 
   void createOrUpdateTransaction(TransactionEditDto input) async {

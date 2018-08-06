@@ -77,10 +77,17 @@ class NavigationIconView {
   }
 }
 
+enum StartPage { Recent, Accounts, Summary }
+
 class HomePage extends StatefulWidget {
   final bool isInitialLoading;
+  final StartPage startpage;
 
-  HomePage({Key key, this.isInitialLoading = false}) : super(key: key);
+  HomePage(
+      {Key key,
+      this.isInitialLoading = false,
+      this.startpage = StartPage.Recent})
+      : super(key: key);
 
   @override
   _HomePageState createState() => new _HomePageState();
@@ -88,8 +95,6 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   int _currentIndex = 0;
-  String _title = 'Recent Transactions';
-  BottomNavigationBarType _type = BottomNavigationBarType.shifting;
   List<NavigationIconView> _navigationViews;
 
   final Key keyRecentPage = PageStorageKey('recent');
@@ -102,8 +107,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
   List<Widget> pages;
   bool isSyncRequired;
-
-  final PageStorageBucket bucket = PageStorageBucket();
 
   /// This controller can be used to programmatically
   /// set the current displayed page
@@ -136,7 +139,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
     for (NavigationIconView view in _navigationViews)
       view.controller.addListener(_rebuild);
-    _navigationViews[_currentIndex].controller.value = 1.0;
 
     summary = new SummaryPage(key: keySummaryPage);
     recent = new RecentPage(
@@ -146,11 +148,12 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       key: keyAccountsPage,
     );
 
-    _pageController = new PageController();
+    _pageController = new PageController(initialPage: widget.startpage.index);
 
     pages = [recent, accounts, summary];
-
     isSyncRequired = widget.isInitialLoading;
+    _currentIndex = widget.startpage.index;
+    _navigationViews[_currentIndex].controller.value = 1.0;
     super.initState();
   }
 
@@ -168,29 +171,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     }
 
     return new Scaffold(
-      appBar: new AppBar(
-        title: Text(_title),
-        actions: <Widget>[
-          new PopupMenuButton<BottomNavigationBarType>(
-            onSelected: (BottomNavigationBarType value) {
-              setState(() {
-                _type = value;
-              });
-            },
-            itemBuilder: (BuildContext context) =>
-                <PopupMenuItem<BottomNavigationBarType>>[
-                  const PopupMenuItem<BottomNavigationBarType>(
-                    value: BottomNavigationBarType.fixed,
-                    child: const Text('Fixed'),
-                  ),
-                  const PopupMenuItem<BottomNavigationBarType>(
-                    value: BottomNavigationBarType.shifting,
-                    child: const Text('Shifting'),
-                  )
-                ],
-          )
-        ],
-      ),
       body: new PageView(
           children: pages,
           controller: _pageController,
@@ -200,7 +180,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
             .map((NavigationIconView navigationView) => navigationView.item)
             .toList(),
         currentIndex: _currentIndex,
-        type: _type,
+        type: BottomNavigationBarType.shifting,
         onTap: navigationTapped,
       ),
       drawer: CommonDrawer(),
@@ -233,27 +213,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   void onPageChanged(int page) {
     setState(() {
       this._currentIndex = page;
-      switch (page) {
-        case 0:
-          {
-            this._title = 'Recent Transactions';
-          }
-          break;
-        case 1:
-          {
-            this._title = 'Accounts';
-          }
-          break;
-        case 2:
-          {
-            this._title = 'Summary';
-          }
-          break;
-        default:
-          {
-            this._title = 'Piggy';
-          }
-      }
     });
   }
 }

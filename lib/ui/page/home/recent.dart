@@ -22,6 +22,14 @@ class RecentPage extends StatelessWidget {
       key: _scaffoldKey,
       appBar: new AppBar(
         title: Text('Recent Transactions'),
+        actions: <Widget>[
+          new IconButton(
+            icon: const Icon(Icons.refresh),
+            onPressed: () {
+              _handleRefresh(transactionBloc);
+            },
+          ),
+        ],
       ),
       body: new RefreshIndicator(
         key: _refreshIndicatorKey,

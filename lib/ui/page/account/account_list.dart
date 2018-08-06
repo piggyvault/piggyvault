@@ -20,6 +20,9 @@ class AccountListPage extends StatelessWidget {
 
     return Scaffold(
       key: _scaffoldKey,
+      appBar: new AppBar(
+        title: Text('Accounts'),
+      ),
       body: new RefreshIndicator(
         key: _refreshIndicatorKey,
         onRefresh: (() => _handleRefresh(accountBloc)),

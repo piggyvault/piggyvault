@@ -20,6 +20,9 @@ class RecentPage extends StatelessWidget {
 
     return Scaffold(
       key: _scaffoldKey,
+      appBar: new AppBar(
+        title: Text('Recent Transactions'),
+      ),
       body: new RefreshIndicator(
         key: _refreshIndicatorKey,
         onRefresh: (() => _handleRefresh(transactionBloc)),

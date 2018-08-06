@@ -8,7 +8,11 @@ class SummaryPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final TransactionBloc transactionBloc = TransactionProvider.of(context);
-    return Scaffold(body: _buildBody(transactionBloc));
+    return Scaffold(
+        appBar: new AppBar(
+          title: Text('Accounts'),
+        ),
+        body: _buildBody(transactionBloc));
   }
 
   Widget _buildBody(TransactionBloc transactionBloc) =>

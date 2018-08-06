@@ -8,7 +8,6 @@ import 'package:piggy_flutter/model/transaction_group_item.dart';
 
 class TransactionBloc {
   final TransactionService _transactionService = new TransactionService();
-  List<TransactionGroupItem> _recentTransactionItems;
 
   final _recentTransactionsRefresh = PublishSubject<bool>();
   final _transactionSummaryRefresh = PublishSubject<String>();
@@ -68,8 +67,7 @@ class TransactionBloc {
         new DateTime.now().add(new Duration(days: -30)).toString(),
         new DateTime.now().add(new Duration(days: 1)).toString(),
         'recent'));
-    _recentTransactionItems = result;
-    _recentTransactions.add(_recentTransactionItems);
+    _recentTransactions.add(result);
   }
 
   void getTransactionSummary(String duration) async {

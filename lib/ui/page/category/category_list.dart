@@ -9,7 +9,7 @@ import 'package:piggy_flutter/ui/widgets/common/message_placeholder.dart';
 class CategoryListPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    print('########## CategoryListPage  build');
+    // print('########## CategoryListPage  build');
     final categoryBloc = CategoryProvider.of(context);
     return new Scaffold(
       appBar: new AppBar(

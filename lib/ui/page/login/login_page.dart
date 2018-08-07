@@ -59,10 +59,10 @@ class _LoginPageState extends State<LoginPage> {
   loginHeader(UserBloc userBloc) => Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
-          FlutterLogo(
-            colors: Colors.green,
-            size: 80.0,
-          ),
+          // FlutterLogo(
+          //   colors: Colors.green,
+          //   size: 80.0,
+          // ),
           SizedBox(
             height: 30.0,
           ),

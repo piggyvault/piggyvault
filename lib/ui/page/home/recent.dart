@@ -29,6 +29,23 @@ class RecentPage extends StatelessWidget {
               _handleRefresh(transactionBloc);
             },
           ),
+          new PopupMenuButton<String>(
+            padding: EdgeInsets.zero,
+//            onSelected: showMenuSelection,
+            itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+                  PopupMenuItem<String>(
+                    value: 'View by category',
+                    child: ListTile(
+                      leading: const Icon(Icons.account_balance),
+                      title: const Text('View by category'),
+                      onTap: () {
+                        transactionBloc.changeTransactionsGroupBy(
+                            TransactionsGroupBy.Category);
+                      },
+                    ),
+                  ),
+                ],
+          )
         ],
       ),
       body: new RefreshIndicator(

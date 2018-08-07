@@ -75,8 +75,12 @@ class AccountDetailsPageState extends State<AccountDetailsPage>
           .add(new Duration(milliseconds: -1));
       var formatter = new DateFormat("MMM, ''yy");
 
-      var input = GetTransactionsInput('account', widget.account.id,
-          startDate.toString(), endDate.toString(), 'account');
+      var input = GetTransactionsInput(
+          type: 'account',
+          accountId: widget.account.id,
+          startDate: startDate.toString(),
+          endDate: endDate.toString(),
+          groupBy: TransactionsGroupBy.Date);
 
       _transactionService.getTransactions(input).then((result) {
         page.transactions = result;
@@ -93,7 +97,7 @@ class AccountDetailsPageState extends State<AccountDetailsPage>
   }
 
   Decoration getIndicator() {
-   return new ShapeDecoration(
+    return new ShapeDecoration(
       shape: const StadiumBorder(
             side: const BorderSide(
               color: Colors.white24,

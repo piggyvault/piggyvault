@@ -14,10 +14,17 @@ class TransactionBloc {
   final _transactionCommentsRefresh = PublishSubject<String>();
   final _transactionComments = PublishSubject<List<TransactionComment>>();
   final _comment = BehaviorSubject<String>();
+  final _transactionsGroupBy =
+      BehaviorSubject<TransactionsGroupBy>(seedValue: TransactionsGroupBy.Date);
 
   Stream<String> get comment => _comment.stream.transform(validateComment);
+  Stream<TransactionsGroupBy> get transactionsGroupBy =>
+      _transactionsGroupBy.stream;
 
   Function(String) get changeComment => _comment.sink.add;
+  Function(TransactionsGroupBy) get changeTransactionsGroupBy =>
+      _transactionsGroupBy.sink.add;
+
   Function(bool) get recentTransactionsRefresh =>
       _recentTransactionsRefresh.sink.add;
   Function(String) get transactionSummaryRefresh =>
@@ -55,6 +62,7 @@ class TransactionBloc {
     _transactionSummaryRefresh.stream.listen(getTransactionSummary);
     transferController.stream.listen(transfer);
     _transactionCommentsRefresh.stream.listen(getTransactionComments);
+    _transactionsGroupBy.stream.listen(onTransactionsGroupByChanged);
   }
 
   submitComment(String transactionId) async {
@@ -66,6 +74,10 @@ class TransactionBloc {
     changeComment('');
   }
 
+  void onTransactionsGroupByChanged(TransactionsGroupBy groupBy) {
+    recentTransactionsRefresh(true);
+  }
+
   Future<Null> getTransactionComments(String id) async {
     // print("########## TransactionBloc getTransactionComments");
     var result = await _transactionService.getTransactionComments(id);
@@ -75,11 +87,11 @@ class TransactionBloc {
   Future<Null> getRecentTransactions(bool done) async {
 //    print("########## TransactionBloc getRecentTransactions");
     var result = await _transactionService.getTransactions(GetTransactionsInput(
-        'tenant',
-        null,
-        new DateTime.now().add(new Duration(days: -30)).toString(),
-        new DateTime.now().add(new Duration(days: 1)).toString(),
-        'recent'));
+        type: 'tenant',
+        accountId: null,
+        startDate: new DateTime.now().add(new Duration(days: -30)).toString(),
+        endDate: new DateTime.now().add(new Duration(days: 1)).toString(),
+        groupBy: _transactionsGroupBy.value));
     _recentTransactions.add(result);
   }
 
@@ -125,5 +137,6 @@ class TransactionBloc {
     _transactionComments.close();
     _transactionCommentsRefresh.close();
     _comment.close();
+    _transactionsGroupBy.close();
   }
 }

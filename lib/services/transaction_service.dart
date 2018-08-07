@@ -15,10 +15,14 @@ class GetTransactionsInput {
   String startDate;
   String endDate;
   String query;
-  String view;
+  TransactionsGroupBy groupBy;
 
-  GetTransactionsInput(this.type, this.accountId, this.startDate, this.endDate,
-      this.view); // where the data is showing
+  GetTransactionsInput(
+      {this.type,
+      this.accountId,
+      this.startDate,
+      this.endDate,
+      this.groupBy}); // where the data is showing
 }
 
 class TransferInput {
@@ -56,8 +60,8 @@ class TransactionService extends AppServiceBase {
         transactions.add(Transaction.fromJson(transaction));
       });
     }
-    var groupedTransactions = groupTransactions(transactions);
-    return groupedTransactions;
+    return groupTransactions(
+        transactions: transactions, groupBy: input.groupBy);
   }
 
   Future<TransactionSummary> getTransactionSummary(String duration) async {
@@ -135,33 +139,37 @@ class TransactionService extends AppServiceBase {
     });
   }
 
-  List<TransactionGroupItem> groupTransactions(List<Transaction> items,
-      [String groupBy = 'transactionTime']) {
-    List<TransactionGroupItem> groupedItems = [];
+  List<TransactionGroupItem> groupTransactions(
+      {List<Transaction> transactions,
+      TransactionsGroupBy groupBy = TransactionsGroupBy.Date}) {
+    List<TransactionGroupItem> sections = [];
+    var formatter = DateFormat("EEE, MMM d, ''yy");
+    String key;
 
-    if (groupBy == 'transactionTime') {
-      for (var i = 0; i < items.length; i++) {
-        var date = DateTime.parse(items[i].transactionTime);
-        var index = date.year * 10000 + (date.month * 100) + date.day;
-        var day = groupedItems.firstWhere((o) => o.index == index,
-            orElse: () => null);
+    transactions.forEach((transaction) {
+      if (groupBy == TransactionsGroupBy.Date) {
+        key = formatter.format(DateTime.parse(transaction.transactionTime));
+      } else if (groupBy == TransactionsGroupBy.Category) {
+        key = transaction.categoryName;
+      }
 
-        if (day == null) {
-          var formatter = new DateFormat("EEE, MMM d, ''yy");
-          day = new TransactionGroupItem(index, formatter.format(date));
+      var section =
+          sections.firstWhere((o) => o.title == key, orElse: () => null);
 
-          groupedItems.add(day);
-        }
+      if (section == null) {
+        section = TransactionGroupItem(title: key);
+        sections.add(section);
+      }
 
 //         if (items[i]['amountInDefaultCurrency'] > 0) {
 //           day['totalInflow'] += items[i]['amountInDefaultCurrency'];
 //         } else {
 //           day['totalOutflow'] += items[i]['amountInDefaultCurrency'];
 //         }
-        day.transactions.add(items[i]);
-      }
-    }
 
-    return groupedItems;
+      section.transactions.add(transaction);
+    });
+
+    return sections;
   }
 }

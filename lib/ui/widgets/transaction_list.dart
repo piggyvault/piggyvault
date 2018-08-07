@@ -29,7 +29,7 @@ class TransactionList extends StatelessWidget {
         .map((transaction) => buildTransactionList(context, transaction));
 
     return ExpansionTile(
-        key: PageStorageKey(item.index),
+        key: PageStorageKey(item.title),
         title: Text(item.title),
         initiallyExpanded: true,
         backgroundColor: Theme.of(context).accentColor.withOpacity(0.025),

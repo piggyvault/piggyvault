@@ -9,15 +9,19 @@ import 'package:piggy_flutter/model/transaction_group_item.dart';
 class TransactionBloc {
   final TransactionService _transactionService = new TransactionService();
 
+  final _comment = BehaviorSubject<String>();
+  final _isRecentTransactionsLoadingSubject =
+      BehaviorSubject<bool>(seedValue: false);
   final _recentTransactionsRefresh = PublishSubject<bool>();
   final _transactionSummaryRefresh = PublishSubject<String>();
   final _transactionCommentsRefresh = PublishSubject<String>();
   final _transactionComments = PublishSubject<List<TransactionComment>>();
-  final _comment = BehaviorSubject<String>();
   final _transactionsGroupBy =
       BehaviorSubject<TransactionsGroupBy>(seedValue: TransactionsGroupBy.Date);
 
   Stream<String> get comment => _comment.stream.transform(validateComment);
+  Stream<bool> get isRecentTransactionsLoading =>
+      _isRecentTransactionsLoadingSubject.stream;
   Stream<TransactionsGroupBy> get transactionsGroupBy =>
       _transactionsGroupBy.stream;
 
@@ -86,6 +90,7 @@ class TransactionBloc {
 
   Future<Null> getRecentTransactions(bool done) async {
 //    print("########## TransactionBloc getRecentTransactions");
+    _isRecentTransactionsLoadingSubject.add(true);
     var result = await _transactionService.getTransactions(GetTransactionsInput(
         type: 'tenant',
         accountId: null,
@@ -93,6 +98,7 @@ class TransactionBloc {
         endDate: new DateTime.now().add(new Duration(days: 1)).toString(),
         groupBy: _transactionsGroupBy.value));
     _recentTransactions.add(result);
+    _isRecentTransactionsLoadingSubject.add(false);
   }
 
   void getTransactionSummary(String duration) async {
@@ -138,5 +144,6 @@ class TransactionBloc {
     _transactionCommentsRefresh.close();
     _comment.close();
     _transactionsGroupBy.close();
+    _isRecentTransactionsLoadingSubject.close();
   }
 }

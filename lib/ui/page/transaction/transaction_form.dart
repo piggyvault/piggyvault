@@ -78,8 +78,9 @@ class TransactionFormPageState extends State<TransactionFormPage> {
           transactionEditDto = result;
           if (widget.isCopy) {
             transactionEditDto.id = null;
-          }else{
-            _transactionDate = DateTime.parse(transactionEditDto.transactionTime);
+          } else {
+            _transactionDate =
+                DateTime.parse(transactionEditDto.transactionTime);
             _transactionTime = TimeOfDay(
                 hour: _transactionDate.hour, minute: _transactionDate.minute);
           }
@@ -94,7 +95,6 @@ class TransactionFormPageState extends State<TransactionFormPage> {
               new TextEditingController(text: transactionEditDto.description);
           _amountFieldController = new TextEditingController(
               text: transactionEditDto.amount.toString());
-
         });
       });
     }
@@ -396,11 +396,11 @@ class TransactionFormPageState extends State<TransactionFormPage> {
             toAmount = amount;
           }
 
-          transactionBloc.doTransfer.add(new TransferInput(
+          transactionBloc.doTransfer(TransferInput(
               transactionEditDto.id,
               _descriptionFieldController.text,
               transactionEditDto.accountId,
-              new DateTime(
+              DateTime(
                       _transactionDate.year,
                       _transactionDate.month,
                       _transactionDate.day,
@@ -435,7 +435,7 @@ class TransactionFormPageState extends State<TransactionFormPage> {
         transactionEditDto.amount = amount;
         transactionEditDto.accountBloc = accountBloc;
 
-        transactionBloc.saveTransaction.add(transactionEditDto);
+        transactionBloc.saveTransaction(transactionEditDto);
 
         Navigator.pop(context, DismissDialogAction.save);
       }

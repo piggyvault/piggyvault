@@ -18,12 +18,22 @@ class TransactionBloc {
   final _transactionComments = PublishSubject<List<TransactionComment>>();
   final _transactionsGroupBy =
       BehaviorSubject<TransactionsGroupBy>(seedValue: TransactionsGroupBy.Date);
+  final _transactionSummary = BehaviorSubject<TransactionSummary>();
+  final _recentTransactions = BehaviorSubject<List<TransactionGroupItem>>();
+  final _saveTransactionController = StreamController<TransactionEditDto>();
+  final _transferController = StreamController<TransferInput>();
 
   Stream<String> get comment => _comment.stream.transform(validateComment);
   Stream<bool> get isRecentTransactionsLoading =>
       _isRecentTransactionsLoadingSubject.stream;
   Stream<TransactionsGroupBy> get transactionsGroupBy =>
       _transactionsGroupBy.stream;
+  Stream<List<TransactionComment>> get transactionComments =>
+      _transactionComments.stream;
+  Stream<TransactionSummary> get transactionSummary =>
+      _transactionSummary.stream;
+  Stream<List<TransactionGroupItem>> get recentTransactions =>
+      _recentTransactions.stream;
 
   Function(String) get changeComment => _comment.sink.add;
   Function(TransactionsGroupBy) get changeTransactionsGroupBy =>
@@ -37,34 +47,17 @@ class TransactionBloc {
   Function(String) get transactionCommentsRefresh =>
       _transactionCommentsRefresh.sink.add;
 
-  final _transactionSummary = BehaviorSubject<TransactionSummary>();
+  Function(TransactionEditDto) get saveTransaction =>
+      _saveTransactionController.sink.add;
 
-  Stream<List<TransactionComment>> get transactionComments =>
-      _transactionComments.stream;
-
-  Stream<TransactionSummary> get transactionSummary =>
-      _transactionSummary.stream;
-
-  final _recentTransactions = BehaviorSubject<List<TransactionGroupItem>>();
-
-  Stream<List<TransactionGroupItem>> get recentTransactions =>
-      _recentTransactions.stream;
-
-  final saveTransactionController = StreamController<TransactionEditDto>();
-
-  Sink<TransactionEditDto> get saveTransaction =>
-      saveTransactionController.sink;
-
-  final transferController = StreamController<TransferInput>();
-
-  Sink<TransferInput> get doTransfer => transferController.sink;
+  Function(TransferInput) get doTransfer => _transferController.sink.add;
 
   TransactionBloc() {
 //    print("########## TransactionBloc");
-    saveTransactionController.stream.listen(createOrUpdateTransaction);
+    _saveTransactionController.stream.listen(createOrUpdateTransaction);
     _recentTransactionsRefresh.stream.listen(getRecentTransactions);
     _transactionSummaryRefresh.stream.listen(getTransactionSummary);
-    transferController.stream.listen(transfer);
+    _transferController.stream.listen(transfer);
     _transactionCommentsRefresh.stream.listen(getTransactionComments);
     _transactionsGroupBy.stream.listen(onTransactionsGroupByChanged);
   }
@@ -137,9 +130,9 @@ class TransactionBloc {
     _transactionSummary.close();
     _transactionSummaryRefresh.close();
     _recentTransactions.close();
-    saveTransactionController.close();
+    _saveTransactionController.close();
     _recentTransactionsRefresh.close();
-    transferController.close();
+    _transferController.close();
     _transactionComments.close();
     _transactionCommentsRefresh.close();
     _comment.close();

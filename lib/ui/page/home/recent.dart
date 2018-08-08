@@ -32,7 +32,7 @@ class RecentPage extends StatelessWidget {
           new PopupMenuButton<String>(
             padding: EdgeInsets.zero,
             onSelected: (value) {
-              print('onSelected $value');
+              // print('onSelected $value');
               switch (value) {
                 case 'TransactionsGroupBy.Category':
                   {

@@ -4,20 +4,17 @@ import 'package:piggy_flutter/model/account.dart';
 import 'package:piggy_flutter/services/account_service.dart';
 
 class AccountBloc {
-
   List<Account> userAccountList;
 
   final AccountService _accountService = new AccountService();
 
   final _accountsRefresh = PublishSubject<bool>();
-
-  Function(bool) get accountsRefresh => _accountsRefresh.sink.add;
-
   final _userAccounts = BehaviorSubject<List<Account>>();
   final _familyAccounts = BehaviorSubject<List<Account>>();
 
-  Stream<List<Account>> get userAccounts => _userAccounts.stream;
+  Function(bool) get accountsRefresh => _accountsRefresh.sink.add;
 
+  Stream<List<Account>> get userAccounts => _userAccounts.stream;
   Stream<List<Account>> get familyAccounts => _familyAccounts.stream;
 
   AccountBloc() {

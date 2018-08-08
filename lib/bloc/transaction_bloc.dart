@@ -7,7 +7,7 @@ import 'package:rxdart/rxdart.dart';
 import 'package:piggy_flutter/model/transaction_group_item.dart';
 
 class TransactionBloc {
-  final TransactionService _transactionService = new TransactionService();
+  final TransactionService _transactionService = TransactionService();
 
   final _comment = BehaviorSubject<String>();
   final _isRecentTransactionsLoadingSubject =
@@ -87,8 +87,8 @@ class TransactionBloc {
     var result = await _transactionService.getTransactions(GetTransactionsInput(
         type: 'tenant',
         accountId: null,
-        startDate: new DateTime.now().add(new Duration(days: -30)),
-        endDate: new DateTime.now().add(new Duration(days: 1)),
+        startDate:  DateTime.now().add( Duration(days: -30)),
+        endDate:  DateTime.now().add( Duration(days: 1)),
         groupBy: _transactionsGroupBy.value));
     _recentTransactions.add(result);
     _isRecentTransactionsLoadingSubject.add(false);

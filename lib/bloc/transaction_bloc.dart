@@ -94,8 +94,8 @@ class TransactionBloc {
     var result = await _transactionService.getTransactions(GetTransactionsInput(
         type: 'tenant',
         accountId: null,
-        startDate: new DateTime.now().add(new Duration(days: -30)).toString(),
-        endDate: new DateTime.now().add(new Duration(days: 1)).toString(),
+        startDate: new DateTime.now().add(new Duration(days: -30)),
+        endDate: new DateTime.now().add(new Duration(days: 1)),
         groupBy: _transactionsGroupBy.value));
     _recentTransactions.add(result);
     _isRecentTransactionsLoadingSubject.add(false);

@@ -12,8 +12,8 @@ import 'package:intl/intl.dart';
 class GetTransactionsInput {
   String type;
   String accountId;
-  String startDate;
-  String endDate;
+  DateTime startDate;
+  DateTime endDate;
   String query;
   TransactionsGroupBy groupBy;
 
@@ -51,8 +51,8 @@ class TransactionService extends AppServiceBase {
         .postAsync<dynamic>('services/app/transaction/GetTransactionsAsync', {
       "type": input.type,
       "accountId": input.accountId,
-      "startDate": input.startDate,
-      "endDate": input.endDate
+      "startDate": input.startDate.toString(),
+      "endDate": input.endDate.toString()
     });
 
     if (result.mappedResult != null) {

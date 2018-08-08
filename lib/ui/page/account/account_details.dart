@@ -7,8 +7,6 @@ import 'package:piggy_flutter/ui/page/transaction/transaction_form.dart';
 import 'package:piggy_flutter/ui/widgets/transaction_list.dart';
 import 'package:piggy_flutter/utils/uidata.dart';
 
-enum TabsDemoStyle { iconsAndText, iconsOnly, textOnly }
-
 class _Page {
   String title;
   final int monthDifferenceIndex;
@@ -27,7 +25,6 @@ List<_Page> _allPages = [
 ];
 
 class AccountDetailsPage extends StatefulWidget {
-  static const String routeName = '/account/details';
   final Account account;
 
   @override
@@ -39,6 +36,7 @@ class AccountDetailsPage extends StatefulWidget {
 class AccountDetailsPageState extends State<AccountDetailsPage>
     with SingleTickerProviderStateMixin {
   TabController _controller;
+
   final TransactionService _transactionService = new TransactionService();
 
   @override
@@ -78,8 +76,8 @@ class AccountDetailsPageState extends State<AccountDetailsPage>
       var input = GetTransactionsInput(
           type: 'account',
           accountId: widget.account.id,
-          startDate: startDate.toString(),
-          endDate: endDate.toString(),
+          startDate: startDate,
+          endDate: endDate,
           groupBy: TransactionsGroupBy.Date);
 
       _transactionService.getTransactions(input).then((result) {

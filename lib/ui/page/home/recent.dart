@@ -33,17 +33,7 @@ class RecentPage extends StatelessWidget {
             padding: EdgeInsets.zero,
 //            onSelected: showMenuSelection,
             itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-                  PopupMenuItem<String>(
-                    value: 'View by category',
-                    child: ListTile(
-                      leading: const Icon(Icons.account_balance),
-                      title: const Text('View by category'),
-                      onTap: () {
-                        transactionBloc.changeTransactionsGroupBy(
-                            TransactionsGroupBy.Category);
-                      },
-                    ),
-                  ),
+                  PopupMenuItem<String>(child: groupByMenu(transactionBloc)),
                 ],
           )
         ],
@@ -66,6 +56,33 @@ class RecentPage extends StatelessWidget {
                   fullscreenDialog: true,
                 ));
           }),
+    );
+  }
+
+  Widget groupByMenu(TransactionBloc transactionBloc) {
+    return StreamBuilder<TransactionsGroupBy>(
+      stream: transactionBloc.transactionsGroupBy,
+      builder: (context, snapshot) {
+        if (snapshot.data == TransactionsGroupBy.Date) {
+          return ListTile(
+            leading: const Icon(Icons.category),
+            title: const Text('View by category'),
+            onTap: () {
+              transactionBloc
+                  .changeTransactionsGroupBy(TransactionsGroupBy.Category);
+            },
+          );
+        } else {
+          return ListTile(
+            leading: const Icon(Icons.date_range),
+            title: const Text('View by date'),
+            onTap: () {
+              transactionBloc
+                  .changeTransactionsGroupBy(TransactionsGroupBy.Date);
+            },
+          );
+        }
+      },
     );
   }
 

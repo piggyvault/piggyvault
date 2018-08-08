@@ -39,23 +39,13 @@ class AccountDetailsPageState extends State<AccountDetailsPage>
 
   final TransactionService _transactionService = TransactionService();
 
-  @override
-  void initState() {
-    super.initState();
-    _controller =  TabController(
-        vsync: this,
-        length: _allPages.length,
-        initialIndex: _allPages.length - 1);
-    setPages();
-  }
-
   void setPages() {
     // creating 6 tabs
     for (int i = 5; i >= 0; i--) {
       var page = _allPages[i];
 
-      var startMonth =  DateTime.now().month - page.monthDifferenceIndex;
-      var startYear =  DateTime.now().year;
+      var startMonth = DateTime.now().month - page.monthDifferenceIndex;
+      var startYear = DateTime.now().year;
       if (startMonth < 0) {
         startMonth += 11;
         startYear -= 1;
@@ -68,10 +58,10 @@ class AccountDetailsPageState extends State<AccountDetailsPage>
         endYear += 1;
       }
 
-      var startDate =  DateTime(startYear, startMonth, 1);
-      var endDate =  DateTime(endYear, endMonth, 1)
-          .add( Duration(milliseconds: -1));
-      var formatter =  DateFormat("MMM, ''yy");
+      var startDate = DateTime(startYear, startMonth, 1);
+      var endDate =
+          DateTime(endYear, endMonth, 1).add(Duration(milliseconds: -1));
+      var formatter = DateFormat("MMM, ''yy");
 
       var input = GetTransactionsInput(
           type: 'account',
@@ -88,14 +78,8 @@ class AccountDetailsPageState extends State<AccountDetailsPage>
     }
   }
 
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
   Decoration getIndicator() {
-    return  ShapeDecoration(
+    return ShapeDecoration(
       shape: const StadiumBorder(
             side: const BorderSide(
               color: Colors.white24,
@@ -112,54 +96,70 @@ class AccountDetailsPageState extends State<AccountDetailsPage>
   }
 
   @override
+  void initState() {
+    super.initState();
+    _controller = TabController(
+        vsync: this,
+        length: _allPages.length,
+        initialIndex: _allPages.length - 1);
+    setPages();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return  Scaffold(
-      appBar:  AppBar(
-        title:  Text(widget.account.name),
-        bottom:  TabBar(
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(widget.account.name),
+        bottom: TabBar(
           controller: _controller,
           isScrollable: true,
           indicator: getIndicator(),
           tabs: _allPages.map((_Page page) {
-            return  Tab(text: page.title);
+            return Tab(text: page.title);
           }).toList(),
         ),
         actions: <Widget>[
-           PopupMenuButton<String>(
+          PopupMenuButton<String>(
             padding: EdgeInsets.zero,
 //            onSelected: showMenuSelection,
             itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
                   const PopupMenuItem<String>(
                     value: UIData.adjust_balance,
                     child: ListTile(
-                      leading:  Icon(Icons.account_balance),
-                      title:  Text(UIData.adjust_balance),
+                      leading: Icon(Icons.account_balance),
+                      title: Text(UIData.adjust_balance),
                     ),
                   ),
                 ],
           ),
         ],
       ),
-      body:  TabBarView(
+      body: TabBarView(
           controller: _controller,
           children: _allPages.map((_Page page) {
-            return  TransactionList(transactions: page.transactions);
+            return TransactionList(transactions: page.transactions);
           }).toList()),
-      floatingActionButton:  FloatingActionButton(
-          key:  ValueKey<Color>(Theme.of(context).primaryColor),
+      floatingActionButton: FloatingActionButton(
+          key: ValueKey<Color>(Theme.of(context).primaryColor),
           tooltip: 'Add new transaction',
           backgroundColor: Theme.of(context).primaryColor,
-          child:  Icon(Icons.add_circle_outline),
+          child: Icon(Icons.add_circle_outline),
           onPressed: () {
             Navigator.push(
                 context,
-                 MaterialPageRoute<DismissDialogAction>(
-                  builder: (BuildContext context) =>  TransactionFormPage(
+                MaterialPageRoute<DismissDialogAction>(
+                  builder: (BuildContext context) => TransactionFormPage(
                         account: widget.account,
                       ),
                   fullscreenDialog: true,
                 ));
           }),
     );
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 }

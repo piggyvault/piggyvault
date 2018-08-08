@@ -157,7 +157,7 @@ class TransactionService extends AppServiceBase {
           sections.firstWhere((o) => o.title == key, orElse: () => null);
 
       if (section == null) {
-        section = TransactionGroupItem(title: key);
+        section = TransactionGroupItem(title: key, groupby: groupBy);
         sections.add(section);
       }
 

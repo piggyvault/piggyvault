@@ -33,7 +33,7 @@ class CommonDrawer extends StatelessWidget {
               Icons.home,
               color: Colors.blue,
             ),
-            onTap: (() => Navigator.push(
+            onTap: (() => Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(builder: (context) => HomePage()),
                 )),
@@ -76,7 +76,7 @@ class CommonDrawer extends StatelessWidget {
             Icons.category,
             color: Colors.cyan,
           ),
-          onTap: (() => Navigator.push(
+          onTap: (() => Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(builder: (context) => CategoryListPage()),
               )),
@@ -107,7 +107,7 @@ class CommonDrawer extends StatelessWidget {
             Icons.account_balance_wallet,
             color: Colors.green,
           ),
-          onTap: (() => Navigator.push(
+          onTap: (() => Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
                     builder: (context) => HomePage(

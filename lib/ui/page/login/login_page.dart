@@ -6,12 +6,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatefulWidget {
   @override
-  _LoginPageState createState() => new _LoginPageState();
+  _LoginPageState createState() => _LoginPageState();
 }
 
 class _LoginPageState extends State<LoginPage> {
-  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
-  final UserBloc _userBloc = new UserBloc();
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  final UserBloc _userBloc = UserBloc();
 
   @override
   void initState() {
@@ -212,7 +212,7 @@ class _LoginPageState extends State<LoginPage> {
       );
     } else {
       _scaffoldKey.currentState?.showSnackBar(
-        new SnackBar(
+        SnackBar(
           backgroundColor: Colors.red,
           content: const Text(
               'Something went wrong, check the credentials and try again.'),

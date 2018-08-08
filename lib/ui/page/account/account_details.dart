@@ -109,7 +109,8 @@ class AccountDetailsPageState extends State<AccountDetailsPage>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.account.name),
+        title: Text(
+            '${widget.account.name} - ${widget.account.currentBalance} ${widget.account.currencySymbol}'),
         bottom: TabBar(
           controller: _controller,
           isScrollable: true,

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:piggy_flutter/model/transaction.dart';
 import 'package:piggy_flutter/model/transaction_group_item.dart';
@@ -6,6 +8,10 @@ import 'package:piggy_flutter/ui/widgets/common/message_placeholder.dart';
 
 class TransactionList extends StatelessWidget {
   final List<TransactionGroupItem> transactions;
+  final Stream<bool> isLoading;
+
+  TransactionList({Key key, this.transactions, this.isLoading})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -13,8 +19,13 @@ class TransactionList extends StatelessWidget {
       return Center(child: CircularProgressIndicator());
     } else {
       if (transactions.length > 0) {
-        Iterable<Widget> groupedTransactionList = transactions
-            .map((item) => buildGroupedTransactionTile(context, item));
+        List<Widget> groupedTransactionList = [];
+        if (isLoading != null) {
+          groupedTransactionList.add(_loadingInfo(isLoading));
+        }
+
+        groupedTransactionList.addAll(transactions
+            .map((item) => buildGroupedTransactionTile(context, item)));
         return ListView(
           children: groupedTransactionList.toList(),
         );
@@ -22,6 +33,19 @@ class TransactionList extends StatelessWidget {
         return MessagePlaceholder();
       }
     }
+  }
+
+  Widget _loadingInfo(Stream<bool> isLoading) {
+    return StreamBuilder<bool>(
+      stream: isLoading,
+      builder: (context, snapshot) {
+        if (snapshot.hasData && snapshot.data) {
+          return LinearProgressIndicator();
+        } else {
+          return Container();
+        }
+      },
+    );
   }
 
   buildGroupedTransactionTile(BuildContext context, TransactionGroupItem item) {
@@ -63,6 +87,4 @@ class TransactionList extends StatelessWidget {
           }),
     );
   }
-
-  TransactionList({Key key, this.transactions}) : super(key: key);
 }

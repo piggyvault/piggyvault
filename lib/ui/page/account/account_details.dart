@@ -28,7 +28,7 @@ class AccountDetailsPage extends StatefulWidget {
   final Account account;
 
   @override
-  AccountDetailsPageState createState() => new AccountDetailsPageState();
+  AccountDetailsPageState createState() => AccountDetailsPageState();
 
   AccountDetailsPage({Key key, this.account}) : super(key: key);
 }
@@ -37,12 +37,12 @@ class AccountDetailsPageState extends State<AccountDetailsPage>
     with SingleTickerProviderStateMixin {
   TabController _controller;
 
-  final TransactionService _transactionService = new TransactionService();
+  final TransactionService _transactionService = TransactionService();
 
   @override
   void initState() {
     super.initState();
-    _controller = new TabController(
+    _controller =  TabController(
         vsync: this,
         length: _allPages.length,
         initialIndex: _allPages.length - 1);
@@ -54,8 +54,8 @@ class AccountDetailsPageState extends State<AccountDetailsPage>
     for (int i = 5; i >= 0; i--) {
       var page = _allPages[i];
 
-      var startMonth = new DateTime.now().month - page.monthDifferenceIndex;
-      var startYear = new DateTime.now().year;
+      var startMonth =  DateTime.now().month - page.monthDifferenceIndex;
+      var startYear =  DateTime.now().year;
       if (startMonth < 0) {
         startMonth += 11;
         startYear -= 1;
@@ -68,10 +68,10 @@ class AccountDetailsPageState extends State<AccountDetailsPage>
         endYear += 1;
       }
 
-      var startDate = new DateTime(startYear, startMonth, 1);
-      var endDate = new DateTime(endYear, endMonth, 1)
-          .add(new Duration(milliseconds: -1));
-      var formatter = new DateFormat("MMM, ''yy");
+      var startDate =  DateTime(startYear, startMonth, 1);
+      var endDate =  DateTime(endYear, endMonth, 1)
+          .add( Duration(milliseconds: -1));
+      var formatter =  DateFormat("MMM, ''yy");
 
       var input = GetTransactionsInput(
           type: 'account',
@@ -95,7 +95,7 @@ class AccountDetailsPageState extends State<AccountDetailsPage>
   }
 
   Decoration getIndicator() {
-    return new ShapeDecoration(
+    return  ShapeDecoration(
       shape: const StadiumBorder(
             side: const BorderSide(
               color: Colors.white24,
@@ -113,48 +113,48 @@ class AccountDetailsPageState extends State<AccountDetailsPage>
 
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
-      appBar: new AppBar(
-        title: new Text(widget.account.name),
-        bottom: new TabBar(
+    return  Scaffold(
+      appBar:  AppBar(
+        title:  Text(widget.account.name),
+        bottom:  TabBar(
           controller: _controller,
           isScrollable: true,
           indicator: getIndicator(),
           tabs: _allPages.map((_Page page) {
-            return new Tab(text: page.title);
+            return  Tab(text: page.title);
           }).toList(),
         ),
         actions: <Widget>[
-          new PopupMenuButton<String>(
+           PopupMenuButton<String>(
             padding: EdgeInsets.zero,
 //            onSelected: showMenuSelection,
             itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
                   const PopupMenuItem<String>(
                     value: UIData.adjust_balance,
-                    child: const ListTile(
-                      leading: const Icon(Icons.account_balance),
-                      title: const Text(UIData.adjust_balance),
+                    child: ListTile(
+                      leading:  Icon(Icons.account_balance),
+                      title:  Text(UIData.adjust_balance),
                     ),
                   ),
                 ],
           ),
         ],
       ),
-      body: new TabBarView(
+      body:  TabBarView(
           controller: _controller,
           children: _allPages.map((_Page page) {
-            return new TransactionList(transactions: page.transactions);
+            return  TransactionList(transactions: page.transactions);
           }).toList()),
-      floatingActionButton: new FloatingActionButton(
-          key: new ValueKey<Color>(Theme.of(context).primaryColor),
+      floatingActionButton:  FloatingActionButton(
+          key:  ValueKey<Color>(Theme.of(context).primaryColor),
           tooltip: 'Add new transaction',
           backgroundColor: Theme.of(context).primaryColor,
-          child: new Icon(Icons.add_circle_outline),
+          child:  Icon(Icons.add_circle_outline),
           onPressed: () {
             Navigator.push(
                 context,
-                new MaterialPageRoute<DismissDialogAction>(
-                  builder: (BuildContext context) => new TransactionFormPage(
+                 MaterialPageRoute<DismissDialogAction>(
+                  builder: (BuildContext context) =>  TransactionFormPage(
                         account: widget.account,
                       ),
                   fullscreenDialog: true,

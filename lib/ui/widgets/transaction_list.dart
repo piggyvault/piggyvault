@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:piggy_flutter/model/transaction.dart';
 import 'package:piggy_flutter/model/transaction_group_item.dart';
 import 'package:piggy_flutter/ui/page/transaction/transaction_detail.dart';
@@ -9,6 +10,7 @@ import 'package:piggy_flutter/ui/widgets/common/message_placeholder.dart';
 class TransactionList extends StatelessWidget {
   final List<TransactionGroupItem> transactions;
   final Stream<bool> isLoading;
+  final DateFormat formatter = DateFormat("EEE, MMM d, ''yy");
 
   TransactionList({Key key, this.transactions, this.isLoading})
       : super(key: key);
@@ -49,8 +51,8 @@ class TransactionList extends StatelessWidget {
   }
 
   buildGroupedTransactionTile(BuildContext context, TransactionGroupItem item) {
-    Iterable<Widget> transactionList = item.transactions
-        .map((transaction) => buildTransactionList(context, transaction));
+    Iterable<Widget> transactionList = item.transactions.map((transaction) =>
+        buildTransactionList(context, transaction, item.groupby));
 
     return ExpansionTile(
         key: PageStorageKey(item.title),
@@ -60,17 +62,26 @@ class TransactionList extends StatelessWidget {
         children: transactionList.toList());
   }
 
-  buildTransactionList(BuildContext context, Transaction transaction) {
+  buildTransactionList(BuildContext context, Transaction transaction,
+      TransactionsGroupBy groupBy) {
     return MergeSemantics(
       child: new ListTile(
           dense: true,
-          title: Text(transaction.categoryName),
+          title: Text(groupBy == TransactionsGroupBy.Date
+              ? transaction.categoryName
+              : formatter.format(DateTime.parse(transaction.transactionTime))),
           subtitle: new Text("${transaction.description}\n${transaction
               .creatorUserName}'s ${transaction.accountName}"),
           isThreeLine: true,
           trailing: Text('${transaction.amount
               .toString()} ${transaction.accountCurrencySymbol}'),
           leading: CircleAvatar(
+            child: Text(
+              groupBy == TransactionsGroupBy.Category
+                  ? DateTime.parse(transaction.transactionTime).day.toString()
+                  : transaction.categoryName[0],
+              style: TextStyle(color: transaction.amount > 0 ? Colors.white :Colors.black),
+            ),
             backgroundColor: transaction.amount > 0
                 ? Theme.of(context).primaryColor
                 : Theme.of(context).disabledColor,

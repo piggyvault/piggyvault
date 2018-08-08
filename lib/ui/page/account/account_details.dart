@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:piggy_flutter/bloc/transaction_bloc.dart';
 import 'package:piggy_flutter/model/account.dart';
 import 'package:piggy_flutter/model/transaction_group_item.dart';
 import 'package:piggy_flutter/services/transaction_service.dart';
@@ -38,6 +39,7 @@ class AccountDetailsPageState extends State<AccountDetailsPage>
   TabController _controller;
 
   final TransactionService _transactionService = TransactionService();
+  final TransactionBloc _transactionBloc =TransactionBloc();
 
   void setPages() {
     // creating 6 tabs
@@ -95,6 +97,14 @@ class AccountDetailsPageState extends State<AccountDetailsPage>
     );
   }
 
+  onSyncRequired(bool isRequired){
+    if(isRequired){
+      print('sync required');
+    }
+  }
+
+
+
   @override
   void initState() {
     super.initState();
@@ -103,6 +113,7 @@ class AccountDetailsPageState extends State<AccountDetailsPage>
         length: _allPages.length,
         initialIndex: _allPages.length - 1);
     setPages();
+    _transactionBloc.isTransactionSyncRequired.listen(onSyncRequired);
   }
 
   @override

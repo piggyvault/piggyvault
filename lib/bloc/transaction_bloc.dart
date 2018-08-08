@@ -15,6 +15,7 @@ class TransactionBloc {
   final _recentTransactionsRefresh = PublishSubject<bool>();
   final _transactionSummaryRefresh = PublishSubject<String>();
   final _transactionCommentsRefresh = PublishSubject<String>();
+  final _isTransactionSyncRequired = PublishSubject<bool>();
   final _transactionComments = PublishSubject<List<TransactionComment>>();
   final _transactionsGroupBy =
       BehaviorSubject<TransactionsGroupBy>(seedValue: TransactionsGroupBy.Date);
@@ -34,6 +35,8 @@ class TransactionBloc {
       _transactionSummary.stream;
   Stream<List<TransactionGroupItem>> get recentTransactions =>
       _recentTransactions.stream;
+  Stream<bool> get isTransactionSyncRequired =>
+      _isTransactionSyncRequired.stream;
 
   Function(String) get changeComment => _comment.sink.add;
   Function(TransactionsGroupBy) get changeTransactionsGroupBy =>
@@ -87,8 +90,8 @@ class TransactionBloc {
     var result = await _transactionService.getTransactions(GetTransactionsInput(
         type: 'tenant',
         accountId: null,
-        startDate:  DateTime.now().add( Duration(days: -30)),
-        endDate:  DateTime.now().add( Duration(days: 1)),
+        startDate: DateTime.now().add(Duration(days: -30)),
+        endDate: DateTime.now().add(Duration(days: 1)),
         groupBy: _transactionsGroupBy.value));
     _recentTransactions.add(result);
     _isRecentTransactionsLoadingSubject.add(false);
@@ -106,6 +109,7 @@ class TransactionBloc {
     input.accountBloc.accountsRefresh(true);
     recentTransactionsRefresh(true);
     transactionSummaryRefresh("month");
+    _isTransactionSyncRequired.sink.add(true);
   }
 
   void transfer(TransferInput input) async {
@@ -138,5 +142,6 @@ class TransactionBloc {
     _comment.close();
     _transactionsGroupBy.close();
     _isRecentTransactionsLoadingSubject.close();
+    _isTransactionSyncRequired.close();
   }
 }

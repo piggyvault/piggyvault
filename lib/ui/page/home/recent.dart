@@ -31,9 +31,38 @@ class RecentPage extends StatelessWidget {
           ),
           new PopupMenuButton<String>(
             padding: EdgeInsets.zero,
-//            onSelected: showMenuSelection,
+            onSelected: (value) {
+              print('onSelected $value');
+              switch (value) {
+                case 'TransactionsGroupBy.Category':
+                  {
+                    transactionBloc.changeTransactionsGroupBy(
+                        TransactionsGroupBy.Category);
+                  }
+                  break;
+                case 'TransactionsGroupBy.Date':
+                  {
+                    transactionBloc
+                        .changeTransactionsGroupBy(TransactionsGroupBy.Date);
+                  }
+                  break;
+              }
+            },
             itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-                  PopupMenuItem<String>(child: groupByMenu(transactionBloc)),
+                  PopupMenuItem<String>(
+                    value: 'TransactionsGroupBy.Category',
+                    child: ListTile(
+                      leading: const Icon(Icons.category),
+                      title: const Text('View by category'),
+                    ),
+                  ),
+                  PopupMenuItem<String>(
+                    value: 'TransactionsGroupBy.Date',
+                    child: ListTile(
+                      leading: const Icon(Icons.date_range),
+                      title: const Text('View by date'),
+                    ),
+                  ),
                 ],
           )
         ],
@@ -59,33 +88,6 @@ class RecentPage extends StatelessWidget {
     );
   }
 
-  Widget groupByMenu(TransactionBloc transactionBloc) {
-    return StreamBuilder<TransactionsGroupBy>(
-      stream: transactionBloc.transactionsGroupBy,
-      builder: (context, snapshot) {
-        if (snapshot.data == TransactionsGroupBy.Date) {
-          return ListTile(
-            leading: const Icon(Icons.category),
-            title: const Text('View by category'),
-            onTap: () {
-              transactionBloc
-                  .changeTransactionsGroupBy(TransactionsGroupBy.Category);
-            },
-          );
-        } else {
-          return ListTile(
-            leading: const Icon(Icons.date_range),
-            title: const Text('View by date'),
-            onTap: () {
-              transactionBloc
-                  .changeTransactionsGroupBy(TransactionsGroupBy.Date);
-            },
-          );
-        }
-      },
-    );
-  }
-
   Future<Null> _handleRefresh(TransactionBloc transactionBloc) {
     return transactionBloc.getRecentTransactions(true).then((_) {
       _scaffoldKey.currentState?.showSnackBar(
@@ -105,6 +107,8 @@ class RecentPage extends StatelessWidget {
       StreamBuilder<List<TransactionGroupItem>>(
         stream: transactionBloc.recentTransactions,
         builder: (context, snapshot) => TransactionList(
-            transactions: snapshot.hasData ? snapshot.data : null),
+              transactions: snapshot.hasData ? snapshot.data : null,
+              isLoading: transactionBloc.isRecentTransactionsLoading,
+            ),
       );
 }

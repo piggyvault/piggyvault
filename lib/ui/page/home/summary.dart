@@ -10,7 +10,7 @@ class SummaryPage extends StatelessWidget {
     final TransactionBloc transactionBloc = TransactionProvider.of(context);
     return Scaffold(
         appBar: new AppBar(
-          title: Text('Accounts'),
+          title: Text('Summary'),
         ),
         body: _buildBody(transactionBloc));
   }

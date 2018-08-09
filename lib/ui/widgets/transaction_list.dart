@@ -56,7 +56,27 @@ class TransactionList extends StatelessWidget {
 
     return ExpansionTile(
         key: PageStorageKey(item.title),
-        title: Text(item.title),
+        title: Row(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            Text('${item.title}'),
+            Row(
+              children: <Widget>[
+                Chip(
+                  label: Text('${item.totalInflow.toStringAsFixed(2)}Rs'),
+                  backgroundColor: Colors.greenAccent.shade100,
+                ),
+                Chip(
+                  label: Text(
+                    '${item.totalOutflow.toStringAsFixed(2)}Rs',
+                  ),
+                  backgroundColor: Colors.red.shade100,
+                )
+              ],
+            )
+          ],
+        ),
         initiallyExpanded: true,
         backgroundColor: Theme.of(context).accentColor.withOpacity(0.025),
         children: transactionList.toList());
@@ -80,7 +100,8 @@ class TransactionList extends StatelessWidget {
               groupBy == TransactionsGroupBy.Category
                   ? DateTime.parse(transaction.transactionTime).day.toString()
                   : transaction.categoryName[0],
-              style: TextStyle(color: transaction.amount > 0 ? Colors.white :Colors.black),
+              style: TextStyle(
+                  color: transaction.amount > 0 ? Colors.white : Colors.black),
             ),
             backgroundColor: transaction.amount > 0
                 ? Theme.of(context).primaryColor

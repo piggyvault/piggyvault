@@ -161,11 +161,11 @@ class TransactionService extends AppServiceBase {
         sections.add(section);
       }
 
-//         if (items[i]['amountInDefaultCurrency'] > 0) {
-//           day['totalInflow'] += items[i]['amountInDefaultCurrency'];
-//         } else {
-//           day['totalOutflow'] += items[i]['amountInDefaultCurrency'];
-//         }
+        if (transaction.amountInDefaultCurrency > 0) {
+          section.totalInflow += transaction.amountInDefaultCurrency;
+        } else {
+          section.totalOutflow += transaction.amountInDefaultCurrency;
+        }
 
       section.transactions.add(transaction);
     });

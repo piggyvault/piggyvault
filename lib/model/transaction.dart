@@ -6,7 +6,7 @@ class Transaction {
       accountName,
       transactionTime,
       accountCurrencySymbol;
-  final double amount;
+  final double amount, amountInDefaultCurrency;
 
   Transaction(
       this.id,
@@ -16,7 +16,8 @@ class Transaction {
       this.accountName,
       this.accountCurrencySymbol,
       this.amount,
-      this.transactionTime);
+      this.transactionTime,
+      this.amountInDefaultCurrency);
 
   Transaction.fromJson(Map<String, dynamic> json)
       : id = json['id'],
@@ -26,5 +27,6 @@ class Transaction {
         accountName = json['account']['name'],
         accountCurrencySymbol = json['account']['currency']['symbol'],
         transactionTime = json['transactionTime'],
-        amount = json['amount'];
+        amount = json['amount'],
+        amountInDefaultCurrency = json['amountInDefaultCurrency'];
 }

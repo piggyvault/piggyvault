@@ -5,36 +5,34 @@ import 'package:intl/intl.dart';
 import 'package:piggy_flutter/model/transaction.dart';
 import 'package:piggy_flutter/model/transaction_group_item.dart';
 import 'package:piggy_flutter/ui/page/transaction/transaction_detail.dart';
-import 'package:piggy_flutter/ui/widgets/common/message_placeholder.dart';
 
 class TransactionList extends StatelessWidget {
-  final List<TransactionGroupItem> transactions;
+  final List<TransactionGroupItem> items;
   final Stream<bool> isLoading;
   final DateFormat formatter = DateFormat("EEE, MMM d, ''yy");
+  final bool visible;
 
-  TransactionList({Key key, this.transactions, this.isLoading})
-      : super(key: key);
+  TransactionList({Key key, @required this.items, this.isLoading, bool visible})
+      : this.visible = visible ?? items.isNotEmpty,
+        super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    if (transactions == null) {
-      return Center(child: CircularProgressIndicator());
-    } else {
-      if (transactions.length > 0) {
-        List<Widget> groupedTransactionList = [];
-        if (isLoading != null) {
-          groupedTransactionList.add(_loadingInfo(isLoading));
-        }
-
-        groupedTransactionList.addAll(transactions
-            .map((item) => buildGroupedTransactionTile(context, item)));
-        return ListView(
-          children: groupedTransactionList.toList(),
-        );
-      } else {
-        return MessagePlaceholder();
-      }
+    List<Widget> groupedTransactionList = [];
+    if (isLoading != null) {
+      groupedTransactionList.add(_loadingInfo(isLoading));
     }
+
+    groupedTransactionList.addAll(
+        items.map((item) => buildGroupedTransactionTile(context, item)));
+
+    return AnimatedOpacity(
+      duration: Duration(milliseconds: 300),
+      opacity: visible ? 1.0 : 0.0,
+      child: ListView(
+        children: groupedTransactionList.toList(),
+      ),
+    );
   }
 
   Widget _loadingInfo(Stream<bool> isLoading) {

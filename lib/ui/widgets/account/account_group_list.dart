@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:piggy_flutter/model/account.dart';
-import 'package:piggy_flutter/ui/page/account/account_details.dart';
+import 'package:piggy_flutter/ui/page/account/account_detail.dart';
 
 class AccountGroupList extends StatelessWidget {
   final List<Account> accounts;
@@ -39,7 +39,7 @@ class AccountGroupList extends StatelessWidget {
         onTap: (() => Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => AccountDetailsPage(
+                  builder: (context) => AccountDetailPage(
                         account: account,
                       )),
             )),

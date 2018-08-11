@@ -107,7 +107,7 @@ class RecentPage extends StatelessWidget {
       StreamBuilder<List<TransactionGroupItem>>(
         stream: transactionBloc.recentTransactions,
         builder: (context, snapshot) => TransactionList(
-              transactions: snapshot.hasData ? snapshot.data : null,
+              items: snapshot.hasData ? snapshot.data : null,
               isLoading: transactionBloc.isRecentTransactionsLoading,
             ),
       );

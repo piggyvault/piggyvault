@@ -6,6 +6,7 @@ import 'package:piggy_flutter/model/transaction_comment.dart';
 import 'package:piggy_flutter/model/transaction_edit_dto.dart';
 import 'package:piggy_flutter/model/transaction_group_item.dart';
 import 'package:piggy_flutter/model/transaction_summary.dart';
+import 'package:piggy_flutter/model/transactions_result.dart';
 import 'package:piggy_flutter/services/app_service_base.dart';
 import 'package:intl/intl.dart';
 
@@ -44,8 +45,7 @@ class TransferInput {
 }
 
 class TransactionService extends AppServiceBase {
-  Future<List<TransactionGroupItem>> getTransactions(
-      GetTransactionsInput input) async {
+  Future<TransactionsResult> getTransactions(GetTransactionsInput input) async {
     List<Transaction> transactions = [];
     var result = await rest
         .postAsync<dynamic>('services/app/transaction/GetTransactionsAsync', {
@@ -60,8 +60,8 @@ class TransactionService extends AppServiceBase {
         transactions.add(Transaction.fromJson(transaction));
       });
     }
-    return groupTransactions(
-        transactions: transactions, groupBy: input.groupBy);
+    return TransactionsResult(
+        groupTransactions(transactions: transactions, groupBy: input.groupBy));
   }
 
   Future<TransactionSummary> getTransactionSummary(String duration) async {
@@ -161,11 +161,11 @@ class TransactionService extends AppServiceBase {
         sections.add(section);
       }
 
-        if (transaction.amountInDefaultCurrency > 0) {
-          section.totalInflow += transaction.amountInDefaultCurrency;
-        } else {
-          section.totalOutflow += transaction.amountInDefaultCurrency;
-        }
+      if (transaction.amountInDefaultCurrency > 0) {
+        section.totalInflow += transaction.amountInDefaultCurrency;
+      } else {
+        section.totalOutflow += transaction.amountInDefaultCurrency;
+      }
 
       section.transactions.add(transaction);
     });

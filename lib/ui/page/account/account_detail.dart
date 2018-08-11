@@ -62,14 +62,18 @@ class _AccountDetailPageState extends State<AccountDetailPage>
                   child: Row(children: <Widget>[
                     IconButton(
                         icon: const Icon(Icons.chevron_left),
-                        // color: color,
-                        // onPressed: () { _handleArrowButtonPress(context, -1); },
+                        color: Colors.white,
+                        onPressed: () {
+                          bloc.onPageChanged(-1);
+                        },
                         tooltip: 'Page back'),
                     Text(state.title),
                     IconButton(
                         icon: const Icon(Icons.chevron_right),
-                        // color: color,
-                        // onPressed: () { _handleArrowButtonPress(context, 1); },
+                        color: Colors.white,
+                        onPressed: () {
+                          bloc.onPageChanged(1);
+                        },
                         tooltip: 'Page forward')
                   ], mainAxisAlignment: MainAxisAlignment.spaceBetween),
                 ),

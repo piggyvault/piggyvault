@@ -7,18 +7,18 @@ import 'package:piggy_flutter/services/transaction_service.dart';
 import 'package:rxdart/rxdart.dart';
 
 class AccountDetailBloc {
+  final String accountId;
+  int pageIndex = 0;
+
   final TransactionService _transactionService = TransactionService();
 
   final _onPageChanged = PublishSubject<int>();
   final _state = BehaviorSubject<AccountDetailState>(
       seedValue: AccountDetailLoading('This Month'));
 
-  final String accountId;
-
   Function(int) get onPageChanged => _onPageChanged.sink.add;
-  Stream<AccountDetailState> get state => _state.stream;
 
-  int pageIndex;
+  Stream<AccountDetailState> get state => _state.stream;
 
   AccountDetailBloc({this.accountId}) {
     _onPageChanged.listen(_getTransactions);
@@ -30,10 +30,12 @@ class AccountDetailBloc {
   }
 
   Future<Null> _getTransactions(
-    int pageIndex,
+    int delta,
   ) async {
+    pageIndex += delta;
+
     print('######### AccountDetailBloc _getTransactions $pageIndex');
-    var startMonth = DateTime.now().month - pageIndex;
+    var startMonth = DateTime.now().month + pageIndex;
     var startYear = DateTime.now().year;
 
     if (startMonth < 0) {

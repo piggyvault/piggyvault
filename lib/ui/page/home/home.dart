@@ -165,6 +165,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     final CategoryBloc categoryBloc = CategoryProvider.of(context);
 
     if (isSyncRequired) {
+      print('# isSyncRequired $isSyncRequired');
       isSyncRequired = false;
       userBloc.userRefresh(true);
       transactionBloc.recentTransactionsRefresh(true);

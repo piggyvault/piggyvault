@@ -56,7 +56,7 @@ class _AccountDetailPageState extends State<AccountDetailPage>
         builder:
             (BuildContext context, AsyncSnapshot<AccountDetailState> snapshot) {
           final state = snapshot.data;
-          print('state is $state');
+
           return Scaffold(
             appBar: AppBar(
               title: Text(
@@ -146,9 +146,9 @@ class _AccountDetailPageState extends State<AccountDetailPage>
                 key: ValueKey<Color>(Theme.of(context).primaryColor),
                 tooltip: 'Add new transaction',
                 backgroundColor: Theme.of(context).primaryColor,
-                child: Icon(Icons.add_circle_outline),
-                onPressed: () {
-                  Navigator.push(
+                child: Icon(Icons.add),
+                onPressed: () async {
+                  var result = await Navigator.push(
                       context,
                       MaterialPageRoute<DismissDialogAction>(
                         builder: (BuildContext context) => TransactionFormPage(
@@ -156,6 +156,10 @@ class _AccountDetailPageState extends State<AccountDetailPage>
                             ),
                         fullscreenDialog: true,
                       ));
+
+                  if (result == DismissDialogAction.save) {
+                    bloc.onPageChanged(0);
+                  }
                 }),
           );
         });

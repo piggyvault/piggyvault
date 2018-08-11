@@ -32,9 +32,8 @@ class _AccountDetailPageState extends State<AccountDetailPage>
   void initState() {
     super.initState();
     _controller = AnimationController(vsync: this);
-    bloc = AccountDetailBloc(
-        transactionService: widget.transactionService,
-        accountId: widget.account.id);
+    bloc = AccountDetailBloc(accountId: widget.account.id);
+    bloc.onPageChanged(0);
   }
 
   @override

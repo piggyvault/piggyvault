@@ -4,28 +4,35 @@ import 'package:intl/intl.dart';
 import 'package:piggy_flutter/model/account_detail_state.dart';
 import 'package:piggy_flutter/model/transaction_group_item.dart';
 import 'package:piggy_flutter/services/transaction_service.dart';
+import 'package:rxdart/rxdart.dart';
 
 class AccountDetailBloc {
-  final Stream<AccountDetailState> state;
+  final TransactionService _transactionService = TransactionService();
 
-  factory AccountDetailBloc(
-      {TransactionService transactionService, String accountId}) {
-    final state = _getTransactions(
-        accountId: accountId,
-        pageIndex: 0,
-        transactionService: transactionService);
+  final _onPageChanged = PublishSubject<int>();
+  final _state = BehaviorSubject<AccountDetailState>(
+      seedValue: AccountDetailLoading('This Month'));
 
-    return AccountDetailBloc._(state);
+  final String accountId;
+
+  Function(int) get onPageChanged => _onPageChanged.sink.add;
+  Stream<AccountDetailState> get state => _state.stream;
+
+  int pageIndex;
+
+  AccountDetailBloc({this.accountId}) {
+    _onPageChanged.listen(_getTransactions);
   }
 
-  AccountDetailBloc._(this.state);
+  void dispose() {
+    _onPageChanged.close();
+    _state.close();
+  }
 
-  void dispose() {}
-
-  static Stream<AccountDetailState> _getTransactions(
-      {String accountId,
-      int pageIndex,
-      TransactionService transactionService}) async* {
+  Future<Null> _getTransactions(
+    int pageIndex,
+  ) async {
+    print('######### AccountDetailBloc _getTransactions $pageIndex');
     var startMonth = DateTime.now().month - pageIndex;
     var startYear = DateTime.now().year;
 
@@ -49,7 +56,7 @@ class AccountDetailBloc {
 
     final title = formatter.format(startDate);
 
-    yield AccountDetailLoading(title);
+    _state.add(AccountDetailLoading(title));
 
     final input = GetTransactionsInput(
         type: 'account',
@@ -59,15 +66,15 @@ class AccountDetailBloc {
         groupBy: TransactionsGroupBy.Date);
 
     try {
-      final result = await transactionService.getTransactions(input);
+      final result = await _transactionService.getTransactions(input);
 
       if (result.isEmpty) {
-        yield AccountDetailEmpty(title);
+        _state.add(AccountDetailEmpty(title));
       } else {
-        yield AccountDetailPopulated(result: result, title: title);
+        _state.add(AccountDetailPopulated(result: result, title: title));
       }
     } catch (e) {
-      yield AccountDetailError(title);
+      _state.add(AccountDetailError(title));
     }
   }
 }

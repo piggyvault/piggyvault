@@ -99,22 +99,6 @@ class _AccountDetailPageState extends State<AccountDetailPage>
               bottom: false,
               child: new Column(
                 children: <Widget>[
-                  // new Container(
-                  //   margin: const EdgeInsets.only(top: 16.0),
-                  //   child: new Row(children: <Widget>[
-                  //     new IconButton(
-                  //         icon: const Icon(Icons.chevron_left),
-                  //         // color: color,
-                  //         // onPressed: () { _handleArrowButtonPress(context, -1); },
-                  //         tooltip: 'Page back'),
-                  //     // new TabPageSelector(controller: controller),
-                  //     new IconButton(
-                  //         icon: const Icon(Icons.chevron_right),
-                  //         // color: color,
-                  //         // onPressed: () { _handleArrowButtonPress(context, 1); },
-                  //         tooltip: 'Page forward')
-                  //   ], mainAxisAlignment: MainAxisAlignment.spaceBetween),
-                  // ),
                   new Expanded(
                     child: Stack(
                       children: <Widget>[

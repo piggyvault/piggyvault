@@ -52,8 +52,6 @@ class _AccountDetailPageState extends State<AccountDetailPage>
         builder:
             (BuildContext context, AsyncSnapshot<AccountDetailState> snapshot) {
           final state = snapshot.data;
-          print('state is $state');
-
           return Scaffold(
             appBar: AppBar(
               title: Text(

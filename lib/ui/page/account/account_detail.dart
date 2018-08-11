@@ -45,12 +45,18 @@ class _AccountDetailPageState extends State<AccountDetailPage>
 
   @override
   Widget build(BuildContext context) {
+    final TextTheme textTheme = Theme.of(context).textTheme;
+
     return StreamBuilder<AccountDetailState>(
         stream: bloc.state,
-        initialData: AccountDetailLoading('This Month'),
+        initialData: AccountDetailLoading(
+            title: 'This Month',
+            nextPageTitle: 'Future',
+            previousPageTitle: 'Last Month'),
         builder:
             (BuildContext context, AsyncSnapshot<AccountDetailState> snapshot) {
           final state = snapshot.data;
+          print('state is $state');
           return Scaffold(
             appBar: AppBar(
               title: Text(
@@ -58,24 +64,36 @@ class _AccountDetailPageState extends State<AccountDetailPage>
               bottom: PreferredSize(
                 preferredSize: const Size.fromHeight(48.0),
                 child: Container(
-                  margin: const EdgeInsets.only(top: 16.0),
-                  child: Row(children: <Widget>[
-                    IconButton(
-                        icon: const Icon(Icons.chevron_left),
-                        color: Colors.white,
-                        onPressed: () {
-                          bloc.onPageChanged(-1);
-                        },
-                        tooltip: 'Page back'),
-                    Text(state.title),
-                    IconButton(
-                        icon: const Icon(Icons.chevron_right),
-                        color: Colors.white,
-                        onPressed: () {
-                          bloc.onPageChanged(1);
-                        },
-                        tooltip: 'Page forward')
-                  ], mainAxisAlignment: MainAxisAlignment.spaceBetween),
+                  child: Row(
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 16.0, horizontal: 8.0),
+                        child: InkWell(
+                          child: Text(state.previousPageTitle),
+                          onTap: () {
+                            bloc.onPageChanged(-1);
+                          },
+                        ),
+                      ),
+                      Text(
+                        state.title,
+                        style: textTheme.body2,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 16.0, horizontal: 8.0),
+                        child: InkWell(
+                          child: Text(state.nextPageTitle),
+                          onTap: () {
+                            bloc.onPageChanged(1);
+                          },
+                        ),
+                      ),
+                    ],
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                  ),
                 ),
               ),
               actions: <Widget>[

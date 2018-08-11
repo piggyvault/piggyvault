@@ -14,7 +14,10 @@ class AccountDetailBloc {
 
   final _onPageChanged = PublishSubject<int>();
   final _state = BehaviorSubject<AccountDetailState>(
-      seedValue: AccountDetailLoading('This Month'));
+      seedValue: AccountDetailLoading(
+          title: 'This Month',
+          nextPageTitle: 'Future',
+          previousPageTitle: 'Last Month'));
 
   Function(int) get onPageChanged => _onPageChanged.sink.add;
 
@@ -57,8 +60,14 @@ class AccountDetailBloc {
     final DateFormat formatter = DateFormat("MMM, ''yy");
 
     final title = formatter.format(startDate);
+    final nextPageTitle = formatter.format(DateTime(endYear, endMonth, 1));
+    final previousPageTitle =
+        formatter.format(DateTime(startYear, startMonth - 1, 1));
 
-    _state.add(AccountDetailLoading(title));
+    _state.add(AccountDetailLoading(
+        title: title,
+        nextPageTitle: nextPageTitle,
+        previousPageTitle: previousPageTitle));
 
     final input = GetTransactionsInput(
         type: 'account',
@@ -71,12 +80,22 @@ class AccountDetailBloc {
       final result = await _transactionService.getTransactions(input);
 
       if (result.isEmpty) {
-        _state.add(AccountDetailEmpty(title));
+        _state.add(AccountDetailEmpty(
+            title: title,
+            nextPageTitle: nextPageTitle,
+            previousPageTitle: previousPageTitle));
       } else {
-        _state.add(AccountDetailPopulated(result: result, title: title));
+        _state.add(AccountDetailPopulated(
+            result: result,
+            title: title,
+            nextPageTitle: nextPageTitle,
+            previousPageTitle: previousPageTitle));
       }
     } catch (e) {
-      _state.add(AccountDetailError(title));
+      _state.add(AccountDetailError(
+          title: title,
+          nextPageTitle: nextPageTitle,
+          previousPageTitle: previousPageTitle));
     }
   }
 }

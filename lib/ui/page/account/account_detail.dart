@@ -64,31 +64,28 @@ class _AccountDetailPageState extends State<AccountDetailPage>
               bottom: PreferredSize(
                 preferredSize: const Size.fromHeight(48.0),
                 child: Container(
+                  margin: EdgeInsets.all(16.0),
                   child: Row(
                     children: <Widget>[
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 16.0, horizontal: 8.0),
-                        child: InkWell(
-                          child: Text(state.previousPageTitle),
-                          onTap: () {
-                            bloc.onPageChanged(-1);
-                          },
-                        ),
+                      InkWell(
+                        child: Text(state.previousPageTitle,
+                            style: textTheme.caption.copyWith(
+                                color: Colors.white.withOpacity(0.6))),
+                        onTap: () {
+                          bloc.onPageChanged(-1);
+                        },
                       ),
                       Text(
                         state.title,
-                        style: textTheme.body2,
+                        style: textTheme.body2.copyWith(color: Colors.white),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 16.0, horizontal: 8.0),
-                        child: InkWell(
-                          child: Text(state.nextPageTitle),
-                          onTap: () {
-                            bloc.onPageChanged(1);
-                          },
-                        ),
+                      InkWell(
+                        child: Text(state.nextPageTitle,
+                            style: textTheme.caption.copyWith(
+                                color: Colors.white.withOpacity(0.6))),
+                        onTap: () {
+                          bloc.onPageChanged(1);
+                        },
                       ),
                     ],
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,

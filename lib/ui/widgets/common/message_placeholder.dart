@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 
 class MessagePlaceholder extends StatelessWidget {
   MessagePlaceholder({
-    this.title: 'Nothing Here',
-    this.message: 'Add a new item to get started.',
+    this.title = 'Nothing Here',
+    this.message = 'Add a new item to get started.',
+    this.icon = Icons.sentiment_dissatisfied,
   });
   final String title;
   final String message;
+  final IconData icon;
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +17,7 @@ class MessagePlaceholder extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           Icon(
-            Icons.sentiment_dissatisfied,
+            this.icon,
             size: 100.0,
 //              color: iconColor,
           ),

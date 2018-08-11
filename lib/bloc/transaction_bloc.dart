@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:piggy_flutter/model/recent_transactions_state.dart';
 import 'package:piggy_flutter/model/transaction_comment.dart';
 import 'package:piggy_flutter/model/transaction_edit_dto.dart';
 import 'package:piggy_flutter/model/transaction_summary.dart';
@@ -20,7 +21,7 @@ class TransactionBloc {
   final _transactionsGroupBy =
       BehaviorSubject<TransactionsGroupBy>(seedValue: TransactionsGroupBy.Date);
   final _transactionSummary = BehaviorSubject<TransactionSummary>();
-  final _recentTransactions = BehaviorSubject<List<TransactionGroupItem>>();
+  final _recentTransactionsState = BehaviorSubject<RecentTransactionsState>();
   final _saveTransactionController = StreamController<TransactionEditDto>();
   final _transferController = StreamController<TransferInput>();
 
@@ -33,8 +34,8 @@ class TransactionBloc {
       _transactionComments.stream;
   Stream<TransactionSummary> get transactionSummary =>
       _transactionSummary.stream;
-  Stream<List<TransactionGroupItem>> get recentTransactions =>
-      _recentTransactions.stream;
+  Stream<RecentTransactionsState> get recentTransactionsState =>
+      _recentTransactionsState.stream;
   Stream<bool> get isTransactionSyncRequired =>
       _isTransactionSyncRequired.stream;
 
@@ -44,6 +45,7 @@ class TransactionBloc {
 
   Function(bool) get recentTransactionsRefresh =>
       _recentTransactionsRefresh.sink.add;
+
   Function(String) get transactionSummaryRefresh =>
       _transactionSummaryRefresh.sink.add;
 
@@ -75,6 +77,8 @@ class TransactionBloc {
   }
 
   void onTransactionsGroupByChanged(TransactionsGroupBy groupBy) {
+    print(
+        '########## TransactionBloc onTransactionsGroupByChanged groupBy $groupBy');
     recentTransactionsRefresh(true);
   }
 
@@ -85,16 +89,29 @@ class TransactionBloc {
   }
 
   Future<Null> getRecentTransactions(bool done) async {
-//    print("########## TransactionBloc getRecentTransactions");
-    _isRecentTransactionsLoadingSubject.add(true);
-    var result = await _transactionService.getTransactions(GetTransactionsInput(
-        type: 'tenant',
-        accountId: null,
-        startDate: DateTime.now().add(Duration(days: -30)),
-        endDate: DateTime.now().add(Duration(days: 1)),
-        groupBy: _transactionsGroupBy.value));
-    _recentTransactions.add(result.items);
-    _isRecentTransactionsLoadingSubject.add(false);
+    print(
+        "########## TransactionBloc getRecentTransactions ${_recentTransactionsState.value}");
+    if (_recentTransactionsState.value is! RecentTransactionsPopulated) {
+      _recentTransactionsState.add(RecentTransactionsLoading());
+    }
+
+    try {
+      var result = await _transactionService.getTransactions(
+          GetTransactionsInput(
+              type: 'tenant',
+              accountId: null,
+              startDate: DateTime.now().add(Duration(days: -30)),
+              endDate: DateTime.now().add(Duration(days: 1)),
+              groupBy: _transactionsGroupBy.value));
+
+      if (result.isEmpty) {
+        _recentTransactionsState.add(RecentTransactionsEmpty());
+      } else {
+        _recentTransactionsState.add(RecentTransactionsPopulated(result));
+      }
+    } catch (e) {
+      _recentTransactionsState.add(RecentTransactionsError());
+    }
   }
 
   void getTransactionSummary(String duration) async {
@@ -133,7 +150,7 @@ class TransactionBloc {
   void dispose() {
     _transactionSummary.close();
     _transactionSummaryRefresh.close();
-    _recentTransactions.close();
+    _recentTransactionsState.close();
     _saveTransactionController.close();
     _recentTransactionsRefresh.close();
     _transferController.close();

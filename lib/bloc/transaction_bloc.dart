@@ -93,7 +93,7 @@ class TransactionBloc {
         startDate: DateTime.now().add(Duration(days: -30)),
         endDate: DateTime.now().add(Duration(days: 1)),
         groupBy: _transactionsGroupBy.value));
-    _recentTransactions.add(result);
+    _recentTransactions.add(result.items);
     _isRecentTransactionsLoadingSubject.add(false);
   }
 

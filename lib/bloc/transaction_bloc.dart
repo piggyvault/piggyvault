@@ -11,12 +11,12 @@ class TransactionBloc {
   final TransactionService _transactionService = TransactionService();
 
   final _comment = BehaviorSubject<String>();
-  final _isRecentTransactionsLoadingSubject =
-      BehaviorSubject<bool>(seedValue: false);
+  // final _isRecentTransactionsLoadingSubject =
+  //     BehaviorSubject<bool>(seedValue: false);
   final _recentTransactionsRefresh = PublishSubject<bool>();
   final _transactionSummaryRefresh = PublishSubject<String>();
   final _transactionCommentsRefresh = PublishSubject<String>();
-  final _isTransactionSyncRequired = PublishSubject<bool>();
+  // final _isTransactionSyncRequired = PublishSubject<bool>();
   final _transactionComments = PublishSubject<List<TransactionComment>>();
   final _transactionsGroupBy =
       BehaviorSubject<TransactionsGroupBy>(seedValue: TransactionsGroupBy.Date);
@@ -26,8 +26,8 @@ class TransactionBloc {
   final _transferController = StreamController<TransferInput>();
 
   Stream<String> get comment => _comment.stream.transform(validateComment);
-  Stream<bool> get isRecentTransactionsLoading =>
-      _isRecentTransactionsLoadingSubject.stream;
+  // Stream<bool> get isRecentTransactionsLoading =>
+  //     _isRecentTransactionsLoadingSubject.stream;
   Stream<TransactionsGroupBy> get transactionsGroupBy =>
       _transactionsGroupBy.stream;
   Stream<List<TransactionComment>> get transactionComments =>
@@ -36,8 +36,8 @@ class TransactionBloc {
       _transactionSummary.stream;
   Stream<RecentTransactionsState> get recentTransactionsState =>
       _recentTransactionsState.stream;
-  Stream<bool> get isTransactionSyncRequired =>
-      _isTransactionSyncRequired.stream;
+  // Stream<bool> get isTransactionSyncRequired =>
+  //     _isTransactionSyncRequired.stream;
 
   Function(String) get changeComment => _comment.sink.add;
   Function(TransactionsGroupBy) get changeTransactionsGroupBy =>
@@ -126,7 +126,7 @@ class TransactionBloc {
     input.accountBloc.accountsRefresh(true);
     recentTransactionsRefresh(true);
     transactionSummaryRefresh("month");
-    _isTransactionSyncRequired.sink.add(true);
+    // _isTransactionSyncRequired.sink.add(true);
   }
 
   void transfer(TransferInput input) async {
@@ -158,7 +158,7 @@ class TransactionBloc {
     _transactionCommentsRefresh.close();
     _comment.close();
     _transactionsGroupBy.close();
-    _isRecentTransactionsLoadingSubject.close();
-    _isTransactionSyncRequired.close();
+    // _isRecentTransactionsLoadingSubject.close();
+    // _isTransactionSyncRequired.close();
   }
 }

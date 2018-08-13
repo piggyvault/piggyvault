@@ -1,10 +1,7 @@
-import 'package:piggy_flutter/bloc/account_bloc.dart';
-
 class TransactionEditDto {
   String id, description, accountId, transactionTime;
   double amount;
   int categoryId;
-  AccountBloc accountBloc;
 
   TransactionEditDto(
       {this.id,
@@ -12,8 +9,7 @@ class TransactionEditDto {
       this.accountId,
       this.transactionTime,
       this.amount,
-      this.categoryId,
-      this.accountBloc});
+      this.categoryId});
 
   TransactionEditDto.fromJson(Map<String, dynamic> json)
       : id = json['id'],

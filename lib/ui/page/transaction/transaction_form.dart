@@ -109,16 +109,17 @@ class TransactionFormPageState extends State<TransactionFormPage> {
     return new Scaffold(
       key: _scaffoldKey,
       appBar: new AppBar(
-          title:
-              new Text(widget.title == null ? 'New Transaction' : widget.title),
-          actions: <Widget>[
-            new FlatButton(
-                child: new Text('SAVE',
-                    style: theme.textTheme.body1.copyWith(color: Colors.white)),
-                onPressed: () {
-                  onSave(transactionFormBloc, accountBloc);
-                })
-          ]),
+        title:
+            new Text(widget.title == null ? 'New Transaction' : widget.title),
+        actions: <Widget>[
+          new FlatButton(
+              child: new Text('SAVE',
+                  style: theme.textTheme.body1.copyWith(color: Colors.white)),
+              onPressed: () {
+                onSave(transactionFormBloc, accountBloc);
+              })
+        ],
+      ),
       body: new DropdownButtonHideUnderline(
         child: new SafeArea(
           top: false,
@@ -433,7 +434,6 @@ class TransactionFormPageState extends State<TransactionFormPage> {
                 _transactionTime.minute)
             .toString();
         transactionEditDto.amount = amount;
-        transactionEditDto.accountBloc = accountBloc;
 
         transactionFormBloc
             .onSave(transactionEditDto)

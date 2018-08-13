@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:piggy_flutter/bloc/account_bloc.dart';
 import 'package:piggy_flutter/model/transaction.dart';
 import 'package:piggy_flutter/model/transaction_comment.dart';
 import 'package:piggy_flutter/model/transaction_edit_dto.dart';
@@ -30,18 +29,9 @@ class TransferInput {
   final String id, description, accountId, toAccountId, transactionTime;
   final double amount, toAmount;
   final int categoryId;
-  final AccountBloc accountBloc;
 
-  TransferInput(
-      this.id,
-      this.description,
-      this.accountId,
-      this.transactionTime,
-      this.amount,
-      this.categoryId,
-      this.accountBloc,
-      this.toAmount,
-      this.toAccountId);
+  TransferInput(this.id, this.description, this.accountId, this.transactionTime,
+      this.amount, this.categoryId, this.toAmount, this.toAccountId);
 }
 
 class TransactionService extends AppServiceBase {

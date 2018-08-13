@@ -5,7 +5,7 @@ import 'package:piggy_flutter/bloc/transaction_bloc.dart';
 import 'package:piggy_flutter/model/recent_transactions_state.dart';
 import 'package:piggy_flutter/model/transaction_group_item.dart';
 import 'package:piggy_flutter/providers/transaction_provider.dart';
-import 'package:piggy_flutter/ui/page/transaction/transaction_form.dart';
+import 'package:piggy_flutter/ui/widgets/add_transaction_fab.dart';
 import 'package:piggy_flutter/ui/widgets/common/empty_result_widget.dart';
 import 'package:piggy_flutter/ui/widgets/common/error_display_widget.dart';
 import 'package:piggy_flutter/ui/widgets/common/loading_widget.dart';
@@ -114,20 +114,7 @@ class RecentPage extends StatelessWidget {
               ),
             ),
           ),
-          floatingActionButton: new FloatingActionButton(
-              key: new ValueKey<Color>(Theme.of(context).primaryColor),
-              tooltip: 'Add new transaction',
-              backgroundColor: Theme.of(context).primaryColor,
-              child: new Icon(Icons.add_circle_outline),
-              onPressed: () {
-                Navigator.push(
-                    context,
-                    new MaterialPageRoute<DismissDialogAction>(
-                      builder: (BuildContext context) =>
-                          new TransactionFormPage(),
-                      fullscreenDialog: true,
-                    ));
-              }),
+          floatingActionButton: AddTransactionFab(),
         );
       },
     );

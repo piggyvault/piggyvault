@@ -2,14 +2,13 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:piggy_flutter/bloc/account_bloc.dart';
 import 'package:piggy_flutter/bloc/category_bloc.dart';
-import 'package:piggy_flutter/bloc/transaction_bloc.dart';
+import 'package:piggy_flutter/bloc/transaction_form_bloc.dart';
 import 'package:piggy_flutter/model/account.dart';
 import 'package:piggy_flutter/model/category.dart';
 import 'package:piggy_flutter/model/transaction.dart';
 import 'package:piggy_flutter/model/transaction_edit_dto.dart';
 import 'package:piggy_flutter/providers/account_provider.dart';
 import 'package:piggy_flutter/providers/category_provider.dart';
-import 'package:piggy_flutter/providers/transaction_provider.dart';
 import 'package:piggy_flutter/services/transaction_service.dart';
 import 'package:piggy_flutter/utils/uidata.dart';
 import 'package:piggy_flutter/ui/widgets/date_time_picker.dart';
@@ -105,7 +104,7 @@ class TransactionFormPageState extends State<TransactionFormPage> {
     final ThemeData theme = Theme.of(context);
     final CategoryBloc categoryBloc = CategoryProvider.of(context);
     final AccountBloc accountBloc = AccountProvider.of(context);
-    final TransactionBloc transactionBloc = TransactionProvider.of(context);
+    final TransactionFormBloc transactionFormBloc = TransactionFormBloc();
 
     return new Scaffold(
       key: _scaffoldKey,
@@ -117,7 +116,7 @@ class TransactionFormPageState extends State<TransactionFormPage> {
                 child: new Text('SAVE',
                     style: theme.textTheme.body1.copyWith(color: Colors.white)),
                 onPressed: () {
-                  onSave(transactionBloc, accountBloc);
+                  onSave(transactionFormBloc, accountBloc);
                 })
           ]),
       body: new DropdownButtonHideUnderline(
@@ -372,7 +371,8 @@ class TransactionFormPageState extends State<TransactionFormPage> {
     ));
   }
 
-  void onSave(TransactionBloc transactionBloc, AccountBloc accountBloc) {
+  void onSave(
+      TransactionFormBloc transactionFormBloc, AccountBloc accountBloc) async {
     final FormState form = _formKey.currentState;
 
     if (!form.validate()) {
@@ -396,24 +396,24 @@ class TransactionFormPageState extends State<TransactionFormPage> {
             toAmount = amount;
           }
 
-          transactionBloc.doTransfer(TransferInput(
-              transactionEditDto.id,
-              _descriptionFieldController.text,
-              transactionEditDto.accountId,
-              DateTime(
-                      _transactionDate.year,
-                      _transactionDate.month,
-                      _transactionDate.day,
-                      _transactionTime.hour,
-                      _transactionTime.minute)
-                  .toString(),
-              amount,
-              transactionEditDto.categoryId,
-              accountBloc,
-              toAmount,
-              _toAccountId));
-
-          Navigator.pop(context, DismissDialogAction.save);
+          transactionFormBloc
+              .onTransfer(TransferInput(
+                  transactionEditDto.id,
+                  _descriptionFieldController.text,
+                  transactionEditDto.accountId,
+                  DateTime(
+                          _transactionDate.year,
+                          _transactionDate.month,
+                          _transactionDate.day,
+                          _transactionTime.hour,
+                          _transactionTime.minute)
+                      .toString(),
+                  amount,
+                  transactionEditDto.categoryId,
+                  accountBloc,
+                  toAmount,
+                  _toAccountId))
+              .then((_) => Navigator.pop(context, DismissDialogAction.save));
         }
       } else {
         double amount = double.parse(_amountFieldController.text);
@@ -435,9 +435,9 @@ class TransactionFormPageState extends State<TransactionFormPage> {
         transactionEditDto.amount = amount;
         transactionEditDto.accountBloc = accountBloc;
 
-        transactionBloc.saveTransaction(transactionEditDto);
-
-        Navigator.pop(context, DismissDialogAction.save);
+        transactionFormBloc
+            .onSave(transactionEditDto)
+            .then((_) => Navigator.pop(context, DismissDialogAction.save));
       }
     }
   }

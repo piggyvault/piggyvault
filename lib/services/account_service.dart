@@ -26,4 +26,17 @@ class AccountService extends AppServiceBase {
     this.userAccounts = userAccountItems;
     this.familyAccounts = familyAccountItems;
   }
+
+  Future<Account> getAccountDetails(String accountId) async {
+    var result = await rest.postAsync<dynamic>(
+        'services/app/account/GetAccountDetails', {"id": accountId});
+
+    print('getAccountDetails result is ${result.mappedResult}');
+
+    if (result.mappedResult != null) {
+      return Account.fromJson(result.mappedResult);
+    }
+
+    return null;
+  }
 }

@@ -1,65 +1,30 @@
-import 'package:flutter/material.dart';
+import 'package:piggy_flutter/model/account.dart';
 import 'package:piggy_flutter/model/transactions_result.dart';
 
 class AccountDetailState {
-  final String title;
-  final String nextPageTitle;
-  final String previousPageTitle;
-
-  AccountDetailState(
-      {@required this.title,
-      @required this.nextPageTitle,
-      @required this.previousPageTitle});
+  String title, nextPageTitle, previousPageTitle;
+  Account account;
 
   @override
   String toString() {
-    return 'title = $title, nextPageTitle=$nextPageTitle, previousPageTitle=$previousPageTitle';
+    return 'title = $title, nextPageTitle=$nextPageTitle, previousPageTitle=$previousPageTitle, account=$account';
   }
 }
+
+class AccountDetailLoading extends AccountDetailState {
+  AccountDetailLoading() {
+    title = 'This Month';
+    nextPageTitle = 'Future';
+    previousPageTitle = 'Last Month';
+  }
+}
+
+class AccountDetailError extends AccountDetailState {}
+
+class AccountDetailEmpty extends AccountDetailState {}
 
 class AccountDetailPopulated extends AccountDetailState {
   final TransactionsResult result;
 
-  AccountDetailPopulated(
-      {@required this.result,
-      @required String title,
-      @required String nextPageTitle,
-      @required String previousPageTitle})
-      : super(
-            title: title,
-            nextPageTitle: nextPageTitle,
-            previousPageTitle: previousPageTitle);
-}
-
-class AccountDetailLoading extends AccountDetailState {
-  AccountDetailLoading(
-      {@required String title,
-      @required String nextPageTitle,
-      @required String previousPageTitle})
-      : super(
-            title: title,
-            nextPageTitle: nextPageTitle,
-            previousPageTitle: previousPageTitle);
-}
-
-class AccountDetailError extends AccountDetailState {
-  AccountDetailError(
-      {@required String title,
-      @required String nextPageTitle,
-      @required String previousPageTitle})
-      : super(
-            title: title,
-            nextPageTitle: nextPageTitle,
-            previousPageTitle: previousPageTitle);
-}
-
-class AccountDetailEmpty extends AccountDetailState {
-  AccountDetailEmpty(
-      {@required String title,
-      @required String nextPageTitle,
-      @required String previousPageTitle})
-      : super(
-            title: title,
-            nextPageTitle: nextPageTitle,
-            previousPageTitle: previousPageTitle);
+  AccountDetailPopulated(this.result);
 }

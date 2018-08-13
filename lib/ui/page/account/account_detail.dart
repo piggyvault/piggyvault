@@ -3,7 +3,7 @@ import 'package:piggy_flutter/bloc/account_detail_bloc.dart';
 import 'package:piggy_flutter/model/account.dart';
 import 'package:piggy_flutter/model/account_detail_state.dart';
 import 'package:piggy_flutter/services/transaction_service.dart';
-import 'package:piggy_flutter/ui/page/transaction/transaction_form.dart';
+import 'package:piggy_flutter/ui/widgets/add_transaction_fab.dart';
 import 'package:piggy_flutter/ui/widgets/common/empty_result_widget.dart';
 import 'package:piggy_flutter/ui/widgets/common/error_display_widget.dart';
 import 'package:piggy_flutter/ui/widgets/common/loading_widget.dart';
@@ -33,6 +33,7 @@ class _AccountDetailPageState extends State<AccountDetailPage>
     super.initState();
     _controller = AnimationController(vsync: this);
     bloc = AccountDetailBloc(accountId: widget.account.id);
+    bloc.changeAccount(widget.account);
     bloc.onPageChanged(0);
   }
 
@@ -49,18 +50,21 @@ class _AccountDetailPageState extends State<AccountDetailPage>
 
     return StreamBuilder<AccountDetailState>(
         stream: bloc.state,
-        initialData: AccountDetailLoading(
-            title: 'This Month',
-            nextPageTitle: 'Future',
-            previousPageTitle: 'Last Month'),
+        initialData: AccountDetailLoading(),
         builder:
             (BuildContext context, AsyncSnapshot<AccountDetailState> snapshot) {
           final state = snapshot.data;
-
+          final account =
+              state.account == null ? widget.account : state.account;
+          debugPrint('######## state is $state');
           return Scaffold(
             appBar: AppBar(
-              title: Text(
-                  '${widget.account.name} - ${widget.account.currentBalance} ${widget.account.currencySymbol}'),
+              title: Row(
+                children: <Widget>[
+                  Text('${widget.account.name}'),
+                  Text('${account.currentBalance} ${account.currencySymbol}')
+                ],
+              ),
               bottom: PreferredSize(
                 preferredSize: const Size.fromHeight(48.0),
                 child: Container(
@@ -142,25 +146,10 @@ class _AccountDetailPageState extends State<AccountDetailPage>
                 ],
               ),
             ),
-            floatingActionButton: FloatingActionButton(
-                key: ValueKey<Color>(Theme.of(context).primaryColor),
-                tooltip: 'Add new transaction',
-                backgroundColor: Theme.of(context).primaryColor,
-                child: Icon(Icons.add),
-                onPressed: () async {
-                  var result = await Navigator.push(
-                      context,
-                      MaterialPageRoute<DismissDialogAction>(
-                        builder: (BuildContext context) => TransactionFormPage(
-                              account: widget.account,
-                            ),
-                        fullscreenDialog: true,
-                      ));
-
-                  if (result == DismissDialogAction.save) {
-                    bloc.onPageChanged(0);
-                  }
-                }),
+            floatingActionButton: AddTransactionFab(
+              account: widget.account,
+              accountDetailBloc: bloc,
+            ),
           );
         });
   }

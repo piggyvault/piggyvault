@@ -12,4 +12,9 @@ class Account {
         currencySymbol = json['currency']['symbol'],
         currencyCode = json['currency']['code'],
         currentBalance = json['currentBalance'];
+
+  @override
+  String toString() {
+    return '$name - ${currentBalance.toString()}';
+  }
 }

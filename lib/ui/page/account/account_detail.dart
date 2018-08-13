@@ -56,13 +56,24 @@ class _AccountDetailPageState extends State<AccountDetailPage>
           final state = snapshot.data;
           final account =
               state.account == null ? widget.account : state.account;
-          debugPrint('######## state is $state');
+          // debugPrint('######## state is $state');
           return Scaffold(
             appBar: AppBar(
-              title: Row(
+              title: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Text('${widget.account.name}'),
-                  Text('${account.currentBalance} ${account.currencySymbol}')
+                  Padding(
+                    padding: const EdgeInsets.only(top: 8.0),
+                    child: Text('${widget.account.name}'),
+                  ),
+                  Text(
+                    ' ${account.currentBalance} ${account.currencySymbol}',
+                    style: Theme
+                        .of(context)
+                        .textTheme
+                        .body2
+                        .copyWith(color: Colors.yellow),
+                  )
                 ],
               ),
               bottom: PreferredSize(
@@ -117,9 +128,9 @@ class _AccountDetailPageState extends State<AccountDetailPage>
             body: SafeArea(
               top: false,
               bottom: false,
-              child: new Column(
+              child: Column(
                 children: <Widget>[
-                  new Expanded(
+                  Expanded(
                     child: Stack(
                       children: <Widget>[
                         // Fade in a loading screen when results are being fetched

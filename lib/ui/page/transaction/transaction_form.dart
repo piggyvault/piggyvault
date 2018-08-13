@@ -7,9 +7,11 @@ import 'package:piggy_flutter/model/account.dart';
 import 'package:piggy_flutter/model/category.dart';
 import 'package:piggy_flutter/model/transaction.dart';
 import 'package:piggy_flutter/model/transaction_edit_dto.dart';
+import 'package:piggy_flutter/model/transaction_form_state.dart';
 import 'package:piggy_flutter/providers/account_provider.dart';
 import 'package:piggy_flutter/providers/category_provider.dart';
 import 'package:piggy_flutter/services/transaction_service.dart';
+import 'package:piggy_flutter/ui/widgets/common/loading_widget.dart';
 import 'package:piggy_flutter/utils/uidata.dart';
 import 'package:piggy_flutter/ui/widgets/date_time_picker.dart';
 // TODO: BLoC
@@ -35,29 +37,29 @@ class TransactionFormPage extends StatefulWidget {
       : super(key: key);
 
   @override
-  TransactionFormPageState createState() => new TransactionFormPageState();
+  TransactionFormPageState createState() => TransactionFormPageState();
 }
 
 class TransactionFormPageState extends State<TransactionFormPage> {
-  TransactionEditDto transactionEditDto = new TransactionEditDto();
+  TransactionEditDto transactionEditDto = TransactionEditDto();
   TextEditingController _descriptionFieldController;
   TextEditingController _amountFieldController;
 
   final TextEditingController _convertedAmountFieldController =
-      new TextEditingController();
+      TextEditingController();
 
   Account _account, _toAccount;
-  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
-  final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   bool _autoValidate = false;
   bool _formWasEdited = false;
   bool _showTransferToAmount = false;
   String _categoryErrorText, _accountErrorText, _toAccountId;
-  DateTime _transactionDate = new DateTime.now();
+  DateTime _transactionDate = DateTime.now();
   TimeOfDay _transactionTime;
   String _transactionType = UIData.transaction_type_expense;
 
-  TransactionService _transactionService = new TransactionService();
+  TransactionService _transactionService = TransactionService();
 
   @override
   void initState() {
@@ -66,8 +68,8 @@ class TransactionFormPageState extends State<TransactionFormPage> {
         TimeOfDay(hour: _transactionDate.hour, minute: _transactionDate.minute);
 
     if (widget.transaction == null) {
-      _descriptionFieldController = new TextEditingController();
-      _amountFieldController = new TextEditingController();
+      _descriptionFieldController = TextEditingController();
+      _amountFieldController = TextEditingController();
     } else {
       _account = widget.account;
       _transactionService
@@ -91,9 +93,9 @@ class TransactionFormPageState extends State<TransactionFormPage> {
           }
 
           _descriptionFieldController =
-              new TextEditingController(text: transactionEditDto.description);
-          _amountFieldController = new TextEditingController(
-              text: transactionEditDto.amount.toString());
+              TextEditingController(text: transactionEditDto.description);
+          _amountFieldController =
+              TextEditingController(text: transactionEditDto.amount.toString());
         });
       });
     }
@@ -106,43 +108,42 @@ class TransactionFormPageState extends State<TransactionFormPage> {
     final AccountBloc accountBloc = AccountProvider.of(context);
     final TransactionFormBloc transactionFormBloc = TransactionFormBloc();
 
-    return new Scaffold(
+    return Scaffold(
       key: _scaffoldKey,
-      appBar: new AppBar(
-        title:
-            new Text(widget.title == null ? 'New Transaction' : widget.title),
+      appBar: AppBar(
+        title: Text(widget.title == null ? ' Transaction' : widget.title),
         actions: <Widget>[
-          new FlatButton(
-              child: new Text('SAVE',
+          FlatButton(
+              child: Text('SAVE',
                   style: theme.textTheme.body1.copyWith(color: Colors.white)),
               onPressed: () {
                 onSave(transactionFormBloc, accountBloc);
               })
         ],
       ),
-      body: new DropdownButtonHideUnderline(
-        child: new SafeArea(
+      body: DropdownButtonHideUnderline(
+        child: SafeArea(
           top: false,
           bottom: false,
-          child: new Form(
+          child: Form(
             key: _formKey,
             autovalidate: _autoValidate,
             onWillPop: _onWillPop,
-            child: new ListView(
+            child: ListView(
               padding: const EdgeInsets.all(16.0),
               children: <Widget>[
-                new InputDecorator(
+                InputDecorator(
                     decoration: const InputDecoration(
                       labelText: 'Transaction Type',
                       hintText: 'Choose the type of transaction',
                     ),
                     isEmpty: _transactionType == null,
-                    child: new DropdownButton<String>(
+                    child: DropdownButton<String>(
                       value: _transactionType,
                       isDense: true,
-                      onChanged: (String newValue) {
+                      onChanged: (String Value) {
                         setState(() {
-                          _transactionType = newValue;
+                          _transactionType = Value;
                           manageTransferView();
                         });
                       },
@@ -151,13 +152,13 @@ class TransactionFormPageState extends State<TransactionFormPage> {
                         UIData.transaction_type_income,
                         UIData.transaction_type_transfer
                       ].map((String value) {
-                        return new DropdownMenuItem<String>(
+                        return DropdownMenuItem<String>(
                           value: value,
-                          child: new Text(value),
+                          child: Text(value),
                         );
                       }).toList(),
                     )),
-                new InputDecorator(
+                InputDecorator(
                   decoration: const InputDecoration(
                     labelText: 'Account',
                     hintText: 'Choose an account',
@@ -166,10 +167,10 @@ class TransactionFormPageState extends State<TransactionFormPage> {
                   child: buildAccountList(accountBloc),
                 ),
                 const SizedBox(height: 24.0),
-                new TextFormField(
+                TextFormField(
                   keyboardType: TextInputType.numberWithOptions(decimal: true),
-                  decoration: new InputDecoration(
-                      border: new OutlineInputBorder(),
+                  decoration: InputDecoration(
+                      border: OutlineInputBorder(),
                       labelText: 'Amount',
                       prefixText:
                           _account == null ? null : _account.currencySymbol,
@@ -180,7 +181,7 @@ class TransactionFormPageState extends State<TransactionFormPage> {
                   controller: _amountFieldController,
                   validator: _validateAmount,
                 ),
-                new InputDecorator(
+                InputDecorator(
                   decoration: InputDecoration(
                     labelText: 'Category',
                     hintText: 'Choose a category',
@@ -190,7 +191,7 @@ class TransactionFormPageState extends State<TransactionFormPage> {
                   child: buildCategoryList(categoryBloc),
                 ),
                 const SizedBox(height: 24.0),
-                new TextFormField(
+                TextFormField(
                   decoration: const InputDecoration(
                     border: const OutlineInputBorder(),
                     hintText: 'Tell us about the transaction',
@@ -203,7 +204,7 @@ class TransactionFormPageState extends State<TransactionFormPage> {
                   validator: _validateDescription,
                 ),
 //                const SizedBox(height: 24.0),
-                new DateTimePicker(
+                DateTimePicker(
                   labelText: 'Date',
                   selectedDate: _transactionDate,
                   selectedTime: _transactionTime,
@@ -219,7 +220,7 @@ class TransactionFormPageState extends State<TransactionFormPage> {
                   },
                 ),
                 _transactionType == UIData.transaction_type_transfer
-                    ? new InputDecorator(
+                    ? InputDecorator(
                         decoration: const InputDecoration(
                           labelText: 'To Account',
                           hintText: 'Choose an account',
@@ -230,11 +231,11 @@ class TransactionFormPageState extends State<TransactionFormPage> {
                     : null,
                 _showTransferToAmount ? const SizedBox(height: 24.0) : null,
                 _showTransferToAmount
-                    ? new TextFormField(
+                    ? TextFormField(
                         keyboardType:
                             TextInputType.numberWithOptions(decimal: true),
-                        decoration: new InputDecoration(
-                            border: new OutlineInputBorder(),
+                        decoration: InputDecoration(
+                            border: OutlineInputBorder(),
                             labelText: 'Converted Amount',
                             prefixText: _toAccount == null
                                 ? null
@@ -249,8 +250,9 @@ class TransactionFormPageState extends State<TransactionFormPage> {
                       )
                     : null,
                 const SizedBox(height: 24.0),
-                new Text('* all fields are mandatory',
+                Text('* all fields are mandatory',
                     style: Theme.of(context).textTheme.caption),
+                _isBusyIndicator(transactionFormBloc),
               ].where((child) => child != null).toList(),
             ),
           ),
@@ -268,6 +270,20 @@ class TransactionFormPageState extends State<TransactionFormPage> {
     super.dispose();
   }
 
+  Widget _isBusyIndicator(TransactionFormBloc bloc) {
+    return StreamBuilder<TransactionFormState>(
+      stream: bloc.state,
+      builder: (context, snapshot) {
+        final state = snapshot.data;
+        return state is TransactionFormBusy
+            ? LoadingWidget(
+                visible: true,
+              )
+            : Container();
+      },
+    );
+  }
+
   Future<bool> _onWillPop() async {
     if (!_formWasEdited) return true;
 
@@ -278,17 +294,16 @@ class TransactionFormPageState extends State<TransactionFormPage> {
     return await showDialog<bool>(
           context: context,
           builder: (BuildContext context) {
-            return new AlertDialog(
-              content:
-                  new Text('Discard unsaved changes?', style: dialogTextStyle),
+            return AlertDialog(
+              content: Text('Discard unsaved changes?', style: dialogTextStyle),
               actions: <Widget>[
-                new FlatButton(
+                FlatButton(
                     child: const Text('CANCEL'),
                     onPressed: () {
                       Navigator.of(context).pop(
                           false); // Pops the confirmation dialog but not the page.
                     }),
-                new FlatButton(
+                FlatButton(
                     child: const Text('DISCARD'),
                     onPressed: () {
                       Navigator.of(context).pop(
@@ -302,31 +317,31 @@ class TransactionFormPageState extends State<TransactionFormPage> {
   }
 
   Widget buildCategoryList(CategoryBloc categoryBloc) =>
-      new StreamBuilder<List<Category>>(
+      StreamBuilder<List<Category>>(
           stream: categoryBloc.categories,
           builder: (context, snapshot) {
             if (snapshot.hasData) {
-              return new DropdownButton<int>(
+              return DropdownButton<int>(
                 value: transactionEditDto.categoryId,
-                onChanged: (int newValue) {
+                onChanged: (int Value) {
                   setState(() {
-                    transactionEditDto.categoryId = newValue;
+                    transactionEditDto.categoryId = Value;
                   });
                 },
                 items: snapshot.data.map((Category category) {
-                  return new DropdownMenuItem<int>(
+                  return DropdownMenuItem<int>(
                     value: category.id,
-                    child: new Text(category.name),
+                    child: Text(category.name),
                   );
                 }).toList(),
               );
             } else {
-              return new LinearProgressIndicator();
+              return LinearProgressIndicator();
             }
           });
 
   Widget buildAccountList(AccountBloc accountBloc, [bool isToAccount = false]) {
-    return new StreamBuilder<List<Account>>(
+    return StreamBuilder<List<Account>>(
       stream: accountBloc.userAccounts,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
@@ -335,39 +350,39 @@ class TransactionFormPageState extends State<TransactionFormPage> {
             _account = snapshot.data.firstWhere(
                 (account) => account.id == transactionEditDto.accountId);
           }
-          return new DropdownButton<String>(
+          return DropdownButton<String>(
             value: isToAccount ? _toAccountId : transactionEditDto.accountId,
-            onChanged: (String newValue) {
+            onChanged: (String Value) {
               setState(() {
                 if (isToAccount) {
-                  _toAccountId = newValue;
+                  _toAccountId = Value;
                   _toAccount = accountBloc.userAccountList
-                      .firstWhere((account) => account.id == newValue);
+                      .firstWhere((account) => account.id == Value);
                 } else {
-                  transactionEditDto.accountId = newValue;
+                  transactionEditDto.accountId = Value;
                   _account = accountBloc.userAccountList
-                      .firstWhere((account) => account.id == newValue);
+                      .firstWhere((account) => account.id == Value);
                 }
               });
               manageTransferView();
             },
             items: snapshot.data.map((Account account) {
-              return new DropdownMenuItem<String>(
+              return DropdownMenuItem<String>(
                 value: account.id,
-                child: new Text(account.name),
+                child: Text(account.name),
               );
             }).toList(),
           );
         } else {
-          return new LinearProgressIndicator();
+          return LinearProgressIndicator();
         }
       },
     );
   }
 
   void showInSnackBar(String value) {
-    _scaffoldKey.currentState.showSnackBar(new SnackBar(
-      content: new Text(value),
+    _scaffoldKey.currentState.showSnackBar(SnackBar(
+      content: Text(value),
       backgroundColor: Colors.red,
     ));
   }
@@ -411,7 +426,6 @@ class TransactionFormPageState extends State<TransactionFormPage> {
                       .toString(),
                   amount,
                   transactionEditDto.categoryId,
-                  accountBloc,
                   toAmount,
                   _toAccountId))
               .then((_) => Navigator.pop(context, DismissDialogAction.save));
@@ -426,7 +440,7 @@ class TransactionFormPageState extends State<TransactionFormPage> {
         }
 
         transactionEditDto.description = _descriptionFieldController.text;
-        transactionEditDto.transactionTime = new DateTime(
+        transactionEditDto.transactionTime = DateTime(
                 _transactionDate.year,
                 _transactionDate.month,
                 _transactionDate.day,

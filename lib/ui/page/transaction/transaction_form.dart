@@ -67,11 +67,15 @@ class TransactionFormPageState extends State<TransactionFormPage> {
     _transactionTime =
         TimeOfDay(hour: _transactionDate.hour, minute: _transactionDate.minute);
 
+    if (widget.account != null) {
+      _account = widget.account;
+      transactionEditDto.accountId = _account.id;
+    }
+
     if (widget.transaction == null) {
       _descriptionFieldController = TextEditingController();
       _amountFieldController = TextEditingController();
     } else {
-      _account = widget.account;
       _transactionService
           .getTransactionForEdit(widget.transaction.id)
           .then((result) {
@@ -145,9 +149,9 @@ class TransactionFormPageState extends State<TransactionFormPage> {
                     child: DropdownButton<String>(
                       value: _transactionType,
                       isDense: true,
-                      onChanged: (String Value) {
+                      onChanged: (String value) {
                         setState(() {
-                          _transactionType = Value;
+                          _transactionType = value;
                           manageTransferView();
                         });
                       },
@@ -200,7 +204,6 @@ class TransactionFormPageState extends State<TransactionFormPage> {
                   decoration: const InputDecoration(
                     border: const OutlineInputBorder(),
                     hintText: 'Tell us about the transaction',
-//                            helperText: 'Keep it short but meaningful',
                     labelText: 'Description',
                   ),
                   maxLines: 2,
@@ -208,7 +211,6 @@ class TransactionFormPageState extends State<TransactionFormPage> {
                   controller: _descriptionFieldController,
                   validator: _validateDescription,
                 ),
-//                const SizedBox(height: 24.0),
                 DateTimePicker(
                   labelText: 'Date',
                   selectedDate: _transactionDate,
@@ -330,9 +332,9 @@ class TransactionFormPageState extends State<TransactionFormPage> {
             if (snapshot.hasData) {
               return DropdownButton<int>(
                 value: transactionEditDto.categoryId,
-                onChanged: (int Value) {
+                onChanged: (int value) {
                   setState(() {
-                    transactionEditDto.categoryId = Value;
+                    transactionEditDto.categoryId = value;
                   });
                 },
                 items: snapshot.data.map((Category category) {
@@ -359,16 +361,16 @@ class TransactionFormPageState extends State<TransactionFormPage> {
           }
           return DropdownButton<String>(
             value: isToAccount ? _toAccountId : transactionEditDto.accountId,
-            onChanged: (String Value) {
+            onChanged: (String value) {
               setState(() {
                 if (isToAccount) {
-                  _toAccountId = Value;
+                  _toAccountId = value;
                   _toAccount = accountBloc.userAccountList
-                      .firstWhere((account) => account.id == Value);
+                      .firstWhere((account) => account.id == value);
                 } else {
-                  transactionEditDto.accountId = Value;
+                  transactionEditDto.accountId = value;
                   _account = accountBloc.userAccountList
-                      .firstWhere((account) => account.id == Value);
+                      .firstWhere((account) => account.id == value);
                 }
               });
               manageTransferView();

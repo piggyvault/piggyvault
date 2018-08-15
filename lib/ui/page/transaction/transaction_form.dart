@@ -107,6 +107,10 @@ class TransactionFormPageState extends State<TransactionFormPage> {
     final CategoryBloc categoryBloc = CategoryProvider.of(context);
     final AccountBloc accountBloc = AccountProvider.of(context);
     final TransactionFormBloc transactionFormBloc = TransactionFormBloc();
+    final _transactionTextStyle = TextStyle(
+        color: _transactionType == UIData.transaction_type_income
+            ? Colors.green
+            : Colors.red);
 
     return Scaffold(
       key: _scaffoldKey,
@@ -174,9 +178,10 @@ class TransactionFormPageState extends State<TransactionFormPage> {
                       labelText: 'Amount',
                       prefixText:
                           _account == null ? null : _account.currencySymbol,
+                      prefixStyle: _transactionTextStyle,
                       suffixText:
                           _account == null ? null : _account.currencyCode,
-                      suffixStyle: const TextStyle(color: Colors.green)),
+                      suffixStyle: _transactionTextStyle),
                   maxLines: 1,
                   controller: _amountFieldController,
                   validator: _validateAmount,
@@ -235,15 +240,17 @@ class TransactionFormPageState extends State<TransactionFormPage> {
                         keyboardType:
                             TextInputType.numberWithOptions(decimal: true),
                         decoration: InputDecoration(
-                            border: OutlineInputBorder(),
-                            labelText: 'Converted Amount',
-                            prefixText: _toAccount == null
-                                ? null
-                                : _toAccount.currencySymbol,
-                            suffixText: _toAccount == null
-                                ? null
-                                : _toAccount.currencyCode,
-                            suffixStyle: const TextStyle(color: Colors.green)),
+                          border: OutlineInputBorder(),
+                          labelText: 'Converted Amount',
+                          prefixText: _toAccount == null
+                              ? null
+                              : _toAccount.currencySymbol,
+                          prefixStyle: const TextStyle(color: Colors.green),
+                          suffixText: _toAccount == null
+                              ? null
+                              : _toAccount.currencyCode,
+                          suffixStyle: const TextStyle(color: Colors.green),
+                        ),
                         maxLines: 1,
                         controller: _convertedAmountFieldController,
                         validator: _validateAmount,

@@ -8,9 +8,7 @@ class MyAboutTile extends StatelessWidget {
       applicationIcon: FlutterLogo(
         colors: Colors.yellow,
       ),
-      icon: FlutterLogo(
-        colors: Colors.yellow,
-      ),
+      icon: Icon(Icons.info_outline),
       aboutBoxChildren: <Widget>[
         SizedBox(
           height: 10.0,

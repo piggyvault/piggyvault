@@ -8,6 +8,7 @@ import 'package:piggy_flutter/model/transaction_summary.dart';
 import 'package:piggy_flutter/model/transactions_result.dart';
 import 'package:piggy_flutter/services/app_service_base.dart';
 import 'package:intl/intl.dart';
+import 'package:piggy_flutter/services/network_service_response.dart';
 
 class GetTransactionsInput {
   String type;
@@ -96,8 +97,10 @@ class TransactionService extends AppServiceBase {
     return comments;
   }
 
-  Future<Null> createOrUpdateTransaction(TransactionEditDto input) async {
-    await rest.postAsync('services/app/transaction/CreateOrUpdateTransaction', {
+  Future<NetworkServiceResponse<dynamic>> createOrUpdateTransaction(
+      TransactionEditDto input) async {
+    final result = await rest
+        .postAsync('services/app/transaction/CreateOrUpdateTransaction', {
       "id": input.id,
       "description": input.description,
       "amount": input.amount,
@@ -105,6 +108,8 @@ class TransactionService extends AppServiceBase {
       "accountId": input.accountId,
       "transactionTime": input.transactionTime
     });
+
+    return result.networkServiceResponse;
   }
 
   Future<Null> saveTransactionComment(

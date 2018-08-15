@@ -4,14 +4,16 @@ import 'package:piggy_flutter/bloc/account_bloc.dart';
 import 'package:piggy_flutter/bloc/category_bloc.dart';
 import 'package:piggy_flutter/bloc/transaction_form_bloc.dart';
 import 'package:piggy_flutter/model/account.dart';
+import 'package:piggy_flutter/model/api_request.dart';
 import 'package:piggy_flutter/model/category.dart';
 import 'package:piggy_flutter/model/transaction.dart';
 import 'package:piggy_flutter/model/transaction_edit_dto.dart';
-import 'package:piggy_flutter/model/transaction_form_state.dart';
+// import 'package:piggy_flutter/model/transaction_form_state.dart';
 import 'package:piggy_flutter/providers/account_provider.dart';
 import 'package:piggy_flutter/providers/category_provider.dart';
 import 'package:piggy_flutter/services/transaction_service.dart';
-import 'package:piggy_flutter/ui/widgets/common/loading_widget.dart';
+import 'package:piggy_flutter/ui/widgets/api_subscription.dart';
+// import 'package:piggy_flutter/ui/widgets/common/loading_widget.dart';
 import 'package:piggy_flutter/utils/uidata.dart';
 import 'package:piggy_flutter/ui/widgets/date_time_picker.dart';
 // TODO: BLoC
@@ -60,10 +62,15 @@ class TransactionFormPageState extends State<TransactionFormPage> {
   String _transactionType = UIData.transaction_type_expense;
 
   TransactionService _transactionService = TransactionService();
+  TransactionFormBloc transactionFormBloc;
+  StreamSubscription<ApiRequest> apiStreamSubscription;
 
   @override
   void initState() {
     super.initState();
+    transactionFormBloc = TransactionFormBloc();
+    apiStreamSubscription = apiSubscription(transactionFormBloc.state, context);
+
     _transactionTime =
         TimeOfDay(hour: _transactionDate.hour, minute: _transactionDate.minute);
 
@@ -110,7 +117,7 @@ class TransactionFormPageState extends State<TransactionFormPage> {
     final ThemeData theme = Theme.of(context);
     final CategoryBloc categoryBloc = CategoryProvider.of(context);
     final AccountBloc accountBloc = AccountProvider.of(context);
-    final TransactionFormBloc transactionFormBloc = TransactionFormBloc();
+
     final _transactionTextStyle = TextStyle(
         color: _transactionType == UIData.transaction_type_income
             ? Colors.green
@@ -261,7 +268,7 @@ class TransactionFormPageState extends State<TransactionFormPage> {
                 const SizedBox(height: 24.0),
                 Text('* all fields are mandatory',
                     style: Theme.of(context).textTheme.caption),
-                _isBusyIndicator(transactionFormBloc),
+                // _isBusyIndicator(transactionFormBloc),
               ].where((child) => child != null).toList(),
             ),
           ),
@@ -276,22 +283,23 @@ class TransactionFormPageState extends State<TransactionFormPage> {
     _descriptionFieldController.dispose();
     _amountFieldController.dispose();
     _convertedAmountFieldController.dispose();
+    apiStreamSubscription?.cancel();
     super.dispose();
   }
 
-  Widget _isBusyIndicator(TransactionFormBloc bloc) {
-    return StreamBuilder<TransactionFormState>(
-      stream: bloc.state,
-      builder: (context, snapshot) {
-        final state = snapshot.data;
-        return state is TransactionFormBusy
-            ? LoadingWidget(
-                visible: true,
-              )
-            : Container();
-      },
-    );
-  }
+  // Widget _isBusyIndicator(TransactionFormBloc bloc) {
+  //   return StreamBuilder<TransactionFormState>(
+  //     stream: bloc.state,
+  //     builder: (context, snapshot) {
+  //       final state = snapshot.data;
+  //       return state is TransactionFormBusy
+  //           ? LoadingWidget(
+  //               visible: true,
+  //             )
+  //           : Container();
+  //     },
+  //   );
+  // }
 
   Future<bool> _onWillPop() async {
     if (!_formWasEdited) return true;

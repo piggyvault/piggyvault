@@ -22,12 +22,11 @@ android {
     }
 
     defaultConfig {
-        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId "in.piggyvault.piggyflutter"
         minSdkVersion 16
         targetSdkVersion 27
-        versionCode 6
-        versionName "0.4.0"
+        versionCode 7
+        versionName "0.5.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 

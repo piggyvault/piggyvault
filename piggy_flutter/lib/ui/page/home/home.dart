@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:piggy_flutter/bloc/account_bloc.dart';
 import 'package:piggy_flutter/bloc/category_bloc.dart';
@@ -11,6 +13,7 @@ import 'package:piggy_flutter/ui/page/account/account_list.dart';
 import 'package:piggy_flutter/ui/page/home/recent.dart';
 import 'package:piggy_flutter/ui/page/home/summary.dart';
 import 'package:piggy_flutter/ui/widgets/common/common_drawer.dart';
+import 'package:connectivity/connectivity.dart';
 
 class NavigationIconView {
   NavigationIconView({
@@ -44,39 +47,6 @@ class NavigationIconView {
   final BottomNavigationBarItem item;
   final AnimationController controller;
   CurvedAnimation _animation;
-
-  FadeTransition transition(
-      BottomNavigationBarType type, BuildContext context) {
-    Color iconColor;
-    if (type == BottomNavigationBarType.shifting) {
-      iconColor = _color;
-    } else {
-      final ThemeData themeData = Theme.of(context);
-      iconColor = themeData.brightness == Brightness.light
-          ? themeData.primaryColor
-          : themeData.accentColor;
-    }
-
-    return new FadeTransition(
-      opacity: _animation,
-      child: new SlideTransition(
-        position: new Tween<Offset>(
-          begin: const Offset(0.0, 0.02), // Slightly down.
-          end: Offset.zero,
-        ).animate(_animation),
-        child: new IconTheme(
-          data: new IconThemeData(
-            color: iconColor,
-            size: 120.0,
-          ),
-          child: new Semantics(
-            label: 'Placeholder for $_title tab',
-            child: _icon,
-          ),
-        ),
-      ),
-    );
-  }
 }
 
 enum StartPage { Recent, Accounts, Summary }
@@ -99,20 +69,23 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   int _currentIndex = 0;
   List<NavigationIconView> _navigationViews;
 
-  final Key keyRecentPage = PageStorageKey('recent');
-  final Key keyAccountsPage = PageStorageKey('accounts');
-  final Key keySummaryPage = PageStorageKey('summary');
+  final Key _keyRecentPage = PageStorageKey('recent');
+  final Key _keyAccountsPage = PageStorageKey('accounts');
+  final Key _keySummaryPage = PageStorageKey('summary');
 
-  RecentPage recent;
-  SummaryPage summary;
-  AccountListPage accounts;
+  RecentPage _recent;
+  SummaryPage _summary;
+  AccountListPage _accounts;
 
-  List<Widget> pages;
-  bool isSyncRequired;
+  List<Widget> _pages;
+  bool _isSyncRequired;
 
   /// This controller can be used to programmatically
   /// set the current displayed page
   PageController _pageController;
+  final Connectivity _connectivity = new Connectivity();
+  StreamSubscription<ConnectivityResult> _connectivitySubscription;
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
@@ -140,43 +113,57 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     for (NavigationIconView view in _navigationViews)
       view.controller.addListener(_rebuild);
 
-    summary = new SummaryPage(key: keySummaryPage);
-    recent = new RecentPage(
-      key: keyRecentPage,
+    _summary = new SummaryPage(key: _keySummaryPage);
+    _recent = new RecentPage(
+      key: _keyRecentPage,
     );
-    accounts = new AccountListPage(
-      key: keyAccountsPage,
+    _accounts = new AccountListPage(
+      key: _keyAccountsPage,
     );
 
     _pageController = new PageController(initialPage: widget.startpage.index);
 
-    pages = [recent, accounts, summary];
-    isSyncRequired = widget.isInitialLoading;
+    _pages = [_recent, _accounts, _summary];
+    _isSyncRequired = widget.isInitialLoading ?? false;
     _currentIndex = widget.startpage.index;
     _navigationViews[_currentIndex].controller.value = 1.0;
     super.initState();
+
+    _connectivitySubscription =
+        _connectivity.onConnectivityChanged.listen((ConnectivityResult result) {
+      if (result == ConnectivityResult.none) {
+        _isSyncRequired = true;
+      } else {
+        syncData(context);
+      }
+    });
   }
 
-  @override
-  Widget build(BuildContext context) {
-    final UserBloc userBloc = UserProvider.of(context);
-    final TransactionBloc transactionBloc = TransactionProvider.of(context);
-    final AccountBloc accountBloc = AccountProvider.of(context);
-    final CategoryBloc categoryBloc = CategoryProvider.of(context);
+  syncData(BuildContext context) {
+    if (_isSyncRequired) {
+      final UserBloc userBloc = UserProvider.of(context);
+      final TransactionBloc transactionBloc = TransactionProvider.of(context);
+      final AccountBloc accountBloc = AccountProvider.of(context);
+      final CategoryBloc categoryBloc = CategoryProvider.of(context);
 
-    if (isSyncRequired) {
-      print('# isSyncRequired $isSyncRequired');
-      isSyncRequired = false;
+      // print('##### syncing data');
+      _isSyncRequired = false;
       userBloc.userRefresh(true);
       transactionBloc.recentTransactionsRefresh(true);
       transactionBloc.transactionSummaryRefresh('month');
       accountBloc.accountsRefresh(true);
       categoryBloc.refreshCategories(true);
     }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    syncData(context);
 
     return new Scaffold(
+      key: _scaffoldKey,
       body: new PageView(
-          children: pages,
+          children: _pages,
           controller: _pageController,
           onPageChanged: onPageChanged),
       bottomNavigationBar: new BottomNavigationBar(
@@ -193,6 +180,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
   @override
   void dispose() {
+    _connectivitySubscription.cancel();
     for (NavigationIconView view in _navigationViews) view.controller.dispose();
     super.dispose();
     _pageController.dispose();

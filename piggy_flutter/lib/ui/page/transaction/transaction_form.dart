@@ -8,12 +8,10 @@ import 'package:piggy_flutter/model/api_request.dart';
 import 'package:piggy_flutter/model/category.dart';
 import 'package:piggy_flutter/model/transaction.dart';
 import 'package:piggy_flutter/model/transaction_edit_dto.dart';
-// import 'package:piggy_flutter/model/transaction_form_state.dart';
 import 'package:piggy_flutter/providers/account_provider.dart';
 import 'package:piggy_flutter/providers/category_provider.dart';
 import 'package:piggy_flutter/services/transaction_service.dart';
 import 'package:piggy_flutter/ui/widgets/api_subscription.dart';
-// import 'package:piggy_flutter/ui/widgets/common/loading_widget.dart';
 import 'package:piggy_flutter/utils/uidata.dart';
 import 'package:piggy_flutter/ui/widgets/date_time_picker.dart';
 // TODO: BLoC
@@ -429,23 +427,21 @@ class TransactionFormPageState extends State<TransactionFormPage> {
             toAmount = amount;
           }
 
-          transactionFormBloc
-              .onTransfer(TransferInput(
-                  transactionEditDto.id,
-                  _descriptionFieldController.text,
-                  transactionEditDto.accountId,
-                  DateTime(
-                          _transactionDate.year,
-                          _transactionDate.month,
-                          _transactionDate.day,
-                          _transactionTime.hour,
-                          _transactionTime.minute)
-                      .toString(),
-                  amount,
-                  transactionEditDto.categoryId,
-                  toAmount,
-                  _toAccountId))
-              .then((_) => Navigator.pop(context, DismissDialogAction.save));
+          transactionFormBloc.onTransfer(TransferInput(
+              transactionEditDto.id,
+              _descriptionFieldController.text,
+              transactionEditDto.accountId,
+              DateTime(
+                      _transactionDate.year,
+                      _transactionDate.month,
+                      _transactionDate.day,
+                      _transactionTime.hour,
+                      _transactionTime.minute)
+                  .toString(),
+              amount,
+              transactionEditDto.categoryId,
+              toAmount,
+              _toAccountId));
         }
       } else {
         double amount = double.parse(_amountFieldController.text);
@@ -466,9 +462,7 @@ class TransactionFormPageState extends State<TransactionFormPage> {
             .toString();
         transactionEditDto.amount = amount;
 
-        transactionFormBloc
-            .onSave(transactionEditDto)
-            .then((_) => Navigator.pop(context, DismissDialogAction.save));
+        transactionFormBloc.onSave(transactionEditDto);
       }
     }
   }

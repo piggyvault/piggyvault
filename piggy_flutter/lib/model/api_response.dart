@@ -1,14 +1,14 @@
-class NetworkServiceResponse<T> {
+class ApiResponse<T> {
   T content;
   bool success;
   String message;
 
-  NetworkServiceResponse({this.content, this.success, this.message});
+  ApiResponse({this.content, this.success, this.message});
 }
 
 class MappedNetworkServiceResponse<T> {
   dynamic mappedResult;
-  NetworkServiceResponse<T> networkServiceResponse;
+  ApiResponse<T> networkServiceResponse;
   MappedNetworkServiceResponse(
       {this.mappedResult, this.networkServiceResponse});
 }

@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
-import 'package:piggy_flutter/services/network_service_response.dart';
 import 'package:http/http.dart' as http;
+import 'package:piggy_flutter/model/api_response.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:piggy_flutter/utils/uidata.dart';
 
@@ -37,11 +37,11 @@ class RestClient {
 
       return new MappedNetworkServiceResponse<T>(
           mappedResult: resultClass["result"],
-          networkServiceResponse: new NetworkServiceResponse<T>(success: true));
+          networkServiceResponse: new ApiResponse<T>(success: true));
     } else {
       var errorResponse = response.body;
       return new MappedNetworkServiceResponse<T>(
-          networkServiceResponse: new NetworkServiceResponse<T>(
+          networkServiceResponse: new ApiResponse<T>(
               success: false,
               message: "(${response.statusCode}) ${errorResponse.toString()}"));
     }

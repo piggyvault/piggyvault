@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:piggy_flutter/model/api_response.dart';
 import 'package:piggy_flutter/model/transaction.dart';
 import 'package:piggy_flutter/model/transaction_comment.dart';
 import 'package:piggy_flutter/model/transaction_edit_dto.dart';
@@ -8,7 +9,6 @@ import 'package:piggy_flutter/model/transaction_summary.dart';
 import 'package:piggy_flutter/model/transactions_result.dart';
 import 'package:piggy_flutter/services/app_service_base.dart';
 import 'package:intl/intl.dart';
-import 'package:piggy_flutter/services/network_service_response.dart';
 
 class GetTransactionsInput {
   String type;
@@ -97,7 +97,7 @@ class TransactionService extends AppServiceBase {
     return comments;
   }
 
-  Future<NetworkServiceResponse<dynamic>> createOrUpdateTransaction(
+  Future<ApiResponse<dynamic>> createOrUpdateTransaction(
       TransactionEditDto input) async {
     final result = await rest
         .postAsync('services/app/transaction/CreateOrUpdateTransaction', {
@@ -121,8 +121,9 @@ class TransactionService extends AppServiceBase {
     });
   }
 
-  Future<Null> transfer(TransferInput input) async {
-    await rest.postAsync('services/app/transaction/TransferAsync', {
+  Future<ApiResponse<dynamic>> transfer(TransferInput input) async {
+    final result =
+        await rest.postAsync('services/app/transaction/TransferAsync', {
       "id": input.id,
       "description": input.description,
       "amount": input.amount,
@@ -132,6 +133,8 @@ class TransactionService extends AppServiceBase {
       "toAccountId": input.toAccountId,
       "transactionTime": input.transactionTime
     });
+
+    return result.networkServiceResponse;
   }
 
   List<TransactionGroupItem> groupTransactions(

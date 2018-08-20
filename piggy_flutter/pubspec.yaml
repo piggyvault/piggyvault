@@ -12,6 +12,7 @@ dependencies:
   intl: ^0.15.7
   rxdart: ^0.18.1
   font_awesome_flutter: ^4.7.2
+  connectivity: ^0.3.1
 
 dev_dependencies:
   flutter_test:

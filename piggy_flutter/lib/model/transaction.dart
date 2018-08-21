@@ -9,7 +9,7 @@ class Transaction {
   final double amount, amountInDefaultCurrency;
 
   Transaction(
-      this.id,
+      {this.id,
       this.categoryName,
       this.description,
       this.creatorUserName,
@@ -17,7 +17,7 @@ class Transaction {
       this.accountCurrencySymbol,
       this.amount,
       this.transactionTime,
-      this.amountInDefaultCurrency);
+      this.amountInDefaultCurrency});
 
   Transaction.fromJson(Map<String, dynamic> json)
       : id = json['id'],

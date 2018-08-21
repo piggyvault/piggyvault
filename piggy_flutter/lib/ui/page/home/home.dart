@@ -1,10 +1,12 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:onesignal/onesignal.dart';
 import 'package:piggy_flutter/bloc/account_bloc.dart';
 import 'package:piggy_flutter/bloc/category_bloc.dart';
 import 'package:piggy_flutter/bloc/transaction_bloc.dart';
 import 'package:piggy_flutter/bloc/user_bloc.dart';
+import 'package:piggy_flutter/model/transaction.dart';
 import 'package:piggy_flutter/providers/account_provider.dart';
 import 'package:piggy_flutter/providers/category_provider.dart';
 import 'package:piggy_flutter/providers/transaction_provider.dart';
@@ -12,6 +14,7 @@ import 'package:piggy_flutter/providers/user_provider.dart';
 import 'package:piggy_flutter/ui/page/account/account_list.dart';
 import 'package:piggy_flutter/ui/page/home/recent.dart';
 import 'package:piggy_flutter/ui/page/home/summary.dart';
+import 'package:piggy_flutter/ui/page/transaction/transaction_detail.dart';
 import 'package:piggy_flutter/ui/widgets/common/common_drawer.dart';
 import 'package:connectivity/connectivity.dart';
 
@@ -89,6 +92,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
   @override
   void initState() {
+    super.initState();
     _navigationViews = <NavigationIconView>[
       new NavigationIconView(
         icon: const Icon(Icons.format_list_bulleted),
@@ -127,7 +131,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     _isSyncRequired = widget.isInitialLoading ?? false;
     _currentIndex = widget.startpage.index;
     _navigationViews[_currentIndex].controller.value = 1.0;
-    super.initState();
 
     _connectivitySubscription =
         _connectivity.onConnectivityChanged.listen((ConnectivityResult result) {
@@ -135,6 +138,42 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
         _isSyncRequired = true;
       } else {
         syncData(context);
+      }
+    });
+
+    initPlatformState();
+  }
+
+  Future<void> initPlatformState() async {
+    if (!mounted) return;
+
+    OneSignal.shared
+        .setNotificationOpenedHandler((OSNotificationOpenedResult result) {
+      // print(
+      //     "########## Opened notification: \n${result.notification.jsonRepresentation().replaceAll("\\n", "\n")}");
+      var transactionData = result.notification.payload.additionalData;
+      try {
+        var transaction = Transaction(
+            id: transactionData['TransactionId'],
+            transactionTime: transactionData['TransactionTime'],
+            description: transactionData['Description'],
+            amount: double.tryParse(transactionData['Amount']),
+            categoryName: transactionData['CategoryName'],
+            creatorUserName: transactionData['CreatorUserName'],
+            accountName: transactionData['AccountName']);
+        // TODO: get data from Id rather than sending over notification
+        // print(
+        //     "########## Opened notification: \n${result.notification.jsonRepresentation().replaceAll("\\n", "\n")}");
+        Navigator.push(
+            context,
+            new MaterialPageRoute(
+              builder: (BuildContext context) => TransactionDetailPage(
+                    transaction: transaction,
+                  ),
+              fullscreenDialog: true,
+            ));
+      } catch (e) {
+        print(e);
       }
     });
   }

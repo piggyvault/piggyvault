@@ -80,7 +80,7 @@ class MyAppState extends State<MyApp> {
   Future<void> initPlatformState() async {
     if (!mounted) return;
 
-    OneSignal.shared.setLogLevel(OSLogLevel.verbose, OSLogLevel.none);
+    OneSignal.shared.setLogLevel(OSLogLevel.warn, OSLogLevel.none);
 
     // OneSignal.shared.setRequiresUserPrivacyConsent(_requireConsent);
 
@@ -90,29 +90,9 @@ class MyAppState extends State<MyApp> {
     };
 
     OneSignal.shared.setNotificationReceivedHandler((notification) {
-      print(
-          "Received notification: \n${notification.jsonRepresentation().replaceAll("\\n", "\n")}");
+      // print(
+      //     "Received notification: \n${notification.jsonRepresentation().replaceAll("\\n", "\n")}");
     });
-
-    OneSignal.shared
-        .setNotificationOpenedHandler((OSNotificationOpenedResult result) {
-      print(
-          "Opened notification: \n${result.notification.jsonRepresentation().replaceAll("\\n", "\n")}");
-    });
-
-    // OneSignal.shared
-    //     .setSubscriptionObserver((OSSubscriptionStateChanges changes) {
-    //   print("SUBSCRIPTION STATE CHANGED: ${changes.jsonRepresentation()}");
-    // });
-
-    // OneSignal.shared.setPermissionObserver((OSPermissionStateChanges changes) {
-    //   print("PERMISSION STATE CHANGED: ${changes.jsonRepresentation()}");
-    // });
-
-    // OneSignal.shared.setEmailSubscriptionObserver(
-    //     (OSEmailSubscriptionStateChanges changes) {
-    //   print("EMAIL SUBSCRIPTION STATE CHANGED ${changes.jsonRepresentation()}");
-    // });
 
     // The App ID should not be treated as private.
     await OneSignal.shared

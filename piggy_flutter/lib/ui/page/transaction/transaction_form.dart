@@ -59,7 +59,7 @@ class TransactionFormPageState extends State<TransactionFormPage> {
   TimeOfDay _transactionTime;
   String _transactionType = UIData.transaction_type_expense;
 
-  TransactionService _transactionService = TransactionService();
+  final TransactionService _transactionService = TransactionService();
   TransactionFormBloc transactionFormBloc;
   StreamSubscription<ApiRequest> apiStreamSubscription;
 

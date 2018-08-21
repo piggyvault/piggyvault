@@ -83,22 +83,22 @@ class UserBloc {
   }
 
   void _handleSendTags(String tenancyName) {
-    print("Sending tags");
+    // print("Sending tags");
     OneSignal.shared
         .sendTag("tenancyName", tenancyName.trim().toLowerCase())
         .then((response) {
-      print("Successfully sent tags with response: $response");
+      // print("Successfully sent tags with response: $response");
     }).catchError((error) {
-      print("Encountered an error sending tags: $error");
+      // print("Encountered an error sending tags: $error");
     });
   }
 
   void _handleDeleteTag() {
-    print("Deleting tag");
+    // print("Deleting tag");
     OneSignal.shared.deleteTag("tenancyName").then((response) {
-      print("Successfully deleted tags with response $response");
+      // print("Successfully deleted tags with response $response");
     }).catchError((error) {
-      print("Encountered error deleting tag: $error");
+      // print("Encountered error deleting tag: $error");
     });
   }
 

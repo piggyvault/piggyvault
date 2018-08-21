@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:piggy_flutter/bloc/account_bloc.dart';
 import 'package:piggy_flutter/bloc/category_bloc.dart';
@@ -11,6 +13,7 @@ import 'package:piggy_flutter/ui/page/category/category_list.dart';
 import 'package:piggy_flutter/ui/page/login/login_page.dart';
 import 'package:piggy_flutter/utils/uidata.dart';
 import 'package:piggy_flutter/ui/page/home/home.dart';
+import 'package:onesignal/onesignal.dart';
 
 void main() {
   final CategoryBloc categoryBloc = CategoryBloc();
@@ -21,7 +24,7 @@ void main() {
   runApp(new MyApp(transactionBloc, accountBloc, categoryBloc, userBloc));
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   final CategoryBloc categoryBloc;
   final AccountBloc accountBloc;
   final TransactionBloc transactionBloc;
@@ -32,26 +35,31 @@ class MyApp extends StatelessWidget {
 
   // This widget is the root of your application.
   @override
+  MyAppState createState() {
+    return new MyAppState();
+  }
+}
+
+class MyAppState extends State<MyApp> {
+  @override
+  void initState() {
+    super.initState();
+    initPlatformState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return UserProvider(
-      userBloc: userBloc,
+      userBloc: widget.userBloc,
       child: TransactionProvider(
-        transactionBloc: transactionBloc,
+        transactionBloc: widget.transactionBloc,
         child: AccountProvider(
-          accountBloc: accountBloc,
+          accountBloc: widget.accountBloc,
           child: CategoryProvider(
-            categoryBloc: categoryBloc,
+            categoryBloc: widget.categoryBloc,
             child: MaterialApp(
               title: 'Piggy',
               theme: new ThemeData(
-                // This is the theme of your application.
-                //
-                // Try running your application with "flutter run". You'll see the
-                // application has a blue toolbar. Then, without quitting the app, try
-                // changing the primarySwatch below to Colors.green and then invoke
-                // "hot reload" (press "r" in the console where you ran "flutter run",
-                // or press Run > Flutter Hot Reload in IntelliJ). Notice that the
-                // counter didn't reset back to zero; the application is not restarted.
                 primarySwatch: Colors.blue,
               ),
               home: new LoginPage(),
@@ -66,5 +74,53 @@ class MyApp extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  // Platform messages are asynchronous, so we initialize in an async method.
+  Future<void> initPlatformState() async {
+    if (!mounted) return;
+
+    OneSignal.shared.setLogLevel(OSLogLevel.verbose, OSLogLevel.none);
+
+    // OneSignal.shared.setRequiresUserPrivacyConsent(_requireConsent);
+
+    var settings = {
+      OSiOSSettings.autoPrompt: false,
+      OSiOSSettings.promptBeforeOpeningPushUrl: true
+    };
+
+    OneSignal.shared.setNotificationReceivedHandler((notification) {
+      print(
+          "Received notification: \n${notification.jsonRepresentation().replaceAll("\\n", "\n")}");
+    });
+
+    OneSignal.shared
+        .setNotificationOpenedHandler((OSNotificationOpenedResult result) {
+      print(
+          "Opened notification: \n${result.notification.jsonRepresentation().replaceAll("\\n", "\n")}");
+    });
+
+    // OneSignal.shared
+    //     .setSubscriptionObserver((OSSubscriptionStateChanges changes) {
+    //   print("SUBSCRIPTION STATE CHANGED: ${changes.jsonRepresentation()}");
+    // });
+
+    // OneSignal.shared.setPermissionObserver((OSPermissionStateChanges changes) {
+    //   print("PERMISSION STATE CHANGED: ${changes.jsonRepresentation()}");
+    // });
+
+    // OneSignal.shared.setEmailSubscriptionObserver(
+    //     (OSEmailSubscriptionStateChanges changes) {
+    //   print("EMAIL SUBSCRIPTION STATE CHANGED ${changes.jsonRepresentation()}");
+    // });
+
+    // The App ID should not be treated as private.
+    await OneSignal.shared
+        .init("9bf198c9-442b-4619-b5c9-759fc250f15b", iOSSettings: settings);
+
+    OneSignal.shared
+        .setInFocusDisplayType(OSNotificationDisplayType.notification);
+
+    // bool requiresConsent = await OneSignal.shared.requiresUserPrivacyConsent();
   }
 }

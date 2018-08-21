@@ -5,6 +5,7 @@ import 'package:piggy_flutter/services/auth_service.dart';
 import 'package:piggy_flutter/utils/uidata.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:onesignal/onesignal.dart';
 
 class UserBloc {
   final AuthService _authService = AuthService();
@@ -72,6 +73,7 @@ class UserBloc {
       if (token == null) {
         _isAuthenticated.add(false);
       } else {
+        _handleSendTags(validTenancyName);
         final prefs = await SharedPreferences.getInstance();
         await prefs.setString(UIData.authToken, token);
         _isAuthenticated.add(true);
@@ -80,7 +82,28 @@ class UserBloc {
     });
   }
 
+  void _handleSendTags(String tenancyName) {
+    print("Sending tags");
+    OneSignal.shared
+        .sendTag("tenancyName", tenancyName.trim().toLowerCase())
+        .then((response) {
+      print("Successfully sent tags with response: $response");
+    }).catchError((error) {
+      print("Encountered an error sending tags: $error");
+    });
+  }
+
+  void _handleDeleteTag() {
+    print("Deleting tag");
+    OneSignal.shared.deleteTag("tenancyName").then((response) {
+      print("Successfully deleted tags with response $response");
+    }).catchError((error) {
+      print("Encountered error deleting tag: $error");
+    });
+  }
+
   logout() async {
+    _handleDeleteTag();
     await _authService.onLogout();
   }
 

@@ -46,10 +46,14 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  @override
-  void dispose() {
-    super.dispose();
-  }
+  final logo = Hero(
+    tag: 'hero',
+    child: CircleAvatar(
+      backgroundColor: Colors.transparent,
+      radius: 48.0,
+      child: Image.asset('graphics/logo.png'),
+    ),
+  );
 
   loginBody(UserBloc userBloc) => Column(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -59,10 +63,7 @@ class _LoginPageState extends State<LoginPage> {
   loginHeader(UserBloc userBloc) => Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
-          // FlutterLogo(
-          //   colors: Colors.green,
-          //   size: 80.0,
-          // ),
+          logo,
           SizedBox(
             height: 30.0,
           ),

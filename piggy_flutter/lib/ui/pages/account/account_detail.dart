@@ -107,7 +107,6 @@ class _AccountDetailPageState extends State<AccountDetailPage> {
               actions: <Widget>[
                 PopupMenuButton<String>(
                   padding: EdgeInsets.zero,
-//            onSelected: showMenuSelection,
                   itemBuilder: (BuildContext context) =>
                       <PopupMenuEntry<String>>[
                         const PopupMenuItem<String>(

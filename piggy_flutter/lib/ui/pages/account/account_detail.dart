@@ -1,8 +1,9 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:piggy_flutter/blocs/account_detail_bloc.dart';
 import 'package:piggy_flutter/models/account.dart';
 import 'package:piggy_flutter/models/account_detail_state.dart';
-import 'package:piggy_flutter/services/transaction_service.dart';
 import 'package:piggy_flutter/ui/widgets/add_transaction_fab.dart';
 import 'package:piggy_flutter/ui/widgets/common/empty_result_widget.dart';
 import 'package:piggy_flutter/ui/widgets/common/error_display_widget.dart';
@@ -12,31 +13,35 @@ import 'package:piggy_flutter/utils/uidata.dart';
 
 class AccountDetailPage extends StatefulWidget {
   final Account account;
-  final TransactionService transactionService;
+  final Stream<bool> syncStream;
 
-  AccountDetailPage(
-      {Key key, this.account, TransactionService transactionService})
-      : this.transactionService = transactionService ?? TransactionService(),
-        super(key: key);
+  AccountDetailPage({
+    Key key,
+    @required this.account,
+    @required this.syncStream,
+  }) : super(key: key);
 
   @override
   _AccountDetailPageState createState() => _AccountDetailPageState();
 }
 
 class _AccountDetailPageState extends State<AccountDetailPage> {
-  AccountDetailBloc bloc;
+  AccountDetailBloc _bloc;
+  StreamSubscription _subscription;
 
   @override
   void initState() {
     super.initState();
-    bloc = AccountDetailBloc(accountId: widget.account.id);
-    bloc.changeAccount(widget.account);
-    bloc.onPageChanged(0);
+    _bloc = AccountDetailBloc(accountId: widget.account.id);
+    _bloc.changeAccount(widget.account);
+    _bloc.onPageChanged(0);
+    _subscription = widget.syncStream.listen(_bloc.sync);
   }
 
   @override
   void dispose() {
-    bloc.dispose();
+    _bloc.dispose();
+    _subscription?.cancel();
     super.dispose();
   }
 
@@ -45,7 +50,7 @@ class _AccountDetailPageState extends State<AccountDetailPage> {
     final TextTheme textTheme = Theme.of(context).textTheme;
 
     return StreamBuilder<AccountDetailState>(
-        stream: bloc.state,
+        stream: _bloc.state,
         initialData: AccountDetailLoading(),
         builder:
             (BuildContext context, AsyncSnapshot<AccountDetailState> snapshot) {
@@ -83,7 +88,7 @@ class _AccountDetailPageState extends State<AccountDetailPage> {
                             style: textTheme.caption.copyWith(
                                 color: Colors.white.withOpacity(0.6))),
                         onTap: () {
-                          bloc.onPageChanged(-1);
+                          _bloc.onPageChanged(-1);
                         },
                       ),
                       Text(
@@ -95,7 +100,7 @@ class _AccountDetailPageState extends State<AccountDetailPage> {
                             style: textTheme.caption.copyWith(
                                 color: Colors.white.withOpacity(0.6))),
                         onTap: () {
-                          bloc.onPageChanged(1);
+                          _bloc.onPageChanged(1);
                         },
                       ),
                     ],
@@ -154,7 +159,6 @@ class _AccountDetailPageState extends State<AccountDetailPage> {
             ),
             floatingActionButton: AddTransactionFab(
               account: widget.account,
-              accountDetailBloc: bloc,
             ),
           );
         });

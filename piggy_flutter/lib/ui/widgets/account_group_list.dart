@@ -1,10 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:piggy_flutter/blocs/transaction_bloc.dart';
 import 'package:piggy_flutter/models/account.dart';
 import 'package:piggy_flutter/ui/pages/account/account_detail.dart';
 
 class AccountGroupList extends StatelessWidget {
   final List<Account> accounts;
   final String title;
+  final TransactionBloc transactionBloc;
+
+  AccountGroupList(
+      {@required this.accounts,
+      @required this.title,
+      @required this.transactionBloc});
 
   @override
   Widget build(BuildContext context) {
@@ -24,23 +31,22 @@ class AccountGroupList extends StatelessWidget {
         children: accountTiles.toList());
   }
 
-  AccountGroupList(this.accounts, this.title);
-
   buildAccountListTile(BuildContext context, Account account) {
-    return new MergeSemantics(
-      child: new ListTile(
+    return MergeSemantics(
+      child: ListTile(
         dense: true,
-        leading: new Icon(Icons.account_balance_wallet,
+        leading: Icon(Icons.account_balance_wallet,
             color: Theme.of(context).disabledColor),
-        title: new Text(account.name),
-        subtitle: new Text(account.accountType),
-        trailing: new Text('${account.currentBalance
+        title: Text(account.name),
+        subtitle: Text(account.accountType),
+        trailing: Text('${account.currentBalance
             .toString()} ${account.currencySymbol}'),
         onTap: (() => Navigator.push(
               context,
               MaterialPageRoute(
                   builder: (context) => AccountDetailPage(
                         account: account,
+                        syncStream: transactionBloc.syncStream,
                       )),
             )),
       ),

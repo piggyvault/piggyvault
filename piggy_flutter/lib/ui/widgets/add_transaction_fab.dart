@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:piggy_flutter/blocs/account_detail_bloc.dart';
 import 'package:piggy_flutter/models/account.dart';
 import 'package:piggy_flutter/ui/pages/transaction/transaction_form.dart';
 
 class AddTransactionFab extends StatelessWidget {
-  final AccountDetailBloc accountDetailBloc;
   final Account account;
-  const AddTransactionFab({Key key, this.accountDetailBloc, this.account})
-      : super(key: key);
+  const AddTransactionFab({Key key, this.account}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +14,7 @@ class AddTransactionFab extends StatelessWidget {
         backgroundColor: Theme.of(context).primaryColor,
         child: Icon(Icons.add),
         onPressed: () async {
-          var result = await Navigator.push(
+          await Navigator.push(
               context,
               MaterialPageRoute<DismissDialogAction>(
                 builder: (BuildContext context) => TransactionFormPage(
@@ -25,13 +22,6 @@ class AddTransactionFab extends StatelessWidget {
                     ),
                 fullscreenDialog: true,
               ));
-
-          if (result == DismissDialogAction.save) {
-            if (accountDetailBloc != null) {
-              accountDetailBloc.onPageChanged(0);
-              accountDetailBloc.refreshAccount(true);
-            }
-          }
         });
   }
 }

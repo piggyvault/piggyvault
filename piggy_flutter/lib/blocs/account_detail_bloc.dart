@@ -22,10 +22,10 @@ class AccountDetailBloc implements BlocBase {
   final _account = BehaviorSubject<Account>();
   final _onPageChanged = PublishSubject<int>();
   final _transactionsState = BehaviorSubject<AccountDetailState>();
-  final _refreshAccount = PublishSubject<bool>();
+  final _syncSubject = PublishSubject<bool>();
 
   Function(int) get onPageChanged => _onPageChanged.sink.add;
-  Function(bool) get refreshAccount => _refreshAccount.sink.add;
+  Function(bool) get sync => _syncSubject.sink.add;
   Function(Account) get changeAccount => _account.sink.add;
 
   Stream<Account> get account => _account.stream;
@@ -42,17 +42,17 @@ class AccountDetailBloc implements BlocBase {
 
   AccountDetailBloc({this.accountId}) {
     _onPageChanged.listen(_getTransactions);
-    _refreshAccount.listen(_getAccountDetails);
+    _syncSubject.listen(_handleSync);
   }
 
   void dispose() {
     _onPageChanged.close();
     _transactionsState.close();
-    _refreshAccount.close();
+    _syncSubject.close();
     _account.close();
   }
 
-  Future<Null> _getAccountDetails(bool done) async {
+  Future<Null> _getAccountDetails() async {
     print('######### AccountDetailBloc _getAccountDetails');
     final result = await _accountService.getAccountDetails(accountId);
     _account.add(result);
@@ -110,5 +110,10 @@ class AccountDetailBloc implements BlocBase {
     } catch (e) {
       _transactionsState.add(AccountDetailError());
     }
+  }
+
+  void _handleSync(bool event) async {
+    await _getAccountDetails();
+    await _getTransactions(0);
   }
 }

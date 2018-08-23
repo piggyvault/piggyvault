@@ -21,6 +21,8 @@ class TransactionBloc implements BlocBase {
   final _transactionSummary = BehaviorSubject<TransactionSummary>();
   final _recentTransactionsState = BehaviorSubject<RecentTransactionsState>();
 
+  Stream<bool> get syncStream => _syncSubject.stream;
+
   Stream<String> get comment => _comment.stream.transform(validateComment);
   Stream<TransactionsGroupBy> get transactionsGroupBy =>
       _transactionsGroupBy.stream;

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:piggy_flutter/models/account.dart';
-import 'package:piggy_flutter/ui/page/account/account_detail.dart';
+import 'package:piggy_flutter/ui/pages/account/account_detail.dart';
 
 class AccountGroupList extends StatelessWidget {
   final List<Account> accounts;

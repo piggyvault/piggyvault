@@ -5,7 +5,7 @@ import 'package:piggy_flutter/blocs/transaction_bloc.dart';
 import 'package:piggy_flutter/models/transaction.dart';
 import 'package:piggy_flutter/models/transaction_comment.dart';
 // import 'package:piggy_flutter/services/transaction_service.dart';
-import 'package:piggy_flutter/ui/page/transaction/transaction_form.dart';
+import 'package:piggy_flutter/ui/pages/transaction/transaction_form.dart';
 
 class TransactionDetailPage extends StatefulWidget {
   static const String routeName = '/transaction-details';

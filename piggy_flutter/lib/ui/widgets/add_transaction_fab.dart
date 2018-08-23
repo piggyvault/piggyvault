@@ -4,7 +4,7 @@ import 'package:piggy_flutter/blocs/account_detail_bloc.dart';
 import 'package:piggy_flutter/blocs/bloc_provider.dart';
 import 'package:piggy_flutter/blocs/transaction_bloc.dart';
 import 'package:piggy_flutter/models/account.dart';
-import 'package:piggy_flutter/ui/page/transaction/transaction_form.dart';
+import 'package:piggy_flutter/ui/pages/transaction/transaction_form.dart';
 
 class AddTransactionFab extends StatelessWidget {
   final AccountDetailBloc accountDetailBloc;

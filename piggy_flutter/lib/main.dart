@@ -6,10 +6,10 @@ import 'package:piggy_flutter/blocs/bloc_provider.dart';
 import 'package:piggy_flutter/blocs/category_bloc.dart';
 import 'package:piggy_flutter/blocs/transaction_bloc.dart';
 import 'package:piggy_flutter/blocs/user_bloc.dart';
-import 'package:piggy_flutter/ui/page/category/category_list.dart';
-import 'package:piggy_flutter/ui/page/login/login_page.dart';
+import 'package:piggy_flutter/ui/pages/category/category_list.dart';
+import 'package:piggy_flutter/ui/pages/login/login_page.dart';
 import 'package:piggy_flutter/utils/uidata.dart';
-import 'package:piggy_flutter/ui/page/home/home.dart';
+import 'package:piggy_flutter/ui/pages/home/home.dart';
 import 'package:onesignal/onesignal.dart';
 
 Future<void> main() async {

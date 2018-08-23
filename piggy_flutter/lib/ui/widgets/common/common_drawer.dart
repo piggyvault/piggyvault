@@ -1,24 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:piggy_flutter/bloc/account_bloc.dart';
-import 'package:piggy_flutter/bloc/category_bloc.dart';
-import 'package:piggy_flutter/bloc/user_bloc.dart';
-import 'package:piggy_flutter/model/account.dart';
-import 'package:piggy_flutter/model/category.dart';
-import 'package:piggy_flutter/model/user.dart';
-import 'package:piggy_flutter/providers/account_provider.dart';
-import 'package:piggy_flutter/providers/category_provider.dart';
-import 'package:piggy_flutter/providers/user_provider.dart';
-import 'package:piggy_flutter/ui/page/category/category_list.dart';
-import 'package:piggy_flutter/ui/page/home/home.dart';
-import 'package:piggy_flutter/ui/page/login/login_page.dart';
+import 'package:piggy_flutter/blocs/account_bloc.dart';
+import 'package:piggy_flutter/blocs/bloc_provider.dart';
+import 'package:piggy_flutter/blocs/category_bloc.dart';
+import 'package:piggy_flutter/blocs/user_bloc.dart';
+import 'package:piggy_flutter/models/account.dart';
+import 'package:piggy_flutter/models/category.dart';
+import 'package:piggy_flutter/models/user.dart';
+import 'package:piggy_flutter/ui/pages/category/category_list.dart';
+import 'package:piggy_flutter/ui/pages/home/home.dart';
+import 'package:piggy_flutter/ui/pages/login/login_page.dart';
 import 'package:piggy_flutter/ui/widgets/about_tile.dart';
 
 class CommonDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final UserBloc userBloc = UserProvider.of(context);
-    final CategoryBloc categoryBloc = CategoryProvider.of(context);
-    final AccountBloc accountBloc = AccountProvider.of(context);
+    final UserBloc userBloc = BlocProvider.of<UserBloc>(context);
+    final CategoryBloc categoryBloc = BlocProvider.of<CategoryBloc>(context);
+    final AccountBloc accountBloc = BlocProvider.of<AccountBloc>(context);
     return Drawer(
       child: ListView(
         padding: EdgeInsets.zero,

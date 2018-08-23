@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:piggy_flutter/model/category.dart';
+import 'package:piggy_flutter/models/category.dart';
 import 'package:piggy_flutter/services/app_service_base.dart';
 
 class CategoryService extends AppServiceBase {

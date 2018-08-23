@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:piggy_flutter/model/user.dart';
+import 'package:piggy_flutter/models/user.dart';
 import 'package:piggy_flutter/services/app_service_base.dart';
 import 'package:piggy_flutter/utils/uidata.dart';
 import 'package:shared_preferences/shared_preferences.dart';

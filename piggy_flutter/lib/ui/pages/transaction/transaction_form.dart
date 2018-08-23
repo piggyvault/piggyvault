@@ -129,7 +129,7 @@ class TransactionFormPageState extends State<TransactionFormPage> {
               child: Text('SAVE',
                   style: theme.textTheme.body1.copyWith(color: Colors.white)),
               onPressed: () {
-                onSave(transactionFormBloc, accountBloc);
+                onSave(transactionFormBloc);
               })
         ],
       ),
@@ -386,8 +386,7 @@ class TransactionFormPageState extends State<TransactionFormPage> {
     ));
   }
 
-  void onSave(
-      TransactionFormBloc transactionFormBloc, AccountBloc accountBloc) async {
+  void onSave(TransactionFormBloc transactionFormBloc) async {
     final FormState form = _formKey.currentState;
 
     if (!form.validate()) {
@@ -445,7 +444,6 @@ class TransactionFormPageState extends State<TransactionFormPage> {
                 _transactionTime.minute)
             .toString();
         transactionEditDto.amount = amount;
-
         transactionFormBloc.onSave(transactionEditDto);
       }
     }

@@ -1,5 +1,5 @@
-import 'package:piggy_flutter/model/account.dart';
-import 'package:piggy_flutter/model/transactions_result.dart';
+import 'package:piggy_flutter/models/account.dart';
+import 'package:piggy_flutter/models/transactions_result.dart';
 
 class AccountDetailState {
   String title, nextPageTitle, previousPageTitle;

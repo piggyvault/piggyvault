@@ -1,4 +1,4 @@
-import 'package:piggy_flutter/model/api_response.dart';
+import 'package:piggy_flutter/models/api_response.dart';
 
 enum ApiType { createOrUpdateTransaction }
 

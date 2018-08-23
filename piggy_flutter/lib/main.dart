@@ -13,7 +13,7 @@ import 'package:piggy_flutter/ui/pages/home/home.dart';
 import 'package:onesignal/onesignal.dart';
 
 Future<void> main() async {
-  debugPrintRebuildDirtyWidgets = true;
+  // debugPrintRebuildDirtyWidgets = true;
   return runApp(BlocProvider<UserBloc>(
     bloc: UserBloc(),
     child: BlocProvider<TransactionBloc>(

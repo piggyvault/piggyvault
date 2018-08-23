@@ -1,4 +1,4 @@
-import 'package:piggy_flutter/model/transactions_result.dart';
+import 'package:piggy_flutter/models/transactions_result.dart';
 
 class RecentTransactionsState {}
 

@@ -265,7 +265,6 @@ class TransactionFormPageState extends State<TransactionFormPage> {
                 const SizedBox(height: 24.0),
                 Text('* all fields are mandatory',
                     style: Theme.of(context).textTheme.caption),
-                // _isBusyIndicator(transactionFormBloc),
               ].where((child) => child != null).toList(),
             ),
           ),
@@ -283,20 +282,6 @@ class TransactionFormPageState extends State<TransactionFormPage> {
     apiStreamSubscription?.cancel();
     super.dispose();
   }
-
-  // Widget _isBusyIndicator(TransactionFormBloc bloc) {
-  //   return StreamBuilder<TransactionFormState>(
-  //     stream: bloc.state,
-  //     builder: (context, snapshot) {
-  //       final state = snapshot.data;
-  //       return state is TransactionFormBusy
-  //           ? LoadingWidget(
-  //               visible: true,
-  //             )
-  //           : Container();
-  //     },
-  //   );
-  // }
 
   Future<bool> _onWillPop() async {
     if (!_formWasEdited) return true;

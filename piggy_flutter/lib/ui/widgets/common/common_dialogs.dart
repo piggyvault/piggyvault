@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:piggy_flutter/model/api_request.dart';
-import 'package:piggy_flutter/model/api_response.dart';
+import 'package:piggy_flutter/models/api_request.dart';
+import 'package:piggy_flutter/models/api_response.dart';
 import 'package:piggy_flutter/ui/page/transaction/transaction_form.dart';
 import 'package:piggy_flutter/utils/uidata.dart';
 

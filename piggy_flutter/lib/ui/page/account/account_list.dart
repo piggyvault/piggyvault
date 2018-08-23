@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:piggy_flutter/blocs/account_bloc.dart';
 import 'package:piggy_flutter/blocs/bloc_provider.dart';
-import 'package:piggy_flutter/model/account.dart';
+import 'package:piggy_flutter/models/account.dart';
 import 'package:piggy_flutter/ui/widgets/account/account_group_list.dart';
 import 'package:piggy_flutter/ui/widgets/add_transaction_fab.dart';
 

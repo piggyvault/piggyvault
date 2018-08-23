@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:piggy_flutter/model/account.dart';
+import 'package:piggy_flutter/models/account.dart';
 import 'package:piggy_flutter/ui/page/account/account_detail.dart';
 
 class AccountGroupList extends StatelessWidget {

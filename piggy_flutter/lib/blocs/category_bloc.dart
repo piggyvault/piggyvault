@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:piggy_flutter/blocs/bloc_provider.dart';
-import 'package:piggy_flutter/model/category.dart';
+import 'package:piggy_flutter/models/category.dart';
 import 'package:piggy_flutter/services/category_service.dart';
 import 'package:rxdart/rxdart.dart';
 

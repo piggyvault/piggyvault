@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:piggy_flutter/blocs/bloc_provider.dart';
 import 'package:piggy_flutter/blocs/transaction_bloc.dart';
-import 'package:piggy_flutter/model/transaction.dart';
-import 'package:piggy_flutter/model/transaction_comment.dart';
+import 'package:piggy_flutter/models/transaction.dart';
+import 'package:piggy_flutter/models/transaction_comment.dart';
 // import 'package:piggy_flutter/services/transaction_service.dart';
 import 'package:piggy_flutter/ui/page/transaction/transaction_form.dart';
 

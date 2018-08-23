@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:piggy_flutter/blocs/account_detail_bloc.dart';
-import 'package:piggy_flutter/model/account.dart';
-import 'package:piggy_flutter/model/account_detail_state.dart';
+import 'package:piggy_flutter/models/account.dart';
+import 'package:piggy_flutter/models/account_detail_state.dart';
 import 'package:piggy_flutter/services/transaction_service.dart';
 import 'package:piggy_flutter/ui/widgets/add_transaction_fab.dart';
 import 'package:piggy_flutter/ui/widgets/common/empty_result_widget.dart';

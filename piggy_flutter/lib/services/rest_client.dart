@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:piggy_flutter/model/api_response.dart';
+import 'package:piggy_flutter/models/api_response.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:piggy_flutter/utils/uidata.dart';
 

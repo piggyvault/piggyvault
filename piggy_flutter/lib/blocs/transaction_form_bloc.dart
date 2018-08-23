@@ -1,8 +1,8 @@
 import 'dart:async';
 
 import 'package:piggy_flutter/blocs/bloc_provider.dart';
-import 'package:piggy_flutter/model/api_request.dart';
-import 'package:piggy_flutter/model/transaction_edit_dto.dart';
+import 'package:piggy_flutter/models/api_request.dart';
+import 'package:piggy_flutter/models/transaction_edit_dto.dart';
 import 'package:piggy_flutter/services/transaction_service.dart';
 import 'package:rxdart/rxdart.dart';
 

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:piggy_flutter/blocs/bloc_provider.dart';
 import 'package:piggy_flutter/blocs/category_bloc.dart';
 
-import 'package:piggy_flutter/model/category.dart';
+import 'package:piggy_flutter/models/category.dart';
 import 'package:piggy_flutter/ui/widgets/common/common_drawer.dart';
 import 'package:piggy_flutter/ui/widgets/common/message_placeholder.dart';
 

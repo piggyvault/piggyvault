@@ -1,11 +1,11 @@
 import 'dart:async';
 import 'package:piggy_flutter/blocs/bloc_provider.dart';
-import 'package:piggy_flutter/model/recent_transactions_state.dart';
-import 'package:piggy_flutter/model/transaction_comment.dart';
-import 'package:piggy_flutter/model/transaction_summary.dart';
+import 'package:piggy_flutter/models/recent_transactions_state.dart';
+import 'package:piggy_flutter/models/transaction_comment.dart';
+import 'package:piggy_flutter/models/transaction_summary.dart';
 import 'package:piggy_flutter/services/transaction_service.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:piggy_flutter/model/transaction_group_item.dart';
+import 'package:piggy_flutter/models/transaction_group_item.dart';
 
 class TransactionBloc implements BlocBase {
   final TransactionService _transactionService = TransactionService();

@@ -1,12 +1,12 @@
 import 'dart:async';
 
-import 'package:piggy_flutter/model/api_response.dart';
-import 'package:piggy_flutter/model/transaction.dart';
-import 'package:piggy_flutter/model/transaction_comment.dart';
-import 'package:piggy_flutter/model/transaction_edit_dto.dart';
-import 'package:piggy_flutter/model/transaction_group_item.dart';
-import 'package:piggy_flutter/model/transaction_summary.dart';
-import 'package:piggy_flutter/model/transactions_result.dart';
+import 'package:piggy_flutter/models/api_response.dart';
+import 'package:piggy_flutter/models/transaction.dart';
+import 'package:piggy_flutter/models/transaction_comment.dart';
+import 'package:piggy_flutter/models/transaction_edit_dto.dart';
+import 'package:piggy_flutter/models/transaction_group_item.dart';
+import 'package:piggy_flutter/models/transaction_summary.dart';
+import 'package:piggy_flutter/models/transactions_result.dart';
 import 'package:piggy_flutter/services/app_service_base.dart';
 import 'package:intl/intl.dart';
 

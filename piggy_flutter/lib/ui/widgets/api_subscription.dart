@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:piggy_flutter/model/api_request.dart';
+import 'package:piggy_flutter/models/api_request.dart';
 import 'package:piggy_flutter/ui/widgets/common/common_dialogs.dart';
 import 'package:piggy_flutter/utils/uidata.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';

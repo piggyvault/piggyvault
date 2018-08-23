@@ -29,8 +29,8 @@ android {
         applicationId "in.piggyvault.piggyflutter"
         minSdkVersion 16
         targetSdkVersion 27
-        versionCode 8
-        versionName "0.6.0"
+        versionCode 9
+        versionName "0.7.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 

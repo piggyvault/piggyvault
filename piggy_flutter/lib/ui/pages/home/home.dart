@@ -186,8 +186,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       // print('##### syncing data');
       _isSyncRequired = false;
       userBloc.userRefresh(true);
-      transactionBloc.recentTransactionsRefresh(true);
-      transactionBloc.transactionSummaryRefresh('month');
+      transactionBloc.sync(true);
       accountBloc.accountsRefresh(true);
       categoryBloc.refreshCategories(true);
     }

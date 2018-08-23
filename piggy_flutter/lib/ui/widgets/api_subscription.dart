@@ -26,9 +26,7 @@ apiSubscription(Stream<ApiRequest> apiResult, BuildContext context) {
           case ApiType.createOrUpdateTransaction:
             {
               accountBloc.accountsRefresh(true);
-              transactionBloc.recentTransactionsRefresh(true);
-              transactionBloc.transactionSummaryRefresh('month');
-
+              transactionBloc.sync(true);
               showSuccess(
                   context: context,
                   message: UIData.success,

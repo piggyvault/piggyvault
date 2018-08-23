@@ -122,7 +122,7 @@ class RecentPage extends StatelessWidget {
   }
 
   Future<Null> _handleRefresh(TransactionBloc transactionBloc) {
-    return transactionBloc.getRecentTransactions(true).then((_) {
+    return transactionBloc.getRecentTransactions().then((_) {
       _scaffoldKey.currentState?.showSnackBar(
         new SnackBar(
           content: const Text('Refresh complete'),

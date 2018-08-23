@@ -11,8 +11,9 @@ class TransactionBloc implements BlocBase {
   final TransactionService _transactionService = TransactionService();
 
   final _comment = BehaviorSubject<String>();
-  final _recentTransactionsRefresh = PublishSubject<bool>();
-  final _transactionSummaryRefresh = PublishSubject<String>();
+
+  final _syncSubject = PublishSubject<bool>();
+
   final _transactionCommentsRefresh = PublishSubject<String>();
   final _transactionComments = PublishSubject<List<TransactionComment>>();
   final _transactionsGroupBy =
@@ -34,20 +35,13 @@ class TransactionBloc implements BlocBase {
   Function(TransactionsGroupBy) get changeTransactionsGroupBy =>
       _transactionsGroupBy.sink.add;
 
-  Function(bool) get recentTransactionsRefresh =>
-      _recentTransactionsRefresh.sink.add;
-
-  Function(String) get transactionSummaryRefresh =>
-      _transactionSummaryRefresh.sink.add;
-
+  Function(bool) get sync => _syncSubject.sink.add;
   Function(String) get transactionCommentsRefresh =>
       _transactionCommentsRefresh.sink.add;
 
   TransactionBloc() {
 //    print("########## TransactionBloc");
-
-    _recentTransactionsRefresh.stream.listen(getRecentTransactions);
-    _transactionSummaryRefresh.stream.listen(getTransactionSummary);
+    _syncSubject.stream.listen(_handleSync);
     _transactionCommentsRefresh.stream.listen(getTransactionComments);
     _transactionsGroupBy.stream.listen(onTransactionsGroupByChanged);
   }
@@ -61,10 +55,10 @@ class TransactionBloc implements BlocBase {
     changeComment('');
   }
 
-  void onTransactionsGroupByChanged(TransactionsGroupBy groupBy) {
+  void onTransactionsGroupByChanged(TransactionsGroupBy groupBy) async {
     print(
         '########## TransactionBloc onTransactionsGroupByChanged groupBy $groupBy');
-    recentTransactionsRefresh(true);
+    await getRecentTransactions();
   }
 
   Future<Null> getTransactionComments(String id) async {
@@ -73,7 +67,7 @@ class TransactionBloc implements BlocBase {
     _transactionComments.add(result);
   }
 
-  Future<Null> getRecentTransactions(bool done) async {
+  Future<Null> getRecentTransactions() async {
     print(
         "########## TransactionBloc getRecentTransactions ${_recentTransactionsState.value}");
     if (_recentTransactionsState.value is! RecentTransactionsPopulated) {
@@ -99,9 +93,9 @@ class TransactionBloc implements BlocBase {
     }
   }
 
-  void getTransactionSummary(String duration) async {
+  Future<Null> getTransactionSummary() async {
 //    print("########## TransactionBloc getTransactionSummary");
-    var result = await _transactionService.getTransactionSummary(duration);
+    var result = await _transactionService.getTransactionSummary('month');
     _transactionSummary.add(result);
   }
 
@@ -117,12 +111,16 @@ class TransactionBloc implements BlocBase {
 
   void dispose() {
     _transactionSummary.close();
-    _transactionSummaryRefresh.close();
+    _syncSubject.close();
     _recentTransactionsState.close();
-    _recentTransactionsRefresh.close();
     _transactionComments.close();
     _transactionCommentsRefresh.close();
     _comment.close();
     _transactionsGroupBy.close();
+  }
+
+  void _handleSync(bool event) async {
+    await getRecentTransactions();
+    await getTransactionSummary();
   }
 }

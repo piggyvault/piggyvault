@@ -1,10 +1,10 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:piggy_flutter/bloc/transaction_bloc.dart';
+import 'package:piggy_flutter/blocs/bloc_provider.dart';
+import 'package:piggy_flutter/blocs/transaction_bloc.dart';
 import 'package:piggy_flutter/model/recent_transactions_state.dart';
 import 'package:piggy_flutter/model/transaction_group_item.dart';
-import 'package:piggy_flutter/providers/transaction_provider.dart';
 import 'package:piggy_flutter/ui/widgets/add_transaction_fab.dart';
 import 'package:piggy_flutter/ui/widgets/common/empty_result_widget.dart';
 import 'package:piggy_flutter/ui/widgets/common/error_display_widget.dart';
@@ -19,7 +19,8 @@ class RecentPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final TransactionBloc transactionBloc = TransactionProvider.of(context);
+    final TransactionBloc transactionBloc =
+        BlocProvider.of<TransactionBloc>(context);
 
     return StreamBuilder<RecentTransactionsState>(
       stream: transactionBloc.recentTransactionsState,

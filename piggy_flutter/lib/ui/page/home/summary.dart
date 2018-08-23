@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:piggy_flutter/bloc/transaction_bloc.dart';
+import 'package:piggy_flutter/blocs/bloc_provider.dart';
+import 'package:piggy_flutter/blocs/transaction_bloc.dart';
 import 'package:piggy_flutter/model/transaction_summary.dart';
-import 'package:piggy_flutter/providers/transaction_provider.dart';
 
 class SummaryPage extends StatelessWidget {
   SummaryPage({Key key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    final TransactionBloc transactionBloc = TransactionProvider.of(context);
+    final TransactionBloc transactionBloc =
+        BlocProvider.of<TransactionBloc>(context);
     return Scaffold(
         appBar: new AppBar(
           title: Text('Summary'),

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:piggy_flutter/bloc/transaction_bloc.dart';
+import 'package:piggy_flutter/blocs/bloc_provider.dart';
+import 'package:piggy_flutter/blocs/transaction_bloc.dart';
 import 'package:piggy_flutter/model/transaction.dart';
 import 'package:piggy_flutter/model/transaction_comment.dart';
-import 'package:piggy_flutter/providers/transaction_provider.dart';
 // import 'package:piggy_flutter/services/transaction_service.dart';
 import 'package:piggy_flutter/ui/page/transaction/transaction_form.dart';
 
@@ -36,7 +36,8 @@ class TransactionDetailPageState extends State<TransactionDetailPage> {
 
   @override
   Widget build(BuildContext context) {
-    final TransactionBloc transactionBloc = TransactionProvider.of(context);
+    final TransactionBloc transactionBloc =
+        BlocProvider.of<TransactionBloc>(context);
     // TODO - not the ideal place
     transactionBloc.transactionCommentsRefresh(widget.transaction.id);
 

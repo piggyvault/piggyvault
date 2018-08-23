@@ -2,15 +2,12 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:onesignal/onesignal.dart';
-import 'package:piggy_flutter/bloc/account_bloc.dart';
-import 'package:piggy_flutter/bloc/category_bloc.dart';
-import 'package:piggy_flutter/bloc/transaction_bloc.dart';
-import 'package:piggy_flutter/bloc/user_bloc.dart';
+import 'package:piggy_flutter/blocs/account_bloc.dart';
+import 'package:piggy_flutter/blocs/bloc_provider.dart';
+import 'package:piggy_flutter/blocs/category_bloc.dart';
+import 'package:piggy_flutter/blocs/transaction_bloc.dart';
+import 'package:piggy_flutter/blocs/user_bloc.dart';
 import 'package:piggy_flutter/model/transaction.dart';
-import 'package:piggy_flutter/providers/account_provider.dart';
-import 'package:piggy_flutter/providers/category_provider.dart';
-import 'package:piggy_flutter/providers/transaction_provider.dart';
-import 'package:piggy_flutter/providers/user_provider.dart';
 import 'package:piggy_flutter/ui/page/account/account_list.dart';
 import 'package:piggy_flutter/ui/page/home/recent.dart';
 import 'package:piggy_flutter/ui/page/home/summary.dart';
@@ -180,10 +177,11 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
   syncData(BuildContext context) {
     if (_isSyncRequired) {
-      final UserBloc userBloc = UserProvider.of(context);
-      final TransactionBloc transactionBloc = TransactionProvider.of(context);
-      final AccountBloc accountBloc = AccountProvider.of(context);
-      final CategoryBloc categoryBloc = CategoryProvider.of(context);
+      final UserBloc userBloc = BlocProvider.of<UserBloc>(context);
+      final TransactionBloc transactionBloc =
+          BlocProvider.of<TransactionBloc>(context);
+      final AccountBloc accountBloc = BlocProvider.of<AccountBloc>(context);
+      final CategoryBloc categoryBloc = BlocProvider.of<CategoryBloc>(context);
 
       // print('##### syncing data');
       _isSyncRequired = false;

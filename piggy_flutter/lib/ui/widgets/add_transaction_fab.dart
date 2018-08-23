@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:piggy_flutter/bloc/account_bloc.dart';
-import 'package:piggy_flutter/bloc/account_detail_bloc.dart';
-import 'package:piggy_flutter/bloc/transaction_bloc.dart';
+import 'package:piggy_flutter/blocs/account_bloc.dart';
+import 'package:piggy_flutter/blocs/account_detail_bloc.dart';
+import 'package:piggy_flutter/blocs/bloc_provider.dart';
+import 'package:piggy_flutter/blocs/transaction_bloc.dart';
 import 'package:piggy_flutter/model/account.dart';
-import 'package:piggy_flutter/providers/account_provider.dart';
-import 'package:piggy_flutter/providers/transaction_provider.dart';
 import 'package:piggy_flutter/ui/page/transaction/transaction_form.dart';
 
 class AddTransactionFab extends StatelessWidget {
@@ -15,8 +14,9 @@ class AddTransactionFab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final AccountBloc accountBloc = AccountProvider.of(context);
-    final TransactionBloc transactionBloc = TransactionProvider.of(context);
+    final AccountBloc accountBloc = BlocProvider.of<AccountBloc>(context);
+    final TransactionBloc transactionBloc =
+        BlocProvider.of<TransactionBloc>(context);
 
     return FloatingActionButton(
         key: ValueKey<Color>(Theme.of(context).primaryColor),

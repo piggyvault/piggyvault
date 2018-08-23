@@ -1,38 +1,35 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:piggy_flutter/bloc/account_bloc.dart';
-import 'package:piggy_flutter/bloc/category_bloc.dart';
-import 'package:piggy_flutter/bloc/transaction_bloc.dart';
-import 'package:piggy_flutter/bloc/user_bloc.dart';
-import 'package:piggy_flutter/providers/account_provider.dart';
-import 'package:piggy_flutter/providers/category_provider.dart';
-import 'package:piggy_flutter/providers/transaction_provider.dart';
-import 'package:piggy_flutter/providers/user_provider.dart';
+import 'package:piggy_flutter/blocs/account_bloc.dart';
+import 'package:piggy_flutter/blocs/bloc_provider.dart';
+import 'package:piggy_flutter/blocs/category_bloc.dart';
+import 'package:piggy_flutter/blocs/transaction_bloc.dart';
+import 'package:piggy_flutter/blocs/user_bloc.dart';
 import 'package:piggy_flutter/ui/page/category/category_list.dart';
 import 'package:piggy_flutter/ui/page/login/login_page.dart';
 import 'package:piggy_flutter/utils/uidata.dart';
 import 'package:piggy_flutter/ui/page/home/home.dart';
 import 'package:onesignal/onesignal.dart';
 
-void main() {
-  final CategoryBloc categoryBloc = CategoryBloc();
-  final AccountBloc accountBloc = AccountBloc();
-  final TransactionBloc transactionBloc = TransactionBloc();
-  final UserBloc userBloc = UserBloc();
-
-  runApp(new MyApp(transactionBloc, accountBloc, categoryBloc, userBloc));
+Future<void> main() async {
+  debugPrintRebuildDirtyWidgets = true;
+  return runApp(BlocProvider<UserBloc>(
+    bloc: UserBloc(),
+    child: BlocProvider<TransactionBloc>(
+      bloc: TransactionBloc(),
+      child: BlocProvider<AccountBloc>(
+        bloc: AccountBloc(),
+        child: BlocProvider<CategoryBloc>(
+          bloc: CategoryBloc(),
+          child: MyApp(),
+        ),
+      ),
+    ),
+  ));
 }
 
 class MyApp extends StatefulWidget {
-  final CategoryBloc categoryBloc;
-  final AccountBloc accountBloc;
-  final TransactionBloc transactionBloc;
-  final UserBloc userBloc;
-
-  MyApp(
-      this.transactionBloc, this.accountBloc, this.categoryBloc, this.userBloc);
-
   // This widget is the root of your application.
   @override
   MyAppState createState() {
@@ -49,30 +46,17 @@ class MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return UserProvider(
-      userBloc: widget.userBloc,
-      child: TransactionProvider(
-        transactionBloc: widget.transactionBloc,
-        child: AccountProvider(
-          accountBloc: widget.accountBloc,
-          child: CategoryProvider(
-            categoryBloc: widget.categoryBloc,
-            child: MaterialApp(
-              title: 'Piggy',
-              theme: new ThemeData(
-                primarySwatch: Colors.blue,
-              ),
-              home: new LoginPage(),
-              routes: <String, WidgetBuilder>{
-                UIData.loginRoute: (BuildContext context) => LoginPage(),
-                UIData.dashboardRoute: (BuildContext context) => HomePage(),
-                UIData.categoryRoute: (BuildContext context) =>
-                    CategoryListPage(),
-              },
-            ),
-          ),
-        ),
+    return MaterialApp(
+      title: 'Piggy',
+      theme: new ThemeData(
+        primarySwatch: Colors.blue,
       ),
+      home: new LoginPage(),
+      routes: <String, WidgetBuilder>{
+        UIData.loginRoute: (BuildContext context) => LoginPage(),
+        UIData.dashboardRoute: (BuildContext context) => HomePage(),
+        UIData.categoryRoute: (BuildContext context) => CategoryListPage(),
+      },
     );
   }
 

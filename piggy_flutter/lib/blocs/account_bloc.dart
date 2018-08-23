@@ -1,9 +1,10 @@
 import 'dart:async';
+import 'package:piggy_flutter/blocs/bloc_provider.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:piggy_flutter/model/account.dart';
 import 'package:piggy_flutter/services/account_service.dart';
 
-class AccountBloc {
+class AccountBloc implements BlocBase {
   List<Account> userAccountList;
 
   final AccountService _accountService = new AccountService();

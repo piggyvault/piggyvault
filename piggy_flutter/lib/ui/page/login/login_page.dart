@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:piggy_flutter/bloc/user_bloc.dart';
+import 'package:piggy_flutter/blocs/user_bloc.dart';
 import 'package:piggy_flutter/ui/page/home/home.dart';
 import 'package:piggy_flutter/utils/uidata.dart';
 import 'package:shared_preferences/shared_preferences.dart';

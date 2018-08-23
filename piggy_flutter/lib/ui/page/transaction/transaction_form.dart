@@ -1,15 +1,14 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:piggy_flutter/bloc/account_bloc.dart';
-import 'package:piggy_flutter/bloc/category_bloc.dart';
-import 'package:piggy_flutter/bloc/transaction_form_bloc.dart';
+import 'package:piggy_flutter/blocs/account_bloc.dart';
+import 'package:piggy_flutter/blocs/bloc_provider.dart';
+import 'package:piggy_flutter/blocs/category_bloc.dart';
+import 'package:piggy_flutter/blocs/transaction_form_bloc.dart';
 import 'package:piggy_flutter/model/account.dart';
 import 'package:piggy_flutter/model/api_request.dart';
 import 'package:piggy_flutter/model/category.dart';
 import 'package:piggy_flutter/model/transaction.dart';
 import 'package:piggy_flutter/model/transaction_edit_dto.dart';
-import 'package:piggy_flutter/providers/account_provider.dart';
-import 'package:piggy_flutter/providers/category_provider.dart';
 import 'package:piggy_flutter/services/transaction_service.dart';
 import 'package:piggy_flutter/ui/widgets/api_subscription.dart';
 import 'package:piggy_flutter/utils/uidata.dart';
@@ -113,8 +112,8 @@ class TransactionFormPageState extends State<TransactionFormPage> {
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
-    final CategoryBloc categoryBloc = CategoryProvider.of(context);
-    final AccountBloc accountBloc = AccountProvider.of(context);
+    final CategoryBloc categoryBloc = BlocProvider.of<CategoryBloc>(context);
+    final AccountBloc accountBloc = BlocProvider.of<AccountBloc>(context);
 
     final _transactionTextStyle = TextStyle(
         color: _transactionType == UIData.transaction_type_income

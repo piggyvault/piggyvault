@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:intl/intl.dart';
+import 'package:piggy_flutter/blocs/bloc_provider.dart';
 import 'package:piggy_flutter/model/account.dart';
 import 'package:piggy_flutter/model/account_detail_state.dart';
 import 'package:piggy_flutter/model/transaction_group_item.dart';
@@ -8,7 +9,7 @@ import 'package:piggy_flutter/services/account_service.dart';
 import 'package:piggy_flutter/services/transaction_service.dart';
 import 'package:rxdart/rxdart.dart';
 
-class AccountDetailBloc {
+class AccountDetailBloc implements BlocBase {
   final String accountId;
   int _pageIndex = 0;
   String _title = 'This Month',

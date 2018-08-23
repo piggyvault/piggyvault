@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:piggy_flutter/blocs/bloc_provider.dart';
 import 'package:piggy_flutter/model/user.dart';
 import 'package:piggy_flutter/services/auth_service.dart';
 import 'package:piggy_flutter/utils/uidata.dart';
@@ -7,7 +8,7 @@ import 'package:rxdart/rxdart.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:onesignal/onesignal.dart';
 
-class UserBloc {
+class UserBloc implements BlocBase {
   final AuthService _authService = AuthService();
 
   final _tenancyName = BehaviorSubject<String>();
@@ -107,7 +108,7 @@ class UserBloc {
     await _authService.onLogout();
   }
 
-  dispose() {
+  void dispose() {
     _tenancyName.close();
     _usernameOrEmailAddress.close();
     _password.close();

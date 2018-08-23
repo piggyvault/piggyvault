@@ -1,17 +1,20 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:piggy_flutter/blocs/bloc_provider.dart';
+import 'package:piggy_flutter/blocs/category_bloc.dart';
 
 import 'package:piggy_flutter/model/category.dart';
-import 'package:piggy_flutter/providers/category_provider.dart';
 import 'package:piggy_flutter/ui/widgets/common/common_drawer.dart';
 import 'package:piggy_flutter/ui/widgets/common/message_placeholder.dart';
 
 class CategoryListPage extends StatelessWidget {
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+
   @override
   Widget build(BuildContext context) {
-    // print('########## CategoryListPage  build');
-    final categoryBloc = CategoryProvider.of(context);
+    final CategoryBloc categoryBloc = BlocProvider.of<CategoryBloc>(context);
     return new Scaffold(
+      key: _scaffoldKey,
       appBar: new AppBar(
         title: Text('Categories'),
       ),

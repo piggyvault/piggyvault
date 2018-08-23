@@ -1,9 +1,9 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:piggy_flutter/blocs/account_bloc.dart';
+import 'package:piggy_flutter/blocs/bloc_provider.dart';
 import 'package:piggy_flutter/model/account.dart';
-import 'package:piggy_flutter/bloc/account_bloc.dart';
-import 'package:piggy_flutter/providers/account_provider.dart';
 import 'package:piggy_flutter/ui/widgets/account/account_group_list.dart';
 import 'package:piggy_flutter/ui/widgets/add_transaction_fab.dart';
 
@@ -16,7 +16,7 @@ class AccountListPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final AccountBloc accountBloc = AccountProvider.of(context);
+    final AccountBloc accountBloc = BlocProvider.of<AccountBloc>(context);
 
     return Scaffold(
       key: _scaffoldKey,

@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:piggy_flutter/blocs/account_bloc.dart';
 import 'package:piggy_flutter/blocs/account_detail_bloc.dart';
-import 'package:piggy_flutter/blocs/bloc_provider.dart';
-import 'package:piggy_flutter/blocs/transaction_bloc.dart';
 import 'package:piggy_flutter/models/account.dart';
 import 'package:piggy_flutter/ui/pages/transaction/transaction_form.dart';
 
@@ -14,10 +11,6 @@ class AddTransactionFab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final AccountBloc accountBloc = BlocProvider.of<AccountBloc>(context);
-    final TransactionBloc transactionBloc =
-        BlocProvider.of<TransactionBloc>(context);
-
     return FloatingActionButton(
         key: ValueKey<Color>(Theme.of(context).primaryColor),
         tooltip: 'Add new transaction',
@@ -38,9 +31,6 @@ class AddTransactionFab extends StatelessWidget {
               accountDetailBloc.onPageChanged(0);
               accountDetailBloc.refreshAccount(true);
             }
-            accountBloc.accountsRefresh(true);
-            transactionBloc.recentTransactionsRefresh(true);
-            transactionBloc.transactionSummaryRefresh('month');
           }
         });
   }

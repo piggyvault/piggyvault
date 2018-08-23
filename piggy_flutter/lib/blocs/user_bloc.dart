@@ -16,8 +16,11 @@ class UserBloc implements BlocBase {
   final _password = BehaviorSubject<String>();
   final _isAuthenticating = BehaviorSubject<bool>();
   final _isAuthenticated = BehaviorSubject<bool>();
+
   final _user = BehaviorSubject<User>();
   final _userRefresh = PublishSubject<bool>();
+
+  User loggedinUser;
 
 // retrieve data from stream
   Stream<String> get tenancyName =>
@@ -54,6 +57,7 @@ class UserBloc implements BlocBase {
   refresh(bool done) {
 //    print("########## UserBloc refresh");
     _authService.getCurrentLoginInformation().then((user) {
+      loggedinUser = user;
       _user.add(user);
     });
   }

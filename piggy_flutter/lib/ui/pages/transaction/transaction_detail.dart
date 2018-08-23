@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:piggy_flutter/blocs/bloc_provider.dart';
 import 'package:piggy_flutter/blocs/transaction_bloc.dart';
+import 'package:piggy_flutter/blocs/user_bloc.dart';
 import 'package:piggy_flutter/models/transaction.dart';
 import 'package:piggy_flutter/models/transaction_comment.dart';
 import 'package:piggy_flutter/ui/pages/transaction/transaction_form.dart';
@@ -21,21 +22,18 @@ class TransactionDetailPageState extends State<TransactionDetailPage> {
   final _formatter = DateFormat("EEE, MMM d, ''yy");
   final _commentTimeFormatter = DateFormat("h:mm a, EEE, MMM d, ''yy");
   final TextEditingController _commentController = new TextEditingController();
-  // final TransactionService _transactionService = TransactionService();
 
   @override
   void initState() {
     super.initState();
-    // _transactionService
-    //     .getTransactionForEdit(widget.transaction.id)
-    //     .then((result) {
-    //     });
   }
 
   @override
   Widget build(BuildContext context) {
     final TransactionBloc transactionBloc =
         BlocProvider.of<TransactionBloc>(context);
+
+    final UserBloc userBloc = BlocProvider.of<UserBloc>(context);
     // TODO - not the ideal place
     transactionBloc.transactionCommentsRefresh(widget.transaction.id);
 
@@ -57,47 +55,52 @@ class TransactionDetailPageState extends State<TransactionDetailPage> {
           _transactionComments(transactionBloc),
         ],
       ),
-      bottomNavigationBar: BottomAppBar(
-        child: Row(
-          children: <Widget>[
-            IconButton(
-              icon: const Icon(Icons.edit),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (BuildContext context) => TransactionFormPage(
-                          transaction: widget.transaction,
-                          title: 'Edit Transaction',
-                        ),
-                    fullscreenDialog: true,
+      bottomNavigationBar:
+          widget.transaction.creatorUserName == userBloc.loggedinUser.userName
+              ? BottomAppBar(
+                  child: Row(
+                    children: <Widget>[
+                      IconButton(
+                        icon: const Icon(Icons.edit),
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (BuildContext context) =>
+                                  TransactionFormPage(
+                                    transaction: widget.transaction,
+                                    title: 'Edit Transaction',
+                                  ),
+                              fullscreenDialog: true,
+                            ),
+                          );
+                        },
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.content_copy),
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (BuildContext context) =>
+                                  TransactionFormPage(
+                                    transaction: widget.transaction,
+                                    title: 'Copy Transaction',
+                                    isCopy: true,
+                                  ),
+                              fullscreenDialog: true,
+                            ),
+                          );
+                        },
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.delete_forever),
+                        onPressed: () {},
+                      ),
+                    ],
                   ),
-                );
-              },
-            ),
-            IconButton(
-              icon: const Icon(Icons.content_copy),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (BuildContext context) => TransactionFormPage(
-                          transaction: widget.transaction,
-                          title: 'Copy Transaction',
-                          isCopy: true,
-                        ),
-                    fullscreenDialog: true,
-                  ),
-                );
-              },
-            ),
-            IconButton(
-              icon: const Icon(Icons.delete_forever),
-              onPressed: () {},
-            ),
-          ],
-        ),
-      ),
+                )
+              : null,
     );
   }
 

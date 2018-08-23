@@ -23,15 +23,12 @@ class AccountDetailPage extends StatefulWidget {
   _AccountDetailPageState createState() => _AccountDetailPageState();
 }
 
-class _AccountDetailPageState extends State<AccountDetailPage>
-    with SingleTickerProviderStateMixin {
-  AnimationController _controller;
+class _AccountDetailPageState extends State<AccountDetailPage> {
   AccountDetailBloc bloc;
 
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(vsync: this);
     bloc = AccountDetailBloc(accountId: widget.account.id);
     bloc.changeAccount(widget.account);
     bloc.onPageChanged(0);
@@ -41,7 +38,6 @@ class _AccountDetailPageState extends State<AccountDetailPage>
   void dispose() {
     bloc.dispose();
     super.dispose();
-    _controller.dispose();
   }
 
   @override

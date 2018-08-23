@@ -5,19 +5,14 @@ class MyAboutTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AboutListTile(
-      applicationIcon: FlutterLogo(
-        colors: Colors.yellow,
-      ),
+      applicationIcon: logo,
       icon: Icon(Icons.info_outline),
       aboutBoxChildren: <Widget>[
         SizedBox(
           height: 10.0,
         ),
         Text(
-          "Developed By Abhith Rajan",
-        ),
-        Text(
-          "@AbhithRajan ",
+          "Developed By @AbhithRajan",
         ),
       ],
       applicationName: UIData.appName,
@@ -25,4 +20,13 @@ class MyAboutTile extends StatelessWidget {
       applicationLegalese: "Apache License 2.0",
     );
   }
+
+  final logo = Hero(
+    tag: 'hero',
+    child: CircleAvatar(
+      backgroundColor: Colors.transparent,
+      radius: 48.0,
+      child: Image.asset('graphics/logo.png'),
+    ),
+  );
 }

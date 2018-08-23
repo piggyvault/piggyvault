@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:piggy_flutter/blocs/account_bloc.dart';
+import 'package:piggy_flutter/blocs/application_bloc.dart';
 import 'package:piggy_flutter/blocs/bloc_provider.dart';
 import 'package:piggy_flutter/blocs/category_bloc.dart';
 import 'package:piggy_flutter/blocs/transaction_bloc.dart';
@@ -14,19 +15,24 @@ import 'package:onesignal/onesignal.dart';
 
 Future<void> main() async {
   // debugPrintRebuildDirtyWidgets = true;
-  return runApp(BlocProvider<UserBloc>(
-    bloc: UserBloc(),
-    child: BlocProvider<TransactionBloc>(
-      bloc: TransactionBloc(),
-      child: BlocProvider<AccountBloc>(
-        bloc: AccountBloc(),
-        child: BlocProvider<CategoryBloc>(
-          bloc: CategoryBloc(),
-          child: MyApp(),
+  return runApp(
+    BlocProvider<ApplicationBloc>(
+      bloc: ApplicationBloc(),
+      child: BlocProvider<UserBloc>(
+        bloc: UserBloc(),
+        child: BlocProvider<TransactionBloc>(
+          bloc: TransactionBloc(),
+          child: BlocProvider<AccountBloc>(
+            bloc: AccountBloc(),
+            child: BlocProvider<CategoryBloc>(
+              bloc: CategoryBloc(),
+              child: MyApp(),
+            ),
+          ),
         ),
       ),
     ),
-  ));
+  );
 }
 
 class MyApp extends StatefulWidget {

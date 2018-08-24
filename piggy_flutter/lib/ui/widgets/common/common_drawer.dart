@@ -9,14 +9,18 @@ import 'package:piggy_flutter/models/user.dart';
 import 'package:piggy_flutter/ui/pages/category/category_list.dart';
 import 'package:piggy_flutter/ui/pages/home/home.dart';
 import 'package:piggy_flutter/ui/pages/login/login_page.dart';
+import 'package:piggy_flutter/ui/screens/reports/categorywise_recent_months_report_screen.dart';
 import 'package:piggy_flutter/ui/widgets/about_tile.dart';
 
 class CommonDrawer extends StatelessWidget {
+  final menuTextStyle = TextStyle(fontWeight: FontWeight.w700, fontSize: 18.0);
+
   @override
   Widget build(BuildContext context) {
     final UserBloc userBloc = BlocProvider.of<UserBloc>(context);
     final CategoryBloc categoryBloc = BlocProvider.of<CategoryBloc>(context);
     final AccountBloc accountBloc = BlocProvider.of<AccountBloc>(context);
+
     return Drawer(
       child: ListView(
         padding: EdgeInsets.zero,
@@ -25,7 +29,7 @@ class CommonDrawer extends StatelessWidget {
           ListTile(
             title: Text(
               "Home",
-              style: TextStyle(fontWeight: FontWeight.w700, fontSize: 18.0),
+              style: menuTextStyle,
             ),
             leading: Icon(
               Icons.home,
@@ -38,6 +42,22 @@ class CommonDrawer extends StatelessWidget {
           ),
           accountsTile(accountBloc),
           categoriesTile(categoryBloc),
+          ListTile(
+            title: Text(
+              "Reports",
+              style: menuTextStyle,
+            ),
+            leading: Icon(
+              Icons.insert_chart,
+              color: Colors.amber,
+            ),
+            onTap: (() => Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          CategoryWiseRecentMonthsReportScreen()),
+                )),
+          ),
           Divider(),
           ListTile(
             title: Text(
@@ -68,7 +88,7 @@ class CommonDrawer extends StatelessWidget {
         return ListTile(
           title: Text(
             "Categories",
-            style: TextStyle(fontWeight: FontWeight.w700, fontSize: 18.0),
+            style: menuTextStyle,
           ),
           leading: Icon(
             Icons.category,
@@ -99,7 +119,7 @@ class CommonDrawer extends StatelessWidget {
         return ListTile(
           title: Text(
             "Accounts",
-            style: TextStyle(fontWeight: FontWeight.w700, fontSize: 18.0),
+            style: menuTextStyle,
           ),
           leading: Icon(
             Icons.account_balance_wallet,

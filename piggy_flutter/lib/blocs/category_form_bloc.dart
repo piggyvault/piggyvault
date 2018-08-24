@@ -9,7 +9,7 @@ import 'package:rxdart/rxdart.dart';
 class CategoryFormBloc implements BlocBase {
   Category category;
   CategoryFormBloc({this.category}) {
-    print('$category');
+    // print('$category');
     if (category != null) {
       changeCategoryName(category.name);
     }
@@ -18,25 +18,12 @@ class CategoryFormBloc implements BlocBase {
   final CategoryService _categoryService = CategoryService();
 
   final _categoryName = BehaviorSubject<String>();
-  final _state = BehaviorSubject<ApiRequest>();
-
-  final StreamTransformer<String, String> _validateCategoryName =
-      StreamTransformer<String, String>.fromHandlers(
-          handleData: (categoryName, sink) {
-    if (categoryName == null || categoryName.length == 0) {
-      sink.addError('Enter a valid category name');
-    } else if (categoryName.length > 50) {
-      sink.addError('Too long. Category name cannot exceed 50 chars');
-    } else {
-      sink.add(categoryName);
-    }
-  });
-
   Stream<String> get categoryName =>
       _categoryName.stream.transform(_validateCategoryName);
-  Stream<ApiRequest> get state => _state.stream;
-
   Function(String) get changeCategoryName => _categoryName.sink.add;
+
+  final _state = BehaviorSubject<ApiRequest>();
+  Stream<ApiRequest> get state => _state.stream;
 
   submit() async {
     ApiRequest request = ApiRequest(isInProcess: true);
@@ -57,6 +44,18 @@ class CategoryFormBloc implements BlocBase {
     request.isInProcess = false;
     _state.add(request);
   }
+
+  final StreamTransformer<String, String> _validateCategoryName =
+      StreamTransformer<String, String>.fromHandlers(
+          handleData: (categoryName, sink) {
+    if (categoryName == null || categoryName.length == 0) {
+      sink.addError('Enter a valid category name');
+    } else if (categoryName.length > 50) {
+      sink.addError('Too long. Category name cannot exceed 50 chars');
+    } else {
+      sink.add(categoryName);
+    }
+  });
 
   void dispose() {
     _categoryName.close();

@@ -52,15 +52,7 @@ showSuccess(
           ),
         ),
   ).then((_) {
-    switch (type) {
-      case ApiType.createOrUpdateTransaction:
-      case ApiType.createCategory:
-      case ApiType.updateCategory:
-        {
-          Navigator.pop(context, DismissDialogAction.save);
-        }
-        break;
-    }
+    Navigator.pop(context);
   });
 }
 

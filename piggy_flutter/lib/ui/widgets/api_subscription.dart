@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:piggy_flutter/blocs/account_bloc.dart';
 import 'package:piggy_flutter/blocs/bloc_provider.dart';
+import 'package:piggy_flutter/blocs/category_bloc.dart';
 import 'package:piggy_flutter/blocs/transaction_bloc.dart';
 import 'package:piggy_flutter/models/api_request.dart';
 import 'package:piggy_flutter/ui/widgets/common/common_dialogs.dart';
@@ -21,12 +22,29 @@ apiSubscription(Stream<ApiRequest> apiResult, BuildContext context) {
         final AccountBloc accountBloc = BlocProvider.of<AccountBloc>(context);
         final TransactionBloc transactionBloc =
             BlocProvider.of<TransactionBloc>(context);
-
         switch (p.type) {
           case ApiType.createOrUpdateTransaction:
             {
               accountBloc.accountsRefresh(true);
               transactionBloc.sync(true);
+              showSuccess(
+                  context: context,
+                  message: UIData.success,
+                  icon: FontAwesomeIcons.check,
+                  type: p.type);
+            }
+            break;
+          case ApiType.createCategory:
+          case ApiType.updateCategory:
+            {
+              final CategoryBloc categoryBloc =
+                  BlocProvider.of<CategoryBloc>(context);
+              categoryBloc.refreshCategories(true);
+
+              if (p.type == ApiType.updateCategory) {
+                transactionBloc.sync(true);
+              }
+
               showSuccess(
                   context: context,
                   message: UIData.success,

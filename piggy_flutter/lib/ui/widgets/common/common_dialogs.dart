@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:piggy_flutter/models/api_request.dart';
 import 'package:piggy_flutter/models/api_response.dart';
-import 'package:piggy_flutter/ui/pages/transaction/transaction_form.dart';
+import 'package:piggy_flutter/utils/common.dart';
 import 'package:piggy_flutter/utils/uidata.dart';
 
 showError(BuildContext context, ApiResponse snapshot) {
@@ -54,10 +54,12 @@ showSuccess(
   ).then((_) {
     switch (type) {
       case ApiType.createOrUpdateTransaction:
+      case ApiType.createCategory:
+      case ApiType.updateCategory:
         {
           Navigator.pop(context, DismissDialogAction.save);
-          break;
         }
+        break;
     }
   });
 }

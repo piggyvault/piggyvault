@@ -15,12 +15,6 @@ import 'package:piggy_flutter/utils/uidata.dart';
 import 'package:piggy_flutter/ui/widgets/date_time_picker.dart';
 // TODO: BLoC
 
-enum DismissDialogAction {
-  cancel,
-  discard,
-  save,
-}
-
 class TransactionFormPage extends StatefulWidget {
   final Account account;
   final Transaction transaction;

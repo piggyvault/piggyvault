@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:piggy_flutter/blocs/bloc_provider.dart';
-import 'package:piggy_flutter/blocs/transaction_bloc.dart';
 import 'package:piggy_flutter/blocs/user_bloc.dart';
 import 'package:piggy_flutter/models/transaction.dart';
 import 'package:piggy_flutter/models/transaction_comment.dart';
+import 'package:piggy_flutter/ui/pages/transaction/transaction_detail_bloc.dart';
 import 'package:piggy_flutter/ui/pages/transaction/transaction_form.dart';
 
 class TransactionDetailPage extends StatefulWidget {
@@ -22,20 +22,17 @@ class TransactionDetailPageState extends State<TransactionDetailPage> {
   final _formatter = DateFormat("EEE, MMM d, ''yy");
   final _commentTimeFormatter = DateFormat("h:mm a, EEE, MMM d, ''yy");
   final TextEditingController _commentController = new TextEditingController();
+  TransactionDetailBloc bloc;
 
   @override
   void initState() {
     super.initState();
+    bloc = TransactionDetailBloc(widget.transaction);
   }
 
   @override
   Widget build(BuildContext context) {
-    final TransactionBloc transactionBloc =
-        BlocProvider.of<TransactionBloc>(context);
-
     final UserBloc userBloc = BlocProvider.of<UserBloc>(context);
-    // TODO - not the ideal place
-    transactionBloc.transactionCommentsRefresh(widget.transaction.id);
 
     return Scaffold(
       appBar: AppBar(
@@ -51,8 +48,8 @@ class TransactionDetailPageState extends State<TransactionDetailPage> {
               style: Theme.of(context).textTheme.headline,
             ),
           ),
-          _commentTile(transactionBloc),
-          _transactionComments(transactionBloc),
+          _commentTile(),
+          _transactionComments(),
         ],
       ),
       bottomNavigationBar:
@@ -104,21 +101,27 @@ class TransactionDetailPageState extends State<TransactionDetailPage> {
     );
   }
 
-  Widget _commentTile(TransactionBloc transactionBloc) {
+  void dispose() {
+    bloc?.dispose();
+    _commentController?.dispose();
+    super.dispose();
+  }
+
+  Widget _commentTile() {
     return StreamBuilder<String>(
-      stream: transactionBloc.comment,
+      stream: bloc.comment,
       builder: (context, snapshot) {
         return ListTile(
           title: TextField(
             controller: _commentController,
             decoration: new InputDecoration(
                 labelText: 'Write a comment...', errorText: snapshot.error),
-            onChanged: transactionBloc.changeComment,
+            onChanged: bloc.changeComment,
           ),
           trailing: new OutlineButton(
             onPressed: (() {
               if (snapshot.hasData && snapshot.data != null) {
-                transactionBloc.submitComment(widget.transaction.id);
+                bloc.submitComment(widget.transaction.id);
                 _commentController.clear();
               }
             }),
@@ -130,9 +133,9 @@ class TransactionDetailPageState extends State<TransactionDetailPage> {
     );
   }
 
-  Widget _transactionComments(TransactionBloc transactionBloc) {
+  Widget _transactionComments() {
     return StreamBuilder<List<TransactionComment>>(
-        stream: transactionBloc.transactionComments,
+        stream: bloc.transactionComments,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             return Card(

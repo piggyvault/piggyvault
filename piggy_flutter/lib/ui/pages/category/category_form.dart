@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:piggy_flutter/blocs/category_form_bloc.dart';
 import 'package:piggy_flutter/models/api_request.dart';
 import 'package:piggy_flutter/models/category.dart';
+import 'package:piggy_flutter/ui/pages/category/category_form_bloc.dart';
 import 'package:piggy_flutter/ui/widgets/api_subscription.dart';
 
 class CategoryFormPage extends StatefulWidget {

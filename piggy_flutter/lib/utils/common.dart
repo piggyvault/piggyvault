@@ -3,3 +3,10 @@ enum DismissDialogAction {
   discard,
   save,
 }
+
+enum DialogAction {
+  cancel,
+  discard,
+  disagree,
+  agree,
+}

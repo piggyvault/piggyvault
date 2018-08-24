@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:piggy_flutter/blocs/bloc_provider.dart';
@@ -6,6 +8,8 @@ import 'package:piggy_flutter/models/transaction.dart';
 import 'package:piggy_flutter/models/transaction_comment.dart';
 import 'package:piggy_flutter/ui/pages/transaction/transaction_detail_bloc.dart';
 import 'package:piggy_flutter/ui/pages/transaction/transaction_form.dart';
+import 'package:piggy_flutter/ui/widgets/api_subscription.dart';
+import 'package:piggy_flutter/utils/common.dart';
 
 class TransactionDetailPage extends StatefulWidget {
   final Transaction transaction;
@@ -22,18 +26,22 @@ class TransactionDetailPageState extends State<TransactionDetailPage> {
   final _formatter = DateFormat("EEE, MMM d, ''yy");
   final _commentTimeFormatter = DateFormat("h:mm a, EEE, MMM d, ''yy");
   final TextEditingController _commentController = new TextEditingController();
-  TransactionDetailBloc bloc;
+  TransactionDetailBloc _bloc;
+  StreamSubscription _apiStreamSubscription;
 
   @override
   void initState() {
     super.initState();
-    bloc = TransactionDetailBloc(widget.transaction);
+    _bloc = TransactionDetailBloc(widget.transaction);
+    _apiStreamSubscription = apiSubscription(_bloc.state, context);
   }
 
   @override
   Widget build(BuildContext context) {
     final UserBloc userBloc = BlocProvider.of<UserBloc>(context);
-
+    final ThemeData theme = Theme.of(context);
+    final TextStyle dialogTextStyle =
+        theme.textTheme.subhead.copyWith(color: theme.textTheme.caption.color);
     return Scaffold(
       appBar: AppBar(
         title: Text('Transaction Details'),
@@ -92,7 +100,29 @@ class TransactionDetailPageState extends State<TransactionDetailPage> {
                       ),
                       IconButton(
                         icon: const Icon(Icons.delete_forever),
-                        onPressed: () {},
+                        onPressed: () {
+                          showDeleteConfirmationDialog<DialogAction>(
+                              context: context,
+                              child: new AlertDialog(
+                                  title: const Text('Delete Transaction?'),
+                                  content: new Text(
+                                      'Are you sure you want to delete transaction with description "${widget.transaction.description}" and amount ${widget.transaction.amount.toString()}${widget.transaction.accountCurrencySymbol}',
+                                      style: dialogTextStyle),
+                                  actions: <Widget>[
+                                    new FlatButton(
+                                        child: const Text('CANCEL'),
+                                        onPressed: () {
+                                          Navigator.pop(
+                                              context, DialogAction.disagree);
+                                        }),
+                                    new FlatButton(
+                                        child: const Text('DELETE'),
+                                        onPressed: () {
+                                          Navigator.pop(
+                                              context, DialogAction.agree);
+                                        })
+                                  ]));
+                        },
                       ),
                     ],
                   ),
@@ -102,26 +132,39 @@ class TransactionDetailPageState extends State<TransactionDetailPage> {
   }
 
   void dispose() {
-    bloc?.dispose();
+    _bloc?.dispose();
     _commentController?.dispose();
+    _apiStreamSubscription?.cancel();
     super.dispose();
+  }
+
+  void showDeleteConfirmationDialog<T>({BuildContext context, Widget child}) {
+    showDialog<T>(
+      context: context,
+      builder: (BuildContext context) => child,
+    ).then<void>((T value) {
+      // The value passed to Navigator.pop() or null.
+      if (value == DialogAction.agree) {
+        _bloc.deleteTransaction();
+      }
+    });
   }
 
   Widget _commentTile() {
     return StreamBuilder<String>(
-      stream: bloc.comment,
+      stream: _bloc.comment,
       builder: (context, snapshot) {
         return ListTile(
           title: TextField(
             controller: _commentController,
             decoration: new InputDecoration(
                 labelText: 'Write a comment...', errorText: snapshot.error),
-            onChanged: bloc.changeComment,
+            onChanged: _bloc.changeComment,
           ),
           trailing: new OutlineButton(
             onPressed: (() {
               if (snapshot.hasData && snapshot.data != null) {
-                bloc.submitComment(widget.transaction.id);
+                _bloc.submitComment(widget.transaction.id);
                 _commentController.clear();
               }
             }),
@@ -135,7 +178,7 @@ class TransactionDetailPageState extends State<TransactionDetailPage> {
 
   Widget _transactionComments() {
     return StreamBuilder<List<TransactionComment>>(
-        stream: bloc.transactionComments,
+        stream: _bloc.transactionComments,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             return Card(

@@ -1,6 +1,6 @@
 import 'package:piggy_flutter/models/api_response.dart';
 
-enum ApiType { createOrUpdateTransaction, createCategory, updateCategory }
+enum ApiType { createOrUpdateTransaction, createCategory, updateCategory, deleteTransaction }
 
 class ApiRequest<T> {
   ApiType type;

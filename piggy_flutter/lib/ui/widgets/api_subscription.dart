@@ -24,6 +24,7 @@ apiSubscription(Stream<ApiRequest> apiResult, BuildContext context) {
             BlocProvider.of<TransactionBloc>(context);
         switch (p.type) {
           case ApiType.createOrUpdateTransaction:
+          case ApiType.deleteTransaction:
             {
               accountBloc.accountsRefresh(true);
               transactionBloc.sync(true);

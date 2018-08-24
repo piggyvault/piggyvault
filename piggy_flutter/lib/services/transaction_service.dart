@@ -112,6 +112,15 @@ class TransactionService extends AppServiceBase {
     return result.networkServiceResponse;
   }
 
+  Future<ApiResponse<dynamic>> deleteTransaction(String id) async {
+    final result = await rest
+        .postAsync('services/app/transaction/DeleteTransaction', {
+      "id": id,      
+    });
+
+    return result.networkServiceResponse;
+  }
+
   Future<Null> saveTransactionComment(
       String transactionId, String content) async {
     await rest.postAsync(

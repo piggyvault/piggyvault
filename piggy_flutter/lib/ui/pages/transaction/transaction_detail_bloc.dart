@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:piggy_flutter/blocs/bloc_provider.dart';
+import 'package:piggy_flutter/models/api_request.dart';
 import 'package:piggy_flutter/models/transaction.dart';
 import 'package:piggy_flutter/models/transaction_comment.dart';
 import 'package:piggy_flutter/services/transaction_service.dart';
@@ -12,6 +13,7 @@ class TransactionDetailBloc implements BlocBase {
   TransactionDetailBloc(this.transaction) {
     getTransactionComments();
   }
+
   final TransactionService _transactionService = TransactionService();
 
   final _comment = BehaviorSubject<String>();
@@ -22,6 +24,9 @@ class TransactionDetailBloc implements BlocBase {
   Stream<List<TransactionComment>> get transactionComments =>
       _transactionComments.stream;
 
+  final _state = BehaviorSubject<ApiRequest>();
+  Stream<ApiRequest> get state => _state.stream;
+
   submitComment(String transactionId) async {
     // print("########## TransactionBloc submitComment");
     final validComment = _comment.value;
@@ -29,6 +34,16 @@ class TransactionDetailBloc implements BlocBase {
         transactionId, validComment);
     changeComment('');
     await getTransactionComments();
+  }
+
+  Future<Null> deleteTransaction() async {
+    ApiRequest request = ApiRequest(isInProcess: true);
+    _state.add(request);
+    request.type = ApiType.deleteTransaction;
+    final result = await _transactionService.deleteTransaction(transaction.id);
+    request.response = result;
+    request.isInProcess = false;
+    _state.add(request);
   }
 
   Future<Null> getTransactionComments() async {
@@ -50,5 +65,6 @@ class TransactionDetailBloc implements BlocBase {
 
   void dispose() {
     _comment.close();
+    _state.close();
   }
 }

@@ -3,21 +3,6 @@ import 'package:flutter/rendering.dart';
 import 'package:piggy_flutter/ui/screens/reports/reports_bloc.dart';
 import 'package:piggy_flutter/ui/widgets/common/common_drawer.dart';
 
-class Dessert {
-  Dessert(this.name, this.calories, this.fat, this.carbs, this.protein,
-      this.sodium, this.calcium, this.iron);
-  final String name;
-  final int calories;
-  final double fat;
-  final int carbs;
-  final double protein;
-  final int sodium;
-  final int calcium;
-  final int iron;
-
-  bool selected = false;
-}
-
 class Dataset {
   final double total;
   Dataset(this.total);
@@ -36,19 +21,6 @@ class CategoryWiseRecentMonthsReportItem {
         datasets =
             (json['datasets'] as List).map((i) => Dataset.fromJson(i)).toList();
 }
-
-class Name {
-  String firstName;
-  String lastName;
-
-  Name({this.firstName, this.lastName});
-}
-
-var names = <Name>[
-  Name(firstName: "Pawan", lastName: "Kumar"),
-  Name(firstName: "Aakash", lastName: "Tewari"),
-  Name(firstName: "Rohan", lastName: "Singh"),
-];
 
 class CategoryWiseRecentMonthsReportScreen extends StatefulWidget {
   static const String routeName = '/material/data-table';
@@ -84,7 +56,7 @@ class _CategoryWiseRecentMonthsReportScreenState
                   ),
                   DataColumn(
                     label: Text("3 Months Ago"),
-                    numeric: false,
+                    numeric: true,
                     // onSort: (i, b) {
                     //   print("$i $b");
                     //   setState(() {
@@ -95,7 +67,7 @@ class _CategoryWiseRecentMonthsReportScreenState
                   ),
                   DataColumn(
                     label: Text("Last Month"),
-                    numeric: false,
+                    numeric: true,
                     // onSort: (i, b) {
                     //   print("$i $b");
                     //   setState(() {
@@ -106,7 +78,7 @@ class _CategoryWiseRecentMonthsReportScreenState
                   ),
                   DataColumn(
                     label: Text("This Month"),
-                    numeric: false,
+                    numeric: true,
                     // onSort: (i, b) {
                     //   print("$i $b");
                     //   setState(() {

@@ -6,6 +6,7 @@ import 'package:piggy_flutter/blocs/bloc_provider.dart';
 import 'package:piggy_flutter/blocs/user_bloc.dart';
 import 'package:piggy_flutter/models/transaction.dart';
 import 'package:piggy_flutter/models/transaction_comment.dart';
+import 'package:piggy_flutter/models/user.dart';
 import 'package:piggy_flutter/ui/screens/transaction/transaction_detail_bloc.dart';
 import 'package:piggy_flutter/ui/screens/transaction/transaction_form.dart';
 import 'package:piggy_flutter/ui/widgets/api_subscription.dart';
@@ -42,8 +43,7 @@ class TransactionDetailPageState extends State<TransactionDetailPage> {
   Widget build(BuildContext context) {
     final UserBloc userBloc = BlocProvider.of<UserBloc>(context);
     final ThemeData theme = Theme.of(context);
-    final TextStyle dialogTextStyle =
-        theme.textTheme.subhead.copyWith(color: theme.textTheme.caption.color);
+
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
@@ -63,8 +63,18 @@ class TransactionDetailPageState extends State<TransactionDetailPage> {
           _transactionComments(),
         ],
       ),
-      bottomNavigationBar:
-          widget.transaction.creatorUserName == userBloc.loggedinUser.userName
+      bottomNavigationBar: _bottomNavigationBar(userBloc, theme),
+    );
+  }
+
+  Widget _bottomNavigationBar(UserBloc bloc, ThemeData theme) {
+    final TextStyle dialogTextStyle =
+        theme.textTheme.subhead.copyWith(color: theme.textTheme.caption.color);
+    return StreamBuilder<User>(
+      stream: bloc.user,
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          return widget.transaction.creatorUserName == snapshot.data.userName
               ? BottomAppBar(
                   child: Row(
                     children: <Widget>[
@@ -130,7 +140,11 @@ class TransactionDetailPageState extends State<TransactionDetailPage> {
                     ],
                   ),
                 )
-              : null,
+              : null;
+        } else {
+          return null;
+        }
+      },
     );
   }
 

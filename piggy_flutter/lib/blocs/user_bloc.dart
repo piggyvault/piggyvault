@@ -10,13 +10,9 @@ class UserBloc implements BlocBase {
   final AuthService _authService = AuthService();
 
   final _user = BehaviorSubject<User>();
-  final _userRefresh = PublishSubject<bool>();
-
-  User loggedinUser;
-
   Stream<User> get user => _user.stream;
 
-  // add data to stream
+  final _userRefresh = PublishSubject<bool>();
   Function(bool) get userRefresh => _userRefresh.sink.add;
 
   UserBloc() {
@@ -26,7 +22,6 @@ class UserBloc implements BlocBase {
   refresh(bool done) {
 //    print("########## UserBloc refresh");
     _authService.getCurrentLoginInformation().then((user) {
-      loggedinUser = user;
       _user.add(user);
     });
   }

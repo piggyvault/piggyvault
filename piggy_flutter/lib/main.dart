@@ -7,7 +7,7 @@ import 'package:piggy_flutter/blocs/bloc_provider.dart';
 import 'package:piggy_flutter/blocs/category_bloc.dart';
 import 'package:piggy_flutter/blocs/transaction_bloc.dart';
 import 'package:piggy_flutter/blocs/user_bloc.dart';
-import 'package:piggy_flutter/ui/pages/category/category_list.dart';
+import 'package:piggy_flutter/ui/screens/category/category_list.dart';
 import 'package:piggy_flutter/ui/screens/login/login_page.dart';
 import 'package:piggy_flutter/ui/screens/reports/categorywise_recent_months_report_screen.dart';
 import 'package:piggy_flutter/utils/uidata.dart';
@@ -62,7 +62,7 @@ class MyAppState extends State<MyApp> {
       routes: <String, WidgetBuilder>{
         UIData.loginRoute: (BuildContext context) => LoginPage(),
         UIData.dashboardRoute: (BuildContext context) => HomePage(),
-        UIData.categoryRoute: (BuildContext context) => CategoryListPage(),
+        UIData.categoriesRoute: (BuildContext context) => CategoryListPage(),
         CategoryWiseRecentMonthsReportScreen.routeName:
             (BuildContext context) => CategoryWiseRecentMonthsReportScreen(),
       },

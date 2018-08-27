@@ -4,7 +4,7 @@ import 'package:piggy_flutter/blocs/bloc_provider.dart';
 import 'package:piggy_flutter/blocs/category_bloc.dart';
 
 import 'package:piggy_flutter/models/category.dart';
-import 'package:piggy_flutter/ui/pages/category/category_form.dart';
+import 'package:piggy_flutter/ui/screens/category/category_form.dart';
 import 'package:piggy_flutter/ui/widgets/common/common_drawer.dart';
 import 'package:piggy_flutter/ui/widgets/common/message_placeholder.dart';
 import 'package:piggy_flutter/utils/common.dart';

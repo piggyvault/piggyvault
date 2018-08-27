@@ -6,7 +6,6 @@ import 'package:piggy_flutter/blocs/user_bloc.dart';
 import 'package:piggy_flutter/models/account.dart';
 import 'package:piggy_flutter/models/category.dart';
 import 'package:piggy_flutter/models/user.dart';
-import 'package:piggy_flutter/ui/pages/category/category_list.dart';
 import 'package:piggy_flutter/ui/pages/home/home.dart';
 import 'package:piggy_flutter/ui/screens/reports/categorywise_recent_months_report_screen.dart';
 import 'package:piggy_flutter/ui/widgets/about_tile.dart';
@@ -89,10 +88,9 @@ class CommonDrawer extends StatelessWidget {
             Icons.category,
             color: Colors.cyan,
           ),
-          onTap: (() => Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => CategoryListPage()),
-              )),
+          onTap: (() => Navigator
+              .of(context)
+              .pushReplacementNamed(UIData.categoriesRoute)),
           trailing: snapshot.hasData
               ? Chip(
                   key: ValueKey<String>(snapshot.data.length.toString()),

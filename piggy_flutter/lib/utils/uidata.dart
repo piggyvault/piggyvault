@@ -4,7 +4,7 @@ class UIData {
   //routes
   static const String loginRoute = "/login";
   static const String dashboardRoute = "/dashboard";
-  static const String categoryRoute = "/categories";
+  static const String categoriesRoute = "/categories";
 
   //strings
   static const String appName = "Piggy";

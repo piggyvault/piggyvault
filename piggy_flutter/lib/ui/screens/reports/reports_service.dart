@@ -15,11 +15,11 @@ class ReportsService extends AppServiceBase {
         });
 
     if (result.mappedResult != null) {
-      print('##### ${result.mappedResult}');
+      // print('##### ${result.mappedResult}');
       result.mappedResult['items'].forEach((item) =>
           data.add(CategoryWiseRecentMonthsReportItem.fromJson(item)));
     }
-    print(data);
+    // print(data);
     return data;
   }
 }

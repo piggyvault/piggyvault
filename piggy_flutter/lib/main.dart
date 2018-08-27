@@ -9,6 +9,7 @@ import 'package:piggy_flutter/blocs/transaction_bloc.dart';
 import 'package:piggy_flutter/blocs/user_bloc.dart';
 import 'package:piggy_flutter/ui/pages/category/category_list.dart';
 import 'package:piggy_flutter/ui/pages/login/login_page.dart';
+import 'package:piggy_flutter/ui/screens/reports/categorywise_recent_months_report_screen.dart';
 import 'package:piggy_flutter/utils/uidata.dart';
 import 'package:piggy_flutter/ui/pages/home/home.dart';
 import 'package:onesignal/onesignal.dart';
@@ -62,6 +63,8 @@ class MyAppState extends State<MyApp> {
         UIData.loginRoute: (BuildContext context) => LoginPage(),
         UIData.dashboardRoute: (BuildContext context) => HomePage(),
         UIData.categoryRoute: (BuildContext context) => CategoryListPage(),
+        CategoryWiseRecentMonthsReportScreen.routeName:
+            (BuildContext context) => CategoryWiseRecentMonthsReportScreen(),
       },
     );
   }

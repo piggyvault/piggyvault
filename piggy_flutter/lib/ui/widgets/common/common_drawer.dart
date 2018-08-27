@@ -51,12 +51,8 @@ class CommonDrawer extends StatelessWidget {
               Icons.insert_chart,
               color: Colors.amber,
             ),
-            onTap: (() => Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) =>
-                          CategoryWiseRecentMonthsReportScreen()),
-                )),
+            onTap: (() => Navigator.of(context).pushReplacementNamed(
+                CategoryWiseRecentMonthsReportScreen.routeName)),
           ),
           Divider(),
           ListTile(

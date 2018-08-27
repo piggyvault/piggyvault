@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:piggy_flutter/ui/screens/reports/reports_bloc.dart';
 import 'package:piggy_flutter/ui/widgets/common/common_drawer.dart';
+import 'package:piggy_flutter/ui/widgets/common/loading_widget.dart';
 
 class Dataset {
   final double total;
@@ -23,7 +24,8 @@ class CategoryWiseRecentMonthsReportItem {
 }
 
 class CategoryWiseRecentMonthsReportScreen extends StatefulWidget {
-  static const String routeName = '/material/data-table';
+  static const String routeName =
+      '/reports/categorywise-recent-months-report-screen';
 
   @override
   _CategoryWiseRecentMonthsReportScreenState createState() =>
@@ -38,86 +40,63 @@ class _CategoryWiseRecentMonthsReportScreenState
         stream: _bloc.categoryWiseTransactionSummaryHistory,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            return DataTable(
-                onSelectAll: (b) {},
-                sortColumnIndex: 1,
-                sortAscending: true,
-                columns: <DataColumn>[
-                  DataColumn(
-                    label: Text("Category"),
-                    numeric: false,
-                    // onSort: (i, b) {
-                    //   print("$i $b");
-                    //   setState(() {
-                    //     names.sort((a, b) => a.firstName.compareTo(b.firstName));
-                    //   });
-                    // },
-                    tooltip: "To display first name of the Name",
-                  ),
-                  DataColumn(
-                    label: Text("3 Months Ago"),
-                    numeric: true,
-                    // onSort: (i, b) {
-                    //   print("$i $b");
-                    //   setState(() {
-                    //     names.sort((a, b) => a.lastName.compareTo(b.lastName));
-                    //   });
-                    // },
-                    tooltip: "To display last name of the Name",
-                  ),
-                  DataColumn(
-                    label: Text("Last Month"),
-                    numeric: true,
-                    // onSort: (i, b) {
-                    //   print("$i $b");
-                    //   setState(() {
-                    //     names.sort((a, b) => a.lastName.compareTo(b.lastName));
-                    //   });
-                    // },
-                    tooltip: "To display last name of the Name",
-                  ),
-                  DataColumn(
-                    label: Text("This Month"),
-                    numeric: true,
-                    // onSort: (i, b) {
-                    //   print("$i $b");
-                    //   setState(() {
-                    //     names.sort((a, b) => a.lastName.compareTo(b.lastName));
-                    //   });
-                    // },
-                    tooltip: "To display last name of the Name",
-                  ),
-                ],
-                rows: snapshot.data
-                    .map(
-                      (item) => DataRow(
-                            cells: [
-                              DataCell(
-                                Text(item.categoryName),
-                                showEditIcon: false,
-                                placeholder: false,
-                              ),
-                              DataCell(
-                                Text(item.datasets[0].total.toString()),
-                                showEditIcon: false,
-                                placeholder: false,
-                              ),
-                              DataCell(
-                                Text(item.datasets[1].total.toString()),
-                                showEditIcon: false,
-                                placeholder: false,
-                              ),
-                              DataCell(
-                                Text(item.datasets[2].total.toString()),
-                                showEditIcon: false,
-                                placeholder: false,
-                              )
-                            ],
-                          ),
-                    )
-                    .toList());
+            return SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: DataTable(
+                  onSelectAll: (b) {},
+                  sortColumnIndex: 0,
+                  sortAscending: true,
+                  columns: <DataColumn>[
+                    DataColumn(
+                      label: Text("Category"),
+                      numeric: false,
+                    ),
+                    DataColumn(
+                      label: Text("3 Months Ago"),
+                      numeric: true,
+                    ),
+                    DataColumn(
+                      label: Text("Last Month"),
+                      numeric: true,
+                    ),
+                    DataColumn(
+                      label: Text("This Month"),
+                      numeric: true,
+                    ),
+                  ],
+                  rows: snapshot.data
+                      .map(
+                        (item) => DataRow(
+                              cells: [
+                                DataCell(
+                                  Text(item.categoryName),
+                                  showEditIcon: false,
+                                  placeholder: false,
+                                ),
+                                DataCell(
+                                  Text(item.datasets[0].total.toString()),
+                                  showEditIcon: false,
+                                  placeholder: false,
+                                ),
+                                DataCell(
+                                  Text(item.datasets[1].total.toString()),
+                                  showEditIcon: false,
+                                  placeholder: false,
+                                ),
+                                DataCell(
+                                  Text(item.datasets[2].total.toString()),
+                                  showEditIcon: false,
+                                  placeholder: false,
+                                )
+                              ],
+                            ),
+                      )
+                      .toList()),
+            );
           } else {
-            return CircularProgressIndicator();
+            return LoadingWidget(
+              visible: true,
+            );
           }
         },
       );
@@ -125,10 +104,8 @@ class _CategoryWiseRecentMonthsReportScreenState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Categorywise Recent Months Report')),
-      body: ListView(padding: const EdgeInsets.all(20.0), children: <Widget>[
-        bodyData(),
-      ]),
+      appBar: AppBar(title: const Text('Categorywise Recent Months')),
+      body: bodyData(),
       drawer: CommonDrawer(),
     );
   }

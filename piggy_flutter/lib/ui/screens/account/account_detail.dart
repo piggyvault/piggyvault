@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:piggy_flutter/models/account.dart';
 import 'package:piggy_flutter/models/account_detail_state.dart';
-import 'package:piggy_flutter/ui/pages/account/account_detail_bloc.dart';
+import 'package:piggy_flutter/ui/screens/account/account_detail_bloc.dart';
 import 'package:piggy_flutter/ui/widgets/add_transaction_fab.dart';
 import 'package:piggy_flutter/ui/widgets/common/empty_result_widget.dart';
 import 'package:piggy_flutter/ui/widgets/common/error_display_widget.dart';

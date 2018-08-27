@@ -8,10 +8,10 @@ import 'package:piggy_flutter/blocs/category_bloc.dart';
 import 'package:piggy_flutter/blocs/transaction_bloc.dart';
 import 'package:piggy_flutter/blocs/user_bloc.dart';
 import 'package:piggy_flutter/models/transaction.dart';
-import 'package:piggy_flutter/ui/pages/account/account_list.dart';
 import 'package:piggy_flutter/ui/pages/home/recent.dart';
 import 'package:piggy_flutter/ui/pages/home/summary.dart';
 import 'package:piggy_flutter/ui/pages/transaction/transaction_detail.dart';
+import 'package:piggy_flutter/ui/screens/account/account_list.dart';
 import 'package:piggy_flutter/ui/widgets/common/common_drawer.dart';
 import 'package:connectivity/connectivity.dart';
 

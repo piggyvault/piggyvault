@@ -37,7 +37,8 @@ class RestClient {
 
       return new MappedNetworkServiceResponse<T>(
           mappedResult: resultClass["result"],
-          networkServiceResponse: new ApiResponse<T>(success: true));
+          networkServiceResponse: new ApiResponse<T>(
+              success: true, content: resultClass["result"]));
     } else {
       var errorResponse = response.body;
       return new MappedNetworkServiceResponse<T>(

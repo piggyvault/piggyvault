@@ -8,9 +8,9 @@ import 'package:piggy_flutter/models/category.dart';
 import 'package:piggy_flutter/models/user.dart';
 import 'package:piggy_flutter/ui/pages/category/category_list.dart';
 import 'package:piggy_flutter/ui/pages/home/home.dart';
-import 'package:piggy_flutter/ui/pages/login/login_page.dart';
 import 'package:piggy_flutter/ui/screens/reports/categorywise_recent_months_report_screen.dart';
 import 'package:piggy_flutter/ui/widgets/about_tile.dart';
+import 'package:piggy_flutter/utils/uidata.dart';
 
 class CommonDrawer extends StatelessWidget {
   final menuTextStyle = TextStyle(fontWeight: FontWeight.w700, fontSize: 18.0);
@@ -64,10 +64,9 @@ class CommonDrawer extends StatelessWidget {
               color: Colors.red,
             ),
             onTap: (() {
-              userBloc.logout().then((done) => Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(builder: (context) => LoginPage()),
-                  ));
+              userBloc.logout().then((done) => Navigator
+                  .of(context)
+                  .pushReplacementNamed(UIData.loginRoute));
             }),
           ),
           Divider(),

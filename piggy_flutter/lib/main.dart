@@ -8,7 +8,7 @@ import 'package:piggy_flutter/blocs/category_bloc.dart';
 import 'package:piggy_flutter/blocs/transaction_bloc.dart';
 import 'package:piggy_flutter/blocs/user_bloc.dart';
 import 'package:piggy_flutter/ui/pages/category/category_list.dart';
-import 'package:piggy_flutter/ui/pages/login/login_page.dart';
+import 'package:piggy_flutter/ui/screens/login/login_page.dart';
 import 'package:piggy_flutter/ui/screens/reports/categorywise_recent_months_report_screen.dart';
 import 'package:piggy_flutter/utils/uidata.dart';
 import 'package:piggy_flutter/ui/pages/home/home.dart';
@@ -58,7 +58,7 @@ class MyAppState extends State<MyApp> {
       theme: new ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: new LoginPage(),
+      home: LoginPage(),
       routes: <String, WidgetBuilder>{
         UIData.loginRoute: (BuildContext context) => LoginPage(),
         UIData.dashboardRoute: (BuildContext context) => HomePage(),

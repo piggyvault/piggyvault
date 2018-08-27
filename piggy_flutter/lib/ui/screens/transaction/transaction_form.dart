@@ -9,7 +9,7 @@ import 'package:piggy_flutter/models/category.dart';
 import 'package:piggy_flutter/models/transaction.dart';
 import 'package:piggy_flutter/models/transaction_edit_dto.dart';
 import 'package:piggy_flutter/services/transaction_service.dart';
-import 'package:piggy_flutter/ui/pages/transaction/transaction_form_bloc.dart';
+import 'package:piggy_flutter/ui/screens/transaction/transaction_form_bloc.dart';
 import 'package:piggy_flutter/ui/widgets/api_subscription.dart';
 import 'package:piggy_flutter/utils/uidata.dart';
 import 'package:piggy_flutter/ui/widgets/date_time_picker.dart';
@@ -60,7 +60,8 @@ class TransactionFormPageState extends State<TransactionFormPage> {
   void initState() {
     super.initState();
     transactionFormBloc = TransactionFormBloc();
-    apiStreamSubscription = apiSubscription(stream:transactionFormBloc.state,context: context, key:_scaffoldKey);
+    apiStreamSubscription = apiSubscription(
+        stream: transactionFormBloc.state, context: context, key: _scaffoldKey);
 
     _transactionTime =
         TimeOfDay(hour: _transactionDate.hour, minute: _transactionDate.minute);

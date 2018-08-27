@@ -60,7 +60,7 @@ class TransactionFormPageState extends State<TransactionFormPage> {
   void initState() {
     super.initState();
     transactionFormBloc = TransactionFormBloc();
-    apiStreamSubscription = apiSubscription(transactionFormBloc.state, context);
+    apiStreamSubscription = apiSubscription(stream:transactionFormBloc.state,context: context, key:_scaffoldKey);
 
     _transactionTime =
         TimeOfDay(hour: _transactionDate.hour, minute: _transactionDate.minute);

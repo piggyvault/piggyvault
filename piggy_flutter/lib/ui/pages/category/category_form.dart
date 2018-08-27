@@ -38,7 +38,8 @@ class CategoryFormPageState extends State<CategoryFormPage> {
       _categorynameFieldController =
           TextEditingController(text: widget.category.name);
     }
-    _apiStreamSubscription = apiSubscription(_bloc.state, context);
+    _apiStreamSubscription = apiSubscription(
+        stream: _bloc.state, context: context, key: _scaffoldKey);
   }
 
   @override

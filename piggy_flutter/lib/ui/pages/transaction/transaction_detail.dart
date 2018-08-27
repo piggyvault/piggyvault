@@ -23,6 +23,7 @@ class TransactionDetailPage extends StatefulWidget {
 }
 
 class TransactionDetailPageState extends State<TransactionDetailPage> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final _formatter = DateFormat("EEE, MMM d, ''yy");
   final _commentTimeFormatter = DateFormat("h:mm a, EEE, MMM d, ''yy");
   final TextEditingController _commentController = new TextEditingController();
@@ -33,7 +34,8 @@ class TransactionDetailPageState extends State<TransactionDetailPage> {
   void initState() {
     super.initState();
     _bloc = TransactionDetailBloc(widget.transaction);
-    _apiStreamSubscription = apiSubscription(_bloc.state, context);
+    _apiStreamSubscription = apiSubscription(
+        stream: _bloc.state, context: context, key: _scaffoldKey);
   }
 
   @override
@@ -43,6 +45,7 @@ class TransactionDetailPageState extends State<TransactionDetailPage> {
     final TextStyle dialogTextStyle =
         theme.textTheme.subhead.copyWith(color: theme.textTheme.caption.color);
     return Scaffold(
+      key: _scaffoldKey,
       appBar: AppBar(
         title: Text('Transaction Details'),
       ),

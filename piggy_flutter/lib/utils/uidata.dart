@@ -8,7 +8,7 @@ class UIData {
 
   //strings
   static const String appName = "Piggy";
-  static const String appVersion = "0.7.0";
+  static const String appVersion = "0.8.0";
   static const String authToken = "authToken";
   static const String transaction_type_expense = "Expense";
   static const String transaction_type_income = "Income";

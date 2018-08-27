@@ -6,7 +6,7 @@ import 'package:piggy_flutter/blocs/bloc_provider.dart';
 import 'package:piggy_flutter/blocs/category_bloc.dart';
 import 'package:piggy_flutter/blocs/transaction_bloc.dart';
 import 'package:piggy_flutter/models/api_request.dart';
-import 'package:piggy_flutter/ui/pages/home/home.dart';
+import 'package:piggy_flutter/ui/screens/home/home.dart';
 import 'package:piggy_flutter/ui/widgets/common/common_dialogs.dart';
 import 'package:piggy_flutter/utils/uidata.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';

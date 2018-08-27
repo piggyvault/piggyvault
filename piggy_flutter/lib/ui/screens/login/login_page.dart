@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:piggy_flutter/ui/pages/home/home.dart';
+import 'package:piggy_flutter/ui/screens/home/home.dart';
 import 'package:piggy_flutter/ui/screens/login/login_bloc.dart';
 import 'package:piggy_flutter/ui/widgets/api_subscription.dart';
 import 'package:piggy_flutter/utils/uidata.dart';

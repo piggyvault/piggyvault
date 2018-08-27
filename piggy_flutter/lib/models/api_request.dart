@@ -1,6 +1,12 @@
 import 'package:piggy_flutter/models/api_response.dart';
 
-enum ApiType { createOrUpdateTransaction, createCategory, updateCategory, deleteTransaction }
+enum ApiType {
+  createOrUpdateTransaction,
+  createCategory,
+  updateCategory,
+  deleteTransaction,
+  login
+}
 
 class ApiRequest<T> {
   ApiType type;
@@ -11,6 +17,6 @@ class ApiRequest<T> {
 
   @override
   String toString() {
-    return 'ApiRequest isInProcess $isInProcess, type $type';
+    return 'ApiRequest isInProcess $isInProcess, type $type $response';
   }
 }

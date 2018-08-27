@@ -1,6 +1,9 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
-import 'package:piggy_flutter/blocs/user_bloc.dart';
 import 'package:piggy_flutter/ui/pages/home/home.dart';
+import 'package:piggy_flutter/ui/screens/login/login_bloc.dart';
+import 'package:piggy_flutter/ui/widgets/api_subscription.dart';
 import 'package:piggy_flutter/utils/uidata.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -11,13 +14,35 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  final UserBloc _userBloc = UserBloc();
+  LoginBloc _bloc;
+  StreamSubscription _apiSubscription;
 
   @override
   void initState() {
     super.initState();
-    _userBloc.isAuthenticated.listen(onLoginResult);
+    _bloc = LoginBloc();
+
+    _apiSubscription = apiSubscription(
+        stream: _bloc.state, context: context, key: _scaffoldKey);
     authCheck();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      key: _scaffoldKey,
+      backgroundColor: Colors.white,
+      body: Center(
+        child: loginBody(),
+      ),
+    );
+  }
+
+  @override
+  dispose() {
+    _bloc?.dispose();
+    _apiSubscription?.cancel();
+    super.dispose();
   }
 
   void authCheck() async {
@@ -35,17 +60,6 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      key: _scaffoldKey,
-      backgroundColor: Colors.white,
-      body: Center(
-        child: loginBody(_userBloc),
-      ),
-    );
-  }
-
   final logo = Hero(
     tag: 'hero',
     child: CircleAvatar(
@@ -55,12 +69,12 @@ class _LoginPageState extends State<LoginPage> {
     ),
   );
 
-  loginBody(UserBloc userBloc) => Column(
+  loginBody() => Column(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: <Widget>[loginHeader(userBloc), loginFields(userBloc)],
+        children: <Widget>[loginHeader(), loginFields()],
       );
 
-  loginHeader(UserBloc userBloc) => Column(
+  loginHeader() => Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
           logo,
@@ -74,22 +88,25 @@ class _LoginPageState extends State<LoginPage> {
           SizedBox(
             height: 5.0,
           ),
-          subHeading(userBloc),
+          Text(
+            "Sign in to continue",
+            style: TextStyle(color: Colors.grey),
+          ),
         ],
       );
 
-  loginFields(UserBloc userBloc) => Container(
+  loginFields() => Container(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
-            familyField(userBloc),
-            usernameField(userBloc),
-            passwordField(userBloc),
+            familyField(),
+            usernameField(),
+            passwordField(),
             SizedBox(
               height: 30.0,
             ),
-            submitButton(userBloc),
+            submitButton(),
             SizedBox(
               height: 5.0,
             ),
@@ -101,25 +118,9 @@ class _LoginPageState extends State<LoginPage> {
         ),
       );
 
-  Widget subHeading(UserBloc userBloc) {
+  Widget familyField() {
     return StreamBuilder(
-      stream: userBloc.isAuthenticating,
-      builder: (context, snapshot) {
-        if (!snapshot.hasData || !snapshot.data) {
-          return Text(
-            "Sign in to continue",
-            style: TextStyle(color: Colors.grey),
-          );
-        } else {
-          return CircularProgressIndicator();
-        }
-      },
-    );
-  }
-
-  Widget familyField(UserBloc userBloc) {
-    return StreamBuilder(
-      stream: userBloc.tenancyName,
+      stream: _bloc.tenancyName,
       builder: (context, snapshot) {
         return Container(
           padding: EdgeInsets.symmetric(vertical: 16.0, horizontal: 30.0),
@@ -130,7 +131,7 @@ class _LoginPageState extends State<LoginPage> {
               labelText: "Family",
               errorText: snapshot.error,
             ),
-            onChanged: userBloc.changeTenancyName,
+            onChanged: _bloc.changeTenancyName,
             keyboardType: TextInputType.emailAddress,
           ),
         );
@@ -138,9 +139,9 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Widget usernameField(UserBloc userBloc) {
+  Widget usernameField() {
     return StreamBuilder(
-      stream: userBloc.usernameOrEmailAddress,
+      stream: _bloc.usernameOrEmailAddress,
       builder: (context, snapshot) {
         return Container(
           padding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 30.0),
@@ -151,7 +152,7 @@ class _LoginPageState extends State<LoginPage> {
               labelText: "Username",
               errorText: snapshot.error,
             ),
-            onChanged: userBloc.changeUsernameOrEmailAddress,
+            onChanged: _bloc.changeUsernameOrEmailAddress,
             keyboardType: TextInputType.emailAddress,
           ),
         );
@@ -159,9 +160,9 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Widget passwordField(UserBloc userBloc) {
+  Widget passwordField() {
     return StreamBuilder(
-      stream: userBloc.password,
+      stream: _bloc.password,
       builder: (context, snapshot) {
         return Container(
           padding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 30.0),
@@ -173,16 +174,16 @@ class _LoginPageState extends State<LoginPage> {
               labelText: "Password",
               errorText: snapshot.error,
             ),
-            onChanged: userBloc.changePassword,
+            onChanged: _bloc.changePassword,
           ),
         );
       },
     );
   }
 
-  Widget submitButton(UserBloc userBloc) {
+  Widget submitButton() {
     return StreamBuilder(
-      stream: userBloc.submitValid,
+      stream: _bloc.submitValid,
       builder: (context, snapshot) {
         return Container(
           padding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 30.0),
@@ -195,30 +196,24 @@ class _LoginPageState extends State<LoginPage> {
               style: TextStyle(color: Colors.white),
             ),
             color: Colors.green,
-            onPressed: snapshot.hasData ? userBloc.submit : null,
+            onPressed: snapshot.hasData ? _bloc.submit : null,
           ),
         );
       },
     );
   }
 
-  onLoginResult(bool isAuthenticated) {
-    if (isAuthenticated) {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-            builder: (context) => HomePage(
-                  isInitialLoading: true,
-                )),
-      );
-    } else {
-      _scaffoldKey.currentState?.showSnackBar(
-        SnackBar(
-          backgroundColor: Colors.red,
-          content: const Text(
-              'Something went wrong, check the credentials and try again.'),
-        ),
-      );
-    }
-  }
+  // onLoginResult(bool isAuthenticated) {
+  //   if (isAuthenticated) {
+  //     Navigator.pushReplacement(
+  //       context,
+  //       MaterialPageRoute(
+  //           builder: (context) => HomePage(
+  //                 isInitialLoading: true,
+  //               )),
+  //     );
+  //   } else {
+
+  //   }
+  // }
 }

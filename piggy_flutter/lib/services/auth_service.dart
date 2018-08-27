@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:piggy_flutter/models/api_response.dart';
 import 'package:piggy_flutter/models/user.dart';
 import 'package:piggy_flutter/services/app_service_base.dart';
 import 'package:piggy_flutter/utils/uidata.dart';
@@ -17,14 +18,14 @@ class AuthService extends AppServiceBase {
     return await prefs.remove(UIData.authToken);
   }
 
-  Future<String> authenticate(LoginInput input) async {
+  Future<ApiResponse<dynamic>> authenticate(LoginInput input) async {
     var result = await rest.postAsync('Account/Authenticate', {
       "tenancyName": input.tenancyName,
       "usernameOrEmailAddress": input.usernameOrEmailAddress,
       "password": input.password
     });
 
-    return result.mappedResult;
+    return result.networkServiceResponse;
   }
 
   Future<User> getCurrentLoginInformation() async {

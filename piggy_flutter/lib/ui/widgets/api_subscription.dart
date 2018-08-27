@@ -6,12 +6,17 @@ import 'package:piggy_flutter/blocs/bloc_provider.dart';
 import 'package:piggy_flutter/blocs/category_bloc.dart';
 import 'package:piggy_flutter/blocs/transaction_bloc.dart';
 import 'package:piggy_flutter/models/api_request.dart';
+import 'package:piggy_flutter/ui/pages/home/home.dart';
 import 'package:piggy_flutter/ui/widgets/common/common_dialogs.dart';
 import 'package:piggy_flutter/utils/uidata.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-apiSubscription(Stream<ApiRequest> apiResult, BuildContext context) {
-  apiResult.listen((ApiRequest p) {
+apiSubscription(
+    {@required Stream<ApiRequest> stream,
+    @required BuildContext context,
+    @required GlobalKey<ScaffoldState> key}) {
+  stream.listen((ApiRequest p) {
+    print(p);
     if (p.isInProcess) {
       showProgress(context);
     } else {
@@ -23,6 +28,25 @@ apiSubscription(Stream<ApiRequest> apiResult, BuildContext context) {
         final TransactionBloc transactionBloc =
             BlocProvider.of<TransactionBloc>(context);
         switch (p.type) {
+          case ApiType.login:
+            {
+              if (p.response.content == null) {
+                showErrorMessage(
+                    key: key,
+                    errorMessage:
+                        'Something went wrong, check the credentials and try again.');
+              } else {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => HomePage(
+                          isInitialLoading: true,
+                        ),
+                  ),
+                );
+              }
+            }
+            break;
           case ApiType.createOrUpdateTransaction:
           case ApiType.deleteTransaction:
             {
@@ -57,4 +81,21 @@ apiSubscription(Stream<ApiRequest> apiResult, BuildContext context) {
       }
     }
   });
+}
+
+void showMessage(
+    {@required GlobalKey<ScaffoldState> key,
+    @required Color color,
+    @required String message}) {
+  key?.currentState?.showSnackBar(
+    SnackBar(
+      backgroundColor: color,
+      content: Text(message),
+    ),
+  );
+}
+
+void showErrorMessage(
+    {@required GlobalKey<ScaffoldState> key, @required String errorMessage}) {
+  showMessage(key: key, color: Colors.red, message: errorMessage);
 }

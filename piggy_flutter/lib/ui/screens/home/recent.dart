@@ -105,7 +105,7 @@ class RecentPage extends StatelessWidget {
                         // Fade in the Result if available
                         TransactionList(
                           items: state is RecentTransactionsPopulated
-                              ? state.result.items
+                              ? state.result.sections
                               : [],
                         ),
                       ],

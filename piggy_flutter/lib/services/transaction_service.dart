@@ -52,7 +52,9 @@ class TransactionService extends AppServiceBase {
       });
     }
     return TransactionsResult(
-        groupTransactions(transactions: transactions, groupBy: input.groupBy));
+        sections: groupTransactions(
+            transactions: transactions, groupBy: input.groupBy),
+        transactions: transactions);
   }
 
   Future<TransactionSummary> getTransactionSummary(String duration) async {
@@ -113,9 +115,9 @@ class TransactionService extends AppServiceBase {
   }
 
   Future<ApiResponse<dynamic>> deleteTransaction(String id) async {
-    final result = await rest
-        .postAsync('services/app/transaction/DeleteTransaction', {
-      "id": id,      
+    final result =
+        await rest.postAsync('services/app/transaction/DeleteTransaction', {
+      "id": id,
     });
 
     return result.networkServiceResponse;

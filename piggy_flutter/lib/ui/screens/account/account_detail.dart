@@ -148,7 +148,7 @@ class _AccountDetailPageState extends State<AccountDetailPage> {
                         // Fade in the Result if available
                         TransactionList(
                           items: state is AccountDetailPopulated
-                              ? state.result.items
+                              ? state.result.sections
                               : [],
                         ),
                       ],

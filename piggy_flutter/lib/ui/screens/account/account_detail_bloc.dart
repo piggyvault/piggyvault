@@ -53,7 +53,7 @@ class AccountDetailBloc implements BlocBase {
   }
 
   Future<Null> _getAccountDetails() async {
-    print('######### AccountDetailBloc _getAccountDetails');
+    // print('######### AccountDetailBloc _getAccountDetails');
     final result = await _accountService.getAccountDetails(accountId);
     _account.add(result);
   }
@@ -63,7 +63,7 @@ class AccountDetailBloc implements BlocBase {
   ) async {
     _pageIndex += delta;
 
-    print('######### AccountDetailBloc _getTransactions $_pageIndex');
+    // print('######### AccountDetailBloc _getTransactions $_pageIndex');
     var startMonth = DateTime.now().month + _pageIndex;
     var startYear = DateTime.now().year;
 

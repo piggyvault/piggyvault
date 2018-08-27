@@ -4,6 +4,11 @@ class ApiResponse<T> {
   String message;
 
   ApiResponse({this.content, this.success, this.message});
+
+  @override
+  String toString() {
+    return 'ApiResponse content $content success $success message $message';
+  }
 }
 
 class MappedNetworkServiceResponse<T> {

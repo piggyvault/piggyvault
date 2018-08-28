@@ -1,0 +1,229 @@
+import 'dart:async';
+
+import 'package:flutter/material.dart';
+import 'package:piggy_flutter/models/api_request.dart';
+import 'package:piggy_flutter/models/currency.dart';
+import 'package:piggy_flutter/ui/screens/account/account_form_bloc.dart';
+import 'package:piggy_flutter/ui/screens/account/account_form_model.dart';
+import 'package:piggy_flutter/ui/screens/account/account_type_model.dart';
+import 'package:piggy_flutter/ui/widgets/api_subscription.dart';
+
+class AccountFormScreen extends StatefulWidget {
+  final String title;
+
+  const AccountFormScreen({Key key, this.title}) : super(key: key);
+
+  @override
+  _AccountFormScreenState createState() => _AccountFormScreenState();
+}
+
+class _AccountFormScreenState extends State<AccountFormScreen> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  bool _autoValidate = false;
+  bool _formWasEdited = false;
+
+  StreamSubscription<ApiRequest> _apiStreamSubscription;
+  AccountFormBloc _bloc;
+  TextEditingController _nameFieldController;
+  AccountFormModel _account;
+
+  @override
+  void initState() {
+    super.initState();
+    _bloc = AccountFormBloc(account: null);
+    _apiStreamSubscription = apiSubscription(
+        stream: _bloc.state, context: context, key: _scaffoldKey);
+    _account = AccountFormModel(id: null);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final ThemeData theme = Theme.of(context);
+    return Scaffold(
+      key: _scaffoldKey,
+      appBar: AppBar(
+        title: Text(widget.title),
+        actions: <Widget>[
+          submitButton(theme),
+        ],
+      ),
+      body: DropdownButtonHideUnderline(
+        child: SafeArea(
+          top: false,
+          bottom: false,
+          child: Form(
+            key: _formKey,
+            autovalidate: _autoValidate,
+            onWillPop: _onWillPop,
+            child: ListView(
+              padding: const EdgeInsets.all(16.0),
+              children: <Widget>[
+                _nameField(theme),
+                InputDecorator(
+                  decoration: const InputDecoration(
+                    labelText: 'Currency',
+                    hintText: 'Choose a currency',
+                  ),
+                  isEmpty: _account.currencyId == null,
+                  child: _currencyField(),
+                ),
+                InputDecorator(
+                  decoration: const InputDecoration(
+                    labelText: 'Type',
+                    hintText: 'Choose an account type',
+                  ),
+                  isEmpty: _account.accountTypeId == null,
+                  child: _typeField(),
+                ),
+                const SizedBox(height: 24.0),
+                Text('* all fields are mandatory',
+                    style: Theme.of(context).textTheme.caption),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  void dispose() {
+    _apiStreamSubscription?.cancel();
+    super.dispose();
+  }
+
+  Future<bool> _onWillPop() async {
+    if (!_formWasEdited) return true;
+
+    final ThemeData theme = Theme.of(context);
+    final TextStyle dialogTextStyle =
+        theme.textTheme.subhead.copyWith(color: theme.textTheme.caption.color);
+
+    return await showDialog<bool>(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              content: Text('Discard unsaved changes?', style: dialogTextStyle),
+              actions: <Widget>[
+                FlatButton(
+                    child: const Text('CANCEL'),
+                    onPressed: () {
+                      Navigator.of(context).pop(
+                          false); // Pops the confirmation dialog but not the page.
+                    }),
+                FlatButton(
+                    child: const Text('DISCARD'),
+                    onPressed: () {
+                      Navigator.of(context).pop(
+                          true); // Returning true to _onWillPop will pop again.
+                    })
+              ],
+            );
+          },
+        ) ??
+        false;
+  }
+
+  Widget _nameField(ThemeData theme) {
+    return StreamBuilder(
+      stream: _bloc.name,
+      builder: (context, snapshot) {
+        return TextField(
+          enabled: true,
+          controller: _nameFieldController,
+          decoration: InputDecoration(
+              labelText: 'Account name',
+              border: OutlineInputBorder(),
+              errorText: snapshot.error),
+          style: theme.textTheme.headline,
+          onChanged: _bloc.changeName,
+        );
+      },
+    );
+  }
+
+  Widget _currencyField() => StreamBuilder<List<Currency>>(
+      stream: _bloc.currencies,
+      builder: (context, snapshot) {
+        if (snapshot.hasData && snapshot.data.length > 0) {
+          return DropdownButton<int>(
+            value: _account.currencyId,
+            onChanged: (int value) {
+              setState(() {
+                _account.currencyId = value;
+              });
+            },
+            items: snapshot.data.map((Currency currency) {
+              return DropdownMenuItem<int>(
+                value: currency.id,
+                child: Text(currency.name),
+              );
+            }).toList(),
+          );
+        } else {
+          return LinearProgressIndicator();
+        }
+      });
+
+  Widget _typeField() => StreamBuilder<List<AccountType>>(
+      stream: _bloc.types,
+      builder: (context, snapshot) {
+        if (snapshot.hasData && snapshot.data.length > 0) {
+          return DropdownButton<int>(
+            value: _account.accountTypeId,
+            onChanged: (int value) {
+              setState(() {
+                _account.accountTypeId = value;
+              });
+            },
+            items: snapshot.data.map((AccountType type) {
+              return DropdownMenuItem<int>(
+                value: type.id,
+                child: Text(type.name),
+              );
+            }).toList(),
+          );
+        } else {
+          return LinearProgressIndicator();
+        }
+      });
+
+  Widget submitButton(ThemeData theme) {
+    return StreamBuilder(
+      stream: _bloc.name,
+      builder: (context, snapshot) {
+        return FlatButton(
+          child: Text('SAVE',
+              style: theme.textTheme.body1.copyWith(color: Colors.white)),
+          onPressed: snapshot.hasData ? onSave : null,
+        );
+      },
+    );
+  }
+
+  void onSave() {
+    if (_isValidAccount()) {
+      _bloc.submit(_account);
+    }
+  }
+
+  bool _isValidAccount() {
+    if (_account.currencyId == null) {
+      String error = 'Currency is required.';
+      showInSnackBar(error);
+      return false;
+    } else if (_account.accountTypeId == null) {
+      String error = 'Account type is required.';
+      showInSnackBar(error);
+      return false;
+    }
+    return true;
+  }
+
+  void showInSnackBar(String value) {
+    _scaffoldKey.currentState.showSnackBar(SnackBar(
+      content: Text(value),
+      backgroundColor: Colors.red,
+    ));
+  }
+}

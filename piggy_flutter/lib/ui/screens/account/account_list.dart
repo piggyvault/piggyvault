@@ -5,8 +5,9 @@ import 'package:piggy_flutter/blocs/account_bloc.dart';
 import 'package:piggy_flutter/blocs/bloc_provider.dart';
 import 'package:piggy_flutter/blocs/transaction_bloc.dart';
 import 'package:piggy_flutter/models/account.dart';
+import 'package:piggy_flutter/ui/screens/account/account_form.dart';
 import 'package:piggy_flutter/ui/widgets/account_group_list.dart';
-import 'package:piggy_flutter/ui/widgets/add_transaction_fab.dart';
+import 'package:piggy_flutter/utils/common.dart';
 
 class AccountListPage extends StatelessWidget {
   AccountListPage({Key key}) : super(key: key);
@@ -34,7 +35,21 @@ class AccountListPage extends StatelessWidget {
           familyAccountsBuilder(_accountBloc, _transactionBloc)
         ]),
       ),
-      floatingActionButton: AddTransactionFab(),
+      // floatingActionButton: FloatingActionButton(
+      //     key: ValueKey<Color>(Theme.of(context).buttonColor),
+      //     tooltip: 'Add new account',
+      //     backgroundColor: Colors.amber,
+      //     child: Icon(Icons.add),
+      //     onPressed: () async {
+      //       await Navigator.push(
+      //           context,
+      //           MaterialPageRoute<DismissDialogAction>(
+      //             builder: (BuildContext context) => AccountFormScreen(
+      //                   title: "Add Account",
+      //                 ),
+      //             fullscreenDialog: true,
+      //           ));
+      //     }),
     );
   }
 
@@ -63,14 +78,7 @@ class AccountListPage extends StatelessWidget {
   Future<Null> _handleRefresh(AccountBloc accountBloc) {
     return accountBloc.getTenantAccounts(true).then((_) {
       _scaffoldKey.currentState?.showSnackBar(
-        new SnackBar(
-          content: const Text('Refresh complete'),
-          action: new SnackBarAction(
-              label: 'RETRY',
-              onPressed: () {
-                _refreshIndicatorKey.currentState.show();
-              }),
-        ),
+        new SnackBar(content: const Text('Refresh complete')),
       );
     });
   }

@@ -35,6 +35,8 @@ class RestClient {
       var jsonResult = response.body;
       dynamic resultClass = jsonDecode(jsonResult);
 
+      // print(jsonResult);
+
       return new MappedNetworkServiceResponse<T>(
           mappedResult: resultClass["result"],
           networkServiceResponse: new ApiResponse<T>(

@@ -5,7 +5,9 @@ enum ApiType {
   createCategory,
   updateCategory,
   deleteTransaction,
-  login
+  login,
+  createAccount,
+  updateAccount
 }
 
 class ApiRequest<T> {

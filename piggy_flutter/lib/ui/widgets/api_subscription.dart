@@ -77,6 +77,16 @@ apiSubscription(
                   type: p.type);
             }
             break;
+          case ApiType.createAccount:
+            {
+              accountBloc.accountsRefresh(true);
+              showSuccess(
+                  context: context,
+                  message: UIData.success,
+                  icon: FontAwesomeIcons.check,
+                  type: p.type);
+            }
+            break;
         }
       }
     }

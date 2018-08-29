@@ -40,59 +40,61 @@ class _CategoryWiseRecentMonthsReportScreenState
         stream: _bloc.categoryWiseTransactionSummaryHistory,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            return SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: DataTable(
-                  onSelectAll: (b) {},
-                  sortColumnIndex: 0,
-                  sortAscending: true,
-                  columns: <DataColumn>[
-                    DataColumn(
-                      label: Text("Category"),
-                      numeric: false,
-                    ),
-                    DataColumn(
-                      label: Text("3 Months Ago"),
-                      numeric: true,
-                    ),
-                    DataColumn(
-                      label: Text("Last Month"),
-                      numeric: true,
-                    ),
-                    DataColumn(
-                      label: Text("This Month"),
-                      numeric: true,
-                    ),
-                  ],
-                  rows: snapshot.data
-                      .map(
-                        (item) => DataRow(
-                              cells: [
-                                DataCell(
-                                  Text(item.categoryName),
-                                  showEditIcon: false,
-                                  placeholder: false,
-                                ),
-                                DataCell(
-                                  Text(item.datasets[0].total.toString()),
-                                  showEditIcon: false,
-                                  placeholder: false,
-                                ),
-                                DataCell(
-                                  Text(item.datasets[1].total.toString()),
-                                  showEditIcon: false,
-                                  placeholder: false,
-                                ),
-                                DataCell(
-                                  Text(item.datasets[2].total.toString()),
-                                  showEditIcon: false,
-                                  placeholder: false,
-                                )
-                              ],
-                            ),
-                      )
-                      .toList()),
-            );
+            return ListView(children: [
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: DataTable(
+                    onSelectAll: (b) {},
+                    sortColumnIndex: 0,
+                    sortAscending: true,
+                    columns: <DataColumn>[
+                      DataColumn(
+                        label: Text("Category"),
+                        numeric: false,
+                      ),
+                      DataColumn(
+                        label: Text("3 Months Ago"),
+                        numeric: true,
+                      ),
+                      DataColumn(
+                        label: Text("Last Month"),
+                        numeric: true,
+                      ),
+                      DataColumn(
+                        label: Text("This Month"),
+                        numeric: true,
+                      ),
+                    ],
+                    rows: snapshot.data
+                        .map(
+                          (item) => DataRow(
+                                cells: [
+                                  DataCell(
+                                    Text(item.categoryName),
+                                    showEditIcon: false,
+                                    placeholder: false,
+                                  ),
+                                  DataCell(
+                                    Text(item.datasets[0].total.toString()),
+                                    showEditIcon: false,
+                                    placeholder: false,
+                                  ),
+                                  DataCell(
+                                    Text(item.datasets[1].total.toString()),
+                                    showEditIcon: false,
+                                    placeholder: false,
+                                  ),
+                                  DataCell(
+                                    Text(item.datasets[2].total.toString()),
+                                    showEditIcon: false,
+                                    placeholder: false,
+                                  )
+                                ],
+                              ),
+                        )
+                        .toList()),
+              )
+            ]);
           } else {
             return LoadingWidget(
               visible: true,

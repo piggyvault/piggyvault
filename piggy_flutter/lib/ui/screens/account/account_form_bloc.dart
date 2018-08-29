@@ -9,6 +9,7 @@ import 'package:piggy_flutter/ui/screens/account/account_type_model.dart';
 import 'package:rxdart/rxdart.dart';
 
 class AccountFormBloc implements BlocBase {
+  final String accountId;
   AccountFormModel account;
 
   final AccountService _accountService = AccountService();
@@ -26,26 +27,30 @@ class AccountFormBloc implements BlocBase {
   final _state = BehaviorSubject<ApiRequest>();
   Stream<ApiRequest> get state => _state.stream;
 
-  AccountFormBloc({this.account}) {
+  AccountFormBloc(this.accountId) {
+    if (accountId == null) {
+      account = AccountFormModel(id: null);
+    } else {
+      _accountService
+          .getAccountForEdit(this.accountId)
+          .then((result) => account = result);
+    }
     _accountService.getCurrencies().then((result) => _currencies.add(result));
     _accountService.getAccountTypes().then((result) => _types.add(result));
   }
 
-  submit(AccountFormModel formData) async {
+  submit() async {
     ApiRequest request = ApiRequest(isInProcess: true);
     _state.add(request);
 
     final validName = _name.value;
 
-    if (account == null) {
-      account = AccountFormModel(id: null);
+    if (account.id == null) {
       request.type = ApiType.createAccount;
     } else {
       request.type = ApiType.updateAccount;
     }
     account.name = validName;
-    account.currencyId = formData.currencyId;
-    account.accountTypeId = formData.accountTypeId;
 
     final result = await _accountService.createOrUpdateAccount(account);
     request.response = result;

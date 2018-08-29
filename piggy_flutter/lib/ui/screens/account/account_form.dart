@@ -4,14 +4,15 @@ import 'package:flutter/material.dart';
 import 'package:piggy_flutter/models/api_request.dart';
 import 'package:piggy_flutter/models/currency.dart';
 import 'package:piggy_flutter/ui/screens/account/account_form_bloc.dart';
-import 'package:piggy_flutter/ui/screens/account/account_form_model.dart';
 import 'package:piggy_flutter/ui/screens/account/account_type_model.dart';
 import 'package:piggy_flutter/ui/widgets/api_subscription.dart';
 
 class AccountFormScreen extends StatefulWidget {
   final String title;
+  final String accountId;
 
-  const AccountFormScreen({Key key, this.title}) : super(key: key);
+  const AccountFormScreen({Key key, this.title, this.accountId})
+      : super(key: key);
 
   @override
   _AccountFormScreenState createState() => _AccountFormScreenState();
@@ -26,15 +27,13 @@ class _AccountFormScreenState extends State<AccountFormScreen> {
   StreamSubscription<ApiRequest> _apiStreamSubscription;
   AccountFormBloc _bloc;
   TextEditingController _nameFieldController;
-  AccountFormModel _account;
 
   @override
   void initState() {
     super.initState();
-    _bloc = AccountFormBloc(account: null);
+    _bloc = AccountFormBloc(widget.accountId);
     _apiStreamSubscription = apiSubscription(
         stream: _bloc.state, context: context, key: _scaffoldKey);
-    _account = AccountFormModel(id: null);
   }
 
   @override
@@ -65,7 +64,7 @@ class _AccountFormScreenState extends State<AccountFormScreen> {
                     labelText: 'Currency',
                     hintText: 'Choose a currency',
                   ),
-                  isEmpty: _account.currencyId == null,
+                  isEmpty: _bloc.account.currencyId == null,
                   child: _currencyField(),
                 ),
                 InputDecorator(
@@ -73,7 +72,7 @@ class _AccountFormScreenState extends State<AccountFormScreen> {
                     labelText: 'Type',
                     hintText: 'Choose an account type',
                   ),
-                  isEmpty: _account.accountTypeId == null,
+                  isEmpty: _bloc.account.accountTypeId == null,
                   child: _typeField(),
                 ),
                 const SizedBox(height: 24.0),
@@ -147,10 +146,10 @@ class _AccountFormScreenState extends State<AccountFormScreen> {
       builder: (context, snapshot) {
         if (snapshot.hasData && snapshot.data.length > 0) {
           return DropdownButton<int>(
-            value: _account.currencyId,
+            value: _bloc.account.currencyId,
             onChanged: (int value) {
               setState(() {
-                _account.currencyId = value;
+                _bloc.account.currencyId = value;
               });
             },
             items: snapshot.data.map((Currency currency) {
@@ -170,10 +169,10 @@ class _AccountFormScreenState extends State<AccountFormScreen> {
       builder: (context, snapshot) {
         if (snapshot.hasData && snapshot.data.length > 0) {
           return DropdownButton<int>(
-            value: _account.accountTypeId,
+            value: _bloc.account.accountTypeId,
             onChanged: (int value) {
               setState(() {
-                _account.accountTypeId = value;
+                _bloc.account.accountTypeId = value;
               });
             },
             items: snapshot.data.map((AccountType type) {
@@ -203,16 +202,16 @@ class _AccountFormScreenState extends State<AccountFormScreen> {
 
   void onSave() {
     if (_isValidAccount()) {
-      _bloc.submit(_account);
+      _bloc.submit();
     }
   }
 
   bool _isValidAccount() {
-    if (_account.currencyId == null) {
+    if (_bloc.account.currencyId == null) {
       String error = 'Currency is required.';
       showInSnackBar(error);
       return false;
-    } else if (_account.accountTypeId == null) {
+    } else if (_bloc.account.accountTypeId == null) {
       String error = 'Account type is required.';
       showInSnackBar(error);
       return false;

@@ -12,4 +12,10 @@ class AccountFormModel {
   String toString() {
     return 'AccountFormModel name $name id $id currencyId $currencyId accountTypeId $accountTypeId';
   }
+
+  AccountFormModel.fromJson(Map<String, dynamic> json)
+      : id = json['id'],
+        name = json['name'],
+        currencyId = json['currencyId'],
+        accountTypeId = json['accountTypeId'];
 }

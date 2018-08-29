@@ -35,21 +35,21 @@ class AccountListPage extends StatelessWidget {
           familyAccountsBuilder(_accountBloc, _transactionBloc)
         ]),
       ),
-      // floatingActionButton: FloatingActionButton(
-      //     key: ValueKey<Color>(Theme.of(context).buttonColor),
-      //     tooltip: 'Add new account',
-      //     backgroundColor: Colors.amber,
-      //     child: Icon(Icons.add),
-      //     onPressed: () async {
-      //       await Navigator.push(
-      //           context,
-      //           MaterialPageRoute<DismissDialogAction>(
-      //             builder: (BuildContext context) => AccountFormScreen(
-      //                   title: "Add Account",
-      //                 ),
-      //             fullscreenDialog: true,
-      //           ));
-      //     }),
+      floatingActionButton: FloatingActionButton(
+          key: ValueKey<Color>(Theme.of(context).buttonColor),
+          tooltip: 'Add new account',
+          backgroundColor: Colors.amber,
+          child: Icon(Icons.add),
+          onPressed: () async {
+            await Navigator.push(
+                context,
+                MaterialPageRoute<DismissDialogAction>(
+                  builder: (BuildContext context) => AccountFormScreen(
+                        title: "Add Account",
+                      ),
+                  fullscreenDialog: true,
+                ));
+          }),
     );
   }
 

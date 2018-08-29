@@ -16,11 +16,11 @@ class AccountService extends AppServiceBase {
     var result = await rest.postAsync<dynamic>(
         'services/app/account/GetTenantAccountsAsync', null);
 
-    if (result.mappedResult != null) {
-      result.mappedResult['userAccounts']['items'].forEach((account) {
+    if (result.success) {
+      result.result['userAccounts']['items'].forEach((account) {
         userAccountItems.add(Account.fromJson(account));
       });
-      result.mappedResult['otherMembersAccounts']['items'].forEach((account) {
+      result.result['otherMembersAccounts']['items'].forEach((account) {
         familyAccountItems.add(Account.fromJson(account));
       });
     }
@@ -29,12 +29,22 @@ class AccountService extends AppServiceBase {
     this.familyAccounts = familyAccountItems;
   }
 
+  Future<AccountFormModel> getAccountForEdit(String id) async {
+    var result = await rest
+        .postAsync('services/app/account/getAccountForEdit', {"id": id});
+
+    if (result.success) {
+      return AccountFormModel.fromJson(result.result);
+    }
+    return null;
+  }
+
   Future<Account> getAccountDetails(String accountId) async {
     var result = await rest.postAsync<dynamic>(
         'services/app/account/GetAccountDetails', {"id": accountId});
 
-    if (result.mappedResult != null) {
-      return Account.fromJson(result.mappedResult);
+    if (result.success) {
+      return Account.fromJson(result.result);
     }
 
     return null;
@@ -45,8 +55,8 @@ class AccountService extends AppServiceBase {
     var result =
         await rest.postAsync('services/app/currency/GetCurrencies', null);
 
-    if (result.mappedResult != null) {
-      currencies = result.mappedResult['items']
+    if (result.success) {
+      currencies = result.result['items']
           .map<Currency>((currency) => Currency.fromJson(currency))
           .toList();
     }
@@ -58,27 +68,27 @@ class AccountService extends AppServiceBase {
     var result =
         await rest.postAsync('services/app/account/GetAccountTypes', null);
 
-    if (result.mappedResult != null) {
-      output = result.mappedResult['items']
+    if (result.success) {
+      output = result.result['items']
           .map<AccountType>((item) => AccountType.fromJson(item))
           .toList();
     }
     return output;
   }
 
-  Future<ApiResponse<dynamic>> createOrUpdateAccount(
+  Future<AjaxResponse<dynamic>> createOrUpdateAccount(
       AccountFormModel input) async {
     print(input);
     final result =
-        await rest.postAsync('services/app/category/CreateOrUpdateCategory', {
-      // "id": input.id,
+        await rest.postAsync('services/app/account/CreateOrUpdateAccount', {
       "account": {
+        "id": input.id,
         "name": input.name,
         "currencyId": input.currencyId,
         "accountTypeId": input.accountTypeId
       }
     });
 
-    return result.networkServiceResponse;
+    return result;
   }
 }

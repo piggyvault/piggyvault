@@ -11,18 +11,18 @@ class CategoryService extends AppServiceBase {
     var result =
         await rest.postAsync('services/app/category/GetTenantCategories', null);
 
-    if (result.mappedResult != null) {
-      result.mappedResult['items'].forEach(
+    if (result.success) {
+      result.result['items'].forEach(
           (category) => tenantCategories.add(Category.fromJson(category)));
     }
     return tenantCategories;
   }
 
-  Future<ApiResponse<dynamic>> createOrUpdateCategory(Category input) async {
+  Future<AjaxResponse<dynamic>> createOrUpdateCategory(Category input) async {
     final result = await rest.postAsync(
         'services/app/category/CreateOrUpdateCategory',
         {"id": input.id, "name": input.name, "icon": input.icon});
 
-    return result.networkServiceResponse;
+    return result;
   }
 }

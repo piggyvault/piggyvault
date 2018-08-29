@@ -46,8 +46,8 @@ class TransactionService extends AppServiceBase {
       "endDate": input.endDate.toString()
     });
 
-    if (result.mappedResult != null) {
-      result.mappedResult['items'].forEach((transaction) {
+    if (result.success) {
+      result.result['items'].forEach((transaction) {
         transactions.add(Transaction.fromJson(transaction));
       });
     }
@@ -63,8 +63,8 @@ class TransactionService extends AppServiceBase {
       "duration": duration,
     });
 
-    if (result.mappedResult != null) {
-      return TransactionSummary.fromJson(result.mappedResult);
+    if (result.success) {
+      return TransactionSummary.fromJson(result.result);
     }
 
     return null;
@@ -76,8 +76,8 @@ class TransactionService extends AppServiceBase {
       "id": id,
     });
 
-    if (result.mappedResult != null) {
-      return TransactionEditDto.fromJson(result.mappedResult);
+    if (result.success != null) {
+      return TransactionEditDto.fromJson(result.result);
     }
 
     return null;
@@ -89,9 +89,9 @@ class TransactionService extends AppServiceBase {
         .postAsync<dynamic>('services/app/transaction/GetTransactionComments', {
       "id": id,
     });
-    print(result.mappedResult);
-    if (result.mappedResult != null) {
-      result.mappedResult['items'].forEach((comment) {
+    // print(result.mappedResult);
+    if (result.success) {
+      result.result['items'].forEach((comment) {
         comments.add(TransactionComment.fromJson(comment));
       });
     }
@@ -99,7 +99,7 @@ class TransactionService extends AppServiceBase {
     return comments;
   }
 
-  Future<ApiResponse<dynamic>> createOrUpdateTransaction(
+  Future<AjaxResponse<dynamic>> createOrUpdateTransaction(
       TransactionEditDto input) async {
     final result = await rest
         .postAsync('services/app/transaction/CreateOrUpdateTransaction', {
@@ -111,16 +111,16 @@ class TransactionService extends AppServiceBase {
       "transactionTime": input.transactionTime
     });
 
-    return result.networkServiceResponse;
+    return result;
   }
 
-  Future<ApiResponse<dynamic>> deleteTransaction(String id) async {
+  Future<AjaxResponse<dynamic>> deleteTransaction(String id) async {
     final result =
         await rest.postAsync('services/app/transaction/DeleteTransaction', {
       "id": id,
     });
 
-    return result.networkServiceResponse;
+    return result;
   }
 
   Future<Null> saveTransactionComment(
@@ -132,7 +132,7 @@ class TransactionService extends AppServiceBase {
     });
   }
 
-  Future<ApiResponse<dynamic>> transfer(TransferInput input) async {
+  Future<AjaxResponse<dynamic>> transfer(TransferInput input) async {
     final result =
         await rest.postAsync('services/app/transaction/TransferAsync', {
       "id": input.id,
@@ -145,7 +145,7 @@ class TransactionService extends AppServiceBase {
       "transactionTime": input.transactionTime
     });
 
-    return result.networkServiceResponse;
+    return result;
   }
 
   List<TransactionGroupItem> groupTransactions(

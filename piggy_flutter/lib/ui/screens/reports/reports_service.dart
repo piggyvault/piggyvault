@@ -14,9 +14,9 @@ class ReportsService extends AppServiceBase {
           "typeOfTransaction": 'expense'
         });
 
-    if (result.mappedResult != null) {
+    if (result.success) {
       // print('##### ${result.mappedResult}');
-      result.mappedResult['items'].forEach((item) =>
+      result.result['items'].forEach((item) =>
           data.add(CategoryWiseRecentMonthsReportItem.fromJson(item)));
     }
     // print(data);

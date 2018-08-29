@@ -3,12 +3,12 @@ import 'package:piggy_flutter/models/api_request.dart';
 import 'package:piggy_flutter/models/api_response.dart';
 import 'package:piggy_flutter/utils/uidata.dart';
 
-showError(BuildContext context, ApiResponse snapshot) {
+showError(BuildContext context, AjaxResponse snapshot) {
   showDialog(
     context: context,
     builder: (context) => AlertDialog(
           title: Text(UIData.error),
-          content: Text(snapshot.message),
+          content: Text(snapshot.error),
           actions: <Widget>[
             FlatButton(
               child: Text(UIData.ok),

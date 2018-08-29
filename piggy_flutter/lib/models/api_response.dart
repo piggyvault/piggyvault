@@ -1,19 +1,14 @@
-class ApiResponse<T> {
-  T content;
-  bool success;
-  String message;
+import 'package:flutter/material.dart';
 
-  ApiResponse({this.content, this.success, this.message});
+class AjaxResponse<T> {
+  final bool success;
+  final T result;
+  final bool unAuthorizedRequest;
+  String error;
 
-  @override
-  String toString() {
-    return 'ApiResponse content $content success $success message $message';
-  }
-}
-
-class MappedNetworkServiceResponse<T> {
-  dynamic mappedResult;
-  ApiResponse<T> networkServiceResponse;
-  MappedNetworkServiceResponse(
-      {this.mappedResult, this.networkServiceResponse});
+  AjaxResponse(
+      {@required this.success,
+      @required this.result,
+      @required this.unAuthorizedRequest,
+      this.error});
 }

@@ -46,11 +46,10 @@ class LoginBloc implements BlocBase {
         usernameOrEmailAddress: validUsernameOrEmailAddress,
         password: validPassword));
 
-    if (result.content == null) {
-    } else {
+    if (result.result != null) {
       _handleSendTags(validTenancyName);
       final prefs = await SharedPreferences.getInstance();
-      await prefs.setString(UIData.authToken, result.content);
+      await prefs.setString(UIData.authToken, result.result);
     }
     request.response = result;
     request.isInProcess = false;

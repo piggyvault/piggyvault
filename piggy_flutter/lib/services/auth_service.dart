@@ -18,22 +18,22 @@ class AuthService extends AppServiceBase {
     return await prefs.remove(UIData.authToken);
   }
 
-  Future<ApiResponse<dynamic>> authenticate(LoginInput input) async {
+  Future<AjaxResponse<dynamic>> authenticate(LoginInput input) async {
     var result = await rest.postAsync('Account/Authenticate', {
       "tenancyName": input.tenancyName,
       "usernameOrEmailAddress": input.usernameOrEmailAddress,
       "password": input.password
     });
 
-    return result.networkServiceResponse;
+    return result;
   }
 
   Future<User> getCurrentLoginInformation() async {
     var result = await rest.postAsync(
         'services/app/session/GetCurrentLoginInformations', null);
 
-    if (result.mappedResult != null) {
-      return User.fromJson(result.mappedResult['user']);
+    if (result.success) {
+      return User.fromJson(result.result['user']);
     }
 
     return null;

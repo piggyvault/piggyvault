@@ -30,7 +30,7 @@ apiSubscription(
         switch (p.type) {
           case ApiType.login:
             {
-              if (p.response.content == null) {
+              if (p.response.result == null) {
                 showErrorMessage(
                     key: key,
                     errorMessage:

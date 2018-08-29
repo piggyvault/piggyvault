@@ -10,7 +10,7 @@ import 'package:piggy_flutter/models/transaction.dart';
 import 'package:piggy_flutter/models/transaction_edit_dto.dart';
 import 'package:piggy_flutter/services/transaction_service.dart';
 import 'package:piggy_flutter/ui/screens/transaction/transaction_form_bloc.dart';
-import 'package:piggy_flutter/ui/widgets/api_subscription.dart';
+import 'package:piggy_flutter/utils/api_subscription.dart';
 import 'package:piggy_flutter/utils/uidata.dart';
 import 'package:piggy_flutter/ui/widgets/date_time_picker.dart';
 // TODO: BLoC

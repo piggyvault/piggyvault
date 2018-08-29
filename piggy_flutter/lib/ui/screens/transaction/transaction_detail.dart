@@ -9,7 +9,7 @@ import 'package:piggy_flutter/models/transaction_comment.dart';
 import 'package:piggy_flutter/models/user.dart';
 import 'package:piggy_flutter/ui/screens/transaction/transaction_detail_bloc.dart';
 import 'package:piggy_flutter/ui/screens/transaction/transaction_form.dart';
-import 'package:piggy_flutter/ui/widgets/api_subscription.dart';
+import 'package:piggy_flutter/utils/api_subscription.dart';
 import 'package:piggy_flutter/utils/common.dart';
 
 class TransactionDetailPage extends StatefulWidget {

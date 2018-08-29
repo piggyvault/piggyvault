@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:piggy_flutter/models/api_request.dart';
 import 'package:piggy_flutter/models/category.dart';
 import 'package:piggy_flutter/ui/screens/category/category_form_bloc.dart';
-import 'package:piggy_flutter/ui/widgets/api_subscription.dart';
+import 'package:piggy_flutter/utils/api_subscription.dart';
 
 class CategoryFormPage extends StatefulWidget {
   final Category category;

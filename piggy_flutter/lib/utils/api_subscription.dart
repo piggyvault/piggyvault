@@ -49,6 +49,7 @@ apiSubscription(
             break;
           case ApiType.createOrUpdateTransaction:
           case ApiType.deleteTransaction:
+          case ApiType.updateAccount:
             {
               accountBloc.accountsRefresh(true);
               transactionBloc.sync(true);

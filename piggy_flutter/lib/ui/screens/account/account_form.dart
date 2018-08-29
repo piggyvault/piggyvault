@@ -5,7 +5,7 @@ import 'package:piggy_flutter/models/api_request.dart';
 import 'package:piggy_flutter/models/currency.dart';
 import 'package:piggy_flutter/ui/screens/account/account_form_bloc.dart';
 import 'package:piggy_flutter/ui/screens/account/account_type_model.dart';
-import 'package:piggy_flutter/ui/widgets/api_subscription.dart';
+import 'package:piggy_flutter/utils/api_subscription.dart';
 
 class AccountFormScreen extends StatefulWidget {
   final String title;

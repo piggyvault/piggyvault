@@ -4,11 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:piggy_flutter/models/account.dart';
 import 'package:piggy_flutter/models/account_detail_state.dart';
 import 'package:piggy_flutter/ui/screens/account/account_detail_bloc.dart';
+import 'package:piggy_flutter/ui/screens/account/account_form.dart';
 import 'package:piggy_flutter/ui/widgets/add_transaction_fab.dart';
 import 'package:piggy_flutter/ui/widgets/common/empty_result_widget.dart';
 import 'package:piggy_flutter/ui/widgets/common/error_display_widget.dart';
 import 'package:piggy_flutter/ui/widgets/common/loading_widget.dart';
 import 'package:piggy_flutter/ui/widgets/transaction_list.dart';
+import 'package:piggy_flutter/utils/common.dart';
 import 'package:piggy_flutter/utils/uidata.dart';
 
 class AccountDetailPage extends StatefulWidget {
@@ -57,7 +59,6 @@ class _AccountDetailPageState extends State<AccountDetailPage> {
           final state = snapshot.data;
           final account =
               state.account == null ? widget.account : state.account;
-          // debugPrint('######## state is $state');
           return Scaffold(
             appBar: AppBar(
               title: Column(
@@ -112,8 +113,34 @@ class _AccountDetailPageState extends State<AccountDetailPage> {
               actions: <Widget>[
                 PopupMenuButton<String>(
                   padding: EdgeInsets.zero,
+                  onSelected: (value) {
+                    // print('PopupMenuButton onSelected $value');
+                    switch (value) {
+                      case UIData.account_edit:
+                        {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute<DismissDialogAction>(
+                                builder: (BuildContext context) =>
+                                    AccountFormScreen(
+                                      account: widget.account,
+                                      title: 'Edit Account',
+                                    ),
+                                fullscreenDialog: true,
+                              ));
+                        }
+                        break;
+                    }
+                  },
                   itemBuilder: (BuildContext context) =>
                       <PopupMenuEntry<String>>[
+                        const PopupMenuItem<String>(
+                          value: UIData.account_edit,
+                          child: ListTile(
+                            leading: Icon(Icons.edit),
+                            title: Text(UIData.edit),
+                          ),
+                        ),
                         const PopupMenuItem<String>(
                           value: UIData.adjust_balance,
                           child: ListTile(

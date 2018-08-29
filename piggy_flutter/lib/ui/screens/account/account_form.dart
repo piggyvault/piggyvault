@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:piggy_flutter/models/account.dart';
 import 'package:piggy_flutter/models/api_request.dart';
 import 'package:piggy_flutter/models/currency.dart';
 import 'package:piggy_flutter/ui/screens/account/account_form_bloc.dart';
@@ -9,9 +10,9 @@ import 'package:piggy_flutter/utils/api_subscription.dart';
 
 class AccountFormScreen extends StatefulWidget {
   final String title;
-  final String accountId;
+  final Account account;
 
-  const AccountFormScreen({Key key, this.title, this.accountId})
+  const AccountFormScreen({Key key, this.title, this.account})
       : super(key: key);
 
   @override
@@ -31,7 +32,14 @@ class _AccountFormScreenState extends State<AccountFormScreen> {
   @override
   void initState() {
     super.initState();
-    _bloc = AccountFormBloc(widget.accountId);
+    _bloc = AccountFormBloc(widget.account?.id);
+
+    if (widget.account == null) {
+      _nameFieldController = TextEditingController();
+    } else {
+      _nameFieldController = TextEditingController(text: widget.account.name);
+    }
+
     _apiStreamSubscription = apiSubscription(
         stream: _bloc.state, context: context, key: _scaffoldKey);
   }

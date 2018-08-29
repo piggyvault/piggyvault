@@ -14,6 +14,8 @@ class UIData {
   static const String transaction_type_income = "Income";
   static const String transaction_type_transfer = "Transfer";
   static const String adjust_balance = "Adjust Balance";
+  static const String account_edit = "account_edit";
+  static const String edit = "Edit";
 
   //images
   static const String imageDir = "assets/images";

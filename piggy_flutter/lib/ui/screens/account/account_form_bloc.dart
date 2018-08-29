@@ -28,15 +28,20 @@ class AccountFormBloc implements BlocBase {
   Stream<ApiRequest> get state => _state.stream;
 
   AccountFormBloc(this.accountId) {
-    if (accountId == null) {
-      account = AccountFormModel(id: null);
+    account = AccountFormModel(id: accountId);
+    if (accountId != null) {
+      _accountService.getAccountForEdit(this.accountId).then((result) {
+        account = result;
+        // TODO: find a good solution for this dirty fix
+        _accountService
+            .getCurrencies()
+            .then((result) => _currencies.add(result));
+        _accountService.getAccountTypes().then((result) => _types.add(result));
+      });
     } else {
-      _accountService
-          .getAccountForEdit(this.accountId)
-          .then((result) => account = result);
+      _accountService.getCurrencies().then((result) => _currencies.add(result));
+      _accountService.getAccountTypes().then((result) => _types.add(result));
     }
-    _accountService.getCurrencies().then((result) => _currencies.add(result));
-    _accountService.getAccountTypes().then((result) => _types.add(result));
   }
 
   submit() async {

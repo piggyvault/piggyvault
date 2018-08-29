@@ -22,10 +22,7 @@ class NavigationIconView {
     String title,
     Color color,
     TickerProvider vsync,
-  })  : _icon = icon,
-        _color = color,
-        _title = title,
-        item = new BottomNavigationBarItem(
+  })  : item = new BottomNavigationBarItem(
           icon: icon,
 //          activeIcon: activeIcon,
           title: new Text(title),
@@ -34,19 +31,10 @@ class NavigationIconView {
         controller = new AnimationController(
           duration: kThemeAnimationDuration,
           vsync: vsync,
-        ) {
-    _animation = new CurvedAnimation(
-      parent: controller,
-      curve: const Interval(0.5, 1.0, curve: Curves.fastOutSlowIn),
-    );
-  }
+        );
 
-  final Widget _icon;
-  final Color _color;
-  final String _title;
   final BottomNavigationBarItem item;
   final AnimationController controller;
-  CurvedAnimation _animation;
 }
 
 enum StartPage { Recent, Accounts, Summary }

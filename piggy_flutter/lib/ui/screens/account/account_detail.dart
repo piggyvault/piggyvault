@@ -66,7 +66,7 @@ class _AccountDetailPageState extends State<AccountDetailPage> {
                 children: <Widget>[
                   Padding(
                     padding: const EdgeInsets.only(top: 8.0),
-                    child: Text('${widget.account.name}'),
+                    child: Text(account.name),
                   ),
                   Text(
                     ' ${account.currentBalance} ${account.currencySymbol}',

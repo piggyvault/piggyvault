@@ -67,22 +67,8 @@ class _AccountFormScreenState extends State<AccountFormScreen> {
               padding: const EdgeInsets.all(16.0),
               children: <Widget>[
                 _nameField(theme),
-                InputDecorator(
-                  decoration: const InputDecoration(
-                    labelText: 'Currency',
-                    hintText: 'Choose a currency',
-                  ),
-                  isEmpty: _bloc.account.currencyId == null,
-                  child: _currencyField(),
-                ),
-                InputDecorator(
-                  decoration: const InputDecoration(
-                    labelText: 'Type',
-                    hintText: 'Choose an account type',
-                  ),
-                  isEmpty: _bloc.account.accountTypeId == null,
-                  child: _typeField(),
-                ),
+                _currencyField(),
+                _typeField(),
                 const SizedBox(height: 24.0),
                 Text('* all fields are mandatory',
                     style: Theme.of(context).textTheme.caption),
@@ -153,20 +139,26 @@ class _AccountFormScreenState extends State<AccountFormScreen> {
       stream: _bloc.currencies,
       builder: (context, snapshot) {
         if (snapshot.hasData && snapshot.data.length > 0) {
-          return DropdownButton<int>(
-            value: _bloc.account.currencyId,
-            onChanged: (int value) {
-              setState(() {
-                _bloc.account.currencyId = value;
-              });
-            },
-            items: snapshot.data.map((Currency currency) {
-              return DropdownMenuItem<int>(
-                value: currency.id,
-                child: Text(currency.name),
-              );
-            }).toList(),
-          );
+          return InputDecorator(
+              decoration: const InputDecoration(
+                labelText: 'Currency',
+                hintText: 'Choose a currency',
+              ),
+              isEmpty: _bloc.account.currencyId == null,
+              child: DropdownButton<int>(
+                value: _bloc.account.currencyId,
+                onChanged: (int value) {
+                  setState(() {
+                    _bloc.account.currencyId = value;
+                  });
+                },
+                items: snapshot.data.map((Currency currency) {
+                  return DropdownMenuItem<int>(
+                    value: currency.id,
+                    child: Text(currency.name),
+                  );
+                }).toList(),
+              ));
         } else {
           return LinearProgressIndicator();
         }
@@ -176,19 +168,26 @@ class _AccountFormScreenState extends State<AccountFormScreen> {
       stream: _bloc.types,
       builder: (context, snapshot) {
         if (snapshot.hasData && snapshot.data.length > 0) {
-          return DropdownButton<int>(
-            value: _bloc.account.accountTypeId,
-            onChanged: (int value) {
-              setState(() {
-                _bloc.account.accountTypeId = value;
-              });
-            },
-            items: snapshot.data.map((AccountType type) {
-              return DropdownMenuItem<int>(
-                value: type.id,
-                child: Text(type.name),
-              );
-            }).toList(),
+          return InputDecorator(
+            decoration: const InputDecoration(
+              labelText: 'Type',
+              hintText: 'Choose an account type',
+            ),
+            isEmpty: _bloc.account.accountTypeId == null,
+            child: DropdownButton<int>(
+              value: _bloc.account.accountTypeId,
+              onChanged: (int value) {
+                setState(() {
+                  _bloc.account.accountTypeId = value;
+                });
+              },
+              items: snapshot.data.map((AccountType type) {
+                return DropdownMenuItem<int>(
+                  value: type.id,
+                  child: Text(type.name),
+                );
+              }).toList(),
+            ),
           );
         } else {
           return LinearProgressIndicator();

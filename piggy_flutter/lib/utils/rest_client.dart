@@ -17,7 +17,7 @@ class RestClient {
     var token = prefs.getString(UIData.authToken);
 
     var content = json.encoder.convert(data);
-    print(content);
+    // print(content);
     var response = await http.post('http://piggyvault.in/api/$resourcePath',
         body: content,
         headers: {
@@ -35,7 +35,7 @@ class RestClient {
     var jsonResult = response.body;
     dynamic resultClass = jsonDecode(jsonResult);
 
-    print(jsonResult);
+    // print(jsonResult);
 
     var output = AjaxResponse<T>(
       result: resultClass["result"],

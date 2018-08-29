@@ -1,4 +1,4 @@
-import 'package:piggy_flutter/services/rest_client.dart';
+import 'package:piggy_flutter/utils/rest_client.dart';
 
 abstract class AppServiceBase {
   RestClient rest;

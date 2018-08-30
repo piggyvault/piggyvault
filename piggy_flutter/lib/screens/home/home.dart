@@ -8,11 +8,11 @@ import 'package:piggy_flutter/blocs/category_bloc.dart';
 import 'package:piggy_flutter/blocs/transaction_bloc.dart';
 import 'package:piggy_flutter/blocs/user_bloc.dart';
 import 'package:piggy_flutter/models/transaction.dart';
-import 'package:piggy_flutter/ui/screens/account/account_list.dart';
-import 'package:piggy_flutter/ui/screens/home/recent.dart';
-import 'package:piggy_flutter/ui/screens/home/summary.dart';
-import 'package:piggy_flutter/ui/screens/transaction/transaction_detail.dart';
-import 'package:piggy_flutter/ui/widgets/common/common_drawer.dart';
+import 'package:piggy_flutter/screens/account/account_list.dart';
+import 'package:piggy_flutter/screens/home/recent.dart';
+import 'package:piggy_flutter/screens/home/summary.dart';
+import 'package:piggy_flutter/screens/transaction/transaction_detail.dart';
+import 'package:piggy_flutter/widgets/common/common_drawer.dart';
 import 'package:connectivity/connectivity.dart';
 
 class NavigationIconView {

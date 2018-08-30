@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:piggy_flutter/blocs/transaction_bloc.dart';
 import 'package:piggy_flutter/models/account.dart';
-import 'package:piggy_flutter/ui/screens/account/account_detail.dart';
+import 'package:piggy_flutter/screens/account/account_detail.dart';
 
 class AccountGroupList extends StatelessWidget {
   final List<Account> accounts;

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:piggy_flutter/ui/screens/reports/reports_bloc.dart';
-import 'package:piggy_flutter/ui/widgets/common/common_drawer.dart';
-import 'package:piggy_flutter/ui/widgets/common/loading_widget.dart';
+import 'package:piggy_flutter/screens/reports/reports_bloc.dart';
+import 'package:piggy_flutter/widgets/common/common_drawer.dart';
+import 'package:piggy_flutter/widgets/common/loading_widget.dart';
 
 class Dataset {
   final double total;

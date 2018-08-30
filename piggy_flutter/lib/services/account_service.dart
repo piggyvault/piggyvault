@@ -3,8 +3,8 @@ import 'package:piggy_flutter/models/account.dart';
 import 'package:piggy_flutter/models/api_response.dart';
 import 'package:piggy_flutter/models/currency.dart';
 import 'package:piggy_flutter/services/app_service_base.dart';
-import 'package:piggy_flutter/ui/screens/account/account_form_model.dart';
-import 'package:piggy_flutter/ui/screens/account/account_type_model.dart';
+import 'package:piggy_flutter/screens/account/account_form_model.dart';
+import 'package:piggy_flutter/screens/account/account_type_model.dart';
 
 class AccountService extends AppServiceBase {
   List<Account> userAccounts;

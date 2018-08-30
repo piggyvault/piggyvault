@@ -5,11 +5,11 @@ import 'package:piggy_flutter/blocs/bloc_provider.dart';
 import 'package:piggy_flutter/blocs/transaction_bloc.dart';
 import 'package:piggy_flutter/models/recent_transactions_state.dart';
 import 'package:piggy_flutter/models/transaction_group_item.dart';
-import 'package:piggy_flutter/ui/widgets/add_transaction_fab.dart';
-import 'package:piggy_flutter/ui/widgets/common/empty_result_widget.dart';
-import 'package:piggy_flutter/ui/widgets/common/error_display_widget.dart';
-import 'package:piggy_flutter/ui/widgets/common/loading_widget.dart';
-import 'package:piggy_flutter/ui/widgets/transaction_list.dart';
+import 'package:piggy_flutter/widgets/add_transaction_fab.dart';
+import 'package:piggy_flutter/widgets/common/empty_result_widget.dart';
+import 'package:piggy_flutter/widgets/common/error_display_widget.dart';
+import 'package:piggy_flutter/widgets/common/loading_widget.dart';
+import 'package:piggy_flutter/widgets/transaction_list.dart';
 
 class RecentPage extends StatelessWidget {
   RecentPage({Key key}) : super(key: key);

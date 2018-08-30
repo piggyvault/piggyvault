@@ -4,8 +4,8 @@ import 'package:piggy_flutter/blocs/bloc_provider.dart';
 import 'package:piggy_flutter/models/api_request.dart';
 import 'package:piggy_flutter/models/currency.dart';
 import 'package:piggy_flutter/services/account_service.dart';
-import 'package:piggy_flutter/ui/screens/account/account_form_model.dart';
-import 'package:piggy_flutter/ui/screens/account/account_type_model.dart';
+import 'package:piggy_flutter/screens/account/account_form_model.dart';
+import 'package:piggy_flutter/screens/account/account_type_model.dart';
 import 'package:rxdart/rxdart.dart';
 
 class AccountFormBloc implements BlocBase {

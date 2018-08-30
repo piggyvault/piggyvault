@@ -1,8 +1,8 @@
 import 'dart:async';
 
 import 'package:piggy_flutter/blocs/bloc_provider.dart';
-import 'package:piggy_flutter/ui/screens/reports/categorywise_recent_months_report_screen.dart';
-import 'package:piggy_flutter/ui/screens/reports/reports_service.dart';
+import 'package:piggy_flutter/screens/reports/categorywise_recent_months_report_screen.dart';
+import 'package:piggy_flutter/screens/reports/reports_service.dart';
 import 'package:rxdart/rxdart.dart';
 
 class ReportsBloc implements BlocBase {

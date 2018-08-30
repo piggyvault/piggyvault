@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:piggy_flutter/models/transaction.dart';
 import 'package:piggy_flutter/models/transaction_group_item.dart';
-import 'package:piggy_flutter/ui/screens/transaction/transaction_detail.dart';
+import 'package:piggy_flutter/screens/transaction/transaction_detail.dart';
 
 class TransactionList extends StatelessWidget {
   final List<TransactionGroupItem> items;

@@ -6,9 +6,9 @@ import 'package:piggy_flutter/blocs/user_bloc.dart';
 import 'package:piggy_flutter/models/account.dart';
 import 'package:piggy_flutter/models/category.dart';
 import 'package:piggy_flutter/models/user.dart';
-import 'package:piggy_flutter/ui/screens/home/home.dart';
-import 'package:piggy_flutter/ui/screens/reports/categorywise_recent_months_report_screen.dart';
-import 'package:piggy_flutter/ui/widgets/about_tile.dart';
+import 'package:piggy_flutter/screens/reports/categorywise_recent_months_report_screen.dart';
+import 'package:piggy_flutter/widgets/about_tile.dart';
+import 'package:piggy_flutter/screens/home/home.dart';
 import 'package:piggy_flutter/utils/uidata.dart';
 
 class CommonDrawer extends StatelessWidget {

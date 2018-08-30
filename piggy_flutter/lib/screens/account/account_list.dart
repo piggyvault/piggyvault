@@ -4,8 +4,8 @@ import 'package:piggy_flutter/blocs/account_bloc.dart';
 import 'package:piggy_flutter/blocs/bloc_provider.dart';
 import 'package:piggy_flutter/blocs/transaction_bloc.dart';
 import 'package:piggy_flutter/models/account.dart';
-import 'package:piggy_flutter/ui/screens/account/account_form.dart';
-import 'package:piggy_flutter/ui/screens/account/account_group_list.dart';
+import 'package:piggy_flutter/screens/account/account_form.dart';
+import 'package:piggy_flutter/screens/account/account_group_list.dart';
 import 'package:piggy_flutter/utils/common.dart';
 
 class AccountListPage extends StatelessWidget {

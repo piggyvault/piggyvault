@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
-import 'package:piggy_flutter/ui/widgets/input_dropdown.dart';
+import 'package:piggy_flutter/widgets/input_dropdown.dart';
 
 class DateTimePicker extends StatelessWidget {
   const DateTimePicker(

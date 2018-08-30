@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:piggy_flutter/models/account.dart';
-import 'package:piggy_flutter/ui/screens/transaction/transaction_form.dart';
+import 'package:piggy_flutter/screens/transaction/transaction_form.dart';
 import 'package:piggy_flutter/utils/common.dart';
 
 class AddTransactionFab extends StatelessWidget {

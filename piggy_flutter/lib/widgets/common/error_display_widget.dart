@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:piggy_flutter/ui/widgets/common/message_placeholder.dart';
+import 'package:piggy_flutter/widgets/common/message_placeholder.dart';
 
 class ErrorDisplayWidget extends StatelessWidget {
   final bool visible;

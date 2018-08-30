@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:piggy_flutter/services/app_service_base.dart';
-import 'package:piggy_flutter/ui/screens/reports/categorywise_recent_months_report_screen.dart';
+import 'package:piggy_flutter/screens/reports/categorywise_recent_months_report_screen.dart';
 
 class ReportsService extends AppServiceBase {
   Future<List<CategoryWiseRecentMonthsReportItem>>

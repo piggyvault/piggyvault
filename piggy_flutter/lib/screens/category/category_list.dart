@@ -9,9 +9,9 @@ import 'package:piggy_flutter/blocs/transaction_bloc.dart';
 import 'package:piggy_flutter/models/category.dart';
 import 'package:piggy_flutter/models/category_list_item.dart';
 import 'package:piggy_flutter/models/recent_transactions_state.dart';
-import 'package:piggy_flutter/ui/screens/category/category_form.dart';
-import 'package:piggy_flutter/ui/widgets/common/common_drawer.dart';
-import 'package:piggy_flutter/ui/widgets/common/message_placeholder.dart';
+import 'package:piggy_flutter/screens/category/category_form.dart';
+import 'package:piggy_flutter/widgets/common/common_drawer.dart';
+import 'package:piggy_flutter/widgets/common/message_placeholder.dart';
 import 'package:piggy_flutter/utils/common.dart';
 import 'package:rxdart/rxdart.dart';
 

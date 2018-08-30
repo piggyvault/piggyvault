@@ -1,17 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:piggy_flutter/blocs/transaction_bloc.dart';
 import 'package:piggy_flutter/models/account.dart';
 import 'package:piggy_flutter/screens/account/account_detail.dart';
+import 'package:piggy_flutter/screens/home/home_bloc.dart';
 
 class AccountGroupList extends StatelessWidget {
   final List<Account> accounts;
   final String title;
-  final TransactionBloc transactionBloc;
+  final HomeBloc homeBloc;
 
   AccountGroupList(
-      {@required this.accounts,
-      @required this.title,
-      @required this.transactionBloc});
+      {@required this.accounts, @required this.title, @required this.homeBloc});
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +44,7 @@ class AccountGroupList extends StatelessWidget {
               MaterialPageRoute(
                   builder: (context) => AccountDetailPage(
                         account: account,
-                        syncStream: transactionBloc.syncStream,
+                        syncStream: homeBloc.syncDataStream,
                       )),
             )),
       ),

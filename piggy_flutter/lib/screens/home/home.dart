@@ -5,10 +5,11 @@ import 'package:onesignal/onesignal.dart';
 import 'package:piggy_flutter/blocs/account_bloc.dart';
 import 'package:piggy_flutter/blocs/bloc_provider.dart';
 import 'package:piggy_flutter/blocs/category_bloc.dart';
-import 'package:piggy_flutter/blocs/transaction_bloc.dart';
 import 'package:piggy_flutter/blocs/user_bloc.dart';
 import 'package:piggy_flutter/models/transaction.dart';
 import 'package:piggy_flutter/screens/account/account_list.dart';
+import 'package:piggy_flutter/screens/home/dashboard.dart';
+import 'package:piggy_flutter/screens/home/home_bloc.dart';
 import 'package:piggy_flutter/screens/home/recent.dart';
 import 'package:piggy_flutter/screens/home/summary.dart';
 import 'package:piggy_flutter/screens/transaction/transaction_detail.dart';
@@ -24,7 +25,6 @@ class NavigationIconView {
     TickerProvider vsync,
   })  : item = new BottomNavigationBarItem(
           icon: icon,
-//          activeIcon: activeIcon,
           title: new Text(title),
           backgroundColor: color,
         ),
@@ -37,7 +37,7 @@ class NavigationIconView {
   final AnimationController controller;
 }
 
-enum StartPage { Recent, Accounts, Summary }
+enum StartPage { Dashboard, Recent, Accounts, Summary }
 
 class HomePage extends StatefulWidget {
   final bool isInitialLoading;
@@ -60,10 +60,12 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   final Key _keyRecentPage = PageStorageKey('recent');
   final Key _keyAccountsPage = PageStorageKey('accounts');
   final Key _keySummaryPage = PageStorageKey('summary');
+  final Key _dashboardKey = PageStorageKey('dashboard');
 
   RecentPage _recent;
   SummaryPage _summary;
   AccountListPage _accounts;
+  DashboardScreen _dashboardScreen;
 
   List<Widget> _pages;
   bool _isSyncRequired;
@@ -80,6 +82,13 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     super.initState();
     _navigationViews = <NavigationIconView>[
       new NavigationIconView(
+        icon: const Icon(Icons.dashboard),
+        title: 'Dashboard',
+        color: Colors.amber,
+        vsync: this,
+        activeIcon: const Icon(Icons.data_usage),
+      ),
+      new NavigationIconView(
         icon: const Icon(Icons.format_list_bulleted),
         title: 'Recent',
         color: Colors.deepPurple,
@@ -92,7 +101,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
         vsync: this,
       ),
       new NavigationIconView(
-        icon: const Icon(Icons.dashboard),
+        icon: const Icon(Icons.work),
         title: 'Dashboard',
         color: Colors.indigo,
         vsync: this,
@@ -102,17 +111,19 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     for (NavigationIconView view in _navigationViews)
       view.controller.addListener(_rebuild);
 
-    _summary = new SummaryPage(key: _keySummaryPage);
-    _recent = new RecentPage(
+    _summary = SummaryPage(key: _keySummaryPage);
+    _recent = RecentPage(
       key: _keyRecentPage,
     );
-    _accounts = new AccountListPage(
+    _accounts = AccountListPage(
       key: _keyAccountsPage,
     );
 
-    _pageController = new PageController(initialPage: widget.startpage.index);
+    _dashboardScreen = DashboardScreen(key: _dashboardKey);
 
-    _pages = [_recent, _accounts, _summary];
+    _pageController = PageController(initialPage: widget.startpage.index);
+
+    _pages = [_dashboardScreen, _recent, _accounts, _summary];
     _isSyncRequired = widget.isInitialLoading ?? false;
     _currentIndex = widget.startpage.index;
     _navigationViews[_currentIndex].controller.value = 1.0;
@@ -166,15 +177,14 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   syncData(BuildContext context) {
     if (_isSyncRequired) {
       final UserBloc userBloc = BlocProvider.of<UserBloc>(context);
-      final TransactionBloc transactionBloc =
-          BlocProvider.of<TransactionBloc>(context);
       final AccountBloc accountBloc = BlocProvider.of<AccountBloc>(context);
       final CategoryBloc categoryBloc = BlocProvider.of<CategoryBloc>(context);
+      final HomeBloc homeBloc = BlocProvider.of<HomeBloc>(context);
 
       // print('##### syncing data');
       _isSyncRequired = false;
+      homeBloc.syncData(true);
       userBloc.userRefresh(true);
-      transactionBloc.sync(true);
       accountBloc.accountsRefresh(true);
       categoryBloc.refreshCategories(true);
     }
@@ -184,13 +194,13 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     syncData(context);
 
-    return new Scaffold(
+    return Scaffold(
       key: _scaffoldKey,
-      body: new PageView(
+      body: PageView(
           children: _pages,
           controller: _pageController,
           onPageChanged: onPageChanged),
-      bottomNavigationBar: new BottomNavigationBar(
+      bottomNavigationBar: BottomNavigationBar(
         items: _navigationViews
             .map((NavigationIconView navigationView) => navigationView.item)
             .toList(),

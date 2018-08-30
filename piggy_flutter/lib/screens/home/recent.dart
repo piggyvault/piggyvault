@@ -2,9 +2,9 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:piggy_flutter/blocs/bloc_provider.dart';
-import 'package:piggy_flutter/blocs/transaction_bloc.dart';
 import 'package:piggy_flutter/models/recent_transactions_state.dart';
 import 'package:piggy_flutter/models/transaction_group_item.dart';
+import 'package:piggy_flutter/screens/home/home_bloc.dart';
 import 'package:piggy_flutter/widgets/add_transaction_fab.dart';
 import 'package:piggy_flutter/widgets/common/empty_result_widget.dart';
 import 'package:piggy_flutter/widgets/common/error_display_widget.dart';
@@ -19,11 +19,10 @@ class RecentPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final TransactionBloc transactionBloc =
-        BlocProvider.of<TransactionBloc>(context);
+    final HomeBloc bloc = BlocProvider.of<HomeBloc>(context);
 
     return StreamBuilder<RecentTransactionsState>(
-      stream: transactionBloc.recentTransactionsState,
+      stream: bloc.recentTransactionsState,
       initialData: RecentTransactionsLoading(),
       builder: (BuildContext context,
           AsyncSnapshot<RecentTransactionsState> snapshot) {
@@ -36,7 +35,7 @@ class RecentPage extends StatelessWidget {
               new IconButton(
                 icon: const Icon(Icons.refresh),
                 onPressed: () {
-                  _handleRefresh(transactionBloc);
+                  _handleRefresh(bloc);
                 },
               ),
               new PopupMenuButton<String>(
@@ -46,13 +45,13 @@ class RecentPage extends StatelessWidget {
                   switch (value) {
                     case 'TransactionsGroupBy.Category':
                       {
-                        transactionBloc.changeTransactionsGroupBy(
+                        bloc.changeTransactionsGroupBy(
                             TransactionsGroupBy.Category);
                       }
                       break;
                     case 'TransactionsGroupBy.Date':
                       {
-                        transactionBloc.changeTransactionsGroupBy(
+                        bloc.changeTransactionsGroupBy(
                             TransactionsGroupBy.Date);
                       }
                       break;
@@ -79,7 +78,7 @@ class RecentPage extends StatelessWidget {
           ),
           body: new RefreshIndicator(
             key: _refreshIndicatorKey,
-            onRefresh: (() => _handleRefresh(transactionBloc)),
+            onRefresh: (() => _handleRefresh(bloc)),
             child: SafeArea(
               top: false,
               bottom: false,
@@ -121,8 +120,8 @@ class RecentPage extends StatelessWidget {
     );
   }
 
-  Future<Null> _handleRefresh(TransactionBloc transactionBloc) {
-    return transactionBloc.getRecentTransactions().then((_) {
+  Future<Null> _handleRefresh(HomeBloc bloc) {
+    return bloc.getRecentTransactions().then((_) {
       _scaffoldKey.currentState?.showSnackBar(
         new SnackBar(
           content: const Text('Refresh complete'),

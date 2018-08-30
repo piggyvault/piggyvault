@@ -4,12 +4,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:piggy_flutter/blocs/bloc_provider.dart';
 import 'package:piggy_flutter/blocs/category_bloc.dart';
-import 'package:piggy_flutter/blocs/transaction_bloc.dart';
 
 import 'package:piggy_flutter/models/category.dart';
 import 'package:piggy_flutter/models/category_list_item.dart';
 import 'package:piggy_flutter/models/recent_transactions_state.dart';
 import 'package:piggy_flutter/screens/category/category_form.dart';
+import 'package:piggy_flutter/screens/home/home_bloc.dart';
 import 'package:piggy_flutter/widgets/common/common_drawer.dart';
 import 'package:piggy_flutter/widgets/common/message_placeholder.dart';
 import 'package:piggy_flutter/utils/common.dart';
@@ -21,12 +21,11 @@ class CategoryListPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final CategoryBloc categoryBloc = BlocProvider.of<CategoryBloc>(context);
-    final TransactionBloc transactionBloc =
-        BlocProvider.of<TransactionBloc>(context);
+    final HomeBloc homeBloc = BlocProvider.of<HomeBloc>(context);
 
     Stream<List<CategoryListItem>> categoriesWithTransactionCount = Observable
         .combineLatest2(
-            categoryBloc.categories, transactionBloc.recentTransactionsState,
+            categoryBloc.categories, homeBloc.recentTransactionsState,
             (List<Category> categories,
                 RecentTransactionsState recentTransactionsState) {
       return categories

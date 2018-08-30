@@ -5,10 +5,10 @@ import 'package:piggy_flutter/blocs/account_bloc.dart';
 import 'package:piggy_flutter/blocs/application_bloc.dart';
 import 'package:piggy_flutter/blocs/bloc_provider.dart';
 import 'package:piggy_flutter/blocs/category_bloc.dart';
-import 'package:piggy_flutter/blocs/transaction_bloc.dart';
 import 'package:piggy_flutter/blocs/user_bloc.dart';
 import 'package:piggy_flutter/screens/category/category_list.dart';
 import 'package:piggy_flutter/screens/home/home.dart';
+import 'package:piggy_flutter/screens/home/home_bloc.dart';
 import 'package:piggy_flutter/screens/login/login_page.dart';
 import 'package:piggy_flutter/screens/reports/categorywise_recent_months_report_screen.dart';
 import 'package:piggy_flutter/utils/uidata.dart';
@@ -21,8 +21,8 @@ Future<void> main() async {
       bloc: ApplicationBloc(),
       child: BlocProvider<UserBloc>(
         bloc: UserBloc(),
-        child: BlocProvider<TransactionBloc>(
-          bloc: TransactionBloc(),
+        child: BlocProvider<HomeBloc>(
+          bloc: HomeBloc(),
           child: BlocProvider<AccountBloc>(
             bloc: AccountBloc(),
             child: BlocProvider<CategoryBloc>(

@@ -1,27 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:piggy_flutter/blocs/bloc_provider.dart';
-import 'package:piggy_flutter/blocs/transaction_bloc.dart';
 import 'package:piggy_flutter/models/transaction_summary.dart';
+import 'package:piggy_flutter/screens/home/home_bloc.dart';
 
 class SummaryPage extends StatelessWidget {
   SummaryPage({Key key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    final TransactionBloc transactionBloc =
-        BlocProvider.of<TransactionBloc>(context);
+    final HomeBloc bloc = BlocProvider.of<HomeBloc>(context);
     return Scaffold(
         appBar: new AppBar(
           title: Text('Summary'),
         ),
-        body: _buildBody(transactionBloc));
+        body: _buildBody(bloc));
   }
 
-  Widget _buildBody(TransactionBloc transactionBloc) =>
-      StreamBuilder<TransactionSummary>(
-          stream: transactionBloc.transactionSummary,
-          initialData: null,
-          builder: (context, snapshot) =>
-              SummaryPageWidget(snapshot.hasData ? snapshot.data : null));
+  Widget _buildBody(HomeBloc bloc) => StreamBuilder<TransactionSummary>(
+      stream: bloc.transactionSummary,
+      initialData: null,
+      builder: (context, snapshot) =>
+          SummaryPageWidget(snapshot.hasData ? snapshot.data : null));
 }
 
 class SummaryPageWidget extends StatelessWidget {

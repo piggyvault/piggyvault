@@ -2,10 +2,10 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:piggy_flutter/blocs/account_bloc.dart';
 import 'package:piggy_flutter/blocs/bloc_provider.dart';
-import 'package:piggy_flutter/blocs/transaction_bloc.dart';
 import 'package:piggy_flutter/models/account.dart';
 import 'package:piggy_flutter/screens/account/account_form.dart';
 import 'package:piggy_flutter/screens/account/account_group_list.dart';
+import 'package:piggy_flutter/screens/home/home_bloc.dart';
 import 'package:piggy_flutter/utils/common.dart';
 
 class AccountListPage extends StatelessWidget {
@@ -18,8 +18,7 @@ class AccountListPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final AccountBloc _accountBloc = BlocProvider.of<AccountBloc>(context);
-    final TransactionBloc _transactionBloc =
-        BlocProvider.of<TransactionBloc>(context);
+    final HomeBloc _homeBloc = BlocProvider.of<HomeBloc>(context);
 
     return Scaffold(
       key: _scaffoldKey,
@@ -30,8 +29,8 @@ class AccountListPage extends StatelessWidget {
         key: _refreshIndicatorKey,
         onRefresh: (() => _handleRefresh(_accountBloc)),
         child: new ListView(children: <Widget>[
-          userAccountsBuilder(_accountBloc, _transactionBloc),
-          familyAccountsBuilder(_accountBloc, _transactionBloc)
+          userAccountsBuilder(_accountBloc, _homeBloc),
+          familyAccountsBuilder(_accountBloc, _homeBloc)
         ]),
       ),
       floatingActionButton: FloatingActionButton(
@@ -52,25 +51,23 @@ class AccountListPage extends StatelessWidget {
     );
   }
 
-  Widget userAccountsBuilder(
-          AccountBloc accountBloc, TransactionBloc transactionBloc) =>
+  Widget userAccountsBuilder(AccountBloc accountBloc, HomeBloc homeBloc) =>
       StreamBuilder<List<Account>>(
         stream: accountBloc.userAccounts,
         builder: (context, snapshot) => AccountGroupList(
               accounts: snapshot.hasData ? snapshot.data : null,
               title: 'Your Accounts',
-              transactionBloc: transactionBloc,
+              homeBloc: homeBloc,
             ),
       );
 
-  Widget familyAccountsBuilder(
-          AccountBloc accountBloc, TransactionBloc transactionBloc) =>
+  Widget familyAccountsBuilder(AccountBloc accountBloc, HomeBloc homeBloc) =>
       StreamBuilder<List<Account>>(
         stream: accountBloc.familyAccounts,
         builder: (context, snapshot) => AccountGroupList(
               accounts: snapshot.hasData ? snapshot.data : null,
               title: 'Family Accounts',
-              transactionBloc: transactionBloc,
+              homeBloc: homeBloc,
             ),
       );
 

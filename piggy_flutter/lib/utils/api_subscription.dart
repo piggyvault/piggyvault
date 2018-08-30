@@ -56,8 +56,7 @@ apiSubscription(
               showSuccess(
                   context: context,
                   message: UIData.success,
-                  icon: FontAwesomeIcons.check,
-                  type: p.type);
+                  icon: FontAwesomeIcons.check);
             }
             break;
           case ApiType.createCategory:
@@ -70,12 +69,10 @@ apiSubscription(
               if (p.type == ApiType.updateCategory) {
                 transactionBloc.sync(true);
               }
-
               showSuccess(
                   context: context,
-                  message: UIData.success,
-                  icon: FontAwesomeIcons.check,
-                  type: p.type);
+                  message: UIData.category_update_success_message,
+                  icon: FontAwesomeIcons.check);
             }
             break;
           case ApiType.createAccount:
@@ -84,8 +81,7 @@ apiSubscription(
               showSuccess(
                   context: context,
                   message: UIData.success,
-                  icon: FontAwesomeIcons.check,
-                  type: p.type);
+                  icon: FontAwesomeIcons.check);
             }
             break;
         }
@@ -104,6 +100,11 @@ void showMessage(
       content: Text(message),
     ),
   );
+}
+
+void showSuccessMessage(
+    {@required GlobalKey<ScaffoldState> key, @required String message}) {
+  showMessage(key: key, color: Colors.greenAccent, message: message);
 }
 
 void showErrorMessage(

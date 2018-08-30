@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:piggy_flutter/models/api_request.dart';
 import 'package:piggy_flutter/models/api_response.dart';
 import 'package:piggy_flutter/utils/uidata.dart';
 
@@ -19,8 +18,7 @@ showError(BuildContext context, AjaxResponse snapshot) {
   );
 }
 
-showSuccess(
-    {BuildContext context, String message, IconData icon, ApiType type}) {
+showSuccess({BuildContext context, String message, IconData icon}) {
   showDialog(
     context: context,
     builder: (context) => Center(
@@ -50,7 +48,10 @@ showSuccess(
             ),
           ),
         ),
-  ).then((_) {
+  )
+      .timeout(Duration(seconds: 2))
+      .catchError((_) => Navigator.pop(context))
+      .then((_) {
     Navigator.pop(context);
   });
 }

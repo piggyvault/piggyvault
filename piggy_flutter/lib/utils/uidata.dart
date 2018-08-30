@@ -31,6 +31,7 @@ class UIData {
   static const String forgot_password = "Forgot Password?";
   static const String something_went_wrong = "Something went wrong";
   static const String coming_soon = "Coming Soon";
+  static const String category_update_success_message = "Category updated";
 
   static const MaterialColor ui_kit_color = Colors.grey;
 }

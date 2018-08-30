@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:piggy_flutter/blocs/bloc_provider.dart';
 import 'package:piggy_flutter/models/recent_transactions_state.dart';
-import 'package:piggy_flutter/models/transaction_summary.dart';
 import 'package:piggy_flutter/services/transaction_service.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:piggy_flutter/models/transaction_group_item.dart';
@@ -13,7 +12,6 @@ class TransactionBloc implements BlocBase {
 
   final _transactionsGroupBy =
       BehaviorSubject<TransactionsGroupBy>(seedValue: TransactionsGroupBy.Date);
-  final _transactionSummary = BehaviorSubject<TransactionSummary>();
   final _recentTransactionsState = BehaviorSubject<RecentTransactionsState>();
 
   Stream<bool> get syncStream => _syncSubject.stream;
@@ -21,8 +19,6 @@ class TransactionBloc implements BlocBase {
   Stream<TransactionsGroupBy> get transactionsGroupBy =>
       _transactionsGroupBy.stream;
 
-  Stream<TransactionSummary> get transactionSummary =>
-      _transactionSummary.stream;
   Stream<RecentTransactionsState> get recentTransactionsState =>
       _recentTransactionsState.stream;
 
@@ -69,14 +65,7 @@ class TransactionBloc implements BlocBase {
     }
   }
 
-  Future<Null> getTransactionSummary() async {
-//    print("########## TransactionBloc getTransactionSummary");
-    var result = await _transactionService.getTransactionSummary('month');
-    _transactionSummary.add(result);
-  }
-
   void dispose() {
-    _transactionSummary.close();
     _syncSubject.close();
     _recentTransactionsState.close();
     _transactionsGroupBy.close();
@@ -84,6 +73,5 @@ class TransactionBloc implements BlocBase {
 
   void _handleSync(bool event) async {
     await getRecentTransactions();
-    await getTransactionSummary();
   }
 }

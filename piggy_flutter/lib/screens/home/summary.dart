@@ -42,7 +42,7 @@ class SummaryPageWidget extends StatelessWidget {
                     'Monthly Income',
                     transactionSummary.userIncome,
                     transactionSummary.tenantIncome,
-                    Theme.of(context).primaryColor),
+                    Theme.of(context).accentColor),
                 balanceCard('Monthly Expense', transactionSummary.userExpense,
                     transactionSummary.tenantExpense, Colors.redAccent),
                 balanceCard('Monthly Savings', transactionSummary.userSaved,

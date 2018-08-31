@@ -21,9 +21,11 @@ class AccountGroupList extends StatelessWidget {
           accounts.map((dynamic item) => buildAccountListTile(context, item));
     }
 
-    return new ExpansionTile(
-        key: PageStorageKey('YourAccounts'),
-        title: Text(this.title),
+    return ExpansionTile(
+        key: PageStorageKey(this.title),
+        title: Text(this.title,
+            style: Theme.of(context).textTheme.title.copyWith(
+                fontSize: 16.0, color: Theme.of(context).accentColor)),
         initiallyExpanded: true,
         backgroundColor: Theme.of(context).accentColor.withOpacity(0.025),
         children: accountTiles.toList());
@@ -35,7 +37,7 @@ class AccountGroupList extends StatelessWidget {
         dense: true,
         leading: Icon(Icons.account_balance_wallet,
             color: Theme.of(context).disabledColor),
-        title: Text(account.name),
+        title: Text(account.name, style: Theme.of(context).textTheme.body2),
         subtitle: Text(account.accountType),
         trailing: Text('${account.currentBalance
             .toString()} ${account.currencySymbol}'),

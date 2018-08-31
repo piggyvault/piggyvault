@@ -74,7 +74,7 @@ class _AccountDetailPageState extends State<AccountDetailPage> {
                         .of(context)
                         .textTheme
                         .body2
-                        .copyWith(color: Colors.yellow),
+                        .copyWith(color: Theme.of(context).accentColor),
                   )
                 ],
               ),
@@ -86,20 +86,18 @@ class _AccountDetailPageState extends State<AccountDetailPage> {
                     children: <Widget>[
                       InkWell(
                         child: Text(state.previousPageTitle,
-                            style: textTheme.caption.copyWith(
-                                color: Colors.white.withOpacity(0.6))),
+                            style: textTheme.caption),
                         onTap: () {
                           _bloc.onPageChanged(-1);
                         },
                       ),
                       Text(
                         state.title,
-                        style: textTheme.body2.copyWith(color: Colors.white),
+                        style: textTheme.body2,
                       ),
                       InkWell(
-                        child: Text(state.nextPageTitle,
-                            style: textTheme.caption.copyWith(
-                                color: Colors.white.withOpacity(0.6))),
+                        child:
+                            Text(state.nextPageTitle, style: textTheme.caption),
                         onTap: () {
                           _bloc.onPageChanged(1);
                         },

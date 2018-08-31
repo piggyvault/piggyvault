@@ -48,20 +48,15 @@ _buildIconTheme(IconThemeData base) {
 }
 
 ThemeData _buildLightTheme() {
-  // const Color primaryColor = Color.fromRGBO(118, 53, 235, 1.0);
   const Color primaryColor = Colors.white;
   final ThemeData base = new ThemeData.light();
   return base.copyWith(
     primaryColor: primaryColor,
     buttonColor: primaryColor,
-    // indicatorColor: Colors.white,
     indicatorColor: Colors.black,
     splashColor: Colors.white24,
     splashFactory: InkRipple.splashFactory,
-    // accentColor: const Color(0xFF13B9FD),
-    // accentColor: const Color.fromRGBO(118, 53, 235, 1.0),
     accentColor: const Color.fromRGBO(57, 139, 189, 1.0),
-    // accentColor: Colors.cyan[600],
     canvasColor: Colors.white,
     scaffoldBackgroundColor: Colors.white,
     backgroundColor: Colors.white,

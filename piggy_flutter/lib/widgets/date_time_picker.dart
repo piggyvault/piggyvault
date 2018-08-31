@@ -37,32 +37,39 @@ class DateTimePicker extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final TextStyle valueStyle = Theme.of(context).textTheme.title;
-    return new Row(
-      crossAxisAlignment: CrossAxisAlignment.end,
-      children: <Widget>[
-        new Expanded(
-          flex: 4,
-          child: new InputDropdown(
-            labelText: labelText,
-            valueText: new DateFormat.yMMMd().format(selectedDate),
-            valueStyle: valueStyle,
-            onPressed: () {
-              _selectDate(context);
-            },
-          ),
-        ),
-        const SizedBox(width: 12.0),
-        new Expanded(
-          flex: 3,
-          child: new InputDropdown(
-            valueText: selectedTime.format(context),
-            valueStyle: valueStyle,
-            onPressed: () {
-              _selectTime(context);
-            },
-          ),
-        ),
-      ],
+    return Theme(
+      child: Builder(
+        builder: (context) => Row(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: <Widget>[
+                Expanded(
+                  flex: 4,
+                  child: InputDropdown(
+                    labelText: labelText,
+                    valueText: DateFormat.yMMMd().format(selectedDate),
+                    valueStyle: valueStyle,
+                    onPressed: () {
+                      _selectDate(context);
+                    },
+                  ),
+                ),
+                const SizedBox(width: 12.0),
+                Expanded(
+                  flex: 3,
+                  child: InputDropdown(
+                    valueText: selectedTime.format(context),
+                    valueStyle: valueStyle,
+                    onPressed: () {
+                      _selectTime(context);
+                    },
+                  ),
+                ),
+              ],
+            ),
+      ),
+      data: Theme
+          .of(context)
+          .copyWith(primaryColor: Theme.of(context).accentColor),
     );
   }
 }

@@ -7,6 +7,7 @@ import 'package:piggy_flutter/models/currency.dart';
 import 'package:piggy_flutter/screens/account/account_form_bloc.dart';
 import 'package:piggy_flutter/screens/account/account_type_model.dart';
 import 'package:piggy_flutter/utils/api_subscription.dart';
+import 'package:piggy_flutter/widgets/primary_color_override.dart';
 
 class AccountFormScreen extends StatefulWidget {
   final String title;
@@ -121,15 +122,17 @@ class _AccountFormScreenState extends State<AccountFormScreen> {
     return StreamBuilder(
       stream: _bloc.name,
       builder: (context, snapshot) {
-        return TextField(
-          enabled: true,
-          controller: _nameFieldController,
-          decoration: InputDecoration(
-              labelText: 'Account name',
-              border: OutlineInputBorder(),
-              errorText: snapshot.error),
-          style: theme.textTheme.headline,
-          onChanged: _bloc.changeName,
+        return PrimaryColorOverride(
+          child: TextField(
+            enabled: true,
+            controller: _nameFieldController,
+            decoration: InputDecoration(
+                labelText: 'Account name',
+                border: OutlineInputBorder(),
+                errorText: snapshot.error),
+            style: theme.textTheme.headline,
+            onChanged: _bloc.changeName,
+          ),
         );
       },
     );
@@ -199,8 +202,7 @@ class _AccountFormScreenState extends State<AccountFormScreen> {
       stream: _bloc.name,
       builder: (context, snapshot) {
         return FlatButton(
-          child: Text('SAVE',
-              style: theme.textTheme.body1.copyWith(color: Colors.white)),
+          child: Text('SAVE', style: theme.textTheme.button),
           onPressed: snapshot.hasData ? onSave : null,
         );
       },

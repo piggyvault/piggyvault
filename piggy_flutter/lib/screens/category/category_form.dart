@@ -4,6 +4,7 @@ import 'package:piggy_flutter/models/api_request.dart';
 import 'package:piggy_flutter/models/category.dart';
 import 'package:piggy_flutter/screens/category/category_form_bloc.dart';
 import 'package:piggy_flutter/utils/api_subscription.dart';
+import 'package:piggy_flutter/widgets/primary_color_override.dart';
 
 class CategoryFormPage extends StatefulWidget {
   final Category category;
@@ -87,12 +88,12 @@ class CategoryFormPageState extends State<CategoryFormPage> {
     return StreamBuilder(
       stream: _bloc.categoryName,
       builder: (context, snapshot) {
-        return Container(
+        return PrimaryColorOverride(
           child: TextField(
             controller: _categorynameFieldController,
             decoration: InputDecoration(
                 labelText: 'Category name',
-                filled: true,
+                border: OutlineInputBorder(),
                 errorText: snapshot.error),
             style: theme.textTheme.headline,
             onChanged: _bloc.changeCategoryName,
@@ -107,8 +108,7 @@ class CategoryFormPageState extends State<CategoryFormPage> {
       stream: _bloc.categoryName,
       builder: (context, snapshot) {
         return FlatButton(
-          child: Text('SAVE',
-              style: theme.textTheme.body1.copyWith(color: Colors.white)),
+          child: Text('SAVE', style: theme.textTheme.button),
           onPressed: snapshot.hasData ? _bloc.submit : null,
         );
       },

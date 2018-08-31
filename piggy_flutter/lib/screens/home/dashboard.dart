@@ -341,7 +341,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
-                              Text('Revenue',
+                              Text('Expense',
                                   style: TextStyle(color: Colors.green)),
                               Text('\$16K',
                                   style: TextStyle(

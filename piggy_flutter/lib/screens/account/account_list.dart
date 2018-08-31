@@ -39,7 +39,7 @@ class AccountListPage extends StatelessWidget {
           backgroundColor: Colors.amber,
           child: Icon(
             Icons.add,
-            color: Theme.of(context).buttonColor,
+            color: Theme.of(context).primaryColor,
           ),
           onPressed: () async {
             await Navigator.push(

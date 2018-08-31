@@ -52,7 +52,7 @@ class CategoryListPage extends StatelessWidget {
           key: ValueKey<Color>(Theme.of(context).buttonColor),
           tooltip: 'Add new category',
           backgroundColor: Theme.of(context).accentColor,
-          child: Icon(Icons.add),
+          child: Icon(Icons.add, color: Theme.of(context).primaryColor),
           onPressed: () async {
             await Navigator.push(
                 context,

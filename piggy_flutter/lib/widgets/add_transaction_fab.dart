@@ -15,7 +15,7 @@ class AddTransactionFab extends StatelessWidget {
         backgroundColor: Theme.of(context).accentColor,
         child: Icon(
           Icons.add,
-          color: Theme.of(context).buttonColor,
+          color: Theme.of(context).primaryColor,
         ),
         onPressed: () async {
           await Navigator.push(

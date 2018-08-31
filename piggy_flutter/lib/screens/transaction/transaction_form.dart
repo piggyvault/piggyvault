@@ -13,6 +13,7 @@ import 'package:piggy_flutter/screens/transaction/transaction_form_bloc.dart';
 import 'package:piggy_flutter/utils/api_subscription.dart';
 import 'package:piggy_flutter/utils/uidata.dart';
 import 'package:piggy_flutter/widgets/date_time_picker.dart';
+import 'package:piggy_flutter/widgets/primary_color_override.dart';
 // TODO: BLoC
 
 class TransactionFormPage extends StatefulWidget {
@@ -121,8 +122,7 @@ class TransactionFormPageState extends State<TransactionFormPage> {
         title: Text(widget.title == null ? ' Transaction' : widget.title),
         actions: <Widget>[
           FlatButton(
-              child: Text('SAVE',
-                  style: theme.textTheme.body1.copyWith(color: Colors.white)),
+              child: Text('SAVE', style: theme.textTheme.button),
               onPressed: () {
                 onSave(transactionFormBloc);
               })
@@ -174,20 +174,23 @@ class TransactionFormPageState extends State<TransactionFormPage> {
                   child: buildAccountList(accountBloc),
                 ),
                 const SizedBox(height: 24.0),
-                TextFormField(
-                  keyboardType: TextInputType.numberWithOptions(decimal: true),
-                  decoration: InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: 'Amount',
-                      prefixText:
-                          _account == null ? null : _account.currencySymbol,
-                      prefixStyle: _transactionTextStyle,
-                      suffixText:
-                          _account == null ? null : _account.currencyCode,
-                      suffixStyle: _transactionTextStyle),
-                  maxLines: 1,
-                  controller: _amountFieldController,
-                  validator: _validateAmount,
+                PrimaryColorOverride(
+                  child: TextFormField(
+                    keyboardType:
+                        TextInputType.numberWithOptions(decimal: true),
+                    decoration: InputDecoration(
+                        border: OutlineInputBorder(),
+                        labelText: 'Amount',
+                        prefixText:
+                            _account == null ? null : _account.currencySymbol,
+                        prefixStyle: _transactionTextStyle,
+                        suffixText:
+                            _account == null ? null : _account.currencyCode,
+                        suffixStyle: _transactionTextStyle),
+                    maxLines: 1,
+                    controller: _amountFieldController,
+                    validator: _validateAmount,
+                  ),
                 ),
                 InputDecorator(
                   decoration: InputDecoration(
@@ -199,16 +202,18 @@ class TransactionFormPageState extends State<TransactionFormPage> {
                   child: buildCategoryList(categoryBloc),
                 ),
                 const SizedBox(height: 24.0),
-                TextFormField(
-                  decoration: const InputDecoration(
-                    border: const OutlineInputBorder(),
-                    hintText: 'Tell us about the transaction',
-                    labelText: 'Description',
+                PrimaryColorOverride(
+                  child: TextFormField(
+                    decoration: const InputDecoration(
+                      border: const OutlineInputBorder(),
+                      hintText: 'Tell us about the transaction',
+                      labelText: 'Description',
+                    ),
+                    maxLines: 2,
+                    keyboardType: TextInputType.multiline,
+                    controller: _descriptionFieldController,
+                    validator: _validateDescription,
                   ),
-                  maxLines: 2,
-                  keyboardType: TextInputType.multiline,
-                  controller: _descriptionFieldController,
-                  validator: _validateDescription,
                 ),
                 DateTimePicker(
                   labelText: 'Date',
@@ -237,24 +242,26 @@ class TransactionFormPageState extends State<TransactionFormPage> {
                     : null,
                 _showTransferToAmount ? const SizedBox(height: 24.0) : null,
                 _showTransferToAmount
-                    ? TextFormField(
-                        keyboardType:
-                            TextInputType.numberWithOptions(decimal: true),
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(),
-                          labelText: 'Converted Amount',
-                          prefixText: _toAccount == null
-                              ? null
-                              : _toAccount.currencySymbol,
-                          prefixStyle: const TextStyle(color: Colors.green),
-                          suffixText: _toAccount == null
-                              ? null
-                              : _toAccount.currencyCode,
-                          suffixStyle: const TextStyle(color: Colors.green),
+                    ? PrimaryColorOverride(
+                        child: TextFormField(
+                          keyboardType:
+                              TextInputType.numberWithOptions(decimal: true),
+                          decoration: InputDecoration(
+                            border: OutlineInputBorder(),
+                            labelText: 'Converted Amount',
+                            prefixText: _toAccount == null
+                                ? null
+                                : _toAccount.currencySymbol,
+                            prefixStyle: const TextStyle(color: Colors.green),
+                            suffixText: _toAccount == null
+                                ? null
+                                : _toAccount.currencyCode,
+                            suffixStyle: const TextStyle(color: Colors.green),
+                          ),
+                          maxLines: 1,
+                          controller: _convertedAmountFieldController,
+                          validator: _validateAmount,
                         ),
-                        maxLines: 1,
-                        controller: _convertedAmountFieldController,
-                        validator: _validateAmount,
                       )
                     : null,
                 const SizedBox(height: 24.0),

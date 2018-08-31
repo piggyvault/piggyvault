@@ -13,11 +13,19 @@ final AppTheme lightAppTheme = new AppTheme._('Light', _buildLightTheme());
 TextTheme _buildTextTheme(TextTheme base) {
   return base
       .copyWith(
-        title: base.title.copyWith(
-          fontFamily: 'GoogleSans',
+        headline: base.headline.copyWith(
+          fontWeight: FontWeight.w500,
+        ),
+        title: base.title.copyWith(fontSize: 18.0),
+        caption: base.caption.copyWith(
+          fontWeight: FontWeight.w400,
+          fontSize: 14.0,
         ),
       )
-      .apply(displayColor: Colors.black, bodyColor: Colors.black);
+      .apply(
+          fontFamily: 'GoogleSans',
+          displayColor: Colors.black,
+          bodyColor: Colors.black);
 }
 
 ThemeData _buildDarkTheme() {
@@ -49,18 +57,16 @@ _buildIconTheme(IconThemeData base) {
 
 ThemeData _buildLightTheme() {
   const Color primaryColor = Colors.white;
+  const Color accentColor = Color.fromRGBO(57, 139, 189, 1.0);
   final ThemeData base = new ThemeData.light();
   return base.copyWith(
+    accentColor: accentColor,
     primaryColor: primaryColor,
     buttonColor: primaryColor,
-    indicatorColor: Colors.black,
-    splashColor: Colors.white24,
-    splashFactory: InkRipple.splashFactory,
-    accentColor: const Color.fromRGBO(57, 139, 189, 1.0),
-    canvasColor: Colors.white,
     scaffoldBackgroundColor: Colors.white,
-    backgroundColor: Colors.white,
-    errorColor: const Color(0xFFB00020),
+    cardColor: Colors.white,
+    textSelectionColor: primaryColor,
+    errorColor: const Color(0xFFC5032B),
     buttonTheme: const ButtonThemeData(
       textTheme: ButtonTextTheme.primary,
     ),

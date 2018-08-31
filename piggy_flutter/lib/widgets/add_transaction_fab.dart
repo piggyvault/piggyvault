@@ -12,8 +12,11 @@ class AddTransactionFab extends StatelessWidget {
     return FloatingActionButton(
         key: ValueKey<Color>(Theme.of(context).primaryColor),
         tooltip: 'Add new transaction',
-        backgroundColor: Theme.of(context).primaryColor,
-        child: Icon(Icons.add),
+        backgroundColor: Theme.of(context).accentColor,
+        child: Icon(
+          Icons.add,
+          color: Theme.of(context).buttonColor,
+        ),
         onPressed: () async {
           await Navigator.push(
               context,

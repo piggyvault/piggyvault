@@ -239,12 +239,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
     return Scaffold(
         appBar: AppBar(
           elevation: 2.0,
-          backgroundColor: Colors.white,
-          title: Text('Dashboard',
-              style: TextStyle(
-                  color: Colors.black,
-                  fontWeight: FontWeight.w700,
-                  fontSize: 30.0)),
+          title: Text(
+            'Dashboard',
+          ),
           actions: <Widget>[
             Container(
               margin: EdgeInsets.only(right: 8.0),
@@ -254,10 +251,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 children: <Widget>[
                   Text('piggyvault.in',
                       style: TextStyle(
-                          color: Colors.blue,
-                          fontWeight: FontWeight.w700,
-                          fontSize: 14.0)),
-                  Icon(Icons.arrow_drop_down, color: Colors.black54)
+                          fontWeight: FontWeight.w700, fontSize: 14.0)),
+                  Icon(
+                    Icons.arrow_drop_down,
+                  )
                 ],
               ),
             )

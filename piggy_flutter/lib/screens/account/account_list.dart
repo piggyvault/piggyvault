@@ -37,7 +37,10 @@ class AccountListPage extends StatelessWidget {
           key: ValueKey<Color>(Theme.of(context).buttonColor),
           tooltip: 'Add new account',
           backgroundColor: Colors.amber,
-          child: Icon(Icons.add),
+          child: Icon(
+            Icons.add,
+            color: Theme.of(context).buttonColor,
+          ),
           onPressed: () async {
             await Navigator.push(
                 context,

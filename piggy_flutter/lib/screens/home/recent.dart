@@ -30,7 +30,9 @@ class RecentPage extends StatelessWidget {
         return Scaffold(
           key: _scaffoldKey,
           appBar: new AppBar(
-            title: Text('Recent Transactions'),
+            title: Text(
+              'Recent Transactions',
+            ),
             actions: <Widget>[
               new IconButton(
                 icon: const Icon(Icons.refresh),

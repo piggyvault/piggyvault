@@ -29,24 +29,31 @@ class RestClient {
   }
 
   AjaxResponse<T> processResponse<T>(http.Response response) {
-    // if (!((response.statusCode < 200) ||
-    //     (response.statusCode >= 300) ||
-    //     (response.body == null))) {
-    var jsonResult = response.body;
-    dynamic resultClass = jsonDecode(jsonResult);
+    try {
+      // if (!((response.statusCode < 200) ||
+      //     (response.statusCode >= 300) ||
+      //     (response.body == null))) {
+      var jsonResult = response.body;
+      dynamic resultClass = jsonDecode(jsonResult);
 
-    // print(jsonResult);
+      // print(jsonResult);
 
-    var output = AjaxResponse<T>(
-      result: resultClass["result"],
-      success: resultClass["success"],
-      unAuthorizedRequest: resultClass['unAuthorizedRequest'],
-    );
+      var output = AjaxResponse<T>(
+        result: resultClass["result"],
+        success: resultClass["success"],
+        unAuthorizedRequest: resultClass['unAuthorizedRequest'],
+      );
 
-    if (!output.success) {
-      output.error = resultClass["error"]["message"];
+      if (!output.success) {
+        output.error = resultClass["error"]["message"];
+      }
+      return output;
+    } catch (e) {
+      return AjaxResponse<T>(
+          result: null,
+          success: false,
+          unAuthorizedRequest: false,
+          error: 'Something went wrong. Please try again');
     }
-
-    return output;
   }
 }

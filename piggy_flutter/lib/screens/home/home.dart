@@ -46,7 +46,7 @@ class HomePage extends StatefulWidget {
   HomePage(
       {Key key,
       this.isInitialLoading = false,
-      this.startpage = StartPage.Recent})
+      this.startpage = StartPage.Dashboard})
       : super(key: key);
 
   @override

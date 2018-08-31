@@ -58,7 +58,9 @@ class TransactionList extends StatelessWidget {
           mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-            Text('${item.title}'),
+            Text('${item.title}',
+                style: Theme.of(context).textTheme.title.copyWith(
+                    fontSize: 16.0, color: Theme.of(context).accentColor)),
             Row(
               children: <Widget>[
                 Chip(
@@ -76,23 +78,32 @@ class TransactionList extends StatelessWidget {
           ],
         ),
         initiallyExpanded: true,
-        backgroundColor: Theme.of(context).accentColor.withOpacity(0.025),
+        // backgroundColor: Theme.of(context).accentColor.withOpacity(0.025),
         children: transactionList.toList());
   }
 
   buildTransactionList(BuildContext context, Transaction transaction,
       TransactionsGroupBy groupBy) {
+    final TextTheme textTheme = Theme.of(context).textTheme;
     return MergeSemantics(
       child: new ListTile(
           dense: true,
-          title: Text(groupBy == TransactionsGroupBy.Date
-              ? transaction.categoryName
-              : formatter.format(DateTime.parse(transaction.transactionTime))),
-          subtitle: new Text("${transaction.description}\n${transaction
-              .creatorUserName}'s ${transaction.accountName}"),
+          title: Text(
+            groupBy == TransactionsGroupBy.Date
+                ? transaction.categoryName
+                : formatter.format(DateTime.parse(transaction.transactionTime)),
+            style: textTheme.body2,
+          ),
+          subtitle: Text(
+            "${transaction.description}\n${transaction
+              .creatorUserName}'s ${transaction.accountName}",
+            // style: textTheme.caption,
+          ),
           isThreeLine: true,
-          trailing: Text('${transaction.amount
-              .toString()} ${transaction.accountCurrencySymbol}'),
+          trailing: Text(
+            '${transaction.amount
+              .toString()} ${transaction.accountCurrencySymbol}',
+          ),
           leading: CircleAvatar(
             child: Text(
               groupBy == TransactionsGroupBy.Category
@@ -102,7 +113,7 @@ class TransactionList extends StatelessWidget {
                   color: transaction.amount > 0 ? Colors.white : Colors.black),
             ),
             backgroundColor: transaction.amount > 0
-                ? Theme.of(context).primaryColor
+                ? Theme.of(context).accentColor
                 : Theme.of(context).disabledColor,
           ),
           onTap: () {

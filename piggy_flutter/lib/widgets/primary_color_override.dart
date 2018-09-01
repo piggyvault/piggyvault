@@ -13,7 +13,7 @@ class PrimaryColorOverride extends StatelessWidget {
       child: child,
       data: Theme
           .of(context)
-          .copyWith(primaryColor: Theme.of(context).accentColor),
+          .copyWith(primaryColor: color ?? Theme.of(context).accentColor),
     );
   }
 }

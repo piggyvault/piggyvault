@@ -57,7 +57,7 @@ _buildIconTheme(IconThemeData base) {
 
 ThemeData _buildLightTheme() {
   const Color primaryColor = Colors.white;
-  const Color accentColor = Color.fromRGBO(57, 139, 189, 1.0);
+  const Color accentColor = Color.fromRGBO(36, 155, 227, 1.0);
   final ThemeData base = new ThemeData.light();
   return base.copyWith(
     accentColor: accentColor,

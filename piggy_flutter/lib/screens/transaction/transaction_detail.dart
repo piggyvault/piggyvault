@@ -11,6 +11,7 @@ import 'package:piggy_flutter/screens/transaction/transaction_detail_bloc.dart';
 import 'package:piggy_flutter/screens/transaction/transaction_form.dart';
 import 'package:piggy_flutter/utils/api_subscription.dart';
 import 'package:piggy_flutter/utils/common.dart';
+import 'package:piggy_flutter/widgets/primary_color_override.dart';
 
 class TransactionDetailPage extends StatefulWidget {
   final Transaction transaction;
@@ -49,7 +50,7 @@ class TransactionDetailPageState extends State<TransactionDetailPage> {
       appBar: AppBar(
         title: Text('Transaction Details'),
       ),
-      body: new ListView(
+      body: ListView(
         padding: const EdgeInsets.only(top: 8.0, left: 8.0, right: 8.0),
         children: <Widget>[
           _transactionDetails(),
@@ -172,11 +173,13 @@ class TransactionDetailPageState extends State<TransactionDetailPage> {
       stream: _bloc.comment,
       builder: (context, snapshot) {
         return ListTile(
-          title: TextField(
-            controller: _commentController,
-            decoration: new InputDecoration(
-                labelText: 'Write a comment...', errorText: snapshot.error),
-            onChanged: _bloc.changeComment,
+          title: PrimaryColorOverride(
+                      child: TextField(
+              controller: _commentController,
+              decoration: new InputDecoration(
+                  labelText: 'Write a comment...', errorText: snapshot.error),
+              onChanged: _bloc.changeComment,
+            ),
           ),
           trailing: new OutlineButton(
             onPressed: (() {
@@ -186,7 +189,7 @@ class TransactionDetailPageState extends State<TransactionDetailPage> {
               }
             }),
             borderSide: BorderSide.none,
-            child: new Text("Post"),
+            child: Text("Post", style: Theme.of(context).textTheme.button),
           ),
         );
       },

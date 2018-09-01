@@ -5,6 +5,7 @@ import 'package:piggy_flutter/screens/home/home.dart';
 import 'package:piggy_flutter/screens/login/login_bloc.dart';
 import 'package:piggy_flutter/utils/api_subscription.dart';
 import 'package:piggy_flutter/utils/uidata.dart';
+import 'package:piggy_flutter/widgets/primary_color_override.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatefulWidget {
@@ -122,17 +123,19 @@ class _LoginPageState extends State<LoginPage> {
     return StreamBuilder(
       stream: _bloc.tenancyName,
       builder: (context, snapshot) {
-        return Container(
-          padding: EdgeInsets.symmetric(vertical: 16.0, horizontal: 30.0),
-          child: TextField(
-            maxLines: 1,
-            decoration: InputDecoration(
-              hintText: "Enter your family name",
-              labelText: "Family",
-              errorText: snapshot.error,
+        return PrimaryColorOverride(
+          child: Container(
+            padding: EdgeInsets.symmetric(vertical: 16.0, horizontal: 30.0),
+            child: TextField(
+              maxLines: 1,
+              decoration: InputDecoration(
+                hintText: "Enter your family name",
+                labelText: "Family",
+                errorText: snapshot.error,
+              ),
+              onChanged: _bloc.changeTenancyName,
+              keyboardType: TextInputType.emailAddress,
             ),
-            onChanged: _bloc.changeTenancyName,
-            keyboardType: TextInputType.emailAddress,
           ),
         );
       },
@@ -143,17 +146,19 @@ class _LoginPageState extends State<LoginPage> {
     return StreamBuilder(
       stream: _bloc.usernameOrEmailAddress,
       builder: (context, snapshot) {
-        return Container(
-          padding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 30.0),
-          child: TextField(
-            maxLines: 1,
-            decoration: InputDecoration(
-              hintText: "Enter your username",
-              labelText: "Username",
-              errorText: snapshot.error,
+        return PrimaryColorOverride(
+          child: Container(
+            padding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 30.0),
+            child: TextField(
+              maxLines: 1,
+              decoration: InputDecoration(
+                hintText: "Enter your username",
+                labelText: "Username",
+                errorText: snapshot.error,
+              ),
+              onChanged: _bloc.changeUsernameOrEmailAddress,
+              keyboardType: TextInputType.emailAddress,
             ),
-            onChanged: _bloc.changeUsernameOrEmailAddress,
-            keyboardType: TextInputType.emailAddress,
           ),
         );
       },
@@ -164,17 +169,19 @@ class _LoginPageState extends State<LoginPage> {
     return StreamBuilder(
       stream: _bloc.password,
       builder: (context, snapshot) {
-        return Container(
-          padding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 30.0),
-          child: TextField(
-            maxLines: 1,
-            obscureText: true,
-            decoration: InputDecoration(
-              hintText: "Enter your password",
-              labelText: "Password",
-              errorText: snapshot.error,
+        return PrimaryColorOverride(
+          child: Container(
+            padding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 30.0),
+            child: TextField(
+              maxLines: 1,
+              obscureText: true,
+              decoration: InputDecoration(
+                hintText: "Enter your password",
+                labelText: "Password",
+                errorText: snapshot.error,
+              ),
+              onChanged: _bloc.changePassword,
             ),
-            onChanged: _bloc.changePassword,
           ),
         );
       },

@@ -70,8 +70,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   List<Widget> _pages;
   bool _isSyncRequired;
 
-  /// This controller can be used to programmatically
-  /// set the current displayed page
   PageController _pageController;
   final Connectivity _connectivity = new Connectivity();
   StreamSubscription<ConnectivityResult> _connectivitySubscription;
@@ -84,7 +82,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       new NavigationIconView(
         icon: const Icon(Icons.dashboard),
         title: 'Dashboard',
-        color: Colors.amber,
+        color: Colors.lightBlue,
         vsync: this,
         activeIcon: const Icon(Icons.data_usage),
       ),

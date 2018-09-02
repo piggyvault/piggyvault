@@ -385,7 +385,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             StaggeredTile.extent(2, 110.0),
             StaggeredTile.extent(1, 180.0),
             StaggeredTile.extent(1, 180.0),
-            StaggeredTile.extent(2, 220.0),
+            // StaggeredTile.extent(2, 220.0),
             StaggeredTile.extent(2, 110.0),
           ],
         ));

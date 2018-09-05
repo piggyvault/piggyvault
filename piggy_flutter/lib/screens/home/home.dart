@@ -84,7 +84,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
         title: 'Dashboard',
         color: Colors.lightBlue,
         vsync: this,
-        activeIcon: const Icon(Icons.data_usage),
       ),
       new NavigationIconView(
         icon: const Icon(Icons.format_list_bulleted),
@@ -100,7 +99,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       ),
       new NavigationIconView(
         icon: const Icon(Icons.work),
-        title: 'Dashboard',
+        title: 'Summary',
         color: Colors.indigo,
         vsync: this,
       ),

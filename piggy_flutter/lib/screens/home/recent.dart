@@ -13,9 +13,9 @@ import 'package:piggy_flutter/widgets/transaction_list.dart';
 
 class RecentPage extends StatelessWidget {
   RecentPage({Key key}) : super(key: key);
-  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
-      new GlobalKey<RefreshIndicatorState>();
+      GlobalKey<RefreshIndicatorState>();
 
   @override
   Widget build(BuildContext context) {
@@ -29,18 +29,18 @@ class RecentPage extends StatelessWidget {
         final state = snapshot.data;
         return Scaffold(
           key: _scaffoldKey,
-          appBar: new AppBar(
+          appBar: AppBar(
             title: Text(
               'Recent Transactions',
             ),
             actions: <Widget>[
-              new IconButton(
+              IconButton(
                 icon: const Icon(Icons.refresh),
                 onPressed: () {
                   _handleRefresh(bloc);
                 },
               ),
-              new PopupMenuButton<String>(
+              PopupMenuButton<String>(
                 padding: EdgeInsets.zero,
                 onSelected: (value) {
                   // print('PopupMenuButton onSelected $value');
@@ -78,15 +78,15 @@ class RecentPage extends StatelessWidget {
               )
             ],
           ),
-          body: new RefreshIndicator(
+          body: RefreshIndicator(
             key: _refreshIndicatorKey,
             onRefresh: (() => _handleRefresh(bloc)),
             child: SafeArea(
               top: false,
               bottom: false,
-              child: new Column(
+              child: Column(
                 children: <Widget>[
-                  new Expanded(
+                  Expanded(
                     child: Stack(
                       children: <Widget>[
                         // Fade in a loading screen when results are being fetched
@@ -125,9 +125,9 @@ class RecentPage extends StatelessWidget {
   Future<Null> _handleRefresh(HomeBloc bloc) {
     return bloc.getRecentTransactions().then((_) {
       _scaffoldKey.currentState?.showSnackBar(
-        new SnackBar(
+        SnackBar(
           content: const Text('Refresh complete'),
-          action: new SnackBarAction(
+          action: SnackBarAction(
               label: 'RETRY',
               onPressed: () {
                 _refreshIndicatorKey.currentState.show();

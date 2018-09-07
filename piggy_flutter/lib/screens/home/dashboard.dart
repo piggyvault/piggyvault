@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-// import 'package:flutter_sparkline/flutter_sparkline.dart';
+import 'package:flutter_sparkline/flutter_sparkline.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:piggy_flutter/blocs/bloc_provider.dart';
 import 'package:piggy_flutter/models/transaction_summary.dart';
@@ -326,66 +326,66 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 ),
                 onTap: (() => Navigator.of(context).pushReplacementNamed(
                     CategoryWiseRecentMonthsReportScreen.routeName))),
-            // _buildTile(
-            //   Padding(
-            //       padding: const EdgeInsets.all(24.0),
-            //       child: Column(
-            //         mainAxisAlignment: MainAxisAlignment.start,
-            //         crossAxisAlignment: CrossAxisAlignment.start,
-            //         children: <Widget>[
-            //           Row(
-            //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            //             crossAxisAlignment: CrossAxisAlignment.start,
-            //             children: <Widget>[
-            //               Column(
-            //                 mainAxisAlignment: MainAxisAlignment.start,
-            //                 crossAxisAlignment: CrossAxisAlignment.start,
-            //                 children: <Widget>[
-            //                   Text('Expense',
-            //                       style: TextStyle(color: Colors.green)),
-            //                   Text('\$16K',
-            //                       style: TextStyle(
-            //                           color: Colors.black,
-            //                           fontWeight: FontWeight.w700,
-            //                           fontSize: 34.0)),
-            //                 ],
-            //               ),
-            //               DropdownButton(
-            //                   isDense: true,
-            //                   value: actualDropdown,
-            //                   onChanged: (String value) => setState(() {
-            //                         actualDropdown = value;
-            //                         actualChart = chartDropdownItems
-            //                             .indexOf(value); // Refresh the chart
-            //                       }),
-            //                   items: chartDropdownItems.map((String title) {
-            //                     return DropdownMenuItem(
-            //                       value: title,
-            //                       child: Text(title,
-            //                           style: TextStyle(
-            //                               color: Colors.blue,
-            //                               fontWeight: FontWeight.w400,
-            //                               fontSize: 14.0)),
-            //                     );
-            //                   }).toList())
-            //             ],
-            //           ),
-            //           Padding(padding: EdgeInsets.only(bottom: 4.0)),
-            //           Sparkline(
-            //             data: charts[actualChart],
-            //             lineWidth: 5.0,
-            //             lineColor: Colors.greenAccent,
-            //           )
-            //         ],
-            //       )),
-            // ),
+            _buildTile(
+              Padding(
+                  padding: const EdgeInsets.all(24.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Text('Expense',
+                                  style: TextStyle(color: Colors.green)),
+                              Text('\$16K',
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.w700,
+                                      fontSize: 34.0)),
+                            ],
+                          ),
+                          DropdownButton(
+                              isDense: true,
+                              value: actualDropdown,
+                              onChanged: (String value) => setState(() {
+                                    actualDropdown = value;
+                                    actualChart = chartDropdownItems
+                                        .indexOf(value); // Refresh the chart
+                                  }),
+                              items: chartDropdownItems.map((String title) {
+                                return DropdownMenuItem(
+                                  value: title,
+                                  child: Text(title,
+                                      style: TextStyle(
+                                          color: Colors.blue,
+                                          fontWeight: FontWeight.w400,
+                                          fontSize: 14.0)),
+                                );
+                              }).toList())
+                        ],
+                      ),
+                      Padding(padding: EdgeInsets.only(bottom: 4.0)),
+                      Sparkline(
+                        data: charts[actualChart],
+                        lineWidth: 5.0,
+                        lineColor: Colors.greenAccent,
+                      )
+                    ],
+                  )),
+            ),
             _lastTransactionTile(bloc)
           ],
           staggeredTiles: [
             StaggeredTile.extent(2, 110.0),
             StaggeredTile.extent(1, 180.0),
             StaggeredTile.extent(1, 180.0),
-            // StaggeredTile.extent(2, 220.0),
+            StaggeredTile.extent(2, 220.0),
             StaggeredTile.extent(2, 110.0),
           ],
         ));

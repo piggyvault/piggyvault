@@ -1,4 +1,6 @@
 # Piggy
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FAbhith%2Fpiggy-flutter.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2FAbhith%2Fpiggy-flutter?ref=badge_shield)
+
 
 A WORK IN PROGRESS family finance management app. App is available ONLY to internal testers in Google play for now.
 
@@ -79,3 +81,7 @@ A WORK IN PROGRESS family finance management app. App is available ONLY to inter
 ### About
 
 <img src="images/screenshots/about.jpg" width="300">
+
+
+## License
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FAbhith%2Fpiggy-flutter.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2FAbhith%2Fpiggy-flutter?ref=badge_large)

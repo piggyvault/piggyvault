@@ -20,7 +20,7 @@ class HomeBloc implements BlocBase {
   Function(bool) get syncData => _syncDataSubject.sink.add;
 
   final _transactionsGroupBy =
-      BehaviorSubject<TransactionsGroupBy>(seedValue: TransactionsGroupBy.Date);
+      BehaviorSubject<TransactionsGroupBy>.seeded(TransactionsGroupBy.Date);
   Stream<TransactionsGroupBy> get transactionsGroupBy =>
       _transactionsGroupBy.stream;
   Function(TransactionsGroupBy) get changeTransactionsGroupBy =>

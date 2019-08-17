@@ -14,10 +14,10 @@ class AccountFormBloc implements BlocBase {
 
   final AccountService _accountService = AccountService();
 
-  final _currencies = BehaviorSubject<List<Currency>>(seedValue: []);
+  final _currencies = BehaviorSubject<List<Currency>>.seeded([]);
   Stream<List<Currency>> get currencies => _currencies.stream;
 
-  final _types = BehaviorSubject<List<AccountType>>(seedValue: []);
+  final _types = BehaviorSubject<List<AccountType>>.seeded([]);
   Stream<List<AccountType>> get types => _types.stream;
 
   final _name = BehaviorSubject<String>();

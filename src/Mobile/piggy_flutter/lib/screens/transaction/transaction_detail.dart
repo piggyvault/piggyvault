@@ -141,9 +141,9 @@ class TransactionDetailPageState extends State<TransactionDetailPage> {
                     ],
                   ),
                 )
-              : null;
+              : new Container();
         } else {
-          return null;
+          return new Container();
         }
       },
     );

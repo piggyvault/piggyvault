@@ -75,6 +75,7 @@ class TransactionDetailPageState extends State<TransactionDetailPage> {
       stream: bloc.user,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
+          // Hide actions if transaction created by another user
           return widget.transaction.creatorUserName == snapshot.data.userName
               ? BottomAppBar(
                   child: Row(
@@ -87,9 +88,9 @@ class TransactionDetailPageState extends State<TransactionDetailPage> {
                             MaterialPageRoute(
                               builder: (BuildContext context) =>
                                   TransactionFormPage(
-                                    transaction: widget.transaction,
-                                    title: 'Edit Transaction',
-                                  ),
+                                transaction: widget.transaction,
+                                title: 'Edit Transaction',
+                              ),
                               fullscreenDialog: true,
                             ),
                           );
@@ -103,10 +104,10 @@ class TransactionDetailPageState extends State<TransactionDetailPage> {
                             MaterialPageRoute(
                               builder: (BuildContext context) =>
                                   TransactionFormPage(
-                                    transaction: widget.transaction,
-                                    title: 'Copy Transaction',
-                                    isCopy: true,
-                                  ),
+                                transaction: widget.transaction,
+                                title: 'Copy Transaction',
+                                isCopy: true,
+                              ),
                               fullscreenDialog: true,
                             ),
                           );
@@ -141,9 +142,9 @@ class TransactionDetailPageState extends State<TransactionDetailPage> {
                     ],
                   ),
                 )
-              : null;
+              : const SizedBox.shrink();
         } else {
-          return null;
+          return new Container();
         }
       },
     );
@@ -174,7 +175,7 @@ class TransactionDetailPageState extends State<TransactionDetailPage> {
       builder: (context, snapshot) {
         return ListTile(
           title: PrimaryColorOverride(
-                      child: TextField(
+            child: TextField(
               controller: _commentController,
               decoration: new InputDecoration(
                   labelText: 'Write a comment...', errorText: snapshot.error),
@@ -209,8 +210,8 @@ class TransactionDetailPageState extends State<TransactionDetailPage> {
                       leading: const CircleAvatar(),
                       title: Text(comment.creatorUserName),
                       subtitle: Text(comment.content),
-                      trailing: Text('${_commentTimeFormatter.format(
-                  DateTime.parse(comment.creationTime))}'),
+                      trailing: Text(
+                          '${_commentTimeFormatter.format(DateTime.parse(comment.creationTime))}'),
                     );
                   }).toList()),
             );
@@ -232,8 +233,7 @@ class TransactionDetailPageState extends State<TransactionDetailPage> {
           ListTile(
             leading: const Icon(Icons.attach_money),
             title: Text(
-                '${widget.transaction.amount.toString()} ${widget.transaction
-                  .accountCurrencySymbol}'),
+                '${widget.transaction.amount.toString()} ${widget.transaction.accountCurrencySymbol}'),
           ),
           ListTile(
             leading: const Icon(Icons.event_note),
@@ -242,8 +242,8 @@ class TransactionDetailPageState extends State<TransactionDetailPage> {
           ),
           ListTile(
             leading: const Icon(Icons.access_time),
-            title: Text('${_formatter.format(
-                  DateTime.parse(widget.transaction.transactionTime))}'),
+            title: Text(
+                '${_formatter.format(DateTime.parse(widget.transaction.transactionTime))}'),
           ),
           ListTile(
             leading: const Icon(Icons.account_balance_wallet),

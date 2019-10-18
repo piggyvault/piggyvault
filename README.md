@@ -1,10 +1,27 @@
 # Piggy
-[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FAbhith%2Fpiggy-flutter.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2FAbhith%2Fpiggy-flutter?ref=badge_shield)
 
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fpiggyvault%2Fpiggyvault.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fpiggyvault%2Fpiggyvault?ref=badge_shield)
 
-A WORK IN PROGRESS family finance management app. App is available ONLY to internal testers in Google play for now.
+A WORK IN PROGRESS family finance management app.
 
-## Screenshots
+## Technology Stack
+
+### Web
+
+- ASP.NET Core
+- Angular
+- MSSQL
+
+### Mobile
+
+- Flutter
+
+## Development Status
+
+Checkout the repository projects tab to see what is planned and what is going on now.
+High level planned items can be viewed under organization's projects.
+
+## Mobile App Screenshots
 
 ### Login
 
@@ -81,7 +98,3 @@ A WORK IN PROGRESS family finance management app. App is available ONLY to inter
 ### About
 
 <img src="images/screenshots/about.jpg" width="300">
-
-
-## License
-[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FAbhith%2Fpiggy-flutter.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2FAbhith%2Fpiggy-flutter?ref=badge_large)

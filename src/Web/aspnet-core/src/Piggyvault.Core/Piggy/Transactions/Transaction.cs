@@ -47,7 +47,7 @@ namespace Piggyvault.Piggy.Transactions
         /// <summary>
         /// Gets or sets the category id.
         /// </summary>
-        public long CategoryId { get; set; }
+        public Guid CategoryId { get; set; }
 
         public virtual ICollection<TransactionComment> Comments { get; set; }
 

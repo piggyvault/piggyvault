@@ -95,5 +95,11 @@
     <text name="Skins">Skins</text>
     <text name="Settings">Settings</text>
     <text name="Filter">Filter</text>
+    <text name="Dashboard">Dashboard</text>
+    <text name="StatisticsAndReports">Statistics and Reports</text>
+    <text name="NetWorth">Net Worth</text>
+    <text name="Income">Income</text>
+    <text name="Expense">Expense</text>
+    <text name="Saved">Saved</text>
   </texts>
 </localizationDictionary>

@@ -7,7 +7,14 @@ import 'package:piggy_flutter/utils/uidata.dart';
 
 class RestClient {
   Future<AjaxResponse<T>> getAsync<T>(String resourcePath) async {
-    var response = await http.get(resourcePath);
+    final prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString(UIData.authToken);
+    var response = await http.get('http://localhost:21021/api/$resourcePath',
+        headers: {
+          'Content-type': 'application/json',
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $token'
+        });
     return processResponse<T>(response);
   }
 

@@ -9,7 +9,7 @@ class CategoryService extends AppServiceBase {
     List<Category> tenantCategories = [];
 
     var result =
-        await rest.postAsync('services/app/Category/GetTenantCategories', null);
+        await rest.getAsync('services/app/Category/GetTenantCategories');
 
     if (result.success) {
       result.result['items'].forEach(

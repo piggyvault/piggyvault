@@ -18,7 +18,7 @@ class RestClient {
 
     var content = json.encoder.convert(data);
     // print(content);
-    var response = await http.post('http://piggyvault.in/api/$resourcePath',
+    var response = await http.post('http://localhost:21021/api/$resourcePath',
         body: content,
         headers: {
           'Content-type': 'application/json',

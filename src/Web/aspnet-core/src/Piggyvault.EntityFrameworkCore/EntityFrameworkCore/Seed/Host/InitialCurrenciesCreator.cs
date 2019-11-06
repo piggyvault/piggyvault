@@ -1,10 +1,10 @@
-﻿using System.Linq;
+﻿using Newtonsoft.Json;
+using System.Linq;
+using System.IO;
+
 
 namespace Piggyvault.EntityFrameworkCore.Seed.Host
 {
-    using System.IO;
-
-    using Newtonsoft.Json;
     using Piggyvault.Piggy.Currencies;
 
     public class InitialCurrenciesCreator

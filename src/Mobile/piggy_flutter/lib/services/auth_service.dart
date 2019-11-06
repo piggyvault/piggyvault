@@ -19,7 +19,7 @@ class AuthService extends AppServiceBase {
   }
 
   Future<AjaxResponse<dynamic>> authenticate(LoginInput input) async {
-    var result = await rest.postAsync('Account/Authenticate', {
+    var result = await rest.postAsync('TokenAuth/Authenticate', {
       "tenancyName": input.tenancyName,
       "usernameOrEmailAddress": input.usernameOrEmailAddress,
       "password": input.password

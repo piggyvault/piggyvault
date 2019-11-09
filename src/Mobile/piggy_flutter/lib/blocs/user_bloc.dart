@@ -4,7 +4,7 @@ import 'package:piggy_flutter/blocs/bloc_provider.dart';
 import 'package:piggy_flutter/models/user.dart';
 import 'package:piggy_flutter/services/auth_service.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:onesignal/onesignal.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 
 class UserBloc implements BlocBase {
   final AuthService _authService = AuthService();

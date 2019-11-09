@@ -1,7 +1,7 @@
 class TransactionEditDto {
   String id, description, accountId, transactionTime;
   double amount;
-  int categoryId;
+  String categoryId;
 
   TransactionEditDto(
       {this.id,

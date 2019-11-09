@@ -49,7 +49,7 @@ class LoginBloc implements BlocBase {
     if (result.result != null) {
       _handleSendTags(validTenancyName);
       final prefs = await SharedPreferences.getInstance();
-      await prefs.setString(UIData.authToken, result.result);
+      await prefs.setString(UIData.authToken, result.result["accessToken"]);
     }
     request.response = result;
     request.isInProcess = false;

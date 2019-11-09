@@ -26,6 +26,9 @@ class AuthService extends AppServiceBase {
         await _apiClient.isTenantAvailable(input.tenancyName);
 
     if (isTenantAvailableResult.state == 1) {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setInt(UIData.tenantId, isTenantAvailableResult.tenantId);
+
       var result = await rest.postAsync('TokenAuth/Authenticate', {
         "usernameOrEmailAddress": input.usernameOrEmailAddress,
         "password": input.password

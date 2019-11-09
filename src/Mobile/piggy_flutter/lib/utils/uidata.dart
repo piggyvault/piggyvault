@@ -10,6 +10,7 @@ class UIData {
   static const String appName = "Piggy";
   static const String appVersion = "0.13.1";
   static const String authToken = "authToken";
+  static const String tenantId = "tenantId";
   static const String transaction_type_expense = "Expense";
   static const String transaction_type_income = "Income";
   static const String transaction_type_transfer = "Transfer";

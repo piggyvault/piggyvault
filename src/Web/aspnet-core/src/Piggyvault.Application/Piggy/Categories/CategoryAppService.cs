@@ -36,7 +36,7 @@ namespace Piggyvault.Piggy.Categories
         [AbpAuthorize]
         public async Task<CategoryEditDto> GetCategoryForEdit(EntityDto<Guid> input)
         {
-            var tenantId = AbpSession.TenantId.HasValue ? AbpSession.TenantId.Value : 1;
+            var tenantId = AbpSession.TenantId.Value;
             var category = await _categoryRepository.FirstOrDefaultAsync(c => c.Id == input.Id && c.TenantId == tenantId);
             return category.MapTo<CategoryEditDto>();
         }
@@ -44,7 +44,7 @@ namespace Piggyvault.Piggy.Categories
         [AbpAuthorize]
         public async Task<ListResultDto<CategoryEditDto>> GetTenantCategories()
         {
-            var tenantId = AbpSession.TenantId.HasValue ? AbpSession.TenantId.Value : 1;
+            var tenantId = AbpSession.TenantId.Value;
             var categories = await
                 _categoryRepository.GetAll().Where(c => c.TenantId == tenantId).OrderBy(c => c.Name).ToListAsync();
 
@@ -54,13 +54,13 @@ namespace Piggyvault.Piggy.Categories
         private async Task CreateCategoryAsync(CategoryEditDto input)
         {
             var category = input.MapTo<Category>();
-            category.TenantId = AbpSession.TenantId.HasValue ? AbpSession.TenantId.Value : 1;
+            category.TenantId = AbpSession.TenantId.Value;
             await _categoryRepository.InsertAsync(category);
         }
 
         private async Task UpdateCategoryAsync(CategoryEditDto input)
         {
-            var tenantId = AbpSession.TenantId.HasValue ? AbpSession.TenantId.Value : 1;
+            var tenantId = AbpSession.TenantId.Value;
             var category = await _categoryRepository.FirstOrDefaultAsync(c => c.Id == input.Id && c.TenantId == tenantId);
             input.MapTo(category);
         }

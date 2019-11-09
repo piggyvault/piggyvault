@@ -8,7 +8,7 @@ class Account {
   Account.fromJson(Map<String, dynamic> json)
       : id = json['id'],
         name = json['name'],
-        accountType = json['accountType']['name'],
+        accountType = json['accountType'],
         currencySymbol = json['currency']['symbol'],
         currencyCode = json['currency']['code'],
         currentBalance = json['currentBalance'];

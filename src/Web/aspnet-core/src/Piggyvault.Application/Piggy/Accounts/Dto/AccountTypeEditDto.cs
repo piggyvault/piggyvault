@@ -1,7 +1,4 @@
 ﻿using Abp.AutoMapper;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Piggyvault.Piggy.Accounts.Dto
 {

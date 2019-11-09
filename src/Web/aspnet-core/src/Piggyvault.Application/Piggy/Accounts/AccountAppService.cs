@@ -127,12 +127,18 @@ namespace Piggyvault.Piggy.Accounts
             {
                 case "user":
                     var userId = input.UserId ?? AbpSession.UserId.Value;
-                    query = _accountRepository.GetAll().Include(c => c.CreatorUser).Where(a => a.CreatorUserId == userId);
+                    query = _accountRepository.GetAll()
+                        .Include(c => c.CreatorUser)
+                        .Include(currency => currency.Currency)
+                        .Where(a => a.CreatorUserId == userId);
                     break;
 
                 default:
                     var tenantId = AbpSession.TenantId.Value;
-                    query = _accountRepository.GetAll().Include(c => c.CreatorUser).Where(a => a.TenantId == tenantId);
+                    query = _accountRepository.GetAll()
+                        .Include(c => c.CreatorUser)
+                        .Include(currency => currency.Currency)
+                        .Where(a => a.TenantId == tenantId);
                     break;
             }
 
@@ -182,7 +188,11 @@ namespace Piggyvault.Piggy.Accounts
             var output = new GetTenantAccountsAsyncOutput();
 
             var tenantId = AbpSession.TenantId;
-            var query = _accountRepository.GetAll().Include(c => c.CreatorUser).Where(a => a.TenantId == tenantId);
+            var query = _accountRepository.GetAll()
+                .Include(c => c.CreatorUser)
+                .Include(currency => currency.Currency)
+                .Include(a => a.AccountType)
+                .Where(a => a.TenantId == tenantId);
 
             var accounts = await query.OrderBy(a => a.Name).ToListAsync();
 
@@ -221,7 +231,10 @@ namespace Piggyvault.Piggy.Accounts
         public async Task<ListResultDto<AccountPreviewDto>> GetUserAccounts()
         {
             var output = new ListResultDto<AccountPreviewDto>();
-            var accounts = await this._accountRepository.GetAll().Where(a => a.CreatorUserId == AbpSession.UserId).Include(c => c.CreatorUser).OrderBy(a => a.Name).ToListAsync();
+            var accounts = await this._accountRepository.GetAll()
+                .Where(a => a.CreatorUserId == AbpSession.UserId)
+                .Include(c => c.CreatorUser).OrderBy(a => a.Name)
+                .Include(currency => currency.Currency).ToListAsync();
             output.Items = accounts.MapTo<List<AccountPreviewDto>>();
             return output;
         }

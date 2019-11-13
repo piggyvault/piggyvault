@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:piggy_flutter/models/api_response.dart';
 import 'package:piggy_flutter/models/user.dart';
+import 'package:piggy_flutter/repositories/piggy_api_client.dart';
 import 'package:piggy_flutter/services/app_service_base.dart';
 import 'package:piggy_flutter/utils/uidata.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -13,24 +14,36 @@ class LoginInput {
 }
 
 class AuthService extends AppServiceBase {
+  PiggyApiClient _apiClient = new PiggyApiClient();
+
   Future<bool> onLogout() async {
     final prefs = await SharedPreferences.getInstance();
     return await prefs.remove(UIData.authToken);
   }
 
   Future<AjaxResponse<dynamic>> authenticate(LoginInput input) async {
-    var result = await rest.postAsync('TokenAuth/Authenticate', {
-      "tenancyName": input.tenancyName,
-      "usernameOrEmailAddress": input.usernameOrEmailAddress,
-      "password": input.password
-    });
+    var isTenantAvailableResult =
+        await _apiClient.isTenantAvailable(input.tenancyName);
 
-    return result;
+    if (isTenantAvailableResult.state == 1) {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setInt(UIData.tenantId, isTenantAvailableResult.tenantId);
+
+      var result = await rest.postAsync('TokenAuth/Authenticate', {
+        "tenancyName": input.tenancyName,
+        "usernameOrEmailAddress": input.usernameOrEmailAddress,
+        "password": input.password
+      });
+
+      return result;
+    }
+
+    return null;
   }
 
   Future<User> getCurrentLoginInformation() async {
-    var result = await rest.postAsync(
-        'services/app/session/GetCurrentLoginInformations', null);
+    var result =
+        await rest.getAsync('services/app/session/GetCurrentLoginInformations');
 
     if (result.success) {
       return User.fromJson(result.result['user']);

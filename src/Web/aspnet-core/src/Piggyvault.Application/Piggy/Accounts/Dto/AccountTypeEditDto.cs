@@ -19,6 +19,8 @@ namespace Piggyvault.Piggy.Accounts.Dto
         /// <summary>
         /// Gets or sets the name.
         /// </summary>
-        public virtual string Name { get; set; }
+        public virtual String Name { get; set; }
+
+        public virtual ICollection<AccountPreviewDto> Accounts { get; set; }
     }
 }

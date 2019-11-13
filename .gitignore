@@ -1,1 +1,5 @@
 .idea/
+.DS_Store
+src/Web/aspnet-core/.DS_Store
+src/Web/aspnet-core/src/Piggyvault.Web.Host/appsettings.Development.json
+src/Web/aspnet-core/.DS_Store

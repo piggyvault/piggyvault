@@ -197,11 +197,6 @@ namespace Piggyvault.Piggy.Transactions
             return output;
         }
 
-        Task<Abp.Application.Services.Dto.PagedResultDto<TransactionPreviewDto>> ITransactionAppService.GetTransactionsAsync(GetTransactionsInput input)
-        {
-            throw new NotImplementedException();
-        }
-
         public async Task<Abp.Application.Services.Dto.ListResultDto<string>> GetTypeAheadSuggestionsAsync(GetTypeAheadSuggestionsInput input)
         {
             var descriptionList = await _transactionRepository.GetAll()

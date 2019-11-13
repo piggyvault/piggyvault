@@ -1,7 +1,5 @@
 ﻿using Abp.AutoMapper;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Piggyvault.Piggy.Accounts.Dto
 {
@@ -16,7 +14,7 @@ namespace Piggyvault.Piggy.Accounts.Dto
         /// <summary>
         /// Gets or sets the account type.
         /// </summary>
-        public virtual AccountTypeEditDto AccountType { get; set; }
+        public virtual string AccountType { get; set; }
 
         /// <summary>
         /// Gets or sets the account holder.

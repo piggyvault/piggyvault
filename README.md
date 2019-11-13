@@ -1,6 +1,7 @@
 # Piggy
 
 [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fpiggyvault%2Fpiggyvault.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fpiggyvault%2Fpiggyvault?ref=badge_shield)
+![Discord](https://img.shields.io/discord/644203940027695132)
 
 A WORK IN PROGRESS family finance management app.
 

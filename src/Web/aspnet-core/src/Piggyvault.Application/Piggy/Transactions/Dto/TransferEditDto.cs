@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Text;
 
 namespace Piggyvault.Piggy.Transactions.Dto
 {
@@ -23,7 +21,7 @@ namespace Piggyvault.Piggy.Transactions.Dto
         /// <summary>
         /// Gets or sets the category id.
         /// </summary>
-        public virtual long CategoryId { get; set; }
+        public virtual Guid CategoryId { get; set; }
 
         /// <summary>
         /// Gets or sets the description.

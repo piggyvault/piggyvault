@@ -1,17 +1,19 @@
 ﻿using Abp.Application.Services.Dto;
+using Abp.Domain.Repositories;
 using Abp.Authorization;
 using Abp.AutoMapper;
-using Abp.Domain.Repositories;
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
-using Piggyvault.Piggy.Accounts.Dto;
-using Piggyvault.Piggy.Transactions;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
+using System.Linq;
+using System;
 
 namespace Piggyvault.Piggy.Accounts
 {
+    using Transactions;
+    using Dto;
+
     /// <summary>
     /// The account app service.
     /// </summary>
@@ -32,6 +34,7 @@ namespace Piggyvault.Piggy.Accounts
         /// The _transaction repository.
         /// </summary>
         private readonly IRepository<Transaction, Guid> _transactionRepository;
+        private readonly IMapper _mapper;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AccountAppService"/> class.
@@ -39,11 +42,15 @@ namespace Piggyvault.Piggy.Accounts
         /// <param name="accountRepository">
         /// The account repository.
         /// </param>
-        public AccountAppService(IRepository<Account, Guid> accountRepository, IRepository<AccountType> accountTypeRepository, IRepository<Transaction, Guid> transactionRepository)
+        public AccountAppService(IRepository<Account, Guid> accountRepository, 
+                                 IRepository<AccountType> accountTypeRepository, 
+                                 IRepository<Transaction, Guid> transactionRepository,
+                                 IMapper mapper)
         {
             this._accountRepository = accountRepository;
             this._accountTypeRepository = accountTypeRepository;
             this._transactionRepository = transactionRepository;
+            this._mapper = mapper;
         }
 
         /// <summary>
@@ -96,7 +103,7 @@ namespace Piggyvault.Piggy.Accounts
         {
             var tenantId = AbpSession.TenantId;
             var account = await _accountRepository.FirstOrDefaultAsync(a => a.Id == input.Id && a.TenantId == tenantId);
-            var output = account.MapTo<AccountPreviewDto>();
+            var output = _mapper.Map<AccountPreviewDto>(account);
             output.CurrentBalance = await GetAccountBalanceAsync(input.Id);
             return output;
         }
@@ -105,7 +112,7 @@ namespace Piggyvault.Piggy.Accounts
         {
             var tenantId = AbpSession.TenantId;
             var account = await _accountRepository.FirstOrDefaultAsync(a => a.Id == input.Id && a.TenantId == tenantId);
-            return account.MapTo<AccountEditDto>();
+            return _mapper.Map<AccountEditDto>(account);
         }
 
         /// <summary>
@@ -144,7 +151,7 @@ namespace Piggyvault.Piggy.Accounts
 
             var accounts = await query.OrderBy(a => a.Name).ToListAsync();
 
-            var accountDtos = accounts.MapTo<List<AccountPreviewDto>>();
+            var accountDtos = _mapper.Map<List<AccountPreviewDto>>(accounts);
 
             foreach (var account in accountDtos)
             {
@@ -167,7 +174,7 @@ namespace Piggyvault.Piggy.Accounts
             var accountTypes = await this._accountTypeRepository.GetAll().ToListAsync();
             var output = new ListResultDto<AccountTypeEditDto>
             {
-                Items = accountTypes.MapTo<List<AccountTypeEditDto>>()
+                Items = _mapper.Map<List<AccountTypeEditDto>>(accountTypes)
             };
             return output;
         }
@@ -211,8 +218,24 @@ namespace Piggyvault.Piggy.Accounts
                 }
             }
 
-            var userAccountDtos = userAccounts.MapTo<List<AccountPreviewDto>>();
-            var otherMembersAccountDtos = otherMembersAccounts.MapTo<List<AccountPreviewDto>>();
+            var userAccountDtos = userAccounts.Select(prop => new AccountPreviewDto(){
+                AccountType = prop.AccountType.Name,
+                AccountTypeId = prop.AccountTypeId,
+                CreatorUserName = prop.CreatorUser.FullName,
+                Currency = _mapper.Map<CurrencyInAccountPreviewDto>(prop.Currency),
+                CurrencyId = prop.CurrencyId,
+                Id = prop.Id,
+                Name = prop.Name
+            }).ToList();
+            var otherMembersAccountDtos = otherMembersAccounts.Select(prop => new AccountPreviewDto(){
+                AccountType = prop.AccountType.Name,
+                AccountTypeId = prop.AccountTypeId,
+                CreatorUserName = prop.CreatorUser.FullName,
+                Currency = _mapper.Map<CurrencyInAccountPreviewDto>(prop.Currency),
+                CurrencyId = prop.CurrencyId,
+                Id = prop.Id,
+                Name = prop.Name
+            }).ToList();
             await UpdateAccountsBalanceAsync(userAccountDtos);
             await UpdateAccountsBalanceAsync(otherMembersAccountDtos);
 
@@ -296,7 +319,7 @@ namespace Piggyvault.Piggy.Accounts
         private async Task UpdateAccountAsync(CreateOrUpdateAccountInput input)
         {
             var account = await this._accountRepository.FirstOrDefaultAsync(a => a.Id == input.Account.Id);
-            input.Account.MapTo(account);
+            account = _mapper.Map<Account>(input.Account);
             await this._accountRepository.UpdateAsync(account);
         }
 

@@ -1,5 +1,7 @@
-﻿using Abp.Domain.Entities;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.Collections.Generic;
+using Abp.Domain.Entities;
+using System;
 
 namespace Piggyvault.Piggy.Accounts
 {
@@ -9,6 +11,8 @@ namespace Piggyvault.Piggy.Accounts
         /// <summary>
         /// Gets or sets the name.
         /// </summary>
-        public virtual string Name { get; set; }
+        public virtual String Name { get; set; }
+
+        public virtual ICollection<Account> Accounts { get; set; }
     }
 }

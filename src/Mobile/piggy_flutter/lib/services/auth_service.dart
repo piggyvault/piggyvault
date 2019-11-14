@@ -42,8 +42,8 @@ class AuthService extends AppServiceBase {
   }
 
   Future<User> getCurrentLoginInformation() async {
-    var result = await rest.postAsync(
-        'services/app/session/GetCurrentLoginInformations', null);
+    var result =
+        await rest.getAsync('services/app/session/GetCurrentLoginInformations');
 
     if (result.success) {
       return User.fromJson(result.result['user']);

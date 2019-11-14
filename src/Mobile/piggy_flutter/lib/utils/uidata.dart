@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 class UIData {
   //routes
+  static const String introViewsRoute = "/intro_views";
   static const String loginRoute = "/login";
   static const String dashboardRoute = "/dashboard";
   static const String categoriesRoute = "/categories";
@@ -10,6 +11,7 @@ class UIData {
   static const String appName = "Piggy";
   static const String appVersion = "0.13.1";
   static const String authToken = "authToken";
+  static const String firstAccess = "firstAccess";
   static const String tenantId = "tenantId";
   static const String transaction_type_expense = "Expense";
   static const String transaction_type_income = "Income";

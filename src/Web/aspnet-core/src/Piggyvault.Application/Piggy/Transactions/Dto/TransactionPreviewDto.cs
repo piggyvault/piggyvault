@@ -2,8 +2,6 @@
 using Piggyvault.Piggy.Accounts.Dto;
 using Piggyvault.Piggy.Categories.Dto;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Piggyvault.Piggy.Transactions.Dto
 {

@@ -190,7 +190,11 @@ namespace Piggyvault.Piggy.Transactions
                 query = query.Where(t => t.Description.Contains(input.Query));
             }
 
-            var transactions = await query.Where(t => t.TransactionTime >= startDate && t.TransactionTime <= endDate).OrderByDescending(t => t.TransactionTime).ThenByDescending(t => t.CreationTime).ToListAsync();
+            var transactions = await query.Include(c => c.CreatorUser)
+                                        .Where(t => t.TransactionTime >= startDate && t.TransactionTime <= endDate)
+                                        .OrderByDescending(t => t.TransactionTime)
+                                        .ThenByDescending(t => t.CreationTime)
+                                        .ToListAsync();
 
             output.Items = _currencyRateExchangeService.GetTransactionsWithAmountInDefaultCurrency(transactions).ToList();
 

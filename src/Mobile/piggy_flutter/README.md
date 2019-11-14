@@ -35,5 +35,5 @@
 ### Transaction Details
 
 - [x] Transaction summary
-- [ ] List comments
-- [ ] Add comment
+- [x] List comments
+- [x] Add comment

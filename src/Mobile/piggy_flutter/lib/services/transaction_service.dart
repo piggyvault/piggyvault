@@ -41,20 +41,18 @@ class TransactionService extends AppServiceBase {
 
     var params = '';
 
-    if (input.type != null)
-      params += 'type=${input.type}';
-    
-    if (input.accountId != null)
-      params += '&accountId=${ input.accountId }';
-    
-    if (input.startDate != null && input.startDate.toString() != '')
-      params += '&startDate=${ input.startDate }';
-    
-    if (input.endDate != null && input.endDate.toString() != '')
-      params += '&endDate=${ input.endDate }';
+    if (input.type != null) params += 'type=${input.type}';
 
-    var result = await rest
-        .getAsync<dynamic>('services/app/transaction/GetTransactionsAsync?$params');
+    if (input.accountId != null) params += '&accountId=${input.accountId}';
+
+    if (input.startDate != null && input.startDate.toString() != '')
+      params += '&startDate=${input.startDate}';
+
+    if (input.endDate != null && input.endDate.toString() != '')
+      params += '&endDate=${input.endDate}';
+
+    var result = await rest.getAsync<dynamic>(
+        'services/app/transaction/GetTransactionsAsync?$params');
 
     if (result.success) {
       result.result['items'].forEach((transaction) {
@@ -69,7 +67,7 @@ class TransactionService extends AppServiceBase {
 
   Future<TransactionSummary> getTransactionSummary(String duration) async {
     var result = await rest.getAsync<dynamic>(
-        'services/app/tenantDashboard/GetTransactionSummary?duration=$duration');
+        'services/app/Transaction/GetSummary?duration=$duration');
 
     if (result.success) {
       return TransactionSummary.fromJson(result.result);
@@ -79,8 +77,8 @@ class TransactionService extends AppServiceBase {
   }
 
   Future<TransactionEditDto> getTransactionForEdit(String id) async {
-    var result = await rest
-        .getAsync<dynamic>('services/app/transaction/GetTransactionForEdit?id=$id');
+    var result = await rest.getAsync<dynamic>(
+        'services/app/transaction/GetTransactionForEdit?id=$id');
 
     if (result.success != null) {
       return TransactionEditDto.fromJson(result.result);
@@ -91,8 +89,8 @@ class TransactionService extends AppServiceBase {
 
   Future<List<TransactionComment>> getTransactionComments(String id) async {
     var comments = List<TransactionComment>();
-    var result = await rest
-        .getAsync<dynamic>('services/app/transaction/GetTransactionComments?id=$id');
+    var result = await rest.getAsync<dynamic>(
+        'services/app/transaction/GetTransactionComments?id=$id');
     if (result.success) {
       result.result['items'].forEach((comment) {
         comments.add(TransactionComment.fromJson(comment));

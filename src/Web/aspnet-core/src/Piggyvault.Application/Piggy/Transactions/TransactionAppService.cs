@@ -104,10 +104,147 @@ namespace Piggyvault.Piggy.Transactions
             await UpdateTransactionsBalanceInAccountAsync(transaction.AccountId);
         }
 
+        public async Task<GetTransactionSummaryOutput> GetSummary(GetTransactionSummaryInput input)
+        {
+            var startDate = DateTime.Today.FirstDayOfMonth();
+            var endDate = startDate.AddMonths(1).AddTicks(-1);
+
+            var tenantId = AbpSession.TenantId;
+
+            var output = new GetTransactionSummaryOutput();
+
+            var tenantTransactions = await
+                  _transactionRepository.GetAll()
+                      .Include(t => t.Account)
+                      .Include(t => t.Account.Currency)
+                      .Where(t => t.Account.TenantId == tenantId && t.TransactionTime > startDate && t.TransactionTime < endDate && !t.IsTransferred).ToListAsync();
+
+            decimal tenantNetWorth = 0;
+            decimal tenantIncome = 0;
+            decimal tenantExpense = 0;
+
+            decimal userNetWorth = 0;
+            decimal userIncome = 0;
+            decimal userExpense = 0;
+
+            decimal accountIncome = 0;
+            decimal accountExpense = 0;
+
+            foreach (var transaction in tenantTransactions)
+            {
+                var currencyConversionRate = _currencyRateExchangeService.GetCurrencyConversionRate(transaction);
+                if (transaction.Amount > 0)
+                {
+                    tenantIncome += transaction.Amount * currencyConversionRate;
+
+                    if (transaction.CreatorUserId == AbpSession.UserId)
+                    {
+                        userIncome += transaction.Amount * currencyConversionRate;
+                    }
+
+                    if (input.AccountId.HasValue && transaction.AccountId == input.AccountId)
+                    {
+                        accountIncome += transaction.Amount * currencyConversionRate;
+                    }
+                }
+                else
+                {
+                    tenantExpense += transaction.Amount * currencyConversionRate;
+                    if (transaction.CreatorUserId == AbpSession.UserId)
+                    {
+                        userExpense += transaction.Amount * currencyConversionRate;
+                    }
+
+                    if (input.AccountId.HasValue && transaction.AccountId == input.AccountId)
+                    {
+                        accountExpense += transaction.Amount * currencyConversionRate;
+                    }
+                }
+            }
+
+            output.TenantExpense = tenantExpense;
+            output.TenantIncome = tenantIncome;
+            // expense is -ve
+            output.TenantSaved = tenantIncome + tenantExpense;
+
+            output.UserExprense = userExpense;
+            output.UserIncome = userIncome;
+            // expense is -ve
+            output.UserSaved = userIncome + userExpense;
+
+            output.AccountExpense = accountExpense;
+            output.AccountIncome = accountIncome;
+            output.AccountSaved = accountIncome + accountExpense;
+
+            // net worth calc
+
+            var tenantAccounts = await _accountRepository.GetAll().Where(a => a.TenantId == tenantId).ToListAsync();
+
+            foreach (var account in tenantAccounts)
+            {
+                var lastTransaction = await _transactionRepository.GetAll().Where(t => t.AccountId == account.Id)
+                    .OrderByDescending(t => t.TransactionTime)
+                    .ThenByDescending(t => t.CreationTime).FirstOrDefaultAsync();
+
+                if (lastTransaction != null)
+                {
+                    decimal currencyConversionRate = _currencyRateExchangeService.GetCurrencyConversionRate(lastTransaction);
+
+                    var convertedAmount = lastTransaction.Balance * currencyConversionRate;
+
+                    tenantNetWorth += convertedAmount;
+
+                    if (lastTransaction.CreatorUserId == AbpSession.UserId)
+                    {
+                        userNetWorth += convertedAmount;
+                    }
+                }
+            }
+
+            output.TenantNetWorth = tenantNetWorth;
+            output.UserNetWorth = userNetWorth;
+            output.CurrencySymbol = "₹";
+
+            int networthPercentage = 0;
+
+            int incomePercentage = 0;
+
+            int expensePercentage = 0;
+
+            int savedPercentage = 0;
+
+            if (input.AccountId.HasValue)
+            {
+                // divide by zero case handled
+                if (tenantIncome != 0) incomePercentage = (int)((accountIncome / tenantIncome) * 100);
+                if (tenantExpense != 0) expensePercentage = (int)((accountExpense / tenantExpense) * 100);
+                if (tenantNetWorth != 0) networthPercentage = (int)((userNetWorth / tenantNetWorth) * 100);
+                if (output.TenantSaved != 0) savedPercentage = (int)((output.AccountSaved / output.TenantSaved) * 100);
+            }
+            else
+            {
+                if (tenantIncome != 0) incomePercentage = (int)((userIncome / tenantIncome) * 100);
+                if (tenantExpense != 0) expensePercentage = (int)((userExpense / tenantExpense) * 100);
+                if (tenantNetWorth != 0) networthPercentage = (int)((userNetWorth / tenantNetWorth) * 100);
+                if (output.TenantSaved != 0) savedPercentage = (int)((output.UserSaved / output.TenantSaved) * 100);
+            }
+
+            output.NetWorthPercentage = $"{networthPercentage}%";
+            output.IncomePercentage = $"{incomePercentage}%";
+            output.ExpensePercentage = $"{expensePercentage}%";
+            output.SavedPercentage = $"{savedPercentage}%";
+
+            return output;
+        }
+
         public async Task<Abp.Application.Services.Dto.ListResultDto<TransactionCommentPreviewDto>> GetTransactionComments(Abp.Application.Services.Dto.EntityDto<Guid> input)
         {
             var transctionComments = await _transactionCommentRepository.GetAll()
-                .Where(c => c.TransactionId == input.Id).OrderBy(c => c.CreationTime).AsNoTracking().ToListAsync();
+                .Include(c => c.CreatorUser)
+                .Where(c => c.TransactionId == input.Id)
+                .OrderBy(c => c.CreationTime)
+                .AsNoTracking()
+                .ToListAsync();
 
             return new Abp.Application.Services.Dto.ListResultDto<TransactionCommentPreviewDto>(transctionComments.MapTo<List<TransactionCommentPreviewDto>>());
         }
@@ -190,7 +327,11 @@ namespace Piggyvault.Piggy.Transactions
                 query = query.Where(t => t.Description.Contains(input.Query));
             }
 
-            var transactions = await query.Where(t => t.TransactionTime >= startDate && t.TransactionTime <= endDate).OrderByDescending(t => t.TransactionTime).ThenByDescending(t => t.CreationTime).ToListAsync();
+            var transactions = await query.Include(c => c.CreatorUser)
+                                        .Where(t => t.TransactionTime >= startDate && t.TransactionTime <= endDate)
+                                        .OrderByDescending(t => t.TransactionTime)
+                                        .ThenByDescending(t => t.CreationTime)
+                                        .ToListAsync();
 
             output.Items = _currencyRateExchangeService.GetTransactionsWithAmountInDefaultCurrency(transactions).ToList();
 

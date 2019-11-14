@@ -172,14 +172,12 @@ namespace Piggyvault.Controllers
 
         private string GetTenancyNameOrNull()
         {
-            var tenantId = 1;
-
-            if (AbpSession.TenantId.HasValue)
+            if (!AbpSession.TenantId.HasValue)
             {
-                tenantId = AbpSession.TenantId.Value;
+                return null;
             }
 
-            return _tenantCache.GetOrNull(tenantId)?.TenancyName;
+            return _tenantCache.GetOrNull(AbpSession.TenantId.Value)?.TenancyName;
         }
 
         private async Task<AbpLoginResult<Tenant, User>> GetLoginResultAsync(string usernameOrEmailAddress, string password, string tenancyName)

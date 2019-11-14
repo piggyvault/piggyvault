@@ -30,7 +30,6 @@ class AuthService extends AppServiceBase {
       await prefs.setInt(UIData.tenantId, isTenantAvailableResult.tenantId);
 
       var result = await rest.postAsync('TokenAuth/Authenticate', {
-        "tenancyName": input.tenancyName,
         "usernameOrEmailAddress": input.usernameOrEmailAddress,
         "password": input.password
       });
@@ -38,6 +37,7 @@ class AuthService extends AppServiceBase {
       return result;
     }
 
+    // TODO: handle invalid tenant cases
     return null;
   }
 

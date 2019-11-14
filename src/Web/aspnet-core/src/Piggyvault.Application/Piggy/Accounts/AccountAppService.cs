@@ -30,11 +30,12 @@ namespace Piggyvault.Piggy.Accounts
         /// </summary>
         private readonly IRepository<AccountType> _accountTypeRepository;
 
+        private readonly IMapper _mapper;
+
         /// <summary>
         /// The _transaction repository.
         /// </summary>
         private readonly IRepository<Transaction, Guid> _transactionRepository;
-        private readonly IMapper _mapper;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AccountAppService"/> class.
@@ -42,8 +43,8 @@ namespace Piggyvault.Piggy.Accounts
         /// <param name="accountRepository">
         /// The account repository.
         /// </param>
-        public AccountAppService(IRepository<Account, Guid> accountRepository, 
-                                 IRepository<AccountType> accountTypeRepository, 
+        public AccountAppService(IRepository<Account, Guid> accountRepository,
+                                 IRepository<AccountType> accountTypeRepository,
                                  IRepository<Transaction, Guid> transactionRepository,
                                  IMapper mapper)
         {
@@ -127,27 +128,25 @@ namespace Piggyvault.Piggy.Accounts
         public async Task<ListResultDto<AccountPreviewDto>> GetAccountsAsync(GetAccountsAsyncInput input)
         {
             var output = new ListResultDto<AccountPreviewDto>();
-            var tenantId = 1;
 
             IQueryable<Account> query;
 
             switch (input.Type)
             {
                 case "user":
-                    tenantId = AbpSession.TenantId.HasValue ? AbpSession.TenantId.Value : 1;
-                    var userId = input.UserId ?? tenantId;
-                    query = _accountRepository.GetAll().Include(user => user.CreatorUser) 
-                                                        .Include(type => type.AccountType)
-                                                        .Include(currency => currency.Currency)
-                                                       .Where(a => a.CreatorUserId == userId);
+                    var userId = input.UserId ?? AbpSession.UserId.Value;
+                    query = _accountRepository.GetAll()
+                        .Include(c => c.CreatorUser)
+                        .Include(currency => currency.Currency)
+                        .Where(a => a.CreatorUserId == userId);
                     break;
 
                 default:
-                    tenantId = AbpSession.TenantId.HasValue ? AbpSession.TenantId.Value : 1;
-                    query = _accountRepository.GetAll().Include(user => user.CreatorUser) 
-                                                        .Include(type => type.AccountType)
-                                                        .Include(currency => currency.Currency)
-                                                       .Where(a => a.TenantId == tenantId);
+                    var tenantId = AbpSession.TenantId.Value;
+                    query = _accountRepository.GetAll()
+                        .Include(c => c.CreatorUser)
+                        .Include(currency => currency.Currency)
+                        .Where(a => a.TenantId == tenantId);
                     break;
             }
 
@@ -196,11 +195,12 @@ namespace Piggyvault.Piggy.Accounts
         {
             var output = new GetTenantAccountsAsyncOutput();
 
-            var tenantId = AbpSession.TenantId ?? 1;
-            var query = _accountRepository.GetAll().Include(user => user.CreatorUser) 
-                                                    .Include(type => type.AccountType)
-                                                    .Include(currency => currency.Currency)
-                                                    .Where(a => a.TenantId == tenantId);
+            var tenantId = AbpSession.TenantId;
+            var query = _accountRepository.GetAll()
+                .Include(c => c.CreatorUser)
+                .Include(currency => currency.Currency)
+                .Include(a => a.AccountType)
+                .Where(a => a.TenantId == tenantId);
 
             var accounts = await query.OrderBy(a => a.Name).ToListAsync();
 
@@ -219,21 +219,24 @@ namespace Piggyvault.Piggy.Accounts
                 }
             }
 
-            var userAccountDtos = userAccounts.Select(prop => new AccountPreviewDto(){
+            var userAccountDtos = userAccounts.Select(prop => new AccountPreviewDto()
+            {
                 AccountType = prop.AccountType.Name,
-                AccountTypeId = prop.AccountTypeId,
+                //AccountTypeId = prop.AccountTypeId,
                 CreatorUserName = prop.CreatorUser.FullName,
                 Currency = _mapper.Map<CurrencyInAccountPreviewDto>(prop.Currency),
-                CurrencyId = prop.CurrencyId,
+                //CurrencyId = prop.CurrencyId,
                 Id = prop.Id,
                 Name = prop.Name
             }).ToList();
-            var otherMembersAccountDtos = otherMembersAccounts.Select(prop => new AccountPreviewDto(){
+
+            var otherMembersAccountDtos = otherMembersAccounts.Select(prop => new AccountPreviewDto()
+            {
                 AccountType = prop.AccountType.Name,
-                AccountTypeId = prop.AccountTypeId,
+                //AccountTypeId = prop.AccountTypeId,
                 CreatorUserName = prop.CreatorUser.FullName,
                 Currency = _mapper.Map<CurrencyInAccountPreviewDto>(prop.Currency),
-                CurrencyId = prop.CurrencyId,
+                //CurrencyId = prop.CurrencyId,
                 Id = prop.Id,
                 Name = prop.Name
             }).ToList();
@@ -255,8 +258,11 @@ namespace Piggyvault.Piggy.Accounts
         public async Task<ListResultDto<AccountPreviewDto>> GetUserAccounts()
         {
             var output = new ListResultDto<AccountPreviewDto>();
-            var accounts = await this._accountRepository.GetAll().Where(a => a.CreatorUserId == AbpSession.UserId).Include(c => c.CreatorUser).OrderBy(a => a.Name).ToListAsync();
-            output.Items = _mapper.Map<List<AccountPreviewDto>>(accounts);
+            var accounts = await this._accountRepository.GetAll()
+                .Where(a => a.CreatorUserId == AbpSession.UserId)
+                .Include(c => c.CreatorUser).OrderBy(a => a.Name)
+                .Include(currency => currency.Currency).ToListAsync();
+            output.Items = accounts.MapTo<List<AccountPreviewDto>>();
             return output;
         }
 
@@ -271,8 +277,8 @@ namespace Piggyvault.Piggy.Accounts
         /// </returns>
         private async Task CreateAccountAsync(CreateOrUpdateAccountInput input)
         {
-            var account = _mapper.Map<Account>(input.Account);
-            account.TenantId = AbpSession.TenantId.HasValue ? AbpSession.TenantId.Value : 1;
+            var account = input.Account.MapTo<Account>();
+            account.TenantId = AbpSession.TenantId.Value;
             await this._accountRepository.InsertAsync(account);
         }
 

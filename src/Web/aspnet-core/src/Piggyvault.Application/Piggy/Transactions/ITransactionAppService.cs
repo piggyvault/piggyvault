@@ -25,6 +25,8 @@ namespace Piggyvault.Piggy.Transactions
 
         Task DeleteTransaction(EntityDto<Guid> input);
 
+        Task<GetTransactionSummaryOutput> GetSummary(GetTransactionSummaryInput input);
+
         Task<ListResultDto<TransactionCommentPreviewDto>> GetTransactionComments(EntityDto<Guid> input);
 
         Task<TransactionEditDto> GetTransactionForEdit(EntityDto<Guid> input);

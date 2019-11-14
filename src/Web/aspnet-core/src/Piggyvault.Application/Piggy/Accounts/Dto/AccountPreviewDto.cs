@@ -9,8 +9,6 @@ namespace Piggyvault.Piggy.Accounts.Dto
     [AutoMapFrom(typeof(Account))]
     public class AccountPreviewDto
     {
-        public int AccountTypeId { get; set; }
-
         /// <summary>
         /// Gets or sets the account type.
         /// </summary>
@@ -20,8 +18,6 @@ namespace Piggyvault.Piggy.Accounts.Dto
         /// Gets or sets the account holder.
         /// </summary>
         public virtual string CreatorUserName { get; set; }
-
-        public int CurrencyId { get; set; }
 
         /// <summary>
         /// Gets or sets the currency.

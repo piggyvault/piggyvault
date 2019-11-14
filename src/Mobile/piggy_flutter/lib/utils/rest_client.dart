@@ -12,12 +12,13 @@ class RestClient {
     final prefs = await SharedPreferences.getInstance();
     var token = prefs.getString(UIData.authToken);
     var tenantId = prefs.getInt(UIData.tenantId);
-    var response = await http.get('$ApiEndpointUrl/$resourcePath', headers: {
-      'Content-type': 'application/json',
-      'Accept': 'application/json',
-      'Authorization': 'Bearer $token',
+    var response = await http.get('$ApiEndpointUrl/$resourcePath',
+        headers: {
+          'Content-type': 'application/json',
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $token',
       'Abp.TenantId': tenantId.toString()
-    });
+        });
     return processResponse<T>(response);
   }
 
@@ -29,13 +30,14 @@ class RestClient {
 
     var content = json.encoder.convert(data);
     // print(content);
-    var response = await http
-        .post('$ApiEndpointUrl/$resourcePath', body: content, headers: {
-      'Content-type': 'application/json',
-      'Accept': 'application/json',
-      'Authorization': 'Bearer $token',
-      'Abp.TenantId': tenantId.toString()
-    });
+    var response = await http.post('$ApiEndpointUrl/$resourcePath',
+        body: content,
+        headers: {
+          'Content-type': 'application/json',
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $token',
+          'Abp.TenantId': tenantId.toString()
+        });
     return processResponse<T>(response);
   }
 

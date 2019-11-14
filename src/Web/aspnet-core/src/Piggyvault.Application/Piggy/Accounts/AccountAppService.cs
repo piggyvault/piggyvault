@@ -30,11 +30,12 @@ namespace Piggyvault.Piggy.Accounts
         /// </summary>
         private readonly IRepository<AccountType> _accountTypeRepository;
 
+        private readonly IMapper _mapper;
+
         /// <summary>
         /// The _transaction repository.
         /// </summary>
         private readonly IRepository<Transaction, Guid> _transactionRepository;
-        private readonly IMapper _mapper;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AccountAppService"/> class.
@@ -42,8 +43,8 @@ namespace Piggyvault.Piggy.Accounts
         /// <param name="accountRepository">
         /// The account repository.
         /// </param>
-        public AccountAppService(IRepository<Account, Guid> accountRepository, 
-                                 IRepository<AccountType> accountTypeRepository, 
+        public AccountAppService(IRepository<Account, Guid> accountRepository,
+                                 IRepository<AccountType> accountTypeRepository,
                                  IRepository<Transaction, Guid> transactionRepository,
                                  IMapper mapper)
         {
@@ -218,21 +219,24 @@ namespace Piggyvault.Piggy.Accounts
                 }
             }
 
-            var userAccountDtos = userAccounts.Select(prop => new AccountPreviewDto(){
+            var userAccountDtos = userAccounts.Select(prop => new AccountPreviewDto()
+            {
                 AccountType = prop.AccountType.Name,
-                AccountTypeId = prop.AccountTypeId,
+                //AccountTypeId = prop.AccountTypeId,
                 CreatorUserName = prop.CreatorUser.FullName,
                 Currency = _mapper.Map<CurrencyInAccountPreviewDto>(prop.Currency),
-                CurrencyId = prop.CurrencyId,
+                //CurrencyId = prop.CurrencyId,
                 Id = prop.Id,
                 Name = prop.Name
             }).ToList();
-            var otherMembersAccountDtos = otherMembersAccounts.Select(prop => new AccountPreviewDto(){
+
+            var otherMembersAccountDtos = otherMembersAccounts.Select(prop => new AccountPreviewDto()
+            {
                 AccountType = prop.AccountType.Name,
-                AccountTypeId = prop.AccountTypeId,
+                //AccountTypeId = prop.AccountTypeId,
                 CreatorUserName = prop.CreatorUser.FullName,
                 Currency = _mapper.Map<CurrencyInAccountPreviewDto>(prop.Currency),
-                CurrencyId = prop.CurrencyId,
+                //CurrencyId = prop.CurrencyId,
                 Id = prop.Id,
                 Name = prop.Name
             }).ToList();

@@ -240,7 +240,11 @@ namespace Piggyvault.Piggy.Transactions
         public async Task<Abp.Application.Services.Dto.ListResultDto<TransactionCommentPreviewDto>> GetTransactionComments(Abp.Application.Services.Dto.EntityDto<Guid> input)
         {
             var transctionComments = await _transactionCommentRepository.GetAll()
-                .Where(c => c.TransactionId == input.Id).OrderBy(c => c.CreationTime).AsNoTracking().ToListAsync();
+                .Include(c => c.CreatorUser)
+                .Where(c => c.TransactionId == input.Id)
+                .OrderBy(c => c.CreationTime)
+                .AsNoTracking()
+                .ToListAsync();
 
             return new Abp.Application.Services.Dto.ListResultDto<TransactionCommentPreviewDto>(transctionComments.MapTo<List<TransactionCommentPreviewDto>>());
         }

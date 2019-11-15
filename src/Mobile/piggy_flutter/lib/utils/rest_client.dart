@@ -6,8 +6,19 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:piggy_flutter/utils/uidata.dart';
 
 class RestClient {
+  static const ApiEndpointUrl = "http://localhost:21021/api";
+
   Future<AjaxResponse<T>> getAsync<T>(String resourcePath) async {
-    var response = await http.get(resourcePath);
+    final prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString(UIData.authToken);
+    var tenantId = prefs.getInt(UIData.tenantId);
+    var response = await http.get('$ApiEndpointUrl/$resourcePath',
+        headers: {
+          'Content-type': 'application/json',
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $token',
+      'Abp.TenantId': tenantId.toString()
+        });
     return processResponse<T>(response);
   }
 
@@ -15,15 +26,17 @@ class RestClient {
       String resourcePath, dynamic data) async {
     final prefs = await SharedPreferences.getInstance();
     var token = prefs.getString(UIData.authToken);
+    var tenantId = prefs.getInt(UIData.tenantId);
 
     var content = json.encoder.convert(data);
     // print(content);
-    var response = await http.post('http://piggyvault.in/api/$resourcePath',
+    var response = await http.post('$ApiEndpointUrl/$resourcePath',
         body: content,
         headers: {
           'Content-type': 'application/json',
           'Accept': 'application/json',
-          'Authorization': 'Bearer $token'
+          'Authorization': 'Bearer $token',
+          'Abp.TenantId': tenantId.toString()
         });
     return processResponse<T>(response);
   }

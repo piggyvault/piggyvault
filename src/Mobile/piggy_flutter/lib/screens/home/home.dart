@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:onesignal/onesignal.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:piggy_flutter/blocs/account_bloc.dart';
 import 'package:piggy_flutter/blocs/bloc_provider.dart';
 import 'package:piggy_flutter/blocs/category_bloc.dart';
@@ -161,8 +161,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
             context,
             new MaterialPageRoute(
               builder: (BuildContext context) => TransactionDetailPage(
-                    transaction: transaction,
-                  ),
+                transaction: transaction,
+              ),
               fullscreenDialog: true,
             ));
       } catch (e) {

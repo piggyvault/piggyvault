@@ -11,7 +11,8 @@ class TransactionComment {
   TransactionComment.fromJson(Map<String, dynamic> json)
       : id = json['id'],
         content = json['content'],
-        creationTime = json['creationTime'],
+        creationTime = json['creationTime'].toString().substring(0,
+            26), // Since API data type is DATETIME2(7) which contains 7 fraction of milli seconds and flutter support only upto 6.
         creatorUserName = json['creatorUserName'],
         creatorUserId = json['creatorUserId'];
 }

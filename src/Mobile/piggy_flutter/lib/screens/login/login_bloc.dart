@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:onesignal/onesignal.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:piggy_flutter/blocs/bloc_provider.dart';
 import 'package:piggy_flutter/models/api_request.dart';
 import 'package:piggy_flutter/services/auth_service.dart';
@@ -49,7 +49,7 @@ class LoginBloc implements BlocBase {
     if (result.result != null) {
       _handleSendTags(validTenancyName);
       final prefs = await SharedPreferences.getInstance();
-      await prefs.setString(UIData.authToken, result.result);
+      await prefs.setString(UIData.authToken, result.result["accessToken"]);
     }
     request.response = result;
     request.isInProcess = false;
@@ -57,14 +57,16 @@ class LoginBloc implements BlocBase {
   }
 
   void _handleSendTags(String tenancyName) {
-    // print("Sending tags");
-    OneSignal.shared
-        .sendTag("tenancyName", tenancyName.trim().toLowerCase())
-        .then((response) {
-      // print("Successfully sent tags with response: $response");
-    }).catchError((error) {
-      // print("Encountered an error sending tags: $error");
-    });
+    try {
+      // print("Sending tags");
+      OneSignal.shared
+          .sendTag("tenancyName", tenancyName.trim().toLowerCase())
+          .then((response) {
+        // print("Successfully sent tags with response: $response");
+      }).catchError((error) {
+        // print("Encountered an error sending tags: $error");
+      });
+    } catch (e) {}
   }
 
   final validateTenancyName = StreamTransformer<String, String>.fromHandlers(

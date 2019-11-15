@@ -16,6 +16,10 @@
             new HostRoleAndUserCreator(_context).Create();
             new DefaultSettingsCreator(_context).Create();
 
+            // Piggy
+            new InitialCurrenciesCreator(_context).Create();
+            new InitialAccountTypeCreator(_context).Create();
+
             _context.SaveChanges();
         }
     }

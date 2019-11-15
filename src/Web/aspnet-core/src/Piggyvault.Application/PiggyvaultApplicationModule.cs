@@ -6,15 +6,10 @@ using Piggyvault.Authorization;
 namespace Piggyvault
 {
     [DependsOn(
-        typeof(PiggyvaultCoreModule), 
+        typeof(PiggyvaultCoreModule),
         typeof(AbpAutoMapperModule))]
     public class PiggyvaultApplicationModule : AbpModule
     {
-        public override void PreInitialize()
-        {
-            Configuration.Authorization.Providers.Add<PiggyvaultAuthorizationProvider>();
-        }
-
         public override void Initialize()
         {
             var thisAssembly = typeof(PiggyvaultApplicationModule).GetAssembly();
@@ -25,6 +20,14 @@ namespace Piggyvault
                 // Scan the assembly for classes which inherit from AutoMapper.Profile
                 cfg => cfg.AddMaps(thisAssembly)
             );
+        }
+
+        public override void PreInitialize()
+        {
+            Configuration.Authorization.Providers.Add<PiggyvaultAuthorizationProvider>();
+
+            //Adding custom AutoMapper configuration
+            Configuration.Modules.AbpAutoMapper().Configurators.Add(CustomDtoMapper.CreateMappings);
         }
     }
 }

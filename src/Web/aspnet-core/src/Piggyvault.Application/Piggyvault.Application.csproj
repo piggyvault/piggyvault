@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <VersionPrefix>1.0.0.0</VersionPrefix>
-    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
     <AssetTargetFallback>$(AssetTargetFallback);portable-net45+win8+wp8+wpa81;</AssetTargetFallback>
     <AssemblyName>Piggyvault.Application</AssemblyName>
     <PackageId>Piggyvault.Application</PackageId>
@@ -11,9 +11,9 @@
     <RootNamespace>Piggyvault</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Code.Library" Version="2.1.0" />
+    <ProjectReference Include="..\Piggyvault.Core\Piggyvault.Core.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Piggyvault.Core\Piggyvault.Core.csproj" />
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
   </ItemGroup>
 </Project>

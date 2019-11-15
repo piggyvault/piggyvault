@@ -49,6 +49,7 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - graphics/logo.png
+    - assets/
   # To add custom fonts to your application, add a fonts section here,
   # in this "flutter" section. Each entry in this list should have a
   # "family" key with the font family name, and a "fonts" key with a

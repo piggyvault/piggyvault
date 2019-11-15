@@ -51,8 +51,8 @@ class TransactionService extends AppServiceBase {
     if (input.endDate != null && input.endDate.toString() != '')
       params += '&endDate=${input.endDate}';
 
-    var result = await rest.getAsync<dynamic>(
-        'services/app/transaction/GetTransactionsAsync?$params');
+    var result = await rest
+        .getAsync<dynamic>('services/app/transaction/GetTransactions?$params');
 
     if (result.success) {
       result.result['items'].forEach((transaction) {
@@ -127,7 +127,7 @@ class TransactionService extends AppServiceBase {
   Future<Null> saveTransactionComment(
       String transactionId, String content) async {
     await rest.postAsync(
-        'services/app/transaction/CreateOrUpdateTransactionCommentAsync', {
+        'services/app/transaction/CreateOrUpdateTransactionComment', {
       "transactionId": transactionId,
       "content": content,
     });

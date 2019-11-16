@@ -237,6 +237,8 @@ namespace Piggyvault.Piggy.Transactions
             output.ExpensePercentage = $"{expensePercentage}%";
             output.SavedPercentage = $"{savedPercentage}%";
 
+            output.TotalFamilyTransactionsCount = await _transactionRepository.CountAsync(t => t.Account.TenantId == tenantId);
+
             return output;
         }
 

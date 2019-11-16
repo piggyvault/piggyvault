@@ -15,6 +15,7 @@
         public virtual decimal TenantNetWorth { get; set; }
 
         public virtual decimal TenantSaved { get; set; }
+        public int TotalFamilyTransactionsCount { get; set; }
         public virtual decimal UserExprense { get; set; }
         public virtual decimal UserIncome { get; set; }
         public virtual decimal UserNetWorth { get; set; }

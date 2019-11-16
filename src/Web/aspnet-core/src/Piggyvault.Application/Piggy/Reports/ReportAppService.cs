@@ -48,7 +48,7 @@ namespace Piggyvault.Piggy.Reports
 
             var query = _transactionRepository.GetAll()
                       .Include(t => t.Account)
-                      .Include(t => t.Account.Currency)
+                        .ThenInclude(account => account.Currency)
                       .Include(t => t.Category).Where(t => !t.IsTransferred).Where(t => t.CreatorUserId == AbpSession.UserId);
 
             var startDate = DateTime.Today.FirstDayOfMonth().AddMonths(-input.NumberOfIteration);

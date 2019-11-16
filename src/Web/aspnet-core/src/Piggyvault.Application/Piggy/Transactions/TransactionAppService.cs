@@ -39,9 +39,9 @@ namespace Piggyvault.Piggy.Transactions
         public TransactionAppService(IRepository<Transaction, Guid> transactionRepository, IRepository<Account, Guid> accountRepository, ISessionAppService sessionAppService, ICurrencyRateExchangeAppService currencyRateExchangeService, IRepository<TransactionComment, Guid> transactionCommentRepository, INotificationAppService notificationService)
         {
             _transactionRepository = transactionRepository;
-            this._accountRepository = accountRepository;
+            _accountRepository = accountRepository;
             _sessionAppService = sessionAppService;
-            this._currencyRateExchangeService = currencyRateExchangeService;
+            _currencyRateExchangeService = currencyRateExchangeService;
             _transactionCommentRepository = transactionCommentRepository;
             _notificationService = notificationService;
         }
@@ -116,7 +116,7 @@ namespace Piggyvault.Piggy.Transactions
             var tenantTransactions = await
                   _transactionRepository.GetAll()
                       .Include(t => t.Account)
-                      .Include(t => t.Account.Currency)
+                        .ThenInclude(account => account.Currency)
                       .Where(t => t.Account.TenantId == tenantId && t.TransactionTime > startDate && t.TransactionTime < endDate && !t.IsTransferred).ToListAsync();
 
             decimal tenantNetWorth = 0;
@@ -182,7 +182,10 @@ namespace Piggyvault.Piggy.Transactions
 
             foreach (var account in tenantAccounts)
             {
-                var lastTransaction = await _transactionRepository.GetAll().Where(t => t.AccountId == account.Id)
+                var lastTransaction = await _transactionRepository.GetAll()
+                    .Include(transaction => transaction.Account)
+                        .ThenInclude(account => account.Currency)
+                    .Where(t => t.AccountId == account.Id)
                     .OrderByDescending(t => t.TransactionTime)
                     .ThenByDescending(t => t.CreationTime).FirstOrDefaultAsync();
 
@@ -278,31 +281,35 @@ namespace Piggyvault.Piggy.Transactions
                 case "tenant":
                     query = _transactionRepository.GetAll()
                                         .Include(t => t.Account)
+                                            .ThenInclude(account => account.Currency)
                                         .Include(t => t.Category)
-                                        .Include(t => t.Account.Currency).Where(t => t.Account.TenantId == tenantId);
+                                        .Where(t => t.Account.TenantId == tenantId);
                     break;
 
                 case "user":
                     var userId = input.UserId ?? AbpSession.UserId;
                     query = _transactionRepository.GetAll()
                     .Include(t => t.Account)
+                        .ThenInclude(account => account.Currency)
                     .Include(t => t.Category)
-                    .Include(t => t.Account.Currency).Where(t => t.CreatorUserId == userId);
+                    .Where(t => t.CreatorUserId == userId);
                     break;
 
                 case "account":
                     // TODO : NULL | Account owner tenant validation
                     query = _transactionRepository.GetAll()
                     .Include(t => t.Account)
+                        .ThenInclude(account => account.Currency)
                     .Include(t => t.Category)
-                    .Include(t => t.Account.Currency).Where(t => t.AccountId == input.AccountId.Value);
+                    .Where(t => t.AccountId == input.AccountId.Value);
                     break;
 
                 default:
                     query = _transactionRepository.GetAll()
                     .Include(t => t.Account)
+                        .ThenInclude(account => account.Currency)
                     .Include(t => t.Category)
-                    .Include(t => t.Account.Currency).Where(t => t.Account.TenantId == tenantId);
+                    .Where(t => t.Account.TenantId == tenantId);
                     break;
             }
 
@@ -375,7 +382,10 @@ namespace Piggyvault.Piggy.Transactions
         /// </returns>
         public async Task SendNotificationAsync(Guid transactionId)
         {
-            var transaction = await _transactionRepository.GetAll().Include(t => t.Account).Include(t => t.Account.Currency).Include(t => t.Category).Include(t => t.CreatorUser).Where(t => t.Id == transactionId).FirstOrDefaultAsync();
+            var transaction = await _transactionRepository.GetAll()
+                .Include(t => t.Account)
+                    .ThenInclude(account => account.Currency)
+                .Include(t => t.Category).Include(t => t.CreatorUser).Where(t => t.Id == transactionId).FirstOrDefaultAsync();
 
             var transactionPreviewDto = transaction.MapTo<TransactionPreviewDto>();
 
@@ -482,7 +492,13 @@ namespace Piggyvault.Piggy.Transactions
             {
                 var currentUser = await _sessionAppService.GetCurrentLoginInformations();
 
-                var transaction = await _transactionRepository.GetAll().Include(t => t.Account).Include(t => t.Account.Currency).Include(t => t.Category).Include(t => t.CreatorUser).Where(t => t.Id == input.TransactionId).FirstOrDefaultAsync();
+                var transaction = await _transactionRepository.GetAll()
+                    .Include(t => t.Account)
+                        .ThenInclude(account => account.Currency)
+                    .Include(t => t.Category)
+                    .Include(t => t.CreatorUser)
+                    .Where(t => t.Id == input.TransactionId)
+                    .FirstOrDefaultAsync();
 
                 var transactionPreviewDto = transaction.MapTo<TransactionPreviewDto>();
 

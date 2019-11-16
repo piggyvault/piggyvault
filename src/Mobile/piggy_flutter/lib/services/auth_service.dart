@@ -18,7 +18,8 @@ class AuthService extends AppServiceBase {
 
   Future<bool> onLogout() async {
     final prefs = await SharedPreferences.getInstance();
-    return await prefs.remove(UIData.authToken);
+    await prefs.remove(UIData.authToken);
+    return await prefs.remove(UIData.tenantId);
   }
 
   Future<AjaxResponse<dynamic>> authenticate(LoginInput input) async {

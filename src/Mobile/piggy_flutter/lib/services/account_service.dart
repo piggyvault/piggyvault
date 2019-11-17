@@ -13,8 +13,8 @@ class AccountService extends AppServiceBase {
   Future<Null> getTenantAccounts() async {
     List<Account> userAccountItems = [];
     List<Account> familyAccountItems = [];
-    var result = await rest.postAsync<dynamic>(
-        'services/app/account/GetTenantAccountsAsync', null);
+    var result =
+        await rest.getAsync<dynamic>('services/app/account/GetTenantAccounts');
 
     if (result.success) {
       result.result['userAccounts']['items'].forEach((account) {
@@ -30,8 +30,8 @@ class AccountService extends AppServiceBase {
   }
 
   Future<AccountFormModel> getAccountForEdit(String id) async {
-    var result = await rest
-        .postAsync('services/app/account/getAccountForEdit', {"id": id});
+    var result =
+        await rest.getAsync('services/app/account/getAccountForEdit?id=$id');
 
     if (result.success) {
       return AccountFormModel.fromJson(result.result);
@@ -40,8 +40,8 @@ class AccountService extends AppServiceBase {
   }
 
   Future<Account> getAccountDetails(String accountId) async {
-    var result = await rest.postAsync<dynamic>(
-        'services/app/account/GetAccountDetails', {"id": accountId});
+    var result = await rest.getAsync<dynamic>(
+        'services/app/account/GetAccountDetails?id=$accountId');
 
     if (result.success) {
       return Account.fromJson(result.result);
@@ -52,8 +52,7 @@ class AccountService extends AppServiceBase {
 
   Future<List<Currency>> getCurrencies() async {
     List<Currency> currencies = [];
-    var result =
-        await rest.postAsync('services/app/currency/GetCurrencies', null);
+    var result = await rest.getAsync('services/app/currency/GetCurrencies');
 
     if (result.success) {
       currencies = result.result['items']
@@ -65,8 +64,7 @@ class AccountService extends AppServiceBase {
 
   Future<List<AccountType>> getAccountTypes() async {
     List<AccountType> output = [];
-    var result =
-        await rest.postAsync('services/app/account/GetAccountTypes', null);
+    var result = await rest.getAsync('services/app/account/GetAccountTypes');
 
     if (result.success) {
       output = result.result['items']

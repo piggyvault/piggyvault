@@ -9,7 +9,7 @@ class CategoryService extends AppServiceBase {
     List<Category> tenantCategories = [];
 
     var result =
-        await rest.postAsync('services/app/category/GetTenantCategories', null);
+        await rest.getAsync('services/app/Category/GetTenantCategories');
 
     if (result.success) {
       result.result['items'].forEach(
@@ -20,7 +20,7 @@ class CategoryService extends AppServiceBase {
 
   Future<AjaxResponse<dynamic>> createOrUpdateCategory(Category input) async {
     final result = await rest.postAsync(
-        'services/app/category/CreateOrUpdateCategory',
+        'services/app/Category/CreateOrUpdateCategory',
         {"id": input.id, "name": input.name, "icon": input.icon});
 
     return result;

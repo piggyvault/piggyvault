@@ -13,7 +13,7 @@ import 'package:piggy_flutter/screens/login/login_page.dart';
 import 'package:piggy_flutter/screens/reports/categorywise_recent_months_report_screen.dart';
 import 'package:piggy_flutter/themes.dart';
 import 'package:piggy_flutter/utils/uidata.dart';
-import 'package:onesignal/onesignal.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 
 Future<void> main() async {
   // debugPrintRebuildDirtyWidgets = true;

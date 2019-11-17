@@ -322,15 +322,15 @@ class TransactionFormPageState extends State<TransactionFormPage> {
           stream: categoryBloc.categories,
           builder: (context, snapshot) {
             if (snapshot.hasData) {
-              return DropdownButton<int>(
+              return DropdownButton<String>(
                 value: transactionEditDto.categoryId,
-                onChanged: (int value) {
+                onChanged: (String value) {
                   setState(() {
                     transactionEditDto.categoryId = value;
                   });
                 },
                 items: snapshot.data.map((Category category) {
-                  return DropdownMenuItem<int>(
+                  return DropdownMenuItem<String>(
                     value: category.id,
                     child: Text(category.name),
                   );

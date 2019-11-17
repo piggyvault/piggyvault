@@ -267,38 +267,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
           children: <Widget>[
             _balanceTile(bloc),
-            _buildTile(
-                Padding(
-                  padding: const EdgeInsets.all(24.0),
-                  child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Material(
-                            color: Colors.teal,
-                            shape: CircleBorder(),
-                            child: Padding(
-                              padding: const EdgeInsets.all(16.0),
-                              child: Icon(Icons.account_balance_wallet,
-                                  color: Colors.white, size: 30.0),
-                            )),
-                        Padding(padding: EdgeInsets.only(bottom: 16.0)),
-                        Text('Accounts',
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.w700,
-                                fontSize: 24.0)),
-                        Text('All', style: TextStyle(color: Colors.black45)),
-                      ]),
-                ),
-                onTap: (() => Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => HomePage(
-                              startpage: StartPage.Accounts,
-                            ),
-                      ),
-                    ))),
+            _transactionsCountTile(bloc),
             _buildTile(
                 Padding(
                   padding: const EdgeInsets.all(24.0),
@@ -389,6 +358,51 @@ class _DashboardScreenState extends State<DashboardScreen> {
             StaggeredTile.extent(2, 110.0),
           ],
         ));
+  }
+
+  Widget _transactionsCountTile(HomeBloc bloc) {
+    return _buildTile(
+        Padding(
+          padding: const EdgeInsets.all(24.0),
+          child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Material(
+                    color: Colors.teal,
+                    shape: CircleBorder(),
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Icon(Icons.local_atm,
+                          color: Colors.white, size: 30.0),
+                    )),
+                Padding(padding: EdgeInsets.only(bottom: 16.0)),
+                StreamBuilder<TransactionSummary>(
+                  stream: bloc.transactionSummary,
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      return Text(
+                          '${snapshot.data.totalFamilyTransactionsCount.toString()}',
+                          style: TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.w700,
+                              fontSize: 24.0));
+                    } else {
+                      return CircularProgressIndicator();
+                    }
+                  },
+                ),
+                Text('Transactions', style: TextStyle(color: Colors.black45)),
+              ]),
+        ),
+        onTap: (() => Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => HomePage(
+                  startpage: StartPage.Accounts,
+                ),
+              ),
+            )));
   }
 
   Widget _balanceTile(HomeBloc bloc) {

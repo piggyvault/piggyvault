@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class Category {
   String name;
-  final int id;
+  final String id;
   final String icon;
 
   Category({@required this.id, this.name, this.icon});

@@ -29,7 +29,7 @@ class GetTransactionsInput {
 class TransferInput {
   final String id, description, accountId, toAccountId, transactionTime;
   final double amount, toAmount;
-  final int categoryId;
+  final String categoryId;
 
   TransferInput(this.id, this.description, this.accountId, this.transactionTime,
       this.amount, this.categoryId, this.toAmount, this.toAccountId);
@@ -38,13 +38,21 @@ class TransferInput {
 class TransactionService extends AppServiceBase {
   Future<TransactionsResult> getTransactions(GetTransactionsInput input) async {
     List<Transaction> transactions = [];
+
+    var params = '';
+
+    if (input.type != null) params += 'type=${input.type}';
+
+    if (input.accountId != null) params += '&accountId=${input.accountId}';
+
+    if (input.startDate != null && input.startDate.toString() != '')
+      params += '&startDate=${input.startDate}';
+
+    if (input.endDate != null && input.endDate.toString() != '')
+      params += '&endDate=${input.endDate}';
+
     var result = await rest
-        .postAsync<dynamic>('services/app/transaction/GetTransactionsAsync', {
-      "type": input.type,
-      "accountId": input.accountId,
-      "startDate": input.startDate.toString(),
-      "endDate": input.endDate.toString()
-    });
+        .getAsync<dynamic>('services/app/transaction/GetTransactions?$params');
 
     if (result.success) {
       result.result['items'].forEach((transaction) {
@@ -58,10 +66,8 @@ class TransactionService extends AppServiceBase {
   }
 
   Future<TransactionSummary> getTransactionSummary(String duration) async {
-    var result = await rest.postAsync<dynamic>(
-        'services/app/tenantDashboard/GetTransactionSummary', {
-      "duration": duration,
-    });
+    var result = await rest.getAsync<dynamic>(
+        'services/app/Transaction/GetSummary?duration=$duration');
 
     if (result.success) {
       return TransactionSummary.fromJson(result.result);
@@ -71,10 +77,8 @@ class TransactionService extends AppServiceBase {
   }
 
   Future<TransactionEditDto> getTransactionForEdit(String id) async {
-    var result = await rest
-        .postAsync<dynamic>('services/app/transaction/GetTransactionForEdit', {
-      "id": id,
-    });
+    var result = await rest.getAsync<dynamic>(
+        'services/app/transaction/GetTransactionForEdit?id=$id');
 
     if (result.success != null) {
       return TransactionEditDto.fromJson(result.result);
@@ -85,11 +89,8 @@ class TransactionService extends AppServiceBase {
 
   Future<List<TransactionComment>> getTransactionComments(String id) async {
     var comments = List<TransactionComment>();
-    var result = await rest
-        .postAsync<dynamic>('services/app/transaction/GetTransactionComments', {
-      "id": id,
-    });
-    // print(result.mappedResult);
+    var result = await rest.getAsync<dynamic>(
+        'services/app/transaction/GetTransactionComments?id=$id');
     if (result.success) {
       result.result['items'].forEach((comment) {
         comments.add(TransactionComment.fromJson(comment));
@@ -126,7 +127,7 @@ class TransactionService extends AppServiceBase {
   Future<Null> saveTransactionComment(
       String transactionId, String content) async {
     await rest.postAsync(
-        'services/app/transaction/CreateOrUpdateTransactionCommentAsync', {
+        'services/app/transaction/CreateOrUpdateTransactionComment', {
       "transactionId": transactionId,
       "content": content,
     });

@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:piggy_flutter/screens/home/home.dart';
+import 'package:piggy_flutter/screens/intro_views/intro_views.dart';
 import 'package:piggy_flutter/screens/login/login_bloc.dart';
 import 'package:piggy_flutter/utils/api_subscription.dart';
 import 'package:piggy_flutter/utils/uidata.dart';
@@ -47,17 +48,28 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void authCheck() async {
-    final prefs = await SharedPreferences.getInstance();
+   final prefs = await SharedPreferences.getInstance();
+
     var token = prefs.getString(UIData.authToken);
-    if (token != null && token.length > 0) {
+    var firstAccess = prefs.getBool(UIData.firstAccess) ?? true;
+
+    if (token != null && token.length > 0 && !firstAccess) {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
           builder: (context) => HomePage(
-                isInitialLoading: true,
-              ),
+            isInitialLoading: true,
+          ),
         ),
       );
+    } else {
+      if (firstAccess)
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => IntroViews(),
+          ),
+        );
     }
   }
 

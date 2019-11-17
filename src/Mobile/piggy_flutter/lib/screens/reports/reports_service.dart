@@ -6,13 +6,8 @@ class ReportsService extends AppServiceBase {
   Future<List<CategoryWiseRecentMonthsReportItem>>
       getCategoryWiseTransactionSummaryHistory() async {
     List<CategoryWiseRecentMonthsReportItem> data = [];
-    var result = await rest.postAsync(
-        'services/app/tenantDashboard/GetCategoryWiseTransactionSummaryHistory',
-        {
-          "numberOfIteration": 3,
-          "periodOfIteration": 'month',
-          "typeOfTransaction": 'expense'
-        });
+    var result = await rest.getAsync(
+        'services/app/Report/GetCategoryWiseTransactionSummaryHistory?numberOfIteration=3&periodOfIteration=month&typeOfTransaction=expense');
 
     if (result.success) {
       // print('##### ${result.mappedResult}');

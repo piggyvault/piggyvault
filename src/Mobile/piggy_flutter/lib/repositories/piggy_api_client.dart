@@ -2,7 +2,9 @@ import 'package:dio/dio.dart';
 import 'package:piggy_flutter/models/isTenantAvailableOutput.dart';
 
 class PiggyApiClient {
-  static const baseUrl = 'http://localhost:21021';
+  static const baseUrl = 'https://piggyvault.in';
+  // static const baseUrl = 'http://10.0.2.2:21021';
+  // static const baseUrl = 'http://localhost:21021';
   Dio _dio;
 
   PiggyApiClient() {

@@ -1,12 +1,13 @@
-﻿using Abp.AutoMapper;
+﻿using Abp.Auditing;
+using Abp.AutoMapper;
 using Piggyvault.Piggy.Transactions;
 using Piggyvault.Piggy.Transactions.Dto;
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace Piggyvault.Piggy.CurrencyRateExchange
 {
+    [DisableAuditing]
     public class CurrencyRateExchangeAppService : PiggyvaultAppServiceBase, ICurrencyRateExchangeAppService
     {
         // TODO: Get currency exchange rate from external service like currencylayer.

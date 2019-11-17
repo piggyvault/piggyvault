@@ -15,6 +15,16 @@ namespace Piggyvault
     [DependsOn(typeof(AbpZeroCoreModule))]
     public class PiggyvaultCoreModule : AbpModule
     {
+        public override void Initialize()
+        {
+            IocManager.RegisterAssemblyByConvention(typeof(PiggyvaultCoreModule).GetAssembly());
+        }
+
+        public override void PostInitialize()
+        {
+            IocManager.Resolve<AppTimes>().StartupTime = Clock.Now;
+        }
+
         public override void PreInitialize()
         {
             Configuration.Auditing.IsEnabledForAnonymousUsers = true;
@@ -28,21 +38,12 @@ namespace Piggyvault
 
             // Enable this line to create a multi-tenant application.
             Configuration.MultiTenancy.IsEnabled = PiggyvaultConsts.MultiTenancyEnabled;
+            Configuration.MultiTenancy.TenantIdResolveKey = "Piggy-TenantId";
 
             // Configure roles
             AppRoleConfig.Configure(Configuration.Modules.Zero().RoleManagement);
 
             Configuration.Settings.Providers.Add<AppSettingProvider>();
-        }
-
-        public override void Initialize()
-        {
-            IocManager.RegisterAssemblyByConvention(typeof(PiggyvaultCoreModule).GetAssembly());
-        }
-
-        public override void PostInitialize()
-        {
-            IocManager.Resolve<AppTimes>().StartupTime = Clock.Now;
         }
     }
 }

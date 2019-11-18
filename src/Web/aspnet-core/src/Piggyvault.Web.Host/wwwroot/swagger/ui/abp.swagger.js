@@ -1,6 +1,5 @@
 var abp = abp || {};
 (function () {
-
     /* Swagger */
 
     abp.swagger = abp.swagger || {};
@@ -48,7 +47,7 @@ var abp = abp || {};
                     var result = responseJSON.result;
                     var expireDate = new Date(Date.now() + (result.expireInSeconds * 1000));
                     abp.auth.setToken(result.accessToken, expireDate);
-                    callback();   
+                    callback();
                 } else {
                     alert('Login failed !');
                 }
@@ -56,7 +55,7 @@ var abp = abp || {};
         };
 
         xhr.open('POST', '/api/TokenAuth/Authenticate', true);
-        xhr.setRequestHeader('Abp.TenantId', tenantId);
+        xhr.setRequestHeader('Piggy-TenantId', tenantId);
         xhr.setRequestHeader('Content-type', 'application/json');
         xhr.send("{" + "usernameOrEmailAddress:'" + usernameOrEmailAddress + "'," + "password:'" + password + "'}");
     };
@@ -72,7 +71,7 @@ var abp = abp || {};
                     var responseJSON = JSON.parse(xhrTenancyName.responseText);
                     var result = responseJSON.result;
                     if (result.state === 1) { // Tenant exists and active.
-                        loginUserInternal(result.tenantId, callback); // Login for tenant    
+                        loginUserInternal(result.tenantId, callback); // Login for tenant
                     } else {
                         alert('There is no such tenant or tenant is not active !');
                     }
@@ -169,7 +168,7 @@ var abp = abp || {};
         var authorizeButton = document.createElement('button');
         authorizeButton.className = 'btn modal-btn auth authorize button';
         authorizeButton.innerText = 'Login';
-        authorizeButton.onclick = function() {
+        authorizeButton.onclick = function () {
             abp.swagger.login(loginCallback);
         };
         authBtnWrapper.appendChild(authorizeButton);
@@ -195,5 +194,4 @@ var abp = abp || {};
 
         section.appendChild(input);
     }
-
 })();

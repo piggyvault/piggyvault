@@ -18,6 +18,7 @@ using Abp.Dependency;
 using Abp.Json;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json.Serialization;
+using Microsoft.Extensions.Options;
 
 namespace Piggyvault.Web.Host.Startup
 {
@@ -32,8 +33,42 @@ namespace Piggyvault.Web.Host.Startup
             _appConfiguration = env.GetAppConfiguration();
         }
 
+        public void Configure(IApplicationBuilder app, ILoggerFactory loggerFactory)
+        {
+            app.UseAbp(options => { options.UseAbpRequestLocalization = false; }); // Initializes ABP framework.
+
+            app.UseCors(_defaultCorsPolicyName); // Enable CORS!
+
+            app.UseStaticFiles();
+
+            app.UseRouting();
+
+            app.UseAuthentication();
+
+            app.UseAbpRequestLocalization();
+
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapHub<AbpCommonHub>("/signalr");
+                endpoints.MapControllerRoute("default", "{controller=Home}/{action=Index}/{id?}");
+                endpoints.MapControllerRoute("defaultWithArea", "{area}/{controller=Home}/{action=Index}/{id?}");
+            });
+
+            // Enable middleware to serve generated Swagger as a JSON endpoint
+            app.UseSwagger();
+            // Enable middleware to serve swagger-ui assets (HTML, JS, CSS etc.)
+            app.UseSwaggerUI(options =>
+            {
+                options.SwaggerEndpoint(_appConfiguration["App:ServerRootAddress"].EnsureEndsWith('/') + "swagger/v1/swagger.json", "Piggyvault API V1");
+                options.IndexStream = () => Assembly.GetExecutingAssembly()
+                    .GetManifestResourceStream("Piggyvault.Web.Host.wwwroot.swagger.ui.index.html");
+            }); // URL: /swagger
+        }
+
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
+            services.Configure<PiggySettings>(_appConfiguration).AddSingleton(sp => sp.GetRequiredService<IOptions<PiggySettings>>().Value);
+
             //MVC
             services.AddControllersWithViews(
                 options =>
@@ -47,8 +82,6 @@ namespace Piggyvault.Web.Host.Startup
                     NamingStrategy = new CamelCaseNamingStrategy()
                 };
             });
-
-
 
             IdentityRegistrar.Register(services);
             AuthConfigurer.Configure(services, _appConfiguration);
@@ -96,40 +129,6 @@ namespace Piggyvault.Web.Host.Startup
                     f => f.UseAbpLog4Net().WithConfig("log4net.config")
                 )
             );
-        }
-
-        public void Configure(IApplicationBuilder app,  ILoggerFactory loggerFactory)
-        {
-            app.UseAbp(options => { options.UseAbpRequestLocalization = false; }); // Initializes ABP framework.
-
-            app.UseCors(_defaultCorsPolicyName); // Enable CORS!
-
-            app.UseStaticFiles();
-
-            app.UseRouting();
-
-            app.UseAuthentication();
-
-            app.UseAbpRequestLocalization();
-
-          
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapHub<AbpCommonHub>("/signalr");
-                endpoints.MapControllerRoute("default", "{controller=Home}/{action=Index}/{id?}");
-                endpoints.MapControllerRoute("defaultWithArea", "{area}/{controller=Home}/{action=Index}/{id?}");
-            });
-
-
-            // Enable middleware to serve generated Swagger as a JSON endpoint
-            app.UseSwagger();
-            // Enable middleware to serve swagger-ui assets (HTML, JS, CSS etc.)
-            app.UseSwaggerUI(options =>
-            {
-                options.SwaggerEndpoint(_appConfiguration["App:ServerRootAddress"].EnsureEndsWith('/') + "swagger/v1/swagger.json", "Piggyvault API V1");
-                options.IndexStream = () => Assembly.GetExecutingAssembly()
-                    .GetManifestResourceStream("Piggyvault.Web.Host.wwwroot.swagger.ui.index.html");
-            }); // URL: /swagger
         }
     }
 }

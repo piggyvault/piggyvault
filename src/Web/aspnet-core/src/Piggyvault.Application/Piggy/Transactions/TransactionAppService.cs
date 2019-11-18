@@ -1,14 +1,13 @@
-﻿using Abp.Application.Services.Dto;
-using Abp.Authorization;
+﻿using Abp.Authorization;
 using Abp.AutoMapper;
 using Abp.Domain.Repositories;
 using Abp.Extensions;
 using Code.Library;
 using Microsoft.EntityFrameworkCore;
-using Piggyvault.Notifications;
 using Piggyvault.Notifications.Dto;
 using Piggyvault.Piggy.Accounts;
 using Piggyvault.Piggy.CurrencyRateExchange;
+using Piggyvault.Piggy.Notifications;
 using Piggyvault.Piggy.Transactions.Dto;
 using Piggyvault.Sessions;
 using System;
@@ -391,7 +390,7 @@ namespace Piggyvault.Piggy.Transactions
 
             var transactionPreviewDto = transaction.MapTo<TransactionPreviewDto>();
 
-            var notificationHeading = transaction.Amount > 0 ? "Inflow" : "Outflow";
+            var notificationHeading = transaction.Amount > 0 ? "🐷 Inflow" : "🔥 Outflow";
             var notificationHeadingFromOrTo = transaction.Amount > 0 ? "to" : "from";
 
             var amount = transaction.Amount > 0 ? transaction.Amount : -transaction.Amount;

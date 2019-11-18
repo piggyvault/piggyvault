@@ -48,7 +48,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void authCheck() async {
-   final prefs = await SharedPreferences.getInstance();
+    final prefs = await SharedPreferences.getInstance();
 
     var token = prefs.getString(UIData.authToken);
     var firstAccess = prefs.getBool(UIData.firstAccess) ?? true;
@@ -221,18 +221,4 @@ class _LoginPageState extends State<LoginPage> {
       },
     );
   }
-
-  // onLoginResult(bool isAuthenticated) {
-  //   if (isAuthenticated) {
-  //     Navigator.pushReplacement(
-  //       context,
-  //       MaterialPageRoute(
-  //           builder: (context) => HomePage(
-  //                 isInitialLoading: true,
-  //               )),
-  //     );
-  //   } else {
-
-  //   }
-  // }
 }

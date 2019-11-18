@@ -134,8 +134,7 @@ class TransactionService extends AppServiceBase {
   }
 
   Future<AjaxResponse<dynamic>> transfer(TransferInput input) async {
-    final result =
-        await rest.postAsync('services/app/transaction/TransferAsync', {
+    final result = await rest.postAsync('services/app/transaction/transfer', {
       "id": input.id,
       "description": input.description,
       "amount": input.amount,

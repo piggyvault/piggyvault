@@ -1,98 +1,108 @@
 import 'dart:async';
 
+import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:piggy_flutter/blocs/account_bloc.dart';
 import 'package:piggy_flutter/blocs/application_bloc.dart';
-import 'package:piggy_flutter/blocs/bloc_provider.dart';
+import 'package:piggy_flutter/blocs/bloc_provider.dart' as oldProvider;
 import 'package:piggy_flutter/blocs/category_bloc.dart';
-import 'package:piggy_flutter/blocs/user_bloc.dart';
+import 'package:piggy_flutter/repositories/repositories.dart';
 import 'package:piggy_flutter/screens/category/category_list.dart';
 import 'package:piggy_flutter/screens/home/home.dart';
 import 'package:piggy_flutter/screens/home/home_bloc.dart';
-import 'package:piggy_flutter/screens/login/login_page.dart';
 import 'package:piggy_flutter/screens/reports/categorywise_recent_months_report_screen.dart';
+import 'package:piggy_flutter/splash/splash.dart';
 import 'package:piggy_flutter/themes.dart';
 import 'package:piggy_flutter/utils/uidata.dart';
-import 'package:onesignal_flutter/onesignal_flutter.dart';
+import 'package:http/http.dart' as http;
+
+import 'auth/auth.dart';
+import 'login/login.dart';
+
+class PiggyBlocDelegate extends BlocDelegate {
+  @override
+  void onEvent(Bloc bloc, Object event) {
+    super.onEvent(bloc, event);
+    print(event);
+  }
+
+  @override
+  onTransition(Bloc bloc, Transition transition) {
+    super.onTransition(bloc, transition);
+    print(transition);
+  }
+
+  @override
+  void onError(Bloc bloc, Object error, StackTrace stacktrace) {
+    super.onError(bloc, error, stacktrace);
+    print(error);
+  }
+}
 
 Future<void> main() async {
+  final UserRepository userRepository = UserRepository(
+      piggyApiClient: PiggyApiClient(
+    httpClient: http.Client(),
+  ));
+
+  BlocSupervisor.delegate = PiggyBlocDelegate();
   // debugPrintRebuildDirtyWidgets = true;
-  return runApp(
-    BlocProvider<ApplicationBloc>(
+  return runApp(MultiBlocProvider(
+    providers: [
+      BlocProvider<AuthBloc>(
+        builder: (context) =>
+            AuthBloc(userRepository: userRepository)..add(AppStarted()),
+      )
+    ],
+    child: oldProvider.BlocProvider<ApplicationBloc>(
       bloc: ApplicationBloc(),
-      child: BlocProvider<UserBloc>(
-        bloc: UserBloc(),
-        child: BlocProvider<HomeBloc>(
-          bloc: HomeBloc(),
-          child: BlocProvider<AccountBloc>(
-            bloc: AccountBloc(),
-            child: BlocProvider<CategoryBloc>(
-              bloc: CategoryBloc(),
-              child: MyApp(),
-            ),
+      // child: oldProvider.BlocProvider<UserBloc>(
+      //   bloc: UserBloc(),
+      child: oldProvider.BlocProvider<HomeBloc>(
+        bloc: HomeBloc(),
+        child: oldProvider.BlocProvider<AccountBloc>(
+          bloc: AccountBloc(),
+          child: oldProvider.BlocProvider<CategoryBloc>(
+            bloc: CategoryBloc(),
+            child: App(userRepository: userRepository),
           ),
         ),
       ),
+      // ),
     ),
-  );
+  ));
 }
 
-class MyApp extends StatefulWidget {
+class App extends StatelessWidget {
+  final UserRepository userRepository;
+
+  App({Key key, @required this.userRepository}) : super(key: key);
+
   // This widget is the root of your application.
-  @override
-  MyAppState createState() {
-    return new MyAppState();
-  }
-}
-
-class MyAppState extends State<MyApp> {
-  @override
-  void initState() {
-    super.initState();
-    initPlatformState();
-  }
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Piggy',
       theme: lightAppTheme.data,
-      home: LoginPage(),
+      home: BlocBuilder<AuthBloc, AuthState>(builder: (context, state) {
+        if (state is AuthAuthenticated) {
+          return HomePage();
+        }
+        if (state is AuthUnauthenticated) {
+          return LoginPage(userRepository: userRepository);
+        }
+        return SplashPage();
+      }),
       routes: <String, WidgetBuilder>{
-        UIData.loginRoute: (BuildContext context) => LoginPage(),
+        UIData.loginRoute: (BuildContext context) => LoginPage(
+              userRepository: userRepository,
+            ),
         UIData.dashboardRoute: (BuildContext context) => HomePage(),
         UIData.categoriesRoute: (BuildContext context) => CategoryListPage(),
         CategoryWiseRecentMonthsReportScreen.routeName:
             (BuildContext context) => CategoryWiseRecentMonthsReportScreen(),
       },
     );
-  }
-
-  // Platform messages are asynchronous, so we initialize in an async method.
-  Future<void> initPlatformState() async {
-    if (!mounted) return;
-
-    OneSignal.shared.setLogLevel(OSLogLevel.warn, OSLogLevel.none);
-
-    // OneSignal.shared.setRequiresUserPrivacyConsent(_requireConsent);
-
-    var settings = {
-      OSiOSSettings.autoPrompt: false,
-      OSiOSSettings.promptBeforeOpeningPushUrl: true
-    };
-
-    OneSignal.shared.setNotificationReceivedHandler((notification) {
-      // print(
-      //     "Received notification: \n${notification.jsonRepresentation().replaceAll("\\n", "\n")}");
-    });
-
-    // The App ID should not be treated as private.
-    await OneSignal.shared
-        .init("9bf198c9-442b-4619-b5c9-759fc250f15b", iOSSettings: settings);
-
-    OneSignal.shared
-        .setInFocusDisplayType(OSNotificationDisplayType.notification);
-
-    // bool requiresConsent = await OneSignal.shared.requiresUserPrivacyConsent();
   }
 }

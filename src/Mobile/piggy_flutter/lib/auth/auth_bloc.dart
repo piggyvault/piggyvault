@@ -3,6 +3,7 @@ import 'package:bloc/bloc.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:piggy_flutter/auth/auth.dart';
+import 'package:piggy_flutter/blocs/transaction_summary/transaction_summary.dart';
 
 import 'package:piggy_flutter/repositories/repositories.dart';
 import 'package:piggy_flutter/user/user.dart';
@@ -11,10 +12,15 @@ import 'package:piggy_flutter/user/user_bloc.dart';
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final UserRepository userRepository;
   final UserBloc userBloc;
+  final TransactionSummaryBloc transactionSummaryBloc;
 
-  AuthBloc({@required this.userRepository, @required this.userBloc})
+  AuthBloc(
+      {@required this.userRepository,
+      @required this.userBloc,
+      @required this.transactionSummaryBloc})
       : assert(userRepository != null),
-        assert(userBloc != null);
+        assert(userBloc != null),
+        assert(transactionSummaryBloc != null);
 
   @override
   AuthState get initialState => AuthUninitialized();
@@ -32,6 +38,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           yield AuthUnauthenticated();
         } else {
           userBloc.add(UserLoggedIn(user: user));
+          transactionSummaryBloc.add(RefreshTransactionSummary());
           yield AuthAuthenticated(user: user);
         }
       } else {
@@ -48,6 +55,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         yield AuthUnauthenticated();
       } else {
         userBloc.add(UserLoggedIn(user: user));
+        transactionSummaryBloc.add(RefreshTransactionSummary());
         yield AuthAuthenticated(user: user);
       }
       yield AuthAuthenticated(user: user);

@@ -44,13 +44,8 @@ class HomeBloc implements BlocBase {
     await getRecentTransactions();
   }
 
-  _handleTransactionSummaryRefresh() async {
-    var result = await _transactionService.getTransactionSummary('month');
-    _transactionSummarySubject.add(result);
-  }
-
   _handleDataSync(bool event) async {
-    await _handleTransactionSummaryRefresh();
+    // await _handleTransactionSummaryRefresh();
     await getRecentTransactions();
   }
 

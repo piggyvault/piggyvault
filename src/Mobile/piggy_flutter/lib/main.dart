@@ -7,6 +7,8 @@ import 'package:piggy_flutter/blocs/account_bloc.dart';
 import 'package:piggy_flutter/blocs/application_bloc.dart';
 import 'package:piggy_flutter/blocs/bloc_provider.dart' as oldProvider;
 import 'package:piggy_flutter/blocs/category_bloc.dart';
+import 'package:piggy_flutter/blocs/transaction_summary/transaction_summary_bloc.dart';
+import 'package:piggy_flutter/dashboard/dashboard_bloc.dart';
 import 'package:piggy_flutter/repositories/repositories.dart';
 import 'package:piggy_flutter/screens/category/category_list.dart';
 import 'package:piggy_flutter/screens/home/home.dart';
@@ -42,22 +44,33 @@ class PiggyBlocDelegate extends BlocDelegate {
 }
 
 Future<void> main() async {
-  final UserRepository userRepository = UserRepository(
-      piggyApiClient: PiggyApiClient(
+  final PiggyApiClient piggyApiClient = PiggyApiClient(
     httpClient: http.Client(),
-  ));
+  );
+  final UserRepository userRepository =
+      UserRepository(piggyApiClient: piggyApiClient);
+
+  final TransactionRepository transactionRepository =
+      TransactionRepository(piggyApiClient: piggyApiClient);
 
   BlocSupervisor.delegate = PiggyBlocDelegate();
   // debugPrintRebuildDirtyWidgets = true;
   return runApp(MultiBlocProvider(
     providers: [
       BlocProvider<UserBloc>(builder: (context) => UserBloc()),
+      BlocProvider<TransactionSummaryBloc>(
+        builder: (context) => TransactionSummaryBloc(
+            transactionRepository: transactionRepository),
+      ),
       BlocProvider<AuthBloc>(
         builder: (context) => AuthBloc(
             userRepository: userRepository,
-            userBloc: BlocProvider.of<UserBloc>(context))
+            userBloc: BlocProvider.of<UserBloc>(context),
+            transactionSummaryBloc:
+                BlocProvider.of<TransactionSummaryBloc>(context))
           ..add(AppStarted()),
-      )
+      ),
+      BlocProvider<DashboardBloc>(builder: (context) => DashboardBloc())
     ],
     child: oldProvider.BlocProvider<ApplicationBloc>(
       bloc: ApplicationBloc(),

@@ -1,22 +1,48 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_sparkline/flutter_sparkline.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'package:piggy_flutter/blocs/bloc_provider.dart';
+import 'package:piggy_flutter/blocs/transaction_summary/transaction_summary_bloc.dart';
+import 'package:piggy_flutter/blocs/transaction_summary/transaction_summary_state.dart';
+import 'package:piggy_flutter/dashboard/index.dart';
 import 'package:piggy_flutter/models/transaction_summary.dart';
 import 'package:piggy_flutter/screens/home/home.dart';
 import 'package:piggy_flutter/screens/home/home_bloc.dart';
 import 'package:piggy_flutter/screens/reports/categorywise_recent_months_report_screen.dart';
 import 'package:piggy_flutter/screens/transaction/transaction_form.dart';
 import 'package:piggy_flutter/utils/common.dart';
+import 'package:piggy_flutter/blocs/bloc_provider.dart' as oldProvider;
 
 class DashboardScreen extends StatefulWidget {
-  @override
-  _DashboardScreenState createState() => _DashboardScreenState();
+  const DashboardScreen({
+    Key key,
+    @required DashboardBloc dashboardBloc,
+  })  : _dashboardBloc = dashboardBloc,
+        super(key: key);
 
-  DashboardScreen({Key key}) : super(key: key);
+  final DashboardBloc _dashboardBloc;
+
+  @override
+  DashboardScreenState createState() {
+    return DashboardScreenState(_dashboardBloc);
+  }
 }
 
-class _DashboardScreenState extends State<DashboardScreen> {
+class DashboardScreenState extends State<DashboardScreen> {
+  final DashboardBloc _dashboardBloc;
+  DashboardScreenState(this._dashboardBloc);
+
+  @override
+  void initState() {
+    super.initState();
+    this._load();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
   final List<List<double>> charts = [
     [
       0.0,
@@ -234,130 +260,140 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final HomeBloc bloc = BlocProvider.of<HomeBloc>(context);
+    final HomeBloc bloc = oldProvider.BlocProvider.of<HomeBloc>(context);
 
-    return Scaffold(
-        appBar: AppBar(
-          elevation: 2.0,
-          title: Text(
-            'Dashboard',
-          ),
-          actions: <Widget>[
-            Container(
-              margin: EdgeInsets.only(right: 8.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  Text('piggyvault.in',
-                      style: TextStyle(
-                          fontWeight: FontWeight.w700, fontSize: 14.0)),
-                  Icon(
-                    Icons.arrow_drop_down,
-                  )
-                ],
-              ),
-            )
-          ],
-        ),
-        body: StaggeredGridView.count(
-          crossAxisCount: 2,
-          crossAxisSpacing: 12.0,
-          mainAxisSpacing: 12.0,
-          padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-          children: <Widget>[
-            _balanceTile(bloc),
-            _transactionsCountTile(bloc),
-            _buildTile(
+    return BlocBuilder<DashboardBloc, DashboardState>(
+        bloc: widget._dashboardBloc,
+        builder: (
+          BuildContext context,
+          DashboardState currentState,
+        ) {
+          if (currentState is UnDashboardState) {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+          if (currentState is ErrorDashboardState) {
+            return Center(
+                child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Text(currentState.errorMessage ?? 'Error'),
                 Padding(
-                  padding: const EdgeInsets.all(24.0),
-                  child: Column(
+                  padding: const EdgeInsets.only(top: 32.0),
+                  child: RaisedButton(
+                    color: Colors.blue,
+                    child: Text("reload"),
+                    onPressed: () => this._load(),
+                  ),
+                ),
+              ],
+            ));
+          }
+          return StaggeredGridView.count(
+            crossAxisCount: 2,
+            crossAxisSpacing: 12.0,
+            mainAxisSpacing: 12.0,
+            padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+            children: <Widget>[
+              _balanceTile(),
+              _transactionsCountTile(bloc),
+              _buildTile(
+                  Padding(
+                    padding: const EdgeInsets.all(24.0),
+                    child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Material(
+                              color: Colors.amber,
+                              shape: CircleBorder(),
+                              child: Padding(
+                                padding: EdgeInsets.all(16.0),
+                                child: Icon(Icons.multiline_chart,
+                                    color: Colors.white, size: 30.0),
+                              )),
+                          Padding(padding: EdgeInsets.only(bottom: 16.0)),
+                          Text('Reports',
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.w700,
+                                  fontSize: 24.0)),
+                          Text('Categorywise Recent',
+                              style: TextStyle(color: Colors.black45)),
+                        ]),
+                  ),
+                  onTap: (() => Navigator.of(context).pushReplacementNamed(
+                      CategoryWiseRecentMonthsReportScreen.routeName))),
+              _buildTile(
+                Padding(
+                    padding: const EdgeInsets.all(24.0),
+                    child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        Material(
-                            color: Colors.amber,
-                            shape: CircleBorder(),
-                            child: Padding(
-                              padding: EdgeInsets.all(16.0),
-                              child: Icon(Icons.multiline_chart,
-                                  color: Colors.white, size: 30.0),
-                            )),
-                        Padding(padding: EdgeInsets.only(bottom: 16.0)),
-                        Text('Reports',
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.w700,
-                                fontSize: 24.0)),
-                        Text('Categorywise Recent',
-                            style: TextStyle(color: Colors.black45)),
-                      ]),
-                ),
-                onTap: (() => Navigator.of(context).pushReplacementNamed(
-                    CategoryWiseRecentMonthsReportScreen.routeName))),
-            _buildTile(
-              Padding(
-                  padding: const EdgeInsets.all(24.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Text('Expense',
-                                  style: TextStyle(color: Colors.green)),
-                              Text('\$16K',
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.w700,
-                                      fontSize: 34.0)),
-                            ],
-                          ),
-                          DropdownButton(
-                              isDense: true,
-                              value: actualDropdown,
-                              onChanged: (String value) => setState(() {
-                                    actualDropdown = value;
-                                    actualChart = chartDropdownItems
-                                        .indexOf(value); // Refresh the chart
-                                  }),
-                              items: chartDropdownItems.map((String title) {
-                                return DropdownMenuItem(
-                                  value: title,
-                                  child: Text(title,
-                                      style: TextStyle(
-                                          color: Colors.blue,
-                                          fontWeight: FontWeight.w400,
-                                          fontSize: 14.0)),
-                                );
-                              }).toList())
-                        ],
-                      ),
-                      Padding(padding: EdgeInsets.only(bottom: 4.0)),
-                      Sparkline(
-                        data: charts[actualChart],
-                        lineWidth: 5.0,
-                        lineColor: Colors.greenAccent,
-                      )
-                    ],
-                  )),
-            ),
-            _lastTransactionTile(bloc)
-          ],
-          staggeredTiles: [
-            StaggeredTile.extent(2, 110.0),
-            StaggeredTile.extent(1, 180.0),
-            StaggeredTile.extent(1, 180.0),
-            StaggeredTile.extent(2, 220.0),
-            StaggeredTile.extent(2, 110.0),
-          ],
-        ));
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Text('Expense',
+                                    style: TextStyle(color: Colors.green)),
+                                Text('\$16K',
+                                    style: TextStyle(
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.w700,
+                                        fontSize: 34.0)),
+                              ],
+                            ),
+                            DropdownButton(
+                                isDense: true,
+                                value: actualDropdown,
+                                onChanged: (String value) => setState(() {
+                                      actualDropdown = value;
+                                      actualChart = chartDropdownItems
+                                          .indexOf(value); // Refresh the chart
+                                    }),
+                                items: chartDropdownItems.map((String title) {
+                                  return DropdownMenuItem(
+                                    value: title,
+                                    child: Text(title,
+                                        style: TextStyle(
+                                            color: Colors.blue,
+                                            fontWeight: FontWeight.w400,
+                                            fontSize: 14.0)),
+                                  );
+                                }).toList())
+                          ],
+                        ),
+                        Padding(padding: EdgeInsets.only(bottom: 4.0)),
+                        Sparkline(
+                          data: charts[actualChart],
+                          lineWidth: 5.0,
+                          lineColor: Colors.greenAccent,
+                        )
+                      ],
+                    )),
+              ),
+              _lastTransactionTile(bloc)
+            ],
+            staggeredTiles: [
+              StaggeredTile.extent(2, 110.0),
+              StaggeredTile.extent(1, 180.0),
+              StaggeredTile.extent(1, 180.0),
+              StaggeredTile.extent(2, 220.0),
+              StaggeredTile.extent(2, 110.0),
+            ],
+          );
+        });
+  }
+
+  void _load([bool isError = false]) {
+    widget._dashboardBloc.add(UnDashboardEvent());
+    widget._dashboardBloc.add(LoadDashboardEvent(isError));
   }
 
   Widget _transactionsCountTile(HomeBloc bloc) {
@@ -405,7 +441,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             )));
   }
 
-  Widget _balanceTile(HomeBloc bloc) {
+  Widget _balanceTile() {
     return _buildTile(
       Padding(
         padding: const EdgeInsets.all(24.0),
@@ -418,19 +454,20 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text('Balance', style: TextStyle(color: Colors.blueAccent)),
-                  StreamBuilder<TransactionSummary>(
-                    stream: bloc.transactionSummary,
-                    builder: (context, snapshot) {
-                      if (snapshot.hasData) {
+                  BlocBuilder<TransactionSummaryBloc, TransactionSummaryState>(
+                    builder: (context, state) {
+                      if (state is TransactionSummaryLoaded) {
                         return Text(
-                            '₹ ${snapshot.data.userNetWorth.toString()}',
+                            '₹ ${state.summary.userNetWorth.toString()}',
                             style: TextStyle(
                                 color: Colors.black,
                                 fontWeight: FontWeight.w700,
                                 fontSize: 34.0));
-                      } else {
+                      } else if (state is TransactionSummaryLoading) {
                         return CircularProgressIndicator();
                       }
+
+                      return Text('---');
                     },
                   )
                 ],

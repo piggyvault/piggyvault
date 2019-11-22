@@ -3,11 +3,11 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:piggy_flutter/blocs/account_bloc.dart';
-import 'package:piggy_flutter/blocs/bloc_provider.dart';
+import 'package:piggy_flutter/blocs/bloc_provider.dart' as oldProvider;
 import 'package:piggy_flutter/blocs/category_bloc.dart';
+import 'package:piggy_flutter/dashboard/index.dart';
 import 'package:piggy_flutter/models/transaction.dart';
 import 'package:piggy_flutter/screens/account/account_list.dart';
-import 'package:piggy_flutter/screens/home/dashboard.dart';
 import 'package:piggy_flutter/screens/home/home_bloc.dart';
 import 'package:piggy_flutter/screens/home/recent.dart';
 import 'package:piggy_flutter/screens/home/summary.dart';
@@ -64,7 +64,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   RecentPage _recent;
   SummaryPage _summary;
   AccountListPage _accounts;
-  DashboardScreen _dashboardScreen;
+  DashboardPage _dashboardScreen;
 
   List<Widget> _pages;
   bool _isSyncRequired;
@@ -115,7 +115,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       key: _keyAccountsPage,
     );
 
-    _dashboardScreen = DashboardScreen(key: _dashboardKey);
+    _dashboardScreen = DashboardPage();
 
     _pageController = PageController(initialPage: widget.startpage.index);
 
@@ -172,9 +172,11 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
   syncData(BuildContext context) {
     if (_isSyncRequired) {
-      final AccountBloc accountBloc = BlocProvider.of<AccountBloc>(context);
-      final CategoryBloc categoryBloc = BlocProvider.of<CategoryBloc>(context);
-      final HomeBloc homeBloc = BlocProvider.of<HomeBloc>(context);
+      final AccountBloc accountBloc =
+          oldProvider.BlocProvider.of<AccountBloc>(context);
+      final CategoryBloc categoryBloc =
+          oldProvider.BlocProvider.of<CategoryBloc>(context);
+      final HomeBloc homeBloc = oldProvider.BlocProvider.of<HomeBloc>(context);
 
       // print('##### syncing data');
       _isSyncRequired = false;

@@ -14,6 +14,7 @@ import 'package:piggy_flutter/screens/home/home_bloc.dart';
 import 'package:piggy_flutter/screens/reports/categorywise_recent_months_report_screen.dart';
 import 'package:piggy_flutter/splash/splash.dart';
 import 'package:piggy_flutter/themes.dart';
+import 'package:piggy_flutter/user/user_bloc.dart';
 import 'package:piggy_flutter/utils/uidata.dart';
 import 'package:http/http.dart' as http;
 
@@ -50,15 +51,16 @@ Future<void> main() async {
   // debugPrintRebuildDirtyWidgets = true;
   return runApp(MultiBlocProvider(
     providers: [
+      BlocProvider<UserBloc>(builder: (context) => UserBloc()),
       BlocProvider<AuthBloc>(
-        builder: (context) =>
-            AuthBloc(userRepository: userRepository)..add(AppStarted()),
+        builder: (context) => AuthBloc(
+            userRepository: userRepository,
+            userBloc: BlocProvider.of<UserBloc>(context))
+          ..add(AppStarted()),
       )
     ],
     child: oldProvider.BlocProvider<ApplicationBloc>(
       bloc: ApplicationBloc(),
-      // child: oldProvider.BlocProvider<UserBloc>(
-      //   bloc: UserBloc(),
       child: oldProvider.BlocProvider<HomeBloc>(
         bloc: HomeBloc(),
         child: oldProvider.BlocProvider<AccountBloc>(
@@ -69,7 +71,6 @@ Future<void> main() async {
           ),
         ),
       ),
-      // ),
     ),
   ));
 }

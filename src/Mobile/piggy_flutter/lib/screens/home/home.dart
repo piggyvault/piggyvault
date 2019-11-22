@@ -5,7 +5,6 @@ import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:piggy_flutter/blocs/account_bloc.dart';
 import 'package:piggy_flutter/blocs/bloc_provider.dart';
 import 'package:piggy_flutter/blocs/category_bloc.dart';
-import 'package:piggy_flutter/blocs/user_bloc.dart';
 import 'package:piggy_flutter/models/transaction.dart';
 import 'package:piggy_flutter/screens/account/account_list.dart';
 import 'package:piggy_flutter/screens/home/dashboard.dart';
@@ -173,7 +172,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
   syncData(BuildContext context) {
     if (_isSyncRequired) {
-      final UserBloc userBloc = BlocProvider.of<UserBloc>(context);
       final AccountBloc accountBloc = BlocProvider.of<AccountBloc>(context);
       final CategoryBloc categoryBloc = BlocProvider.of<CategoryBloc>(context);
       final HomeBloc homeBloc = BlocProvider.of<HomeBloc>(context);
@@ -181,7 +179,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       // print('##### syncing data');
       _isSyncRequired = false;
       homeBloc.syncData(true);
-      userBloc.userRefresh(true);
       accountBloc.accountsRefresh(true);
       categoryBloc.refreshCategories(true);
     }

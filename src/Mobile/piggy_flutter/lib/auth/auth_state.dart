@@ -1,4 +1,6 @@
 import 'package:equatable/equatable.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:piggy_flutter/models/models.dart';
 
 abstract class AuthState extends Equatable {
   @override
@@ -7,7 +9,14 @@ abstract class AuthState extends Equatable {
 
 class AuthUninitialized extends AuthState {}
 
-class AuthAuthenticated extends AuthState {}
+class AuthAuthenticated extends AuthState {
+  final User user;
+
+  AuthAuthenticated({@required this.user});
+
+  @override
+  List<Object> get props => [user];
+}
 
 class AuthUnauthenticated extends AuthState {}
 

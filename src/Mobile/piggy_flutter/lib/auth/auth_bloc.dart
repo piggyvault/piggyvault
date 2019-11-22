@@ -5,11 +5,16 @@ import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:piggy_flutter/auth/auth.dart';
 
 import 'package:piggy_flutter/repositories/repositories.dart';
+import 'package:piggy_flutter/user/user.dart';
+import 'package:piggy_flutter/user/user_bloc.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final UserRepository userRepository;
+  final UserBloc userBloc;
 
-  AuthBloc({@required this.userRepository}) : assert(userRepository != null);
+  AuthBloc({@required this.userRepository, @required this.userBloc})
+      : assert(userRepository != null),
+        assert(userBloc != null);
 
   @override
   AuthState get initialState => AuthUninitialized();
@@ -26,7 +31,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         if (user == null || user.id == null) {
           yield AuthUnauthenticated();
         } else {
-          yield AuthAuthenticated();
+          userBloc.add(UserLoggedIn(user: user));
+          yield AuthAuthenticated(user: user);
         }
       } else {
         yield AuthUnauthenticated();
@@ -37,11 +43,21 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       yield AuthLoading();
       await userRepository.persistToken(event.token);
       _handleSendTags(event.tenancyName);
-      yield AuthAuthenticated();
+      final user = await userRepository.getCurrentLoginInformation();
+      if (user == null || user.id == null) {
+        yield AuthUnauthenticated();
+      } else {
+        userBloc.add(UserLoggedIn(user: user));
+        yield AuthAuthenticated(user: user);
+      }
+      yield AuthAuthenticated(user: user);
     }
 
     if (event is LoggedOut) {
       yield AuthLoading();
+      userBloc.add(UserLoggedOut());
+
+      _handleDeleteTag();
       await userRepository.deleteToken();
       yield AuthUnauthenticated();
     }
@@ -72,6 +88,15 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     OneSignal.shared.setNotificationReceivedHandler((notification) {
       // print(
       //     "Received notification: \n${notification.jsonRepresentation().replaceAll("\\n", "\n")}");
+    });
+  }
+
+  void _handleDeleteTag() {
+    // print("Deleting tag");
+    OneSignal.shared.deleteTag("tenancyName").then((response) {
+      // print("Successfully deleted tags with response $response");
+    }).catchError((error) {
+      // print("Encountered error deleting tag: $error");
     });
   }
 }

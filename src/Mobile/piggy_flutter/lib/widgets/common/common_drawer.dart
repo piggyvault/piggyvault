@@ -1,30 +1,33 @@
 import 'package:flutter/material.dart';
+import 'package:piggy_flutter/auth/auth.dart';
 import 'package:piggy_flutter/blocs/account_bloc.dart';
-import 'package:piggy_flutter/blocs/bloc_provider.dart';
+import 'package:piggy_flutter/blocs/bloc_provider.dart' as oldBloc;
 import 'package:piggy_flutter/blocs/category_bloc.dart';
-import 'package:piggy_flutter/blocs/user_bloc.dart';
 import 'package:piggy_flutter/models/account.dart';
 import 'package:piggy_flutter/models/category.dart';
-import 'package:piggy_flutter/models/user.dart';
 import 'package:piggy_flutter/screens/reports/categorywise_recent_months_report_screen.dart';
+import 'package:piggy_flutter/user/user.dart';
+import 'package:piggy_flutter/user/user_bloc.dart';
 import 'package:piggy_flutter/widgets/about_tile.dart';
 import 'package:piggy_flutter/screens/home/home.dart';
 import 'package:piggy_flutter/utils/uidata.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class CommonDrawer extends StatelessWidget {
   final menuTextStyle = TextStyle(fontWeight: FontWeight.w700, fontSize: 18.0);
 
   @override
   Widget build(BuildContext context) {
-    final UserBloc userBloc = BlocProvider.of<UserBloc>(context);
-    final CategoryBloc categoryBloc = BlocProvider.of<CategoryBloc>(context);
-    final AccountBloc accountBloc = BlocProvider.of<AccountBloc>(context);
+    final CategoryBloc categoryBloc =
+        oldBloc.BlocProvider.of<CategoryBloc>(context);
+    final AccountBloc accountBloc =
+        oldBloc.BlocProvider.of<AccountBloc>(context);
 
     return Drawer(
       child: ListView(
         padding: EdgeInsets.zero,
         children: <Widget>[
-          drawerHeader(userBloc),
+          drawerHeader(),
           ListTile(
             title: Text(
               "Home",
@@ -34,8 +37,7 @@ class CommonDrawer extends StatelessWidget {
               Icons.home,
               color: Colors.blue,
             ),
-            onTap: (() => Navigator
-                .of(context)
+            onTap: (() => Navigator.of(context)
                 .pushReplacementNamed(UIData.dashboardRoute)),
           ),
           accountsTile(accountBloc),
@@ -62,9 +64,7 @@ class CommonDrawer extends StatelessWidget {
               color: Colors.red,
             ),
             onTap: (() {
-              userBloc.logout().then((done) => Navigator
-                  .of(context)
-                  .pushReplacementNamed(UIData.loginRoute));
+              BlocProvider.of<AuthBloc>(context).add(LoggedOut());
             }),
           ),
           Divider(),
@@ -87,8 +87,7 @@ class CommonDrawer extends StatelessWidget {
             Icons.category,
             color: Colors.cyan,
           ),
-          onTap: (() => Navigator
-              .of(context)
+          onTap: (() => Navigator.of(context)
               .pushReplacementNamed(UIData.categoriesRoute)),
           trailing: snapshot.hasData
               ? Chip(
@@ -138,28 +137,25 @@ class CommonDrawer extends StatelessWidget {
     );
   }
 
-  Widget drawerHeader(UserBloc userBloc) {
-    return StreamBuilder<User>(
-      stream: userBloc.user,
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          return UserAccountsDrawerHeader(
-            accountName: Text(
-              '${snapshot.data.name} ${snapshot.data.surname}',
-            ),
-            accountEmail: Text(
-              snapshot.data.emailAddress,
-            ),
-            currentAccountPicture: new CircleAvatar(
+  Widget drawerHeader() {
+    return BlocBuilder<UserBloc, UserState>(builder: (context, state) {
+      if (state is UserLoaded) {
+        return UserAccountsDrawerHeader(
+          accountName: Text(
+            '${state.user.name} ${state.user.surname}',
+          ),
+          accountEmail: Text(
+            state.user.emailAddress,
+          ),
+          currentAccountPicture: new CircleAvatar(
 //              backgroundImage: new AssetImage(UIData.pkImage),
-                ),
-          );
-        } else {
-          return DrawerHeader(
-            child: Text('User not logged in'),
-          );
-        }
-      },
-    );
+              ),
+        );
+      }
+
+      return DrawerHeader(
+        child: Text('User not logged in'),
+      );
+    });
   }
 }

@@ -17,3 +17,4 @@ class UserBloc extends Bloc<UserEvent, UserState> {
       yield UserEmpty();
     }
   }
+}

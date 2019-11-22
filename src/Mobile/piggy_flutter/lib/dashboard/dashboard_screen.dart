@@ -413,19 +413,20 @@ class DashboardScreenState extends State<DashboardScreen> {
                           color: Colors.white, size: 30.0),
                     )),
                 Padding(padding: EdgeInsets.only(bottom: 16.0)),
-                StreamBuilder<TransactionSummary>(
-                  stream: bloc.transactionSummary,
-                  builder: (context, snapshot) {
-                    if (snapshot.hasData) {
+                BlocBuilder<TransactionSummaryBloc, TransactionSummaryState>(
+                  builder: (context, state) {
+                    if (state is TransactionSummaryLoaded) {
                       return Text(
-                          '${snapshot.data.totalFamilyTransactionsCount.toString()}',
+                          '${state.summary.totalFamilyTransactionsCount.toString()}',
                           style: TextStyle(
                               color: Colors.black,
                               fontWeight: FontWeight.w700,
                               fontSize: 24.0));
-                    } else {
+                    } else if (state is TransactionSummaryLoading) {
                       return CircularProgressIndicator();
                     }
+
+                    return Text('---');
                   },
                 ),
                 Text('Transactions', style: TextStyle(color: Colors.black45)),

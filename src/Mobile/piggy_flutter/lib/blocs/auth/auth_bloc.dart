@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
-import 'package:piggy_flutter/auth/auth.dart';
+import 'package:piggy_flutter/blocs/auth/auth.dart';
 import 'package:piggy_flutter/blocs/transaction_summary/transaction_summary.dart';
 
 import 'package:piggy_flutter/repositories/repositories.dart';

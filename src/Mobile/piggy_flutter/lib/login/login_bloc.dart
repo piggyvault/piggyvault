@@ -2,8 +2,7 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:piggy_flutter/auth/auth.dart';
-import 'package:piggy_flutter/auth/auth_bloc.dart';
+import 'package:piggy_flutter/blocs/auth/auth.dart';
 import 'package:piggy_flutter/login/login.dart';
 import 'package:piggy_flutter/repositories/repositories.dart';
 

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:piggy_flutter/auth/auth_bloc.dart';
+import 'package:piggy_flutter/blocs/auth/auth.dart';
 import 'package:piggy_flutter/login/login.dart';
 import 'package:piggy_flutter/login/login_bloc.dart';
 import 'package:piggy_flutter/repositories/repositories.dart';

@@ -66,6 +66,25 @@ class PiggyApiClient {
     return null;
   }
 
+  Future<TenantAccountsResult> getTenantAccounts() async {
+    List<Account> userAccountItems = [];
+    List<Account> familyAccountItems = [];
+    var result = await getAsync<dynamic>(
+        '$baseUrl/api/services/app/account/GetTenantAccounts');
+
+    if (result.success) {
+      result.result['userAccounts']['items'].forEach((account) {
+        userAccountItems.add(Account.fromJson(account));
+      });
+      result.result['otherMembersAccounts']['items'].forEach((account) {
+        familyAccountItems.add(Account.fromJson(account));
+      });
+    }
+
+    return TenantAccountsResult(
+        familyAccounts: familyAccountItems, userAccounts: userAccountItems);
+  }
+
 // utils
   Future<AjaxResponse<T>> getAsync<T>(String resourcePath) async {
     final prefs = await SharedPreferences.getInstance();

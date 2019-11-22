@@ -65,17 +65,6 @@ class TransactionService extends AppServiceBase {
         transactions: transactions);
   }
 
-  Future<TransactionSummary> getTransactionSummary(String duration) async {
-    var result = await rest.getAsync<dynamic>(
-        'services/app/Transaction/GetSummary?duration=$duration');
-
-    if (result.success) {
-      return TransactionSummary.fromJson(result.result);
-    }
-
-    return null;
-  }
-
   Future<TransactionEditDto> getTransactionForEdit(String id) async {
     var result = await rest.getAsync<dynamic>(
         'services/app/transaction/GetTransactionForEdit?id=$id');

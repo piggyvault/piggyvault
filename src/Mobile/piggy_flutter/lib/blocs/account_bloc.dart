@@ -18,17 +18,7 @@ class AccountBloc implements BlocBase {
   Stream<List<Account>> get userAccounts => _userAccounts.stream;
   Stream<List<Account>> get familyAccounts => _familyAccounts.stream;
 
-  AccountBloc() {
-    _accountsRefresh.stream.listen(getTenantAccounts);
-  }
-
-  Future<Null> getTenantAccounts(bool done) async {
-//    print("########## AccountBloc getTenantAccounts");
-    await _accountService.getTenantAccounts();
-    userAccountList = _accountService.userAccounts;
-    _userAccounts.add(userAccountList);
-    _familyAccounts.add(_accountService.familyAccounts);
-  }
+  AccountBloc() {}
 
   void dispose() {
     _accountsRefresh.close();

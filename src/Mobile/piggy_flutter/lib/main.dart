@@ -4,11 +4,14 @@ import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:piggy_flutter/blocs/account_bloc.dart';
+import 'package:piggy_flutter/blocs/accounts/accounts_bloc.dart';
 import 'package:piggy_flutter/blocs/application_bloc.dart';
+import 'package:piggy_flutter/blocs/auth/auth.dart';
 import 'package:piggy_flutter/blocs/bloc_provider.dart' as oldProvider;
 import 'package:piggy_flutter/blocs/category_bloc.dart';
 import 'package:piggy_flutter/blocs/transaction_summary/transaction_summary_bloc.dart';
 import 'package:piggy_flutter/dashboard/dashboard_bloc.dart';
+import 'package:piggy_flutter/repositories/account_repository%20copy.dart';
 import 'package:piggy_flutter/repositories/repositories.dart';
 import 'package:piggy_flutter/screens/category/category_list.dart';
 import 'package:piggy_flutter/screens/home/home.dart';
@@ -20,7 +23,6 @@ import 'package:piggy_flutter/user/user_bloc.dart';
 import 'package:piggy_flutter/utils/uidata.dart';
 import 'package:http/http.dart' as http;
 
-import 'auth/auth.dart';
 import 'login/login.dart';
 
 class PiggyBlocDelegate extends BlocDelegate {
@@ -53,6 +55,9 @@ Future<void> main() async {
   final TransactionRepository transactionRepository =
       TransactionRepository(piggyApiClient: piggyApiClient);
 
+  final AccountRepository accountRepository =
+      AccountRepository(piggyApiClient: piggyApiClient);
+
   BlocSupervisor.delegate = PiggyBlocDelegate();
   // debugPrintRebuildDirtyWidgets = true;
   return runApp(MultiBlocProvider(
@@ -62,15 +67,19 @@ Future<void> main() async {
         builder: (context) => TransactionSummaryBloc(
             transactionRepository: transactionRepository),
       ),
+      BlocProvider<AccountsBloc>(
+          builder: (context) =>
+              AccountsBloc(accountRepository: accountRepository)),
       BlocProvider<AuthBloc>(
         builder: (context) => AuthBloc(
             userRepository: userRepository,
             userBloc: BlocProvider.of<UserBloc>(context),
             transactionSummaryBloc:
-                BlocProvider.of<TransactionSummaryBloc>(context))
+                BlocProvider.of<TransactionSummaryBloc>(context),
+            accountsBloc: BlocProvider.of<AccountsBloc>(context))
           ..add(AppStarted()),
       ),
-      BlocProvider<DashboardBloc>(builder: (context) => DashboardBloc())
+      BlocProvider<DashboardBloc>(builder: (context) => DashboardBloc()),
     ],
     child: oldProvider.BlocProvider<ApplicationBloc>(
       bloc: ApplicationBloc(),

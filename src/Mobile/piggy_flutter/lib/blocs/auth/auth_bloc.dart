@@ -2,8 +2,11 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
+import 'package:piggy_flutter/blocs/accounts/accounts.dart';
+import 'package:piggy_flutter/blocs/accounts/accounts_bloc.dart';
 import 'package:piggy_flutter/blocs/auth/auth.dart';
 import 'package:piggy_flutter/blocs/transaction_summary/transaction_summary.dart';
+import 'package:piggy_flutter/models/models.dart';
 
 import 'package:piggy_flutter/repositories/repositories.dart';
 import 'package:piggy_flutter/user/user.dart';
@@ -13,14 +16,17 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final UserRepository userRepository;
   final UserBloc userBloc;
   final TransactionSummaryBloc transactionSummaryBloc;
+  final AccountsBloc accountsBloc;
 
   AuthBloc(
       {@required this.userRepository,
       @required this.userBloc,
-      @required this.transactionSummaryBloc})
+      @required this.transactionSummaryBloc,
+      @required this.accountsBloc})
       : assert(userRepository != null),
         assert(userBloc != null),
-        assert(transactionSummaryBloc != null);
+        assert(transactionSummaryBloc != null),
+        assert(accountsBloc != null);
 
   @override
   AuthState get initialState => AuthUninitialized();
@@ -37,8 +43,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         if (user == null || user.id == null) {
           yield AuthUnauthenticated();
         } else {
-          userBloc.add(UserLoggedIn(user: user));
-          transactionSummaryBloc.add(RefreshTransactionSummary());
+          syncData(user);
           yield AuthAuthenticated(user: user);
         }
       } else {
@@ -54,8 +59,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       if (user == null || user.id == null) {
         yield AuthUnauthenticated();
       } else {
-        userBloc.add(UserLoggedIn(user: user));
-        transactionSummaryBloc.add(RefreshTransactionSummary());
+        syncData(user);
         yield AuthAuthenticated(user: user);
       }
       yield AuthAuthenticated(user: user);
@@ -69,6 +73,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       await userRepository.deleteToken();
       yield AuthUnauthenticated();
     }
+  }
+
+  void syncData(User user) {
+    userBloc.add(UserLoggedIn(user: user));
+    transactionSummaryBloc.add(RefreshTransactionSummary());
+    accountsBloc.add(LoadAccounts());
   }
 
   void _handleSendTags(String tenancyName) {

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:piggy_flutter/auth/auth.dart';
 import 'package:piggy_flutter/blocs/account_bloc.dart';
+import 'package:piggy_flutter/blocs/auth/auth.dart';
 import 'package:piggy_flutter/blocs/bloc_provider.dart' as oldBloc;
 import 'package:piggy_flutter/blocs/category_bloc.dart';
 import 'package:piggy_flutter/models/account.dart';

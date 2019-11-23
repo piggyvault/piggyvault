@@ -1,14 +1,13 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import 'package:piggy_flutter/blocs/bloc_provider.dart';
-import 'package:piggy_flutter/blocs/user_bloc.dart';
 import 'package:piggy_flutter/models/transaction.dart';
 import 'package:piggy_flutter/models/transaction_comment.dart';
-import 'package:piggy_flutter/models/user.dart';
 import 'package:piggy_flutter/screens/transaction/transaction_detail_bloc.dart';
 import 'package:piggy_flutter/screens/transaction/transaction_form.dart';
+import 'package:piggy_flutter/user/user.dart';
 import 'package:piggy_flutter/utils/api_subscription.dart';
 import 'package:piggy_flutter/utils/common.dart';
 import 'package:piggy_flutter/widgets/primary_color_override.dart';
@@ -42,7 +41,6 @@ class TransactionDetailPageState extends State<TransactionDetailPage> {
 
   @override
   Widget build(BuildContext context) {
-    final UserBloc userBloc = BlocProvider.of<UserBloc>(context);
     final ThemeData theme = Theme.of(context);
 
     return Scaffold(
@@ -64,19 +62,18 @@ class TransactionDetailPageState extends State<TransactionDetailPage> {
           _transactionComments(),
         ],
       ),
-      bottomNavigationBar: _bottomNavigationBar(userBloc, theme),
+      bottomNavigationBar: _bottomNavigationBar(theme),
     );
   }
 
-  Widget _bottomNavigationBar(UserBloc bloc, ThemeData theme) {
+  Widget _bottomNavigationBar(ThemeData theme) {
     final TextStyle dialogTextStyle =
         theme.textTheme.subhead.copyWith(color: theme.textTheme.caption.color);
-    return StreamBuilder<User>(
-      stream: bloc.user,
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
+    return BlocBuilder<UserBloc, UserState>(
+      builder: (context, state) {
+        if (state is UserLoaded) {
           // Hide actions if transaction created by another user
-          return widget.transaction.creatorUserName == snapshot.data.userName
+          return widget.transaction.creatorUserName == state.user.userName
               ? BottomAppBar(
                   child: Row(
                     children: <Widget>[

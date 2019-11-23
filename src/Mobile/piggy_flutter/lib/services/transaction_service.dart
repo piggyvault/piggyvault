@@ -26,15 +26,6 @@ class GetTransactionsInput {
       this.groupBy}); // where the data is showing
 }
 
-class TransferInput {
-  final String id, description, accountId, toAccountId, transactionTime;
-  final double amount, toAmount;
-  final String categoryId;
-
-  TransferInput(this.id, this.description, this.accountId, this.transactionTime,
-      this.amount, this.categoryId, this.toAmount, this.toAccountId);
-}
-
 class TransactionService extends AppServiceBase {
   Future<TransactionsResult> getTransactions(GetTransactionsInput input) async {
     List<Transaction> transactions = [];
@@ -89,22 +80,7 @@ class TransactionService extends AppServiceBase {
     return comments;
   }
 
-  Future<AjaxResponse<dynamic>> createOrUpdateTransaction(
-      TransactionEditDto input) async {
-    final result = await rest
-        .postAsync('services/app/transaction/CreateOrUpdateTransaction', {
-      "id": input.id,
-      "description": input.description,
-      "amount": input.amount,
-      "categoryId": input.categoryId,
-      "accountId": input.accountId,
-      "transactionTime": input.transactionTime
-    });
-
-    return result;
-  }
-
-  Future<AjaxResponse<dynamic>> deleteTransaction(String id) async {
+  Future<ApiResponse<dynamic>> deleteTransaction(String id) async {
     final result =
         await rest.postAsync('services/app/transaction/DeleteTransaction', {
       "id": id,
@@ -120,21 +96,6 @@ class TransactionService extends AppServiceBase {
       "transactionId": transactionId,
       "content": content,
     });
-  }
-
-  Future<AjaxResponse<dynamic>> transfer(TransferInput input) async {
-    final result = await rest.postAsync('services/app/transaction/transfer', {
-      "id": input.id,
-      "description": input.description,
-      "amount": input.amount,
-      "toAmount": input.toAmount,
-      "categoryId": input.categoryId,
-      "accountId": input.accountId,
-      "toAccountId": input.toAccountId,
-      "transactionTime": input.transactionTime
-    });
-
-    return result;
   }
 
   List<TransactionGroupItem> groupTransactions(

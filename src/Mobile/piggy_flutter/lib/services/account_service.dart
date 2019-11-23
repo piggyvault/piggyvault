@@ -55,7 +55,7 @@ class AccountService extends AppServiceBase {
     return output;
   }
 
-  Future<AjaxResponse<dynamic>> createOrUpdateAccount(
+  Future<ApiResponse<dynamic>> createOrUpdateAccount(
       AccountFormModel input) async {
     print(input);
     final result =

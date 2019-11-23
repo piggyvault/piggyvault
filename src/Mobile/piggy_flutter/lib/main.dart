@@ -4,11 +4,11 @@ import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:piggy_flutter/blocs/accounts/accounts_bloc.dart';
-import 'package:piggy_flutter/blocs/application_bloc.dart';
 import 'package:piggy_flutter/blocs/auth/auth.dart';
 import 'package:piggy_flutter/blocs/bloc_provider.dart' as oldProvider;
 import 'package:piggy_flutter/blocs/categories/categories_bloc.dart';
 import 'package:piggy_flutter/blocs/transaction_summary/transaction_summary_bloc.dart';
+import 'package:piggy_flutter/blocs/transactions/transactions.dart';
 import 'package:piggy_flutter/dashboard/dashboard_bloc.dart';
 import 'package:piggy_flutter/repositories/repositories.dart';
 import 'package:piggy_flutter/screens/category/category_list.dart';
@@ -68,6 +68,10 @@ Future<void> main() async {
         builder: (context) => TransactionSummaryBloc(
             transactionRepository: transactionRepository),
       ),
+      BlocProvider<TransactionsBloc>(
+        builder: (context) =>
+            TransactionsBloc(transactionRepository: transactionRepository),
+      ),
       BlocProvider<AccountsBloc>(
           builder: (context) =>
               AccountsBloc(accountRepository: accountRepository)),
@@ -86,12 +90,9 @@ Future<void> main() async {
       ),
       BlocProvider<DashboardBloc>(builder: (context) => DashboardBloc()),
     ],
-    child: oldProvider.BlocProvider<ApplicationBloc>(
-      bloc: ApplicationBloc(),
-      child: oldProvider.BlocProvider<HomeBloc>(
-        bloc: HomeBloc(),
-        child: App(userRepository: userRepository),
-      ),
+    child: oldProvider.BlocProvider<HomeBloc>(
+      bloc: HomeBloc(),
+      child: App(userRepository: userRepository),
     ),
   ));
 }

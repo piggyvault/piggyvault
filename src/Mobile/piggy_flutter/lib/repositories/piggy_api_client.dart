@@ -98,8 +98,39 @@ class PiggyApiClient {
     return tenantCategories;
   }
 
+  Future<ApiResponse<dynamic>> createOrUpdateTransaction(
+      TransactionEditDto input) async {
+    final result = await postAsync(
+        '$baseUrl/api/services/app/transaction/CreateOrUpdateTransaction', {
+      "id": input.id,
+      "description": input.description,
+      "amount": input.amount,
+      "categoryId": input.categoryId,
+      "accountId": input.accountId,
+      "transactionTime": input.transactionTime
+    });
+
+    return result;
+  }
+
+  Future<ApiResponse<dynamic>> transfer(TransferInput input) async {
+    final result =
+        await postAsync('$baseUrl/api/services/app/transaction/transfer', {
+      "id": input.id,
+      "description": input.description,
+      "amount": input.amount,
+      "toAmount": input.toAmount,
+      "categoryId": input.categoryId,
+      "accountId": input.accountId,
+      "toAccountId": input.toAccountId,
+      "transactionTime": input.transactionTime
+    });
+
+    return result;
+  }
+
 // utils
-  Future<AjaxResponse<T>> getAsync<T>(String resourcePath) async {
+  Future<ApiResponse<T>> getAsync<T>(String resourcePath) async {
     final prefs = await SharedPreferences.getInstance();
     var token = prefs.getString(UIData.authToken);
     var tenantId = prefs.getInt(UIData.tenantId);
@@ -112,8 +143,7 @@ class PiggyApiClient {
     return processResponse<T>(response);
   }
 
-  Future<AjaxResponse<T>> postAsync<T>(
-      String resourcePath, dynamic data) async {
+  Future<ApiResponse<T>> postAsync<T>(String resourcePath, dynamic data) async {
     final prefs = await SharedPreferences.getInstance();
     var token = prefs.getString(UIData.authToken);
     var tenantId = prefs.getInt(UIData.tenantId);
@@ -142,7 +172,7 @@ class PiggyApiClient {
     return processResponse<T>(response);
   }
 
-  AjaxResponse<T> processResponse<T>(http.Response response) {
+  ApiResponse<T> processResponse<T>(http.Response response) {
     try {
       // if (!((response.statusCode < 200) ||
       //     (response.statusCode >= 300) ||
@@ -152,7 +182,7 @@ class PiggyApiClient {
 
       // print(jsonResult);
 
-      var output = AjaxResponse<T>(
+      var output = ApiResponse<T>(
         result: parsedJson["result"],
         success: parsedJson["success"],
         unAuthorizedRequest: parsedJson['unAuthorizedRequest'],
@@ -163,7 +193,7 @@ class PiggyApiClient {
       }
       return output;
     } catch (e) {
-      return AjaxResponse<T>(
+      return ApiResponse<T>(
           result: null,
           success: false,
           unAuthorizedRequest: false,

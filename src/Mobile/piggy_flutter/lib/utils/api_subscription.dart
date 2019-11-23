@@ -1,7 +1,10 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:piggy_flutter/blocs/bloc_provider.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:piggy_flutter/blocs/accounts/accounts.dart';
+import 'package:piggy_flutter/blocs/bloc_provider.dart' as oldProvider;
+import 'package:piggy_flutter/blocs/categories/categories.dart';
 import 'package:piggy_flutter/models/api_request.dart';
 import 'package:piggy_flutter/screens/home/home.dart';
 import 'package:piggy_flutter/screens/home/home_bloc.dart';
@@ -22,7 +25,11 @@ apiSubscription(
       if (p.response.success == false) {
         showError(context, p.response);
       } else {
-        final HomeBloc homeBloc = BlocProvider.of<HomeBloc>(context);
+        final HomeBloc homeBloc =
+            oldProvider.BlocProvider.of<HomeBloc>(context);
+        final AccountsBloc accountsBloc =
+            BlocProvider.of<AccountsBloc>(context);
+
         switch (p.type) {
           case ApiType.login:
             {
@@ -47,7 +54,7 @@ apiSubscription(
           case ApiType.deleteTransaction:
           case ApiType.updateAccount:
             {
-              // accountBloc.accountsRefresh(true);
+              accountsBloc.add(LoadAccounts());
               homeBloc.syncData(true);
               showSuccess(
                   context: context,
@@ -58,9 +65,9 @@ apiSubscription(
           case ApiType.createCategory:
           case ApiType.updateCategory:
             {
-              // final CategoryBloc categoryBloc =
-              //     BlocProvider.of<CategoryBloc>(context);
-              // categoryBloc.refreshCategories(true);
+              final CategoriesBloc categoriesBloc =
+                  BlocProvider.of<CategoriesBloc>(context);
+              categoriesBloc.add(LoadCategories());
 
               if (p.type == ApiType.updateCategory) {
                 homeBloc.syncData(true);
@@ -73,7 +80,7 @@ apiSubscription(
             break;
           case ApiType.createAccount:
             {
-              // accountBloc.accountsRefresh(true);
+              accountsBloc.add(LoadAccounts());
               showSuccess(
                   context: context,
                   message: UIData.success,

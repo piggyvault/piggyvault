@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:piggy_flutter/intro_views/Models/page_view_model.dart';
 import 'package:piggy_flutter/intro_views/intro_views_flutter.dart';
-import 'package:piggy_flutter/screens/login/login_page.dart';
+import 'package:piggy_flutter/login/login.dart';
 import 'package:piggy_flutter/utils/uidata.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -13,9 +13,7 @@ setAccess() async {
 }
 
 class IntroViews extends StatelessWidget {
-  IntroViews(
-      {Key key})
-      : super(key: key);
+  IntroViews({Key key}) : super(key: key);
 
   //making list of pages needed to pass in IntroViewsFlutter constructor.
   final pages = [
@@ -103,19 +101,3 @@ class IntroViews extends StatelessWidget {
     ); //Material App
   }
 }
-
-// /// Home Page of our example app.
-
-// class HomePage extends StatelessWidget {
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: Text('Home'),
-//       ), //Appbar
-//       body: Center(
-//         child: Text("This is the home page of the app"),
-//       ), //Center
-//     ); //Scaffold
-//   }
-// }

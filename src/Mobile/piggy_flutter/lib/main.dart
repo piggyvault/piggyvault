@@ -19,7 +19,7 @@ import 'package:piggy_flutter/screens/home/home_bloc.dart';
 import 'package:piggy_flutter/screens/reports/categorywise_recent_months_report_screen.dart';
 import 'package:piggy_flutter/splash/splash.dart';
 import 'package:piggy_flutter/themes.dart';
-import 'package:piggy_flutter/user/user_bloc.dart';
+import 'package:piggy_flutter/blocs/user/user_bloc.dart';
 import 'package:piggy_flutter/utils/uidata.dart';
 import 'package:http/http.dart' as http;
 

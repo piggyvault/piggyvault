@@ -1,5 +1,5 @@
 import 'package:bloc/bloc.dart';
-import 'package:piggy_flutter/user/user.dart';
+import 'package:piggy_flutter/blocs/user/user.dart';
 
 class UserBloc extends Bloc<UserEvent, UserState> {
   @override

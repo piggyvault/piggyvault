@@ -7,7 +7,7 @@ import 'package:piggy_flutter/models/transaction.dart';
 import 'package:piggy_flutter/models/transaction_comment.dart';
 import 'package:piggy_flutter/screens/transaction/transaction_detail_bloc.dart';
 import 'package:piggy_flutter/screens/transaction/transaction_form.dart';
-import 'package:piggy_flutter/user/user.dart';
+import 'package:piggy_flutter/blocs/user/user.dart';
 import 'package:piggy_flutter/utils/api_subscription.dart';
 import 'package:piggy_flutter/utils/common.dart';
 import 'package:piggy_flutter/widgets/primary_color_override.dart';

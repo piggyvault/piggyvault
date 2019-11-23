@@ -9,8 +9,7 @@ import 'package:piggy_flutter/blocs/transaction_summary/transaction_summary.dart
 import 'package:piggy_flutter/models/models.dart';
 
 import 'package:piggy_flutter/repositories/repositories.dart';
-import 'package:piggy_flutter/user/user.dart';
-import 'package:piggy_flutter/user/user_bloc.dart';
+import 'package:piggy_flutter/blocs/user/user.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final UserRepository userRepository;

@@ -1,7 +1,8 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:piggy_flutter/blocs/account_bloc.dart';
-import 'package:piggy_flutter/blocs/bloc_provider.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:piggy_flutter/blocs/accounts/accounts.dart';
+import 'package:piggy_flutter/blocs/bloc_provider.dart' as oldProvider;
 import 'package:piggy_flutter/blocs/category_bloc.dart';
 import 'package:piggy_flutter/models/account.dart';
 import 'package:piggy_flutter/models/api_request.dart';
@@ -108,8 +109,8 @@ class TransactionFormPageState extends State<TransactionFormPage> {
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
-    final CategoryBloc categoryBloc = BlocProvider.of<CategoryBloc>(context);
-    final AccountBloc accountBloc = BlocProvider.of<AccountBloc>(context);
+    final CategoryBloc categoryBloc =
+        oldProvider.BlocProvider.of<CategoryBloc>(context);
 
     final _transactionTextStyle = TextStyle(
         color: _transactionType == UIData.transaction_type_income
@@ -171,7 +172,7 @@ class TransactionFormPageState extends State<TransactionFormPage> {
                     hintText: 'Choose an account',
                   ),
                   isEmpty: transactionEditDto.accountId == null,
-                  child: buildAccountList(accountBloc),
+                  child: buildAccountList(),
                 ),
                 const SizedBox(height: 24.0),
                 PrimaryColorOverride(
@@ -237,7 +238,7 @@ class TransactionFormPageState extends State<TransactionFormPage> {
                           hintText: 'Choose an account',
                         ),
                         isEmpty: _toAccount == null,
-                        child: buildAccountList(accountBloc, true),
+                        child: buildAccountList(true),
                       )
                     : null,
                 _showTransferToAmount ? const SizedBox(height: 24.0) : null,
@@ -341,14 +342,13 @@ class TransactionFormPageState extends State<TransactionFormPage> {
             }
           });
 
-  Widget buildAccountList(AccountBloc accountBloc, [bool isToAccount = false]) {
-    return StreamBuilder<List<Account>>(
-      stream: accountBloc.userAccounts,
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
+  Widget buildAccountList([bool isToAccount = false]) {
+    return BlocBuilder<AccountsBloc, AccountsState>(
+      builder: (context, state) {
+        if (state is AccountsLoaded) {
           if (transactionEditDto != null &&
               transactionEditDto.accountId != null) {
-            _account = snapshot.data.firstWhere(
+            _account = state.userAccounts.firstWhere(
                 (account) => account.id == transactionEditDto.accountId);
           }
           return DropdownButton<String>(
@@ -357,17 +357,17 @@ class TransactionFormPageState extends State<TransactionFormPage> {
               setState(() {
                 if (isToAccount) {
                   _toAccountId = value;
-                  _toAccount = accountBloc.userAccountList
+                  _toAccount = state.userAccounts
                       .firstWhere((account) => account.id == value);
                 } else {
                   transactionEditDto.accountId = value;
-                  _account = accountBloc.userAccountList
+                  _account = state.userAccounts
                       .firstWhere((account) => account.id == value);
                 }
               });
               manageTransferView();
             },
-            items: snapshot.data.map((Account account) {
+            items: state.userAccounts.map((Account account) {
               return DropdownMenuItem<String>(
                 value: account.id,
                 child: Text(account.name),

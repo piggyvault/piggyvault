@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:piggy_flutter/blocs/account_bloc.dart';
 import 'package:piggy_flutter/blocs/accounts/accounts_bloc.dart';
 import 'package:piggy_flutter/blocs/application_bloc.dart';
 import 'package:piggy_flutter/blocs/auth/auth.dart';
@@ -85,12 +84,9 @@ Future<void> main() async {
       bloc: ApplicationBloc(),
       child: oldProvider.BlocProvider<HomeBloc>(
         bloc: HomeBloc(),
-        child: oldProvider.BlocProvider<AccountBloc>(
-          bloc: AccountBloc(),
-          child: oldProvider.BlocProvider<CategoryBloc>(
-            bloc: CategoryBloc(),
-            child: App(userRepository: userRepository),
-          ),
+        child: oldProvider.BlocProvider<CategoryBloc>(
+          bloc: CategoryBloc(),
+          child: App(userRepository: userRepository),
         ),
       ),
     ),

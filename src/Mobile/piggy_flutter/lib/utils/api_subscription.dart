@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:piggy_flutter/blocs/account_bloc.dart';
 import 'package:piggy_flutter/blocs/bloc_provider.dart';
 import 'package:piggy_flutter/blocs/category_bloc.dart';
 import 'package:piggy_flutter/models/api_request.dart';
@@ -24,7 +23,6 @@ apiSubscription(
       if (p.response.success == false) {
         showError(context, p.response);
       } else {
-        final AccountBloc accountBloc = BlocProvider.of<AccountBloc>(context);
         final HomeBloc homeBloc = BlocProvider.of<HomeBloc>(context);
         switch (p.type) {
           case ApiType.login:
@@ -39,8 +37,8 @@ apiSubscription(
                   context,
                   MaterialPageRoute(
                     builder: (context) => HomePage(
-                          isInitialLoading: true,
-                        ),
+                      isInitialLoading: true,
+                    ),
                   ),
                 );
               }
@@ -50,7 +48,7 @@ apiSubscription(
           case ApiType.deleteTransaction:
           case ApiType.updateAccount:
             {
-              accountBloc.accountsRefresh(true);
+              // accountBloc.accountsRefresh(true);
               homeBloc.syncData(true);
               showSuccess(
                   context: context,
@@ -76,7 +74,7 @@ apiSubscription(
             break;
           case ApiType.createAccount:
             {
-              accountBloc.accountsRefresh(true);
+              // accountBloc.accountsRefresh(true);
               showSuccess(
                   context: context,
                   message: UIData.success,

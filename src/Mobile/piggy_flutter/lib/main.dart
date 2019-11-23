@@ -7,10 +7,9 @@ import 'package:piggy_flutter/blocs/accounts/accounts_bloc.dart';
 import 'package:piggy_flutter/blocs/application_bloc.dart';
 import 'package:piggy_flutter/blocs/auth/auth.dart';
 import 'package:piggy_flutter/blocs/bloc_provider.dart' as oldProvider;
-import 'package:piggy_flutter/blocs/category_bloc.dart';
+import 'package:piggy_flutter/blocs/categories/categories_bloc.dart';
 import 'package:piggy_flutter/blocs/transaction_summary/transaction_summary_bloc.dart';
 import 'package:piggy_flutter/dashboard/dashboard_bloc.dart';
-import 'package:piggy_flutter/repositories/account_repository%20copy.dart';
 import 'package:piggy_flutter/repositories/repositories.dart';
 import 'package:piggy_flutter/screens/category/category_list.dart';
 import 'package:piggy_flutter/screens/home/home.dart';
@@ -57,6 +56,9 @@ Future<void> main() async {
   final AccountRepository accountRepository =
       AccountRepository(piggyApiClient: piggyApiClient);
 
+  final CategoryRepository categoryRepository =
+      CategoryRepository(piggyApiClient: piggyApiClient);
+
   BlocSupervisor.delegate = PiggyBlocDelegate();
   // debugPrintRebuildDirtyWidgets = true;
   return runApp(MultiBlocProvider(
@@ -69,13 +71,17 @@ Future<void> main() async {
       BlocProvider<AccountsBloc>(
           builder: (context) =>
               AccountsBloc(accountRepository: accountRepository)),
+      BlocProvider<CategoriesBloc>(
+          builder: (context) =>
+              CategoriesBloc(categoryRepository: categoryRepository)),
       BlocProvider<AuthBloc>(
         builder: (context) => AuthBloc(
             userRepository: userRepository,
             userBloc: BlocProvider.of<UserBloc>(context),
             transactionSummaryBloc:
                 BlocProvider.of<TransactionSummaryBloc>(context),
-            accountsBloc: BlocProvider.of<AccountsBloc>(context))
+            accountsBloc: BlocProvider.of<AccountsBloc>(context),
+            categoriesBloc: BlocProvider.of<CategoriesBloc>(context))
           ..add(AppStarted()),
       ),
       BlocProvider<DashboardBloc>(builder: (context) => DashboardBloc()),
@@ -84,10 +90,7 @@ Future<void> main() async {
       bloc: ApplicationBloc(),
       child: oldProvider.BlocProvider<HomeBloc>(
         bloc: HomeBloc(),
-        child: oldProvider.BlocProvider<CategoryBloc>(
-          bloc: CategoryBloc(),
-          child: App(userRepository: userRepository),
-        ),
+        child: App(userRepository: userRepository),
       ),
     ),
   ));

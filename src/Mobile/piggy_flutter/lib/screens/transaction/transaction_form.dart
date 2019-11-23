@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:piggy_flutter/blocs/accounts/accounts.dart';
 import 'package:piggy_flutter/blocs/bloc_provider.dart' as oldProvider;
-import 'package:piggy_flutter/blocs/category_bloc.dart';
+import 'package:piggy_flutter/blocs/categories/categories_bloc.dart';
+import 'package:piggy_flutter/blocs/categories/categories_state.dart';
 import 'package:piggy_flutter/models/account.dart';
 import 'package:piggy_flutter/models/api_request.dart';
 import 'package:piggy_flutter/models/category.dart';
@@ -109,8 +110,6 @@ class TransactionFormPageState extends State<TransactionFormPage> {
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
-    final CategoryBloc categoryBloc =
-        oldProvider.BlocProvider.of<CategoryBloc>(context);
 
     final _transactionTextStyle = TextStyle(
         color: _transactionType == UIData.transaction_type_income
@@ -200,7 +199,7 @@ class TransactionFormPageState extends State<TransactionFormPage> {
                     errorText: _categoryErrorText,
                   ),
                   isEmpty: transactionEditDto.categoryId == null,
-                  child: buildCategoryList(categoryBloc),
+                  child: buildCategoryList(),
                 ),
                 const SizedBox(height: 24.0),
                 PrimaryColorOverride(
@@ -318,29 +317,26 @@ class TransactionFormPageState extends State<TransactionFormPage> {
         false;
   }
 
-  Widget buildCategoryList(CategoryBloc categoryBloc) =>
-      StreamBuilder<List<Category>>(
-          stream: categoryBloc.categories,
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              return DropdownButton<String>(
-                value: transactionEditDto.categoryId,
-                onChanged: (String value) {
-                  setState(() {
-                    transactionEditDto.categoryId = value;
-                  });
-                },
-                items: snapshot.data.map((Category category) {
-                  return DropdownMenuItem<String>(
-                    value: category.id,
-                    child: Text(category.name),
-                  );
-                }).toList(),
+  Widget buildCategoryList() =>
+      BlocBuilder<CategoriesBloc, CategoriesState>(builder: (context, state) {
+        if (state is CategoriesLoaded) {
+          return DropdownButton<String>(
+            value: transactionEditDto.categoryId,
+            onChanged: (String value) {
+              setState(() {
+                transactionEditDto.categoryId = value;
+              });
+            },
+            items: state.categories.map((Category category) {
+              return DropdownMenuItem<String>(
+                value: category.id,
+                child: Text(category.name),
               );
-            } else {
-              return LinearProgressIndicator();
-            }
-          });
+            }).toList(),
+          );
+        }
+        return LinearProgressIndicator();
+      });
 
   Widget buildAccountList([bool isToAccount = false]) {
     return BlocBuilder<AccountsBloc, AccountsState>(

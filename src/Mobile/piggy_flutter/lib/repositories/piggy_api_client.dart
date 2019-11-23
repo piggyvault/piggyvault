@@ -85,6 +85,19 @@ class PiggyApiClient {
         familyAccounts: familyAccountItems, userAccounts: userAccountItems);
   }
 
+  Future<List<Category>> getTenantCategories() async {
+    List<Category> tenantCategories = [];
+
+    var result = await getAsync(
+        '$baseUrl/api/services/app/Category/GetTenantCategories');
+
+    if (result.success) {
+      result.result['items'].forEach(
+          (category) => tenantCategories.add(Category.fromJson(category)));
+    }
+    return tenantCategories;
+  }
+
 // utils
   Future<AjaxResponse<T>> getAsync<T>(String resourcePath) async {
     final prefs = await SharedPreferences.getInstance();

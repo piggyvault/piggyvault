@@ -5,6 +5,7 @@ import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:piggy_flutter/blocs/accounts/accounts.dart';
 import 'package:piggy_flutter/blocs/accounts/accounts_bloc.dart';
 import 'package:piggy_flutter/blocs/auth/auth.dart';
+import 'package:piggy_flutter/blocs/categories/categories.dart';
 import 'package:piggy_flutter/blocs/transaction_summary/transaction_summary.dart';
 import 'package:piggy_flutter/models/models.dart';
 
@@ -16,12 +17,14 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final UserBloc userBloc;
   final TransactionSummaryBloc transactionSummaryBloc;
   final AccountsBloc accountsBloc;
+  final CategoriesBloc categoriesBloc;
 
   AuthBloc(
       {@required this.userRepository,
       @required this.userBloc,
       @required this.transactionSummaryBloc,
-      @required this.accountsBloc})
+      @required this.accountsBloc,
+      @required this.categoriesBloc})
       : assert(userRepository != null),
         assert(userBloc != null),
         assert(transactionSummaryBloc != null),
@@ -78,6 +81,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     userBloc.add(UserLoggedIn(user: user));
     transactionSummaryBloc.add(RefreshTransactionSummary());
     accountsBloc.add(LoadAccounts());
+    categoriesBloc.add(LoadCategories());
   }
 
   void _handleSendTags(String tenancyName) {

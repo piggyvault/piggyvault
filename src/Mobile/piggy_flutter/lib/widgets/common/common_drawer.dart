@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:piggy_flutter/blocs/accounts/accounts_bloc.dart';
 import 'package:piggy_flutter/blocs/accounts/accounts_state.dart';
 import 'package:piggy_flutter/blocs/auth/auth.dart';
-import 'package:piggy_flutter/blocs/bloc_provider.dart' as oldBloc;
-import 'package:piggy_flutter/blocs/category_bloc.dart';
-import 'package:piggy_flutter/models/category.dart';
+import 'package:piggy_flutter/blocs/categories/categories_bloc.dart';
+import 'package:piggy_flutter/blocs/categories/categories_state.dart';
 import 'package:piggy_flutter/screens/reports/categorywise_recent_months_report_screen.dart';
 import 'package:piggy_flutter/blocs/user/user.dart';
 import 'package:piggy_flutter/widgets/about_tile.dart';
@@ -17,9 +16,6 @@ class CommonDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final CategoryBloc categoryBloc =
-        oldBloc.BlocProvider.of<CategoryBloc>(context);
-
     return Drawer(
       child: ListView(
         padding: EdgeInsets.zero,
@@ -65,7 +61,7 @@ class CommonDrawer extends StatelessWidget {
                   label: Icon(Icons.hourglass_empty),
                 );
               })),
-          categoriesTile(categoryBloc),
+          categoriesTile(context),
           ListTile(
             title: Text(
               "Reports",
@@ -98,33 +94,30 @@ class CommonDrawer extends StatelessWidget {
     );
   }
 
-  Widget categoriesTile(CategoryBloc categoryBloc) {
-    return StreamBuilder<List<Category>>(
-      stream: categoryBloc.categories,
-      builder: (context, snapshot) {
-        return ListTile(
-          title: Text(
-            "Categories",
-            style: menuTextStyle,
-          ),
-          leading: Icon(
-            Icons.category,
-            color: Colors.cyan,
-          ),
-          onTap: (() => Navigator.of(context)
-              .pushReplacementNamed(UIData.categoriesRoute)),
-          trailing: snapshot.hasData
-              ? Chip(
-                  key: ValueKey<String>(snapshot.data.length.toString()),
-                  backgroundColor: Colors.cyan,
-                  label: Text(snapshot.data.length.toString()),
-                )
-              : Chip(
-                  label: Icon(Icons.hourglass_empty),
-                ),
-        );
-      },
-    );
+  Widget categoriesTile(BuildContext context) {
+    return ListTile(
+        title: Text(
+          "Categories",
+          style: menuTextStyle,
+        ),
+        leading: Icon(
+          Icons.category,
+          color: Colors.cyan,
+        ),
+        onTap: (() =>
+            Navigator.of(context).pushReplacementNamed(UIData.categoriesRoute)),
+        trailing: BlocBuilder<CategoriesBloc, CategoriesState>(
+            builder: (context, state) {
+          if (state is CategoriesLoaded) {
+            return Chip(
+              backgroundColor: Colors.cyan,
+              label: Text(state.categories.length.toString()),
+            );
+          }
+          return Chip(
+            label: Icon(Icons.hourglass_empty),
+          );
+        }));
   }
 
   Widget drawerHeader() {

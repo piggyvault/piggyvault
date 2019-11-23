@@ -3,7 +3,7 @@ import 'package:bloc/bloc.dart';
 import 'package:flutter/cupertino.dart';
 
 import 'package:piggy_flutter/blocs/accounts/accounts.dart';
-import 'package:piggy_flutter/repositories/account_repository%20copy.dart';
+import 'package:piggy_flutter/repositories/repositories.dart';
 
 class AccountsBloc extends Bloc<AccountsEvent, AccountsState> {
   final AccountRepository accountRepository;

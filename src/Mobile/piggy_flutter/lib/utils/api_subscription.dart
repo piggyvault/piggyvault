@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:piggy_flutter/blocs/bloc_provider.dart';
-import 'package:piggy_flutter/blocs/category_bloc.dart';
 import 'package:piggy_flutter/models/api_request.dart';
 import 'package:piggy_flutter/screens/home/home.dart';
 import 'package:piggy_flutter/screens/home/home_bloc.dart';
@@ -59,9 +58,9 @@ apiSubscription(
           case ApiType.createCategory:
           case ApiType.updateCategory:
             {
-              final CategoryBloc categoryBloc =
-                  BlocProvider.of<CategoryBloc>(context);
-              categoryBloc.refreshCategories(true);
+              // final CategoryBloc categoryBloc =
+              //     BlocProvider.of<CategoryBloc>(context);
+              // categoryBloc.refreshCategories(true);
 
               if (p.type == ApiType.updateCategory) {
                 homeBloc.syncData(true);

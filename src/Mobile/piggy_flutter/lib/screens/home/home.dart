@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:piggy_flutter/blocs/bloc_provider.dart' as oldProvider;
-import 'package:piggy_flutter/blocs/category_bloc.dart';
 import 'package:piggy_flutter/dashboard/index.dart';
 import 'package:piggy_flutter/models/transaction.dart';
 import 'package:piggy_flutter/screens/account/account_list.dart';
@@ -171,15 +170,13 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
   syncData(BuildContext context) {
     if (_isSyncRequired) {
-      final CategoryBloc categoryBloc =
-          oldProvider.BlocProvider.of<CategoryBloc>(context);
       final HomeBloc homeBloc = oldProvider.BlocProvider.of<HomeBloc>(context);
 
       // print('##### syncing data');
       _isSyncRequired = false;
       homeBloc.syncData(true);
       // accountBloc.accountsRefresh(true);
-      categoryBloc.refreshCategories(true);
+      // categoryBloc.refreshCategories(true);
     }
   }
 

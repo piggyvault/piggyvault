@@ -5,3 +5,4 @@ export 'user.dart';
 export 'transaction_summary.dart';
 export 'account.dart';
 export 'tenant_accounts_result.dart';
+export 'category.dart';

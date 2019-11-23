@@ -15,13 +15,8 @@ import 'package:piggy_flutter/utils/uidata.dart';
 
 class AccountDetailPage extends StatefulWidget {
   final Account account;
-  final Stream<bool> syncStream;
 
-  AccountDetailPage({
-    Key key,
-    @required this.account,
-    @required this.syncStream,
-  }) : super(key: key);
+  AccountDetailPage({Key key, @required this.account}) : super(key: key);
 
   @override
   _AccountDetailPageState createState() => _AccountDetailPageState();
@@ -37,7 +32,6 @@ class _AccountDetailPageState extends State<AccountDetailPage> {
     _bloc = AccountDetailBloc(accountId: widget.account.id);
     _bloc.changeAccount(widget.account);
     _bloc.onPageChanged(0);
-    _subscription = widget.syncStream.listen(_bloc.sync);
   }
 
   @override
@@ -70,8 +64,7 @@ class _AccountDetailPageState extends State<AccountDetailPage> {
                   ),
                   Text(
                     ' ${account.currentBalance} ${account.currencySymbol}',
-                    style: Theme
-                        .of(context)
+                    style: Theme.of(context)
                         .textTheme
                         .body2
                         .copyWith(color: Theme.of(context).accentColor),
@@ -121,9 +114,9 @@ class _AccountDetailPageState extends State<AccountDetailPage> {
                               MaterialPageRoute<DismissDialogAction>(
                                 builder: (BuildContext context) =>
                                     AccountFormScreen(
-                                      account: widget.account,
-                                      title: 'Edit Account',
-                                    ),
+                                  account: widget.account,
+                                  title: 'Edit Account',
+                                ),
                                 fullscreenDialog: true,
                               ));
                         }
@@ -132,21 +125,21 @@ class _AccountDetailPageState extends State<AccountDetailPage> {
                   },
                   itemBuilder: (BuildContext context) =>
                       <PopupMenuEntry<String>>[
-                        const PopupMenuItem<String>(
-                          value: UIData.account_edit,
-                          child: ListTile(
-                            leading: Icon(Icons.edit),
-                            title: Text(UIData.edit),
-                          ),
-                        ),
-                        const PopupMenuItem<String>(
-                          value: UIData.adjust_balance,
-                          child: ListTile(
-                            leading: Icon(Icons.account_balance),
-                            title: Text(UIData.adjust_balance),
-                          ),
-                        ),
-                      ],
+                    const PopupMenuItem<String>(
+                      value: UIData.account_edit,
+                      child: ListTile(
+                        leading: Icon(Icons.edit),
+                        title: Text(UIData.edit),
+                      ),
+                    ),
+                    const PopupMenuItem<String>(
+                      value: UIData.adjust_balance,
+                      child: ListTile(
+                        leading: Icon(Icons.account_balance),
+                        title: Text(UIData.adjust_balance),
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),

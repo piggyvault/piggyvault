@@ -2,16 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_sparkline/flutter_sparkline.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:piggy_flutter/blocs/recent_transactions/recent_transactions_bloc.dart';
+import 'package:piggy_flutter/blocs/recent_transactions/recent_transactions_state.dart';
 import 'package:piggy_flutter/blocs/transaction_summary/transaction_summary_bloc.dart';
 import 'package:piggy_flutter/blocs/transaction_summary/transaction_summary_state.dart';
 import 'package:piggy_flutter/dashboard/index.dart';
-import 'package:piggy_flutter/models/transaction_summary.dart';
-import 'package:piggy_flutter/screens/home/home.dart';
-import 'package:piggy_flutter/screens/home/home_bloc.dart';
 import 'package:piggy_flutter/screens/reports/categorywise_recent_months_report_screen.dart';
 import 'package:piggy_flutter/screens/transaction/transaction_form.dart';
 import 'package:piggy_flutter/utils/common.dart';
-import 'package:piggy_flutter/blocs/bloc_provider.dart' as oldProvider;
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({
@@ -260,8 +258,6 @@ class DashboardScreenState extends State<DashboardScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final HomeBloc bloc = oldProvider.BlocProvider.of<HomeBloc>(context);
-
     return BlocBuilder<DashboardBloc, DashboardState>(
         bloc: widget._dashboardBloc,
         builder: (
@@ -297,7 +293,7 @@ class DashboardScreenState extends State<DashboardScreen> {
             padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
             children: <Widget>[
               _balanceTile(),
-              _transactionsCountTile(bloc),
+              _transactionsCountTile(),
               _buildTile(
                   Padding(
                     padding: const EdgeInsets.all(24.0),
@@ -378,7 +374,7 @@ class DashboardScreenState extends State<DashboardScreen> {
                       ],
                     )),
               ),
-              _lastTransactionTile(bloc)
+              _lastTransactionTile()
             ],
             staggeredTiles: [
               StaggeredTile.extent(2, 110.0),
@@ -396,50 +392,40 @@ class DashboardScreenState extends State<DashboardScreen> {
     widget._dashboardBloc.add(LoadDashboardEvent(isError));
   }
 
-  Widget _transactionsCountTile(HomeBloc bloc) {
-    return _buildTile(
-        Padding(
-          padding: const EdgeInsets.all(24.0),
-          child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Material(
-                    color: Colors.teal,
-                    shape: CircleBorder(),
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Icon(Icons.local_atm,
-                          color: Colors.white, size: 30.0),
-                    )),
-                Padding(padding: EdgeInsets.only(bottom: 16.0)),
-                BlocBuilder<TransactionSummaryBloc, TransactionSummaryState>(
-                  builder: (context, state) {
-                    if (state is TransactionSummaryLoaded) {
-                      return Text(
-                          '${state.summary.totalFamilyTransactionsCount.toString()}',
-                          style: TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.w700,
-                              fontSize: 24.0));
-                    } else if (state is TransactionSummaryLoading) {
-                      return CircularProgressIndicator();
-                    }
+  Widget _transactionsCountTile() {
+    return _buildTile(Padding(
+      padding: const EdgeInsets.all(24.0),
+      child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Material(
+                color: Colors.teal,
+                shape: CircleBorder(),
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Icon(Icons.local_atm, color: Colors.white, size: 30.0),
+                )),
+            Padding(padding: EdgeInsets.only(bottom: 16.0)),
+            BlocBuilder<TransactionSummaryBloc, TransactionSummaryState>(
+              builder: (context, state) {
+                if (state is TransactionSummaryLoaded) {
+                  return Text(
+                      '${state.summary.totalFamilyTransactionsCount.toString()}',
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.w700,
+                          fontSize: 24.0));
+                } else if (state is TransactionSummaryLoading) {
+                  return CircularProgressIndicator();
+                }
 
-                    return Text('---');
-                  },
-                ),
-                Text('Transactions', style: TextStyle(color: Colors.black45)),
-              ]),
-        ),
-        onTap: (() => Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                builder: (context) => HomePage(
-                  startpage: StartPage.Accounts,
-                ),
-              ),
-            )));
+                return Text('---');
+              },
+            ),
+            Text('Transactions', style: TextStyle(color: Colors.black45)),
+          ]),
+    ));
   }
 
   Widget _balanceTile() {
@@ -487,7 +473,7 @@ class DashboardScreenState extends State<DashboardScreen> {
     );
   }
 
-  Widget _lastTransactionTile(HomeBloc bloc) {
+  Widget _lastTransactionTile() {
     return _buildTile(
       Padding(
         padding: const EdgeInsets.all(24.0),
@@ -501,19 +487,22 @@ class DashboardScreenState extends State<DashboardScreen> {
                 children: <Widget>[
                   Text('Last Transaction On',
                       style: TextStyle(color: Colors.redAccent)),
-                  StreamBuilder<String>(
-                      stream: bloc.lastTransactionDate,
-                      builder: (context, snapshot) {
-                        if (snapshot.hasData) {
-                          return Text(snapshot.data,
-                              style: TextStyle(
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.w700,
-                                  fontSize: 30.0));
-                        } else {
-                          return Text('Data Not Available');
-                        }
-                      })
+                  BlocBuilder<RecentTransactionsBloc, RecentTransactionsState>(
+                      builder: (context, state) {
+                    if (state is RecentTransactionsLoaded) {
+                      return Text(state.latestTransactionDate,
+                          style: TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.w700,
+                              fontSize: 30.0));
+                    }
+
+                    if (state is RecentTransactionsLoading) {
+                      return CircularProgressIndicator();
+                    }
+
+                    return Text('Data Not Available');
+                  })
                 ],
               ),
               Material(

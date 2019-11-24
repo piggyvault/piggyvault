@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:intl/intl.dart';
 import 'package:piggy_flutter/models/api_response.dart';
 import 'package:http/http.dart' as http;
 import 'package:meta/meta.dart';
@@ -129,7 +130,71 @@ class PiggyApiClient {
     return result;
   }
 
+  Future<TransactionsResult> getTransactions(GetTransactionsInput input) async {
+    List<Transaction> transactions = [];
+
+    var params = '';
+
+    if (input.type != null) params += 'type=${input.type}';
+
+    if (input.accountId != null) params += '&accountId=${input.accountId}';
+
+    if (input.startDate != null && input.startDate.toString() != '')
+      params += '&startDate=${input.startDate}';
+
+    if (input.endDate != null && input.endDate.toString() != '')
+      params += '&endDate=${input.endDate}';
+
+    var result = await getAsync<dynamic>(
+        '$baseUrl/api/services/app/transaction/GetTransactions?$params');
+
+    if (result.success) {
+      result.result['items'].forEach((transaction) {
+        transactions.add(Transaction.fromJson(transaction));
+      });
+    }
+    return TransactionsResult(
+        sections: groupTransactions(
+            transactions: transactions, groupBy: input.groupBy),
+        transactions: transactions);
+  }
+
 // utils
+
+  List<TransactionGroupItem> groupTransactions(
+      {List<Transaction> transactions,
+      TransactionsGroupBy groupBy = TransactionsGroupBy.Date}) {
+    List<TransactionGroupItem> sections = [];
+    var formatter = DateFormat("EEE, MMM d, ''yy");
+    String key;
+
+    transactions.forEach((transaction) {
+      if (groupBy == TransactionsGroupBy.Date) {
+        key = formatter.format(DateTime.parse(transaction.transactionTime));
+      } else if (groupBy == TransactionsGroupBy.Category) {
+        key = transaction.categoryName;
+      }
+
+      var section =
+          sections.firstWhere((o) => o.title == key, orElse: () => null);
+
+      if (section == null) {
+        section = TransactionGroupItem(title: key, groupby: groupBy);
+        sections.add(section);
+      }
+
+      if (transaction.amountInDefaultCurrency > 0) {
+        section.totalInflow += transaction.amountInDefaultCurrency;
+      } else {
+        section.totalOutflow += transaction.amountInDefaultCurrency;
+      }
+
+      section.transactions.add(transaction);
+    });
+
+    return sections;
+  }
+
   Future<ApiResponse<T>> getAsync<T>(String resourcePath) async {
     final prefs = await SharedPreferences.getInstance();
     var token = prefs.getString(UIData.authToken);

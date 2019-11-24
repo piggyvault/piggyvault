@@ -3,11 +3,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:piggy_flutter/blocs/accounts/accounts.dart';
-import 'package:piggy_flutter/blocs/bloc_provider.dart' as oldProvider;
 import 'package:piggy_flutter/blocs/categories/categories.dart';
 import 'package:piggy_flutter/models/api_request.dart';
-import 'package:piggy_flutter/screens/home/home.dart';
-import 'package:piggy_flutter/screens/home/home_bloc.dart';
 import 'package:piggy_flutter/widgets/common/common_dialogs.dart';
 import 'package:piggy_flutter/utils/uidata.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -25,8 +22,8 @@ apiSubscription(
       if (p.response.success == false) {
         showError(context, p.response);
       } else {
-        final HomeBloc homeBloc =
-            oldProvider.BlocProvider.of<HomeBloc>(context);
+        // final HomeBloc homeBloc =
+        //     oldProvider.BlocProvider.of<HomeBloc>(context);
         final AccountsBloc accountsBloc =
             BlocProvider.of<AccountsBloc>(context);
 
@@ -39,14 +36,14 @@ apiSubscription(
                     errorMessage:
                         'Something went wrong, check the credentials and try again.');
               } else {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => HomePage(
-                      isInitialLoading: true,
-                    ),
-                  ),
-                );
+                // Navigator.pushReplacement(
+                //   context,
+                //   MaterialPageRoute(
+                //     builder: (context) => HomePage(
+                //       isInitialLoading: true,
+                //     ),
+                //   ),
+                // );
               }
             }
             break;
@@ -55,7 +52,7 @@ apiSubscription(
           case ApiType.updateAccount:
             {
               accountsBloc.add(LoadAccounts());
-              homeBloc.syncData(true);
+              // homeBloc.syncData(true);
               showSuccess(
                   context: context,
                   message: UIData.success,
@@ -70,7 +67,7 @@ apiSubscription(
               categoriesBloc.add(LoadCategories());
 
               if (p.type == ApiType.updateCategory) {
-                homeBloc.syncData(true);
+                // homeBloc.syncData(true);
               }
               showSuccess(
                   context: context,

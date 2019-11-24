@@ -6,29 +6,31 @@ import 'package:piggy_flutter/blocs/accounts/accounts.dart';
 import 'package:piggy_flutter/blocs/accounts/accounts_bloc.dart';
 import 'package:piggy_flutter/blocs/auth/auth.dart';
 import 'package:piggy_flutter/blocs/categories/categories.dart';
+import 'package:piggy_flutter/blocs/recent_transactions/recent_transactions_bloc.dart';
+import 'package:piggy_flutter/blocs/recent_transactions/recent_transactions_event.dart';
 import 'package:piggy_flutter/blocs/transaction_summary/transaction_summary.dart';
 import 'package:piggy_flutter/models/models.dart';
 
 import 'package:piggy_flutter/repositories/repositories.dart';
-import 'package:piggy_flutter/blocs/user/user.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final UserRepository userRepository;
-  final UserBloc userBloc;
+
   final TransactionSummaryBloc transactionSummaryBloc;
   final AccountsBloc accountsBloc;
   final CategoriesBloc categoriesBloc;
+  final RecentTransactionsBloc recentTransactionsBloc;
 
   AuthBloc(
       {@required this.userRepository,
-      @required this.userBloc,
       @required this.transactionSummaryBloc,
       @required this.accountsBloc,
-      @required this.categoriesBloc})
+      @required this.categoriesBloc,
+      @required this.recentTransactionsBloc})
       : assert(userRepository != null),
-        assert(userBloc != null),
         assert(transactionSummaryBloc != null),
-        assert(accountsBloc != null);
+        assert(accountsBloc != null),
+        assert(recentTransactionsBloc != null);
 
   @override
   AuthState get initialState => AuthUninitialized();
@@ -69,7 +71,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
     if (event is LoggedOut) {
       yield AuthLoading();
-      userBloc.add(UserLoggedOut());
 
       _handleDeleteTag();
       await userRepository.deleteToken();
@@ -78,10 +79,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   }
 
   void syncData(User user) {
-    userBloc.add(UserLoggedIn(user: user));
     transactionSummaryBloc.add(RefreshTransactionSummary());
     accountsBloc.add(LoadAccounts());
     categoriesBloc.add(LoadCategories());
+    recentTransactionsBloc.add(LoadRecentTransactions());
   }
 
   void _handleSendTags(String tenancyName) {

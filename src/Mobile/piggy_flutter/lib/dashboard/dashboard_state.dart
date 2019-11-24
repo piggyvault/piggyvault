@@ -1,12 +1,11 @@
 import 'package:equatable/equatable.dart';
-import 'package:meta/meta.dart';
 
 abstract class DashboardState extends Equatable {
   /// notify change state without deep clone state
   final int version;
-  
+
   final Iterable propss;
-  DashboardState(this.version,[this.propss]);
+  DashboardState(this.version, [this.propss]);
 
   /// Copy object for use in action
   /// if need use deep clone
@@ -20,7 +19,6 @@ abstract class DashboardState extends Equatable {
 
 /// UnInitialized
 class UnDashboardState extends DashboardState {
-
   UnDashboardState(version) : super(version);
 
   @override
@@ -33,7 +31,7 @@ class UnDashboardState extends DashboardState {
 
   @override
   UnDashboardState getNewVersion() {
-    return UnDashboardState(version+1);
+    return UnDashboardState(version + 1);
   }
 }
 
@@ -53,15 +51,16 @@ class InDashboardState extends DashboardState {
 
   @override
   InDashboardState getNewVersion() {
-    return InDashboardState(version+1, this.hello);
+    return InDashboardState(version + 1, this.hello);
   }
 }
 
 class ErrorDashboardState extends DashboardState {
   final String errorMessage;
 
-  ErrorDashboardState(version, this.errorMessage): super(version, [errorMessage]);
-  
+  ErrorDashboardState(version, this.errorMessage)
+      : super(version, [errorMessage]);
+
   @override
   String toString() => 'ErrorDashboardState';
 
@@ -72,6 +71,6 @@ class ErrorDashboardState extends DashboardState {
 
   @override
   ErrorDashboardState getNewVersion() {
-    return ErrorDashboardState(version+1, this.errorMessage);
+    return ErrorDashboardState(version + 1, this.errorMessage);
   }
 }

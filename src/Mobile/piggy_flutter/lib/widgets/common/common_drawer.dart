@@ -4,10 +4,9 @@ import 'package:piggy_flutter/blocs/accounts/accounts_state.dart';
 import 'package:piggy_flutter/blocs/auth/auth.dart';
 import 'package:piggy_flutter/blocs/categories/categories_bloc.dart';
 import 'package:piggy_flutter/blocs/categories/categories_state.dart';
-import 'package:piggy_flutter/screens/reports/categorywise_recent_months_report_screen.dart';
-import 'package:piggy_flutter/blocs/user/user.dart';
-import 'package:piggy_flutter/widgets/about_tile.dart';
 import 'package:piggy_flutter/screens/home/home.dart';
+import 'package:piggy_flutter/screens/reports/categorywise_recent_months_report_screen.dart';
+import 'package:piggy_flutter/widgets/about_tile.dart';
 import 'package:piggy_flutter/utils/uidata.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -121,8 +120,8 @@ class CommonDrawer extends StatelessWidget {
   }
 
   Widget drawerHeader() {
-    return BlocBuilder<UserBloc, UserState>(builder: (context, state) {
-      if (state is UserLoaded) {
+    return BlocBuilder<AuthBloc, AuthState>(builder: (context, state) {
+      if (state is AuthAuthenticated) {
         return UserAccountsDrawerHeader(
           accountName: Text(
             '${state.user.name} ${state.user.surname}',

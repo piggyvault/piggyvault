@@ -23,4 +23,8 @@ class TransactionRepository {
   Future<ApiResponse<dynamic>> transfer(TransferInput input) async {
     return await piggyApiClient.transfer(input);
   }
+
+  Future<TransactionsResult> getTransactions(GetTransactionsInput input) async {
+    return await piggyApiClient.getTransactions(input);
+  }
 }

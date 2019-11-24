@@ -319,8 +319,9 @@ class DashboardScreenState extends State<DashboardScreen> {
                               style: TextStyle(color: Colors.black45)),
                         ]),
                   ),
-                  onTap: (() => Navigator.of(context).pushReplacementNamed(
-                      CategoryWiseRecentMonthsReportScreen.routeName))),
+                  onTap: (() => Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) =>
+                          CategoryWiseRecentMonthsReportScreen())))),
               _buildTile(
                 Padding(
                     padding: const EdgeInsets.all(24.0),

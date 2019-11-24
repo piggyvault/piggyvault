@@ -9,6 +9,7 @@ class DashboardPage extends StatelessWidget {
     var _dashboardBloc = DashboardBloc();
     return Scaffold(
       appBar: AppBar(
+        // leading: Container(), // TODO: To hide back button
         elevation: 2.0,
         title: Text(
           'Dashboard',

@@ -4,6 +4,7 @@ import 'package:piggy_flutter/blocs/accounts/accounts_state.dart';
 import 'package:piggy_flutter/blocs/auth/auth.dart';
 import 'package:piggy_flutter/blocs/categories/categories_bloc.dart';
 import 'package:piggy_flutter/blocs/categories/categories_state.dart';
+import 'package:piggy_flutter/screens/category/category_list.dart';
 import 'package:piggy_flutter/screens/home/home.dart';
 import 'package:piggy_flutter/screens/reports/categorywise_recent_months_report_screen.dart';
 import 'package:piggy_flutter/widgets/about_tile.dart';
@@ -30,7 +31,7 @@ class CommonDrawer extends StatelessWidget {
               color: Colors.blue,
             ),
             onTap: (() => Navigator.of(context)
-                .pushReplacementNamed(UIData.dashboardRoute)),
+                .push(MaterialPageRoute(builder: (context) => HomePage()))),
           ),
           ListTile(
               title: Text(
@@ -41,8 +42,7 @@ class CommonDrawer extends StatelessWidget {
                 Icons.account_balance_wallet,
                 color: Colors.green,
               ),
-              onTap: (() => Navigator.pushReplacement(
-                    context,
+              onTap: (() => Navigator.of(context).push(
                     MaterialPageRoute(
                         builder: (context) => HomePage(
                               startpage: StartPage.Accounts,
@@ -70,8 +70,8 @@ class CommonDrawer extends StatelessWidget {
               Icons.insert_chart,
               color: Colors.amber,
             ),
-            onTap: (() => Navigator.of(context).pushReplacementNamed(
-                CategoryWiseRecentMonthsReportScreen.routeName)),
+            onTap: (() => Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => CategoryWiseRecentMonthsReportScreen()))),
           ),
           Divider(),
           ListTile(
@@ -83,6 +83,7 @@ class CommonDrawer extends StatelessWidget {
               color: Colors.red,
             ),
             onTap: (() {
+              Navigator.popUntil(context, (ModalRoute.withName('/')));
               BlocProvider.of<AuthBloc>(context).add(LoggedOut());
             }),
           ),
@@ -103,8 +104,8 @@ class CommonDrawer extends StatelessWidget {
           Icons.category,
           color: Colors.cyan,
         ),
-        onTap: (() =>
-            Navigator.of(context).pushReplacementNamed(UIData.categoriesRoute)),
+        onTap: (() => Navigator.of(context)
+            .push(MaterialPageRoute(builder: (context) => CategoryListPage()))),
         trailing: BlocBuilder<CategoriesBloc, CategoriesState>(
             builder: (context, state) {
           if (state is CategoriesLoaded) {

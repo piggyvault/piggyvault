@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:piggy_flutter/models/account.dart';
+import 'package:piggy_flutter/repositories/repositories.dart';
 import 'package:piggy_flutter/screens/account/account_detail.dart';
 
 class AccountGroupList extends StatelessWidget {
@@ -41,7 +43,12 @@ class AccountGroupList extends StatelessWidget {
         onTap: (() => Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => AccountDetailPage(account: account)),
+                  builder: (context) => AccountDetailPage(
+                        account: account,
+                        transactionRepository:
+                            RepositoryProvider.of<TransactionRepository>(
+                                context),
+                      )),
             )),
       ),
     );

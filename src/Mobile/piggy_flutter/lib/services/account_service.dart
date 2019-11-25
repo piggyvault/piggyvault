@@ -20,17 +20,6 @@ class AccountService extends AppServiceBase {
     return null;
   }
 
-  Future<Account> getAccountDetails(String accountId) async {
-    var result = await rest.getAsync<dynamic>(
-        'services/app/account/GetAccountDetails?id=$accountId');
-
-    if (result.success) {
-      return Account.fromJson(result.result);
-    }
-
-    return null;
-  }
-
   Future<List<Currency>> getCurrencies() async {
     List<Currency> currencies = [];
     var result = await rest.getAsync('services/app/currency/GetCurrencies');

@@ -159,6 +159,17 @@ class PiggyApiClient {
         transactions: transactions);
   }
 
+  Future<Account> getAccountDetails(String accountId) async {
+    var result = await getAsync<dynamic>(
+        '$baseUrl/api/services/app/account/GetAccountDetails?id=$accountId');
+
+    if (result.success) {
+      return Account.fromJson(result.result);
+    }
+
+    return null;
+  }
+
 // utils
 
   List<TransactionGroupItem> groupTransactions(

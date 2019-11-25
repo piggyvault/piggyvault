@@ -95,6 +95,7 @@ Future<void> main() async {
     child: App(
       transactionRepository: transactionRepository,
       userRepository: userRepository,
+      accountRepository: accountRepository,
     ),
   ));
 }
@@ -102,41 +103,49 @@ Future<void> main() async {
 class App extends StatelessWidget {
   final UserRepository userRepository;
   final TransactionRepository transactionRepository;
+  final AccountRepository accountRepository;
 
-  App(
-      {Key key,
-      @required this.userRepository,
-      @required this.transactionRepository})
-      : super(key: key);
+  App({
+    Key key,
+    @required this.userRepository,
+    @required this.transactionRepository,
+    @required this.accountRepository,
+  }) : super(key: key);
 
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return RepositoryProvider<TransactionRepository>(
-        builder: (context) => transactionRepository,
-        child: MaterialApp(
-          title: 'Piggy',
-          theme: lightAppTheme.data,
-          home: BlocBuilder<AuthBloc, AuthState>(builder: (context, state) {
-            if (state is AuthAuthenticated) {
-              return HomePage();
-            }
-            if (state is AuthUnauthenticated) {
-              return LoginPage(userRepository: userRepository);
-            }
-            return SplashPage();
-          }),
-          routes: <String, WidgetBuilder>{
-            UIData.loginRoute: (BuildContext context) => LoginPage(
-                  userRepository: userRepository,
-                ),
-            UIData.dashboardRoute: (BuildContext context) => HomePage(),
-            UIData.categoriesRoute: (BuildContext context) =>
-                CategoryListPage(),
-            CategoryWiseRecentMonthsReportScreen.routeName:
-                (BuildContext context) =>
-                    CategoryWiseRecentMonthsReportScreen(),
-          },
-        ));
+    return MultiRepositoryProvider(
+      providers: [
+        RepositoryProvider<TransactionRepository>(
+          builder: (context) => transactionRepository,
+        ),
+        RepositoryProvider<AccountRepository>(
+          builder: (context) => accountRepository,
+        ),
+      ],
+      child: MaterialApp(
+        title: 'Piggy',
+        theme: lightAppTheme.data,
+        home: BlocBuilder<AuthBloc, AuthState>(builder: (context, state) {
+          if (state is AuthAuthenticated) {
+            return HomePage();
+          }
+          if (state is AuthUnauthenticated) {
+            return LoginPage(userRepository: userRepository);
+          }
+          return SplashPage();
+        }),
+        routes: <String, WidgetBuilder>{
+          UIData.loginRoute: (BuildContext context) => LoginPage(
+                userRepository: userRepository,
+              ),
+          UIData.dashboardRoute: (BuildContext context) => HomePage(),
+          UIData.categoriesRoute: (BuildContext context) => CategoryListPage(),
+          CategoryWiseRecentMonthsReportScreen.routeName:
+              (BuildContext context) => CategoryWiseRecentMonthsReportScreen(),
+        },
+      ),
+    );
   }
 }

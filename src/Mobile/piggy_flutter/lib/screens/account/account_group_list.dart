@@ -45,6 +45,8 @@ class AccountGroupList extends StatelessWidget {
               MaterialPageRoute(
                   builder: (context) => AccountDetailPage(
                         account: account,
+                        accountRepository:
+                            RepositoryProvider.of<AccountRepository>(context),
                         transactionRepository:
                             RepositoryProvider.of<TransactionRepository>(
                                 context),

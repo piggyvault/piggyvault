@@ -1,24 +1,34 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:intl/intl.dart';
+import 'package:piggy_flutter/blocs/account/bloc.dart';
 import 'package:piggy_flutter/blocs/account_transactions/bloc.dart';
 import 'package:piggy_flutter/models/account.dart';
 import 'package:piggy_flutter/models/get_transactions_input.dart';
 import 'package:piggy_flutter/models/models.dart';
 import 'package:piggy_flutter/repositories/repositories.dart';
 import 'package:piggy_flutter/theme/piggy_app_theme.dart';
+import 'package:piggy_flutter/utils/common.dart';
+import 'package:piggy_flutter/utils/uidata.dart';
 import 'package:piggy_flutter/widgets/common/calendar_popup_view.dart';
 import 'package:piggy_flutter/widgets/common/empty_result_widget.dart';
 import 'package:piggy_flutter/widgets/common/error_display_widget.dart';
 import 'package:piggy_flutter/widgets/common/loading_widget.dart';
 import 'package:piggy_flutter/widgets/transaction_list.dart';
 
+import 'account_form.dart';
+
 class AccountDetailPage extends StatefulWidget {
   final Account account;
   final TransactionRepository transactionRepository;
+  final AccountRepository accountRepository;
 
   AccountDetailPage(
-      {Key key, @required this.account, @required this.transactionRepository})
+      {Key key,
+      @required this.account,
+      @required this.transactionRepository,
+      @required this.accountRepository})
       : super(key: key);
 
   @override
@@ -30,18 +40,18 @@ class _AccountDetailPageState extends State<AccountDetailPage>
   AnimationController animationController;
   final ScrollController _scrollController = ScrollController();
   AccountTransactionsBloc accountTransactionsBloc;
+  AccountBloc accountBloc;
 
   DateTime startDate = DateTime.now().add(const Duration(days: -30));
   DateTime endDate = DateTime.now();
-
-  // AccountDetailBloc _bloc;
-  // StreamSubscription _subscription;
 
   @override
   void initState() {
     accountTransactionsBloc = AccountTransactionsBloc(
         transactionRepository: widget.transactionRepository);
+    accountBloc = AccountBloc(accountRepository: widget.accountRepository);
 
+    accountBloc.add(FetchAccount(accountId: widget.account.id));
     accountTransactionsBloc.add(FetchAccountTransactions(
         input: GetTransactionsInput(
             type: 'account',
@@ -53,17 +63,11 @@ class _AccountDetailPageState extends State<AccountDetailPage>
         duration: const Duration(milliseconds: 1000), vsync: this);
 
     super.initState();
-    // _bloc = AccountDetailBloc(accountId: widget.account.id);
-    // _bloc.changeAccount(widget.account);
-    // _bloc.onPageChanged(0);
   }
 
   @override
   void dispose() {
     animationController.dispose();
-
-    // _bloc.dispose();
-    // _subscription?.cancel();
     super.dispose();
   }
 
@@ -98,7 +102,8 @@ class _AccountDetailPageState extends State<AccountDetailPage>
                                 return Column(
                                   children: <Widget>[
                                     // getSearchBarUI(),
-                                    getTimeDateUI(accountTransactionsBloc),
+                                    getTimeDateUI(
+                                        accountTransactionsBloc, accountBloc),
                                   ],
                                 );
                               }, childCount: 1),
@@ -194,28 +199,8 @@ class _AccountDetailPageState extends State<AccountDetailPage>
     );
   }
 
-  Widget getAppBarUI() {
-    return AppBar(
-        //     title: Column(
-        //   crossAxisAlignment: CrossAxisAlignment.start,
-        //   children: <Widget>[
-        //     Padding(
-        //       padding: const EdgeInsets.only(top: 8.0),
-        //       child: Text(account.name),
-        //     ),
-        //     Text(
-        //       ' ${account.currentBalance} ${account.currencySymbol}',
-        //       style: Theme.of(context)
-        //           .textTheme
-        //           .body2
-        //           .copyWith(color: Theme.of(context).accentColor),
-        //     )
-        //   ],
-        // )
-        );
-  }
-
-  Widget getTimeDateUI(AccountTransactionsBloc accountTransactionsBloc) {
+  Widget getTimeDateUI(AccountTransactionsBloc accountTransactionsBloc,
+      AccountBloc accountBloc) {
     return Padding(
       padding: const EdgeInsets.only(left: 18, bottom: 16),
       child: Row(
@@ -305,7 +290,7 @@ class _AccountDetailPageState extends State<AccountDetailPage>
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           Text(
-                            'Number of Rooms',
+                            'Current Balance',
                             style: TextStyle(
                                 fontWeight: FontWeight.w100,
                                 fontSize: 16,
@@ -314,13 +299,49 @@ class _AccountDetailPageState extends State<AccountDetailPage>
                           const SizedBox(
                             height: 8,
                           ),
-                          Text(
-                            '1 Room - 2 Adults',
-                            style: TextStyle(
-                              fontWeight: FontWeight.w100,
-                              fontSize: 16,
-                            ),
-                          ),
+                          BlocBuilder<AccountBloc, AccountState>(
+                              bloc: accountBloc,
+                              builder: (context, state) {
+                                if (state is AccountLoaded) {
+                                  return Text(
+                                    ' ${state.account.currentBalance} ${state.account.currencySymbol}',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w100,
+                                      fontSize: 16,
+                                    ),
+                                  );
+                                }
+                                if (state is AccountLoading) {
+                                  return Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      SpinKitWave(
+                                          size: 16,
+                                          color: PiggyAppTheme.buildLightTheme()
+                                              .accentColor,
+                                          type: SpinKitWaveType.start),
+                                      SpinKitWave(
+                                          size: 16,
+                                          color: PiggyAppTheme.buildLightTheme()
+                                              .accentColor,
+                                          type: SpinKitWaveType.center),
+                                      SpinKitWave(
+                                          size: 16,
+                                          color: PiggyAppTheme.buildLightTheme()
+                                              .accentColor,
+                                          type: SpinKitWaveType.end),
+                                    ],
+                                  );
+                                }
+                                return Text(
+                                  '---',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w100,
+                                    fontSize: 16,
+                                  ),
+                                );
+                              })
                         ],
                       ),
                     ),
@@ -331,6 +352,51 @@ class _AccountDetailPageState extends State<AccountDetailPage>
           ),
         ],
       ),
+    );
+  }
+
+  Widget getAppBarUI() {
+    return AppBar(
+      title: Text(widget.account.name),
+      actions: <Widget>[
+        PopupMenuButton<String>(
+          padding: EdgeInsets.zero,
+          onSelected: (value) {
+            // print('PopupMenuButton onSelected $value');
+            switch (value) {
+              case UIData.account_edit:
+                {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute<DismissDialogAction>(
+                        builder: (BuildContext context) => AccountFormScreen(
+                          account: widget.account,
+                          title: 'Edit Account',
+                        ),
+                        fullscreenDialog: true,
+                      ));
+                }
+                break;
+            }
+          },
+          itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+            const PopupMenuItem<String>(
+              value: UIData.account_edit,
+              child: ListTile(
+                leading: Icon(Icons.edit),
+                title: Text(UIData.edit),
+              ),
+            ),
+            const PopupMenuItem<String>(
+              value: UIData.adjust_balance,
+              child: ListTile(
+                leading: Icon(Icons.account_balance),
+                title: Text(UIData.adjust_balance),
+              ),
+            ),
+          ],
+        ),
+      ],
     );
   }
 
@@ -362,113 +428,4 @@ class _AccountDetailPageState extends State<AccountDetailPage>
       ),
     );
   }
-  // @override
-  // Widget build(BuildContext context) {
-  //   final TextTheme textTheme = Theme.of(context).textTheme;
-
-  //   return StreamBuilder<AccountDetailState>(
-  //       stream: _bloc.state,
-  //       initialData: AccountDetailLoading(),
-  //       builder:
-  //           (BuildContext context, AsyncSnapshot<AccountDetailState> snapshot) {
-  //         final state = snapshot.data;
-  //         final account =
-  //             state.account == null ? widget.account : state.account;
-  //         return Scaffold(
-  //           appBar: AppBar(
-  //             title: Column(
-  //               crossAxisAlignment: CrossAxisAlignment.start,
-  //               children: <Widget>[
-  //                 Padding(
-  //                   padding: const EdgeInsets.only(top: 8.0),
-  //                   child: Text(account.name),
-  //                 ),
-  //                 Text(
-  //                   ' ${account.currentBalance} ${account.currencySymbol}',
-  //                   style: Theme.of(context)
-  //                       .textTheme
-  //                       .body2
-  //                       .copyWith(color: Theme.of(context).accentColor),
-  //                 )
-  //               ],
-  //             ),
-  //             bottom: PreferredSize(
-  //               preferredSize: const Size.fromHeight(48.0),
-  //               child: Container(
-  //                 margin: EdgeInsets.all(16.0),
-  //                 child: Row(
-  //                   children: <Widget>[
-  //                     InkWell(
-  //                       child: Text(state.previousPageTitle,
-  //                           style: textTheme.caption),
-  //                       onTap: () {
-  //                         _bloc.onPageChanged(-1);
-  //                       },
-  //                     ),
-  //                     Text(
-  //                       state.title,
-  //                       style: textTheme.body2,
-  //                     ),
-  //                     InkWell(
-  //                       child:
-  //                           Text(state.nextPageTitle, style: textTheme.caption),
-  //                       onTap: () {
-  //                         _bloc.onPageChanged(1);
-  //                       },
-  //                     ),
-  //                   ],
-  //                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  //                   crossAxisAlignment: CrossAxisAlignment.center,
-  //                 ),
-  //               ),
-  //             ),
-  //             actions: <Widget>[
-  //               PopupMenuButton<String>(
-  //                 padding: EdgeInsets.zero,
-  //                 onSelected: (value) {
-  //                   // print('PopupMenuButton onSelected $value');
-  //                   switch (value) {
-  //                     case UIData.account_edit:
-  //                       {
-  //                         Navigator.push(
-  //                             context,
-  //                             MaterialPageRoute<DismissDialogAction>(
-  //                               builder: (BuildContext context) =>
-  //                                   AccountFormScreen(
-  //                                 account: widget.account,
-  //                                 title: 'Edit Account',
-  //                               ),
-  //                               fullscreenDialog: true,
-  //                             ));
-  //                       }
-  //                       break;
-  //                   }
-  //                 },
-  //                 itemBuilder: (BuildContext context) =>
-  //                     <PopupMenuEntry<String>>[
-  //                   const PopupMenuItem<String>(
-  //                     value: UIData.account_edit,
-  //                     child: ListTile(
-  //                       leading: Icon(Icons.edit),
-  //                       title: Text(UIData.edit),
-  //                     ),
-  //                   ),
-  //                   const PopupMenuItem<String>(
-  //                     value: UIData.adjust_balance,
-  //                     child: ListTile(
-  //                       leading: Icon(Icons.account_balance),
-  //                       title: Text(UIData.adjust_balance),
-  //                     ),
-  //                   ),
-  //                 ],
-  //               ),
-  //             ],
-  //           ),
-
-  //           floatingActionButton: AddTransactionFab(
-  //             account: widget.account,
-  //           ),
-  //         );
-  //       });
-  // }
 }

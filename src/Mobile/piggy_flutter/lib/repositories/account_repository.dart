@@ -13,4 +13,8 @@ class AccountRepository {
   Future<TenantAccountsResult> getTenantAccounts() async {
     return await piggyApiClient.getTenantAccounts();
   }
+
+  Future<Account> getAccountDetails(String accountId) async {
+    return await piggyApiClient.getAccountDetails(accountId);
+  }
 }

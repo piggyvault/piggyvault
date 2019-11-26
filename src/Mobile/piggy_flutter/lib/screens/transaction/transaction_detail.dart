@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:piggy_flutter/blocs/auth/auth.dart';
+import 'package:piggy_flutter/blocs/transaction/transaction.dart';
 import 'package:piggy_flutter/models/transaction.dart';
 import 'package:piggy_flutter/models/transaction_comment.dart';
 import 'package:piggy_flutter/screens/transaction/transaction_detail_bloc.dart';
@@ -85,6 +86,8 @@ class TransactionDetailPageState extends State<TransactionDetailPage> {
                             MaterialPageRoute(
                               builder: (BuildContext context) =>
                                   TransactionFormPage(
+                                transactionsBloc:
+                                    BlocProvider.of<TransactionBloc>(context),
                                 transaction: widget.transaction,
                                 title: 'Edit Transaction',
                               ),
@@ -101,6 +104,8 @@ class TransactionDetailPageState extends State<TransactionDetailPage> {
                             MaterialPageRoute(
                               builder: (BuildContext context) =>
                                   TransactionFormPage(
+                                transactionsBloc:
+                                    BlocProvider.of<TransactionBloc>(context),
                                 transaction: widget.transaction,
                                 title: 'Copy Transaction',
                                 isCopy: true,

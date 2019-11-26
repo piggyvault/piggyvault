@@ -55,7 +55,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   final Key _keyRecentPage = PageStorageKey('recent');
   final Key _keyAccountsPage = PageStorageKey('accounts');
   final Key _keySummaryPage = PageStorageKey('summary');
-  final Key _dashboardKey = PageStorageKey('dashboard');
 
   RecentPage _recent;
   SummaryPage _summary;

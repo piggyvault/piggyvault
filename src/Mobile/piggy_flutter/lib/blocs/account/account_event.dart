@@ -16,3 +16,5 @@ class FetchAccount extends AccountEvent {
   @override
   List<Object> get props => [accountId];
 }
+
+class RefreshAccount extends AccountEvent {}

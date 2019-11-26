@@ -4,6 +4,7 @@ import 'package:flutter_sparkline/flutter_sparkline.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:piggy_flutter/blocs/recent_transactions/recent_transactions_bloc.dart';
 import 'package:piggy_flutter/blocs/recent_transactions/recent_transactions_state.dart';
+import 'package:piggy_flutter/blocs/transaction/transaction.dart';
 import 'package:piggy_flutter/blocs/transaction_summary/transaction_summary_bloc.dart';
 import 'package:piggy_flutter/blocs/transaction_summary/transaction_summary_state.dart';
 import 'package:piggy_flutter/dashboard/index.dart';
@@ -516,9 +517,12 @@ class DashboardScreenState extends State<DashboardScreen> {
                   )))
             ]),
       ),
-      onTap: () => Navigator.of(context).push(
-          MaterialPageRoute<DismissDialogAction>(
-              builder: (_) => TransactionFormPage(), fullscreenDialog: true)),
+      onTap: () =>
+          Navigator.of(context).push(MaterialPageRoute<DismissDialogAction>(
+              builder: (_) => TransactionFormPage(
+                    transactionsBloc: BlocProvider.of<TransactionBloc>(context),
+                  ),
+              fullscreenDialog: true)),
     );
   }
 

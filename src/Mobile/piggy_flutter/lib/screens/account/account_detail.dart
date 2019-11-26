@@ -4,6 +4,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:intl/intl.dart';
 import 'package:piggy_flutter/blocs/account/bloc.dart';
 import 'package:piggy_flutter/blocs/account_transactions/bloc.dart';
+import 'package:piggy_flutter/blocs/transaction/transaction.dart';
 import 'package:piggy_flutter/models/account.dart';
 import 'package:piggy_flutter/models/get_transactions_input.dart';
 import 'package:piggy_flutter/models/models.dart';
@@ -49,7 +50,9 @@ class _AccountDetailPageState extends State<AccountDetailPage>
   void initState() {
     accountTransactionsBloc = AccountTransactionsBloc(
         transactionRepository: widget.transactionRepository);
-    accountBloc = AccountBloc(accountRepository: widget.accountRepository);
+    accountBloc = AccountBloc(
+        accountRepository: widget.accountRepository,
+        transactionsBloc: BlocProvider.of<TransactionBloc>(context));
 
     accountBloc.add(FetchAccount(accountId: widget.account.id));
     accountTransactionsBloc.add(FetchAccountTransactions(

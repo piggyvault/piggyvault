@@ -5,16 +5,12 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:piggy_flutter/blocs/accounts/accounts.dart';
 import 'package:piggy_flutter/blocs/categories/categories_bloc.dart';
 import 'package:piggy_flutter/blocs/categories/categories_state.dart';
-import 'package:piggy_flutter/blocs/transaction_summary/transaction_summary.dart';
-import 'package:piggy_flutter/blocs/transactions/transactions.dart';
-import 'package:piggy_flutter/blocs/transactions/transactions_bloc.dart';
-import 'package:piggy_flutter/blocs/transactions/transactions_state.dart';
+import 'package:piggy_flutter/blocs/transaction/transaction.dart';
 import 'package:piggy_flutter/models/account.dart';
 import 'package:piggy_flutter/models/category.dart';
 import 'package:piggy_flutter/models/models.dart';
 import 'package:piggy_flutter/models/transaction.dart';
 import 'package:piggy_flutter/models/transaction_edit_dto.dart';
-import 'package:piggy_flutter/repositories/repositories.dart';
 import 'package:piggy_flutter/services/transaction_service.dart';
 import 'package:piggy_flutter/utils/uidata.dart';
 import 'package:piggy_flutter/widgets/common/common_dialogs.dart';
@@ -22,6 +18,7 @@ import 'package:piggy_flutter/widgets/date_time_picker.dart';
 import 'package:piggy_flutter/widgets/primary_color_override.dart';
 
 class TransactionFormPage extends StatefulWidget {
+  final TransactionBloc transactionsBloc;
   final Account account;
   final Transaction transaction;
   final String title;
@@ -29,6 +26,7 @@ class TransactionFormPage extends StatefulWidget {
 
   TransactionFormPage(
       {Key key,
+      @required this.transactionsBloc,
       this.title,
       this.account,
       this.transaction,
@@ -40,7 +38,6 @@ class TransactionFormPage extends StatefulWidget {
 }
 
 class TransactionFormPageState extends State<TransactionFormPage> {
-  TransactionsBloc transactionsBloc;
   TransactionEditDto transactionEditDto = TransactionEditDto();
   TextEditingController _descriptionFieldController;
   TextEditingController _amountFieldController;
@@ -63,12 +60,6 @@ class TransactionFormPageState extends State<TransactionFormPage> {
 
   @override
   void initState() {
-    transactionsBloc = TransactionsBloc(
-        transactionRepository:
-            RepositoryProvider.of<TransactionRepository>(context),
-        transactionSummaryBloc:
-            BlocProvider.of<TransactionSummaryBloc>(context));
-
     super.initState();
     _transactionTime =
         TimeOfDay(hour: _transactionDate.hour, minute: _transactionDate.minute);
@@ -132,8 +123,7 @@ class TransactionFormPageState extends State<TransactionFormPage> {
                 })
           ],
         ),
-        body: BlocListener<TransactionsBloc, TransactionsState>(
-          bloc: transactionsBloc,
+        body: BlocListener<TransactionBloc, TransactionState>(
           listener: (context, state) {
             if (state is SavingTransaction) {
               showProgress(context);
@@ -429,7 +419,7 @@ class TransactionFormPageState extends State<TransactionFormPage> {
             toAmount = amount;
           }
 
-          transactionsBloc.add(DoTransfer(
+          widget.transactionsBloc.add(DoTransfer(
               transferInput: TransferInput(
                   transactionEditDto.id,
                   _descriptionFieldController.text,
@@ -464,7 +454,7 @@ class TransactionFormPageState extends State<TransactionFormPage> {
                 _transactionTime.minute)
             .toString();
         transactionEditDto.amount = amount;
-        transactionsBloc
+        widget.transactionsBloc
             .add(SaveTransaction(transactionEditDto: transactionEditDto));
       }
     }

@@ -2,31 +2,14 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
-import 'package:piggy_flutter/blocs/accounts/accounts.dart';
-import 'package:piggy_flutter/blocs/accounts/accounts_bloc.dart';
 import 'package:piggy_flutter/blocs/auth/auth.dart';
-import 'package:piggy_flutter/blocs/categories/categories.dart';
-import 'package:piggy_flutter/blocs/recent_transactions/recent_transactions_bloc.dart';
-import 'package:piggy_flutter/blocs/recent_transactions/recent_transactions_event.dart';
-import 'package:piggy_flutter/models/models.dart';
 
 import 'package:piggy_flutter/repositories/repositories.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final UserRepository userRepository;
 
-  final AccountsBloc accountsBloc;
-  final CategoriesBloc categoriesBloc;
-  final RecentTransactionsBloc recentTransactionsBloc;
-
-  AuthBloc(
-      {@required this.userRepository,
-      @required this.accountsBloc,
-      @required this.categoriesBloc,
-      @required this.recentTransactionsBloc})
-      : assert(userRepository != null),
-        assert(accountsBloc != null),
-        assert(recentTransactionsBloc != null);
+  AuthBloc({@required this.userRepository}) : assert(userRepository != null);
 
   @override
   AuthState get initialState => AuthUninitialized();
@@ -43,7 +26,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         if (user == null || user.id == null) {
           yield AuthUnauthenticated();
         } else {
-          syncData(user);
           yield AuthAuthenticated(user: user);
         }
       } else {
@@ -59,7 +41,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       if (user == null || user.id == null) {
         yield AuthUnauthenticated();
       } else {
-        syncData(user);
         yield AuthAuthenticated(user: user);
       }
       yield AuthAuthenticated(user: user);
@@ -72,12 +53,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       await userRepository.deleteToken();
       yield AuthUnauthenticated();
     }
-  }
-
-  void syncData(User user) {
-    accountsBloc.add(LoadAccounts());
-    categoriesBloc.add(LoadCategories());
-    recentTransactionsBloc.add(LoadRecentTransactions());
   }
 
   void _handleSendTags(String tenancyName) {

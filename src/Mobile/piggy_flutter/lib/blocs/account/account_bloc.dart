@@ -1,14 +1,26 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:piggy_flutter/blocs/transaction/transaction.dart';
 import 'package:piggy_flutter/repositories/account_repository.dart';
 import './bloc.dart';
 
 class AccountBloc extends Bloc<AccountEvent, AccountState> {
   final AccountRepository accountRepository;
 
-  AccountBloc({@required this.accountRepository})
-      : assert(accountRepository != null);
+  final TransactionBloc transactionsBloc;
+  StreamSubscription transactionBlocSubscription;
+
+  AccountBloc(
+      {@required this.accountRepository, @required this.transactionsBloc})
+      : assert(accountRepository != null),
+        assert(transactionsBloc != null) {
+    transactionBlocSubscription = transactionsBloc.listen((state) {
+      if (state is TransactionSaved) {
+        add(RefreshAccount());
+      }
+    });
+  }
 
   @override
   AccountState get initialState => AccountEmpty();
@@ -29,5 +41,11 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
         yield AccountFetchError();
       }
     }
+  }
+
+  @override
+  Future<void> close() {
+    transactionBlocSubscription.cancel();
+    return super.close();
   }
 }

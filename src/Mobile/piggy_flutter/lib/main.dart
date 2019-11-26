@@ -7,6 +7,7 @@ import 'package:piggy_flutter/blocs/accounts/accounts_bloc.dart';
 import 'package:piggy_flutter/blocs/auth/auth.dart';
 import 'package:piggy_flutter/blocs/categories/categories_bloc.dart';
 import 'package:piggy_flutter/blocs/recent_transactions/recent_transactions_bloc.dart';
+import 'package:piggy_flutter/blocs/transaction/transaction_bloc.dart';
 import 'package:piggy_flutter/blocs/transaction_summary/transaction_summary_bloc.dart';
 import 'package:piggy_flutter/dashboard/dashboard_bloc.dart';
 import 'package:piggy_flutter/repositories/repositories.dart';
@@ -60,31 +61,37 @@ Future<void> main() async {
   // debugPrintRebuildDirtyWidgets = true;
   return runApp(MultiBlocProvider(
     providers: [
-      BlocProvider<AccountsBloc>(
-          builder: (context) =>
-              AccountsBloc(accountRepository: accountRepository)),
+      BlocProvider<AuthBloc>(
+        builder: (context) =>
+            AuthBloc(userRepository: userRepository)..add(AppStarted()),
+      ),
+      BlocProvider<TransactionBloc>(
+        builder: (context) =>
+            TransactionBloc(transactionRepository: transactionRepository),
+      ),
       BlocProvider<CategoriesBloc>(
-          builder: (context) =>
-              CategoriesBloc(categoryRepository: categoryRepository)),
+          builder: (context) => CategoriesBloc(
+              categoryRepository: categoryRepository,
+              authBloc: BlocProvider.of<AuthBloc>(context))),
+      BlocProvider<AccountsBloc>(
+          builder: (context) => AccountsBloc(
+              accountRepository: accountRepository,
+              transactionsBloc: BlocProvider.of<TransactionBloc>(context),
+              authBloc: BlocProvider.of<AuthBloc>(context))),
       BlocProvider<RecentTransactionsBloc>(
         builder: (context) => RecentTransactionsBloc(
-            transactionRepository: transactionRepository),
-      ),
-      BlocProvider<AuthBloc>(
-        builder: (context) => AuthBloc(
-            userRepository: userRepository,
-            accountsBloc: BlocProvider.of<AccountsBloc>(context),
-            categoriesBloc: BlocProvider.of<CategoriesBloc>(context),
-            recentTransactionsBloc:
-                BlocProvider.of<RecentTransactionsBloc>(context))
-          ..add(AppStarted()),
+            transactionRepository: transactionRepository,
+            transactionsBloc: BlocProvider.of<TransactionBloc>(context),
+            authBloc: BlocProvider.of<AuthBloc>(context)),
       ),
       BlocProvider<TransactionSummaryBloc>(
         builder: (context) => TransactionSummaryBloc(
+            transactionsBloc: BlocProvider.of<TransactionBloc>(context),
             authBloc: BlocProvider.of<AuthBloc>(context),
             transactionRepository: transactionRepository),
       ),
-      BlocProvider<DashboardBloc>(builder: (context) => DashboardBloc()),
+      BlocProvider<DashboardBloc>(
+          builder: (context) => DashboardBloc()), // TODO: remove if not needed
     ],
     child: App(
       transactionRepository: transactionRepository,

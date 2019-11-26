@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:piggy_flutter/blocs/auth/auth.dart';
+import 'package:piggy_flutter/blocs/transaction/transaction.dart';
 import 'package:piggy_flutter/blocs/transaction_summary/transaction_summary.dart';
 import 'dart:developer' as developer;
 
@@ -11,13 +12,27 @@ class TransactionSummaryBloc
     extends Bloc<TransactionSummaryEvent, TransactionSummaryState> {
   final AuthBloc authBloc;
   StreamSubscription authBlocSubscription;
+
+  final TransactionBloc transactionsBloc;
+  StreamSubscription transactionBlocSubscription;
+
   final TransactionRepository transactionRepository;
 
   TransactionSummaryBloc(
-      {@required this.transactionRepository, @required this.authBloc})
-      : assert(transactionRepository != null) {
+      {@required this.transactionRepository,
+      @required this.authBloc,
+      @required this.transactionsBloc})
+      : assert(transactionRepository != null),
+        assert(authBloc != null),
+        assert(transactionsBloc != null) {
     authBlocSubscription = authBloc.listen((state) {
       if (state is AuthAuthenticated) {
+        add(RefreshTransactionSummary());
+      }
+    });
+
+    transactionBlocSubscription = transactionsBloc.listen((state) {
+      if (state is TransactionSaved) {
         add(RefreshTransactionSummary());
       }
     });
@@ -45,6 +60,7 @@ class TransactionSummaryBloc
   @override
   Future<void> close() {
     authBlocSubscription.cancel();
+    transactionBlocSubscription.cancel();
     return super.close();
   }
 }

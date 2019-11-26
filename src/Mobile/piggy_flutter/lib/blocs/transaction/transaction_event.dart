@@ -2,11 +2,11 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:piggy_flutter/models/models.dart';
 
-abstract class TransactionsEvent extends Equatable {
-  const TransactionsEvent();
+abstract class TransactionEvent extends Equatable {
+  const TransactionEvent();
 }
 
-class SaveTransaction extends TransactionsEvent {
+class SaveTransaction extends TransactionEvent {
   final TransactionEditDto transactionEditDto;
 
   const SaveTransaction({@required this.transactionEditDto})
@@ -16,7 +16,7 @@ class SaveTransaction extends TransactionsEvent {
   List<Object> get props => [transactionEditDto];
 }
 
-class DoTransfer extends TransactionsEvent {
+class DoTransfer extends TransactionEvent {
   final TransferInput transferInput;
 
   const DoTransfer({@required this.transferInput})

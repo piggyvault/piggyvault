@@ -8,7 +8,6 @@ import 'package:piggy_flutter/screens/category/category_list.dart';
 import 'package:piggy_flutter/screens/home/home.dart';
 import 'package:piggy_flutter/screens/reports/categorywise_recent_months_report_screen.dart';
 import 'package:piggy_flutter/widgets/about_tile.dart';
-import 'package:piggy_flutter/utils/uidata.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class CommonDrawer extends StatelessWidget {

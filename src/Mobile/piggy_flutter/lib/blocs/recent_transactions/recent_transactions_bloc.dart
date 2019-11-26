@@ -2,16 +2,40 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
+import 'package:piggy_flutter/blocs/auth/auth.dart';
+import 'package:piggy_flutter/blocs/transaction/transaction.dart';
 import 'package:piggy_flutter/models/models.dart';
 import 'package:piggy_flutter/repositories/repositories.dart';
 import './bloc.dart';
 
 class RecentTransactionsBloc
     extends Bloc<RecentTransactionsEvent, RecentTransactionsState> {
+  final AuthBloc authBloc;
+  StreamSubscription authBlocSubscription;
+
+  final TransactionBloc transactionsBloc;
+  StreamSubscription transactionBlocSubscription;
   final TransactionRepository transactionRepository;
 
-  RecentTransactionsBloc({@required this.transactionRepository})
-      : assert(transactionRepository != null);
+  RecentTransactionsBloc(
+      {@required this.transactionRepository,
+      @required this.authBloc,
+      @required this.transactionsBloc})
+      : assert(transactionRepository != null),
+        assert(authBloc != null),
+        assert(transactionsBloc != null) {
+    authBlocSubscription = authBloc.listen((state) {
+      if (state is AuthAuthenticated) {
+        add(LoadRecentTransactions());
+      }
+    });
+
+    transactionBlocSubscription = transactionsBloc.listen((state) {
+      if (state is TransactionSaved) {
+        add(LoadRecentTransactions());
+      }
+    });
+  }
 
   @override
   RecentTransactionsState get initialState => RecentTransactionsEmpty();
@@ -71,5 +95,12 @@ class RecentTransactionsBloc
         RecentTransactionsError();
       }
     }
+  }
+
+  @override
+  Future<void> close() {
+    authBlocSubscription.cancel();
+    transactionBlocSubscription.cancel();
+    return super.close();
   }
 }

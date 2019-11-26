@@ -13,7 +13,7 @@ enum ApiType {
 class ApiRequest<T> {
   ApiType type;
   bool isInProcess;
-  AjaxResponse<T> response;
+  ApiResponse<T> response;
 
   ApiRequest({this.isInProcess, this.response, this.type});
 

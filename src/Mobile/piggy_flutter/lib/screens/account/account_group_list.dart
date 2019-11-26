@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:piggy_flutter/models/account.dart';
+import 'package:piggy_flutter/repositories/repositories.dart';
 import 'package:piggy_flutter/screens/account/account_detail.dart';
-import 'package:piggy_flutter/screens/home/home_bloc.dart';
 
 class AccountGroupList extends StatelessWidget {
   final List<Account> accounts;
   final String title;
-  final HomeBloc homeBloc;
 
-  AccountGroupList(
-      {@required this.accounts, @required this.title, @required this.homeBloc});
+  AccountGroupList({@required this.accounts, @required this.title});
 
   @override
   Widget build(BuildContext context) {
@@ -39,14 +38,18 @@ class AccountGroupList extends StatelessWidget {
             color: Theme.of(context).disabledColor),
         title: Text(account.name, style: Theme.of(context).textTheme.body2),
         subtitle: Text(account.accountType),
-        trailing: Text('${account.currentBalance
-            .toString()} ${account.currencySymbol}'),
+        trailing: Text(
+            '${account.currentBalance.toString()} ${account.currencySymbol}'),
         onTap: (() => Navigator.push(
               context,
               MaterialPageRoute(
                   builder: (context) => AccountDetailPage(
                         account: account,
-                        syncStream: homeBloc.syncDataStream,
+                        accountRepository:
+                            RepositoryProvider.of<AccountRepository>(context),
+                        transactionRepository:
+                            RepositoryProvider.of<TransactionRepository>(
+                                context),
                       )),
             )),
       ),

@@ -8,7 +8,6 @@ import 'package:piggy_flutter/blocs/auth/auth.dart';
 import 'package:piggy_flutter/blocs/categories/categories_bloc.dart';
 import 'package:piggy_flutter/blocs/recent_transactions/recent_transactions_bloc.dart';
 import 'package:piggy_flutter/blocs/transaction_summary/transaction_summary_bloc.dart';
-import 'package:piggy_flutter/blocs/transactions/transactions.dart';
 import 'package:piggy_flutter/dashboard/dashboard_bloc.dart';
 import 'package:piggy_flutter/repositories/repositories.dart';
 import 'package:piggy_flutter/screens/category/category_list.dart';
@@ -61,14 +60,6 @@ Future<void> main() async {
   // debugPrintRebuildDirtyWidgets = true;
   return runApp(MultiBlocProvider(
     providers: [
-      BlocProvider<TransactionSummaryBloc>(
-        builder: (context) => TransactionSummaryBloc(
-            transactionRepository: transactionRepository),
-      ),
-      BlocProvider<TransactionsBloc>(
-        builder: (context) =>
-            TransactionsBloc(transactionRepository: transactionRepository),
-      ),
       BlocProvider<AccountsBloc>(
           builder: (context) =>
               AccountsBloc(accountRepository: accountRepository)),
@@ -82,13 +73,16 @@ Future<void> main() async {
       BlocProvider<AuthBloc>(
         builder: (context) => AuthBloc(
             userRepository: userRepository,
-            transactionSummaryBloc:
-                BlocProvider.of<TransactionSummaryBloc>(context),
             accountsBloc: BlocProvider.of<AccountsBloc>(context),
             categoriesBloc: BlocProvider.of<CategoriesBloc>(context),
             recentTransactionsBloc:
                 BlocProvider.of<RecentTransactionsBloc>(context))
           ..add(AppStarted()),
+      ),
+      BlocProvider<TransactionSummaryBloc>(
+        builder: (context) => TransactionSummaryBloc(
+            authBloc: BlocProvider.of<AuthBloc>(context),
+            transactionRepository: transactionRepository),
       ),
       BlocProvider<DashboardBloc>(builder: (context) => DashboardBloc()),
     ],

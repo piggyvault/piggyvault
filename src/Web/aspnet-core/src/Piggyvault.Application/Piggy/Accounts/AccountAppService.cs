@@ -103,7 +103,10 @@ namespace Piggyvault.Piggy.Accounts
         public async Task<AccountPreviewDto> GetAccountDetails(EntityDto<Guid> input)
         {
             var tenantId = AbpSession.TenantId;
-            var account = await _accountRepository.FirstOrDefaultAsync(a => a.Id == input.Id && a.TenantId == tenantId);
+            var account = await _accountRepository.GetAll()
+                .Include(a => a.AccountType)
+                .Include(a => a.Currency)
+                .Where(a => a.Id == input.Id && a.TenantId == tenantId).FirstOrDefaultAsync();
             var output = _mapper.Map<AccountPreviewDto>(account);
             output.CurrentBalance = await GetAccountBalanceAsync(input.Id);
             return output;

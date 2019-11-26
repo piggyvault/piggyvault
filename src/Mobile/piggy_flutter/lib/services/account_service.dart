@@ -10,25 +10,6 @@ class AccountService extends AppServiceBase {
   List<Account> userAccounts;
   List<Account> familyAccounts;
 
-  Future<Null> getTenantAccounts() async {
-    List<Account> userAccountItems = [];
-    List<Account> familyAccountItems = [];
-    var result =
-        await rest.getAsync<dynamic>('services/app/account/GetTenantAccounts');
-
-    if (result.success) {
-      result.result['userAccounts']['items'].forEach((account) {
-        userAccountItems.add(Account.fromJson(account));
-      });
-      result.result['otherMembersAccounts']['items'].forEach((account) {
-        familyAccountItems.add(Account.fromJson(account));
-      });
-    }
-
-    this.userAccounts = userAccountItems;
-    this.familyAccounts = familyAccountItems;
-  }
-
   Future<AccountFormModel> getAccountForEdit(String id) async {
     var result =
         await rest.getAsync('services/app/account/getAccountForEdit?id=$id');
@@ -36,17 +17,6 @@ class AccountService extends AppServiceBase {
     if (result.success) {
       return AccountFormModel.fromJson(result.result);
     }
-    return null;
-  }
-
-  Future<Account> getAccountDetails(String accountId) async {
-    var result = await rest.getAsync<dynamic>(
-        'services/app/account/GetAccountDetails?id=$accountId');
-
-    if (result.success) {
-      return Account.fromJson(result.result);
-    }
-
     return null;
   }
 
@@ -74,7 +44,7 @@ class AccountService extends AppServiceBase {
     return output;
   }
 
-  Future<AjaxResponse<dynamic>> createOrUpdateAccount(
+  Future<ApiResponse<dynamic>> createOrUpdateAccount(
       AccountFormModel input) async {
     print(input);
     final result =

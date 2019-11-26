@@ -2,14 +2,9 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
-import 'package:piggy_flutter/blocs/account_bloc.dart';
-import 'package:piggy_flutter/blocs/bloc_provider.dart';
-import 'package:piggy_flutter/blocs/category_bloc.dart';
-import 'package:piggy_flutter/blocs/user_bloc.dart';
+import 'package:piggy_flutter/dashboard/index.dart';
 import 'package:piggy_flutter/models/transaction.dart';
 import 'package:piggy_flutter/screens/account/account_list.dart';
-import 'package:piggy_flutter/screens/home/dashboard.dart';
-import 'package:piggy_flutter/screens/home/home_bloc.dart';
 import 'package:piggy_flutter/screens/home/recent.dart';
 import 'package:piggy_flutter/screens/home/summary.dart';
 import 'package:piggy_flutter/screens/transaction/transaction_detail.dart';
@@ -60,12 +55,11 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   final Key _keyRecentPage = PageStorageKey('recent');
   final Key _keyAccountsPage = PageStorageKey('accounts');
   final Key _keySummaryPage = PageStorageKey('summary');
-  final Key _dashboardKey = PageStorageKey('dashboard');
 
   RecentPage _recent;
   SummaryPage _summary;
   AccountListPage _accounts;
-  DashboardScreen _dashboardScreen;
+  DashboardPage _dashboardScreen;
 
   List<Widget> _pages;
   bool _isSyncRequired;
@@ -116,7 +110,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       key: _keyAccountsPage,
     );
 
-    _dashboardScreen = DashboardScreen(key: _dashboardKey);
+    _dashboardScreen = DashboardPage();
 
     _pageController = PageController(initialPage: widget.startpage.index);
 
@@ -173,17 +167,13 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
   syncData(BuildContext context) {
     if (_isSyncRequired) {
-      final UserBloc userBloc = BlocProvider.of<UserBloc>(context);
-      final AccountBloc accountBloc = BlocProvider.of<AccountBloc>(context);
-      final CategoryBloc categoryBloc = BlocProvider.of<CategoryBloc>(context);
-      final HomeBloc homeBloc = BlocProvider.of<HomeBloc>(context);
+      // final HomeBloc homeBloc = oldProvider.BlocProvider.of<HomeBloc>(context);
 
       // print('##### syncing data');
       _isSyncRequired = false;
-      homeBloc.syncData(true);
-      userBloc.userRefresh(true);
-      accountBloc.accountsRefresh(true);
-      categoryBloc.refreshCategories(true);
+      // homeBloc.syncData(true);
+      // accountBloc.accountsRefresh(true);
+      // categoryBloc.refreshCategories(true);
     }
   }
 

@@ -1,58 +1,52 @@
 import 'package:flutter/material.dart';
-import 'package:piggy_flutter/blocs/bloc_provider.dart';
-import 'package:piggy_flutter/models/transaction_summary.dart';
-import 'package:piggy_flutter/screens/home/home_bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:piggy_flutter/blocs/transaction_summary/transaction_summary.dart';
 
 class SummaryPage extends StatelessWidget {
   SummaryPage({Key key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    final HomeBloc bloc = BlocProvider.of<HomeBloc>(context);
     return Scaffold(
         appBar: new AppBar(
           title: Text('Summary'),
         ),
-        body: _buildBody(bloc));
-  }
-
-  Widget _buildBody(HomeBloc bloc) => StreamBuilder<TransactionSummary>(
-      stream: bloc.transactionSummary,
-      initialData: null,
-      builder: (context, snapshot) =>
-          SummaryPageWidget(snapshot.hasData ? snapshot.data : null));
-}
-
-class SummaryPageWidget extends StatelessWidget {
-  final TransactionSummary transactionSummary;
-
-  @override
-  Widget build(BuildContext context) {
-    if (transactionSummary == null) {
-      return Center(child: CircularProgressIndicator());
-    } else {
-      return Stack(
-        fit: StackFit.expand,
-        children: <Widget>[
-          SingleChildScrollView(
-            child: Column(
+        body: BlocBuilder<TransactionSummaryBloc, TransactionSummaryState>(
+            builder: (context, state) {
+          if (state is TransactionSummaryLoaded) {
+            return Stack(
+              fit: StackFit.expand,
               children: <Widget>[
-                balanceCard('Net Worth', transactionSummary.userNetWorth,
-                    transactionSummary.tenantNetWorth, Colors.green),
-                balanceCard(
-                    'Monthly Income',
-                    transactionSummary.userIncome,
-                    transactionSummary.tenantIncome,
-                    Theme.of(context).accentColor),
-                balanceCard('Monthly Expense', transactionSummary.userExpense,
-                    transactionSummary.tenantExpense, Colors.redAccent),
-                balanceCard('Monthly Savings', transactionSummary.userSaved,
-                    transactionSummary.tenantSaved, Colors.lightGreen),
+                SingleChildScrollView(
+                  child: Column(
+                    children: <Widget>[
+                      balanceCard('Net Worth', state.summary.userNetWorth,
+                          state.summary.tenantNetWorth, Colors.green),
+                      balanceCard(
+                          'Monthly Income',
+                          state.summary.userIncome,
+                          state.summary.tenantIncome,
+                          Theme.of(context).accentColor),
+                      balanceCard('Monthly Expense', state.summary.userExpense,
+                          state.summary.tenantExpense, Colors.redAccent),
+                      balanceCard('Monthly Savings', state.summary.userSaved,
+                          state.summary.tenantSaved, Colors.lightGreen),
+                    ],
+                  ),
+                ),
               ],
-            ),
-          ),
-        ],
-      );
-    }
+            );
+          }
+
+          if (state is TransactionSummaryLoading) {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+
+          return Center(
+            child: Text('---'),
+          );
+        }));
   }
 
   Widget balanceCard(
@@ -97,6 +91,4 @@ class SummaryPageWidget extends StatelessWidget {
           ),
         ),
       );
-
-  SummaryPageWidget(this.transactionSummary);
 }

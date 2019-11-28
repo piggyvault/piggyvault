@@ -42,6 +42,7 @@ class _AccountDetailPageState extends State<AccountDetailPage>
     with TickerProviderStateMixin {
   AnimationController animationController;
   final ScrollController _scrollController = ScrollController();
+
   AccountTransactionsBloc accountTransactionsBloc;
   AccountBloc accountBloc;
 
@@ -51,19 +52,24 @@ class _AccountDetailPageState extends State<AccountDetailPage>
   @override
   void initState() {
     accountTransactionsBloc = AccountTransactionsBloc(
-        transactionRepository: widget.transactionRepository);
+        transactionRepository: widget.transactionRepository,
+        transactionBloc: BlocProvider.of<TransactionBloc>(context));
+
     accountBloc = AccountBloc(
         accountRepository: widget.accountRepository,
         transactionsBloc: BlocProvider.of<TransactionBloc>(context));
 
     accountBloc.add(FetchAccount(accountId: widget.account.id));
-    accountTransactionsBloc.add(FetchAccountTransactions(
+    accountTransactionsBloc.add(
+      FetchAccountTransactions(
         input: GetTransactionsInput(
             type: 'account',
             accountId: widget.account.id,
             startDate: startDate,
             endDate: endDate,
-            groupBy: TransactionsGroupBy.Date)));
+            groupBy: TransactionsGroupBy.Date),
+      ),
+    );
     animationController = AnimationController(
         duration: const Duration(milliseconds: 1000), vsync: this);
 

@@ -20,11 +20,19 @@ class AccountTransactionsLoading extends AccountTransactionsState {
 }
 
 class AccountTransactionsLoaded extends AccountTransactionsState {
-  final TransactionsResult result;
+  final TransactionsResult allAccountTransactions;
+  final TransactionsResult filterdAccountTransactions;
   final GetTransactionsInput filters;
 
-  AccountTransactionsLoaded({@required this.result, @required this.filters})
+  AccountTransactionsLoaded(
+      {@required this.allAccountTransactions,
+      @required this.filterdAccountTransactions,
+      @required this.filters})
       : super(filters);
+
+  @override
+  List<Object> get props =>
+      [allAccountTransactions, filterdAccountTransactions, filters];
 }
 
 class AccountTransactionsError extends AccountTransactionsState {

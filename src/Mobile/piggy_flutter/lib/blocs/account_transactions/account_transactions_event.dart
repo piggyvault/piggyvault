@@ -16,3 +16,9 @@ class FetchAccountTransactions extends AccountTransactionsEvent {
   @override
   List<Object> get props => [input];
 }
+
+class FilterAccountTransactions extends AccountTransactionsEvent {
+  final String query;
+
+  FilterAccountTransactions(this.query);
+}

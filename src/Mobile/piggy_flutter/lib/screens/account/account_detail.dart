@@ -164,7 +164,9 @@ class _AccountDetailPageState extends State<AccountDetailPage>
                                             TransactionList(
                                               items: state
                                                       is AccountTransactionsLoaded
-                                                  ? state.result.sections
+                                                  ? state
+                                                      .filterdAccountTransactions
+                                                      .sections
                                                   : [],
                                             ),
                                           ],
@@ -215,14 +217,17 @@ class _AccountDetailPageState extends State<AccountDetailPage>
                   padding: const EdgeInsets.only(
                       left: 16, right: 16, top: 4, bottom: 4),
                   child: TextField(
-                    onChanged: (String txt) {},
+                    onChanged: (String txt) {
+                      accountTransactionsBloc
+                          .add(FilterAccountTransactions(txt));
+                    },
                     style: const TextStyle(
                       fontSize: 18,
                     ),
                     cursorColor: PiggyAppTheme.buildLightTheme().primaryColor,
                     decoration: InputDecoration(
                       border: InputBorder.none,
-                      hintText: 'Coming soon...',
+                      hintText: 'Search...',
                     ),
                   ),
                 ),
@@ -457,7 +462,7 @@ class _AccountDetailPageState extends State<AccountDetailPage>
                           return Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Text(
-                              '${state.result.transactions.length} transactions found',
+                              '${state.filterdAccountTransactions.transactions.length} transactions found',
                               style: TextStyle(
                                 fontWeight: FontWeight.w100,
                                 fontSize: 16,

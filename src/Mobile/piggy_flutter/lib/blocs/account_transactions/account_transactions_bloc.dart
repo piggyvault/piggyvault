@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:piggy_flutter/blocs/transaction/transaction.dart';
+import 'package:piggy_flutter/models/models.dart';
 import 'package:piggy_flutter/repositories/repositories.dart';
 import './bloc.dart';
 
@@ -40,10 +41,43 @@ class AccountTransactionsBloc
         if (result.isEmpty) {
           yield AccountTransactionsEmpty(event.input);
         } else {
-          yield AccountTransactionsLoaded(result: result, filters: event.input);
+          yield AccountTransactionsLoaded(
+              allAccountTransactions: result,
+              filterdAccountTransactions: result,
+              filters: event.input);
         }
       } catch (e) {
         yield AccountTransactionsError(event.input);
+      }
+    } else if (event is FilterAccountTransactions) {
+      if (this.state is AccountTransactionsLoaded) {
+        if (event.query == null || event.query == "") {
+          yield AccountTransactionsLoaded(
+              allAccountTransactions:
+                  (state as AccountTransactionsLoaded).allAccountTransactions,
+              filterdAccountTransactions:
+                  (state as AccountTransactionsLoaded).allAccountTransactions,
+              filters: state.filters);
+        } else {
+          var filteredTransactions = (state as AccountTransactionsLoaded)
+              .allAccountTransactions
+              .transactions
+              .where((t) => t.description
+                  .toLowerCase()
+                  .contains(event.query.toLowerCase()))
+              .toList();
+          var filteredTransactionsResult = TransactionsResult(
+              sections: transactionRepository.groupTransactions(
+                  transactions: filteredTransactions,
+                  groupBy: TransactionsGroupBy.Date),
+              transactions: filteredTransactions);
+
+          yield AccountTransactionsLoaded(
+              allAccountTransactions:
+                  (state as AccountTransactionsLoaded).allAccountTransactions,
+              filterdAccountTransactions: filteredTransactionsResult,
+              filters: state.filters);
+        }
       }
     }
   }

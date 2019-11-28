@@ -48,10 +48,10 @@ namespace Piggyvault.Piggy.Accounts
                                  IRepository<Transaction, Guid> transactionRepository,
                                  IMapper mapper)
         {
-            this._accountRepository = accountRepository;
-            this._accountTypeRepository = accountTypeRepository;
-            this._transactionRepository = transactionRepository;
-            this._mapper = mapper;
+            _accountRepository = accountRepository;
+            _accountTypeRepository = accountTypeRepository;
+            _transactionRepository = transactionRepository;
+            _mapper = mapper;
         }
 
         /// <summary>
@@ -88,7 +88,7 @@ namespace Piggyvault.Piggy.Accounts
         [AbpAuthorize]
         public async Task DeleteAccount(EntityDto<Guid> input)
         {
-            await this._accountRepository.DeleteAsync(input.Id);
+            await _accountRepository.DeleteAsync(input.Id);
         }
 
         /// <summary>
@@ -175,7 +175,7 @@ namespace Piggyvault.Piggy.Accounts
         [AbpAuthorize]
         public async Task<ListResultDto<AccountTypeEditDto>> GetAccountTypes()
         {
-            var accountTypes = await this._accountTypeRepository.GetAll().ToListAsync();
+            var accountTypes = await _accountTypeRepository.GetAll().ToListAsync();
             var output = new ListResultDto<AccountTypeEditDto>
             {
                 Items = _mapper.Map<List<AccountTypeEditDto>>(accountTypes)
@@ -261,7 +261,7 @@ namespace Piggyvault.Piggy.Accounts
         public async Task<ListResultDto<AccountPreviewDto>> GetUserAccounts()
         {
             var output = new ListResultDto<AccountPreviewDto>();
-            var accounts = await this._accountRepository.GetAll()
+            var accounts = await _accountRepository.GetAll()
                 .Where(a => a.CreatorUserId == AbpSession.UserId)
                 .Include(c => c.CreatorUser).OrderBy(a => a.Name)
                 .Include(currency => currency.Currency).ToListAsync();
@@ -282,7 +282,7 @@ namespace Piggyvault.Piggy.Accounts
         {
             var account = input.Account.MapTo<Account>();
             account.TenantId = AbpSession.TenantId.Value;
-            await this._accountRepository.InsertAsync(account);
+            await _accountRepository.InsertAsync(account);
         }
 
         /// <summary>
@@ -300,7 +300,7 @@ namespace Piggyvault.Piggy.Accounts
 
             var lastTransasction =
                 await
-                this._transactionRepository.GetAll()
+                _transactionRepository.GetAll()
                     .Where(t => t.AccountId == accountId)
                     .OrderByDescending(t => t.TransactionTime)
                     .ThenByDescending(t => t.CreationTime)
@@ -325,9 +325,11 @@ namespace Piggyvault.Piggy.Accounts
         /// </returns>
         private async Task UpdateAccountAsync(CreateOrUpdateAccountInput input)
         {
-            var account = await this._accountRepository.FirstOrDefaultAsync(a => a.Id == input.Account.Id);
-            account = _mapper.Map<Account>(input.Account);
-            await this._accountRepository.UpdateAsync(account);
+            var account = await _accountRepository.FirstOrDefaultAsync(a => a.Id == input.Account.Id);
+
+            ObjectMapper.Map(input.Account, account);
+
+            await _accountRepository.UpdateAsync(account);
         }
 
         /// <summary>

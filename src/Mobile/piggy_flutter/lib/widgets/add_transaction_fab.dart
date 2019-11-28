@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:piggy_flutter/blocs/transaction/transaction.dart';
 import 'package:piggy_flutter/models/account.dart';
 import 'package:piggy_flutter/screens/transaction/transaction_form.dart';
+import 'package:piggy_flutter/theme/piggy_app_theme.dart';
 import 'package:piggy_flutter/utils/common.dart';
 
 class AddTransactionFab extends StatelessWidget {
@@ -17,18 +18,19 @@ class AddTransactionFab extends StatelessWidget {
         backgroundColor: Theme.of(context).accentColor,
         child: Icon(
           Icons.add,
-          color: Theme.of(context).primaryColor,
+          color: PiggyAppTheme.buildLightTheme().indicatorColor,
         ),
         onPressed: () async {
           await Navigator.push(
-              context,
-              MaterialPageRoute<DismissDialogAction>(
-                builder: (BuildContext context) => TransactionFormPage(
-                  transactionsBloc: BlocProvider.of<TransactionBloc>(context),
-                  account: account,
-                ),
-                fullscreenDialog: true,
-              ));
+            context,
+            MaterialPageRoute<DismissDialogAction>(
+              builder: (BuildContext context) => TransactionFormPage(
+                transactionsBloc: BlocProvider.of<TransactionBloc>(context),
+                account: account,
+              ),
+              fullscreenDialog: true,
+            ),
+          );
         });
   }
 }

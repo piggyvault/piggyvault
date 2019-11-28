@@ -130,7 +130,7 @@ class PiggyApiClient {
     return result;
   }
 
-  Future<TransactionsResult> getTransactions(GetTransactionsInput input) async {
+  Future<List<Transaction>> getTransactions(GetTransactionsInput input) async {
     List<Transaction> transactions = [];
 
     var params = '';
@@ -153,10 +153,7 @@ class PiggyApiClient {
         transactions.add(Transaction.fromJson(transaction));
       });
     }
-    return TransactionsResult(
-        sections: groupTransactions(
-            transactions: transactions, groupBy: input.groupBy),
-        transactions: transactions);
+    return transactions;
   }
 
   Future<Account> getAccountDetails(String accountId) async {
@@ -171,40 +168,6 @@ class PiggyApiClient {
   }
 
 // utils
-
-  List<TransactionGroupItem> groupTransactions(
-      {List<Transaction> transactions,
-      TransactionsGroupBy groupBy = TransactionsGroupBy.Date}) {
-    List<TransactionGroupItem> sections = [];
-    var formatter = DateFormat("EEE, MMM d, ''yy");
-    String key;
-
-    transactions.forEach((transaction) {
-      if (groupBy == TransactionsGroupBy.Date) {
-        key = formatter.format(DateTime.parse(transaction.transactionTime));
-      } else if (groupBy == TransactionsGroupBy.Category) {
-        key = transaction.categoryName;
-      }
-
-      var section =
-          sections.firstWhere((o) => o.title == key, orElse: () => null);
-
-      if (section == null) {
-        section = TransactionGroupItem(title: key, groupby: groupBy);
-        sections.add(section);
-      }
-
-      if (transaction.amountInDefaultCurrency > 0) {
-        section.totalInflow += transaction.amountInDefaultCurrency;
-      } else {
-        section.totalOutflow += transaction.amountInDefaultCurrency;
-      }
-
-      section.transactions.add(transaction);
-    });
-
-    return sections;
-  }
 
   Future<ApiResponse<T>> getAsync<T>(String resourcePath) async {
     final prefs = await SharedPreferences.getInstance();

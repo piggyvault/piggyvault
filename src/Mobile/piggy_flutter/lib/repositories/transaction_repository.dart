@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
+import 'package:intl/intl.dart';
 import 'package:piggy_flutter/models/api_response.dart';
 import 'package:piggy_flutter/models/models.dart';
 import 'package:piggy_flutter/repositories/piggy_api_client.dart';
@@ -25,6 +26,47 @@ class TransactionRepository {
   }
 
   Future<TransactionsResult> getTransactions(GetTransactionsInput input) async {
-    return await piggyApiClient.getTransactions(input);
+    var transactions = await piggyApiClient.getTransactions(input);
+
+    return TransactionsResult(
+        sections: groupTransactions(
+            transactions: transactions, groupBy: input.groupBy),
+        transactions: transactions);
+  }
+
+  // Utils
+
+  List<TransactionGroupItem> groupTransactions(
+      {List<Transaction> transactions,
+      TransactionsGroupBy groupBy = TransactionsGroupBy.Date}) {
+    List<TransactionGroupItem> sections = [];
+    var formatter = DateFormat("EEE, MMM d, ''yy");
+    String key;
+
+    transactions.forEach((transaction) {
+      if (groupBy == TransactionsGroupBy.Date) {
+        key = formatter.format(DateTime.parse(transaction.transactionTime));
+      } else if (groupBy == TransactionsGroupBy.Category) {
+        key = transaction.categoryName;
+      }
+
+      var section =
+          sections.firstWhere((o) => o.title == key, orElse: () => null);
+
+      if (section == null) {
+        section = TransactionGroupItem(title: key, groupby: groupBy);
+        sections.add(section);
+      }
+
+      if (transaction.amountInDefaultCurrency > 0) {
+        section.totalInflow += transaction.amountInDefaultCurrency;
+      } else {
+        section.totalOutflow += transaction.amountInDefaultCurrency;
+      }
+
+      section.transactions.add(transaction);
+    });
+
+    return sections;
   }
 }

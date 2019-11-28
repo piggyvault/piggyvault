@@ -23,14 +23,14 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
   }
 
   @override
-  AccountState get initialState => AccountEmpty();
+  AccountState get initialState => AccountEmpty(null);
 
   @override
   Stream<AccountState> mapEventToState(
     AccountEvent event,
   ) async* {
     if (event is FetchAccount) {
-      yield AccountLoading();
+      yield AccountLoading(event.accountId);
 
       try {
         var account =
@@ -38,8 +38,12 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
 
         yield AccountLoaded(account: account);
       } catch (e) {
-        yield AccountFetchError();
+        yield AccountFetchError(event.accountId);
       }
+    }
+
+    if (event is RefreshAccount) {
+      add(FetchAccount(accountId: this.state.accountId));
     }
   }
 

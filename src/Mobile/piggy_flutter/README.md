@@ -37,3 +37,7 @@
 - [x] Transaction summary
 - [x] List comments
 - [x] Add comment
+
+## Credits
+
+- [mitesh77/Best-Flutter-UI-Templates](https://github.com/mitesh77/Best-Flutter-UI-Templates)

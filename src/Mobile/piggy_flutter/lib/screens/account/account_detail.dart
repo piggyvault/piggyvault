@@ -13,6 +13,7 @@ import 'package:piggy_flutter/repositories/repositories.dart';
 import 'package:piggy_flutter/theme/piggy_app_theme.dart';
 import 'package:piggy_flutter/utils/common.dart';
 import 'package:piggy_flutter/utils/uidata.dart';
+import 'package:piggy_flutter/widgets/add_transaction_fab.dart';
 import 'package:piggy_flutter/widgets/common/calendar_popup_view.dart';
 import 'package:piggy_flutter/widgets/common/empty_result_widget.dart';
 import 'package:piggy_flutter/widgets/common/error_display_widget.dart';
@@ -81,102 +82,104 @@ class _AccountDetailPageState extends State<AccountDetailPage>
       data: PiggyAppTheme.buildLightTheme(),
       child: Container(
         child: Scaffold(
-          body: Stack(
-            children: <Widget>[
-              InkWell(
-                splashColor: Colors.transparent,
-                focusColor: Colors.transparent,
-                highlightColor: Colors.transparent,
-                hoverColor: Colors.transparent,
-                onTap: () {
-                  FocusScope.of(context).requestFocus(FocusNode());
-                },
-                child: Column(
-                  children: <Widget>[
-                    getAppBarUI(),
-                    Expanded(
-                      child: NestedScrollView(
-                        controller: _scrollController,
-                        headerSliverBuilder:
-                            (BuildContext context, bool innerBoxIsScrolled) {
-                          return <Widget>[
-                            SliverList(
-                              delegate: SliverChildBuilderDelegate(
-                                  (BuildContext context, int index) {
-                                return Column(
-                                  children: <Widget>[
-                                    getSearchBarUI(),
-                                    getTimeDateUI(
-                                        accountTransactionsBloc, accountBloc),
-                                  ],
-                                );
-                              }, childCount: 1),
-                            ),
-                            SliverPersistentHeader(
-                              pinned: true,
-                              floating: true,
-                              delegate: ContestTabHeader(
-                                getFilterBarUI(),
+            body: Stack(
+              children: <Widget>[
+                InkWell(
+                  splashColor: Colors.transparent,
+                  focusColor: Colors.transparent,
+                  highlightColor: Colors.transparent,
+                  hoverColor: Colors.transparent,
+                  onTap: () {
+                    FocusScope.of(context).requestFocus(FocusNode());
+                  },
+                  child: Column(
+                    children: <Widget>[
+                      getAppBarUI(),
+                      Expanded(
+                        child: NestedScrollView(
+                          controller: _scrollController,
+                          headerSliverBuilder:
+                              (BuildContext context, bool innerBoxIsScrolled) {
+                            return <Widget>[
+                              SliverList(
+                                delegate: SliverChildBuilderDelegate(
+                                    (BuildContext context, int index) {
+                                  return Column(
+                                    children: <Widget>[
+                                      getSearchBarUI(),
+                                      getTimeDateUI(
+                                          accountTransactionsBloc, accountBloc),
+                                    ],
+                                  );
+                                }, childCount: 1),
                               ),
-                            ),
-                          ];
-                        },
-                        body: Container(
-                          color:
-                              PiggyAppTheme.buildLightTheme().backgroundColor,
-                          child: BlocBuilder<AccountTransactionsBloc,
-                              AccountTransactionsState>(
-                            bloc: accountTransactionsBloc,
-                            builder: (context, state) {
-                              return SafeArea(
-                                top: false,
-                                bottom: false,
-                                child: Column(
-                                  children: <Widget>[
-                                    Expanded(
-                                      child: Stack(
-                                        children: <Widget>[
-                                          // Fade in a loading screen when results are being fetched
-                                          LoadingWidget(
-                                              visible: state
-                                                  is AccountTransactionsLoading),
-
-                                          // Fade in an Empty Result screen if the search contained
-                                          // no items
-                                          EmptyResultWidget(
-                                              visible: state
-                                                  is AccountTransactionsEmpty),
-
-                                          // Fade in an error if something went wrong when fetching
-                                          // the results
-                                          ErrorDisplayWidget(
-                                              visible: state
-                                                  is AccountTransactionsError),
-
-                                          // Fade in the Result if available
-                                          TransactionList(
-                                            items: state
-                                                    is AccountTransactionsLoaded
-                                                ? state.result.sections
-                                                : [],
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
+                              SliverPersistentHeader(
+                                pinned: true,
+                                floating: true,
+                                delegate: ContestTabHeader(
+                                  getFilterBarUI(),
                                 ),
-                              );
-                            },
+                              ),
+                            ];
+                          },
+                          body: Container(
+                            color:
+                                PiggyAppTheme.buildLightTheme().backgroundColor,
+                            child: BlocBuilder<AccountTransactionsBloc,
+                                AccountTransactionsState>(
+                              bloc: accountTransactionsBloc,
+                              builder: (context, state) {
+                                return SafeArea(
+                                  top: false,
+                                  bottom: false,
+                                  child: Column(
+                                    children: <Widget>[
+                                      Expanded(
+                                        child: Stack(
+                                          children: <Widget>[
+                                            // Fade in a loading screen when results are being fetched
+                                            LoadingWidget(
+                                                visible: state
+                                                    is AccountTransactionsLoading),
+
+                                            // Fade in an Empty Result screen if the search contained
+                                            // no items
+                                            EmptyResultWidget(
+                                                visible: state
+                                                    is AccountTransactionsEmpty),
+
+                                            // Fade in an error if something went wrong when fetching
+                                            // the results
+                                            ErrorDisplayWidget(
+                                                visible: state
+                                                    is AccountTransactionsError),
+
+                                            // Fade in the Result if available
+                                            TransactionList(
+                                              items: state
+                                                      is AccountTransactionsLoaded
+                                                  ? state.result.sections
+                                                  : [],
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              },
+                            ),
                           ),
                         ),
-                      ),
-                    )
-                  ],
+                      )
+                    ],
+                  ),
                 ),
-              ),
-            ],
-          ),
-        ),
+              ],
+            ),
+            floatingActionButton: AddTransactionFab(
+              account: widget.account,
+            )),
       ),
     );
   }

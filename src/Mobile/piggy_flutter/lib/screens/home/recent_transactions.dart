@@ -175,7 +175,6 @@ class _RecentTransactionsPageState extends State<RecentTransactionsPage>
               ),
             ],
           ),
-          floatingActionButton: AddTransactionFab(),
         ),
       ),
     );

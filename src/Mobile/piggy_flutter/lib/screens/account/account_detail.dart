@@ -15,6 +15,7 @@ import 'package:piggy_flutter/utils/common.dart';
 import 'package:piggy_flutter/utils/uidata.dart';
 import 'package:piggy_flutter/widgets/add_transaction_fab.dart';
 import 'package:piggy_flutter/widgets/common/calendar_popup_view.dart';
+import 'package:piggy_flutter/widgets/common/common.dart';
 import 'package:piggy_flutter/widgets/common/empty_result_widget.dart';
 import 'package:piggy_flutter/widgets/common/error_display_widget.dart';
 import 'package:piggy_flutter/widgets/common/loading_widget.dart';
@@ -634,29 +635,5 @@ class _AccountDetailPageState extends State<AccountDetailPage>
         onCancelClick: () {},
       ),
     );
-  }
-}
-
-class ContestTabHeader extends SliverPersistentHeaderDelegate {
-  ContestTabHeader(
-    this.searchUI,
-  );
-  final Widget searchUI;
-
-  @override
-  Widget build(
-      BuildContext context, double shrinkOffset, bool overlapsContent) {
-    return searchUI;
-  }
-
-  @override
-  double get maxExtent => 52.0;
-
-  @override
-  double get minExtent => 52.0;
-
-  @override
-  bool shouldRebuild(SliverPersistentHeaderDelegate oldDelegate) {
-    return false;
   }
 }

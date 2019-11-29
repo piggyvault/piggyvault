@@ -17,14 +17,15 @@ import 'package:piggy_flutter/widgets/common/error_display_widget.dart';
 import 'package:piggy_flutter/widgets/common/loading_widget.dart';
 import 'package:piggy_flutter/widgets/transaction_list.dart';
 
-class RecentPage extends StatefulWidget {
-  RecentPage({Key key}) : super(key: key);
+class RecentTransactionsPage extends StatefulWidget {
+  RecentTransactionsPage({Key key}) : super(key: key);
 
   @override
-  _RecentPageState createState() => _RecentPageState();
+  _RecentTransactionsPageState createState() => _RecentTransactionsPageState();
 }
 
-class _RecentPageState extends State<RecentPage> with TickerProviderStateMixin {
+class _RecentTransactionsPageState extends State<RecentTransactionsPage>
+    with TickerProviderStateMixin {
   AnimationController animationController;
   final ScrollController _scrollController = ScrollController();
 

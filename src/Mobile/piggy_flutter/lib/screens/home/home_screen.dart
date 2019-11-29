@@ -6,7 +6,7 @@ import 'package:piggy_flutter/dashboard/dashboard_page.dart';
 import 'package:piggy_flutter/models/models.dart';
 import 'package:piggy_flutter/screens/account/account_list.dart';
 import 'package:piggy_flutter/screens/home/overview_screen.dart';
-import 'package:piggy_flutter/screens/home/recent.dart';
+import 'package:piggy_flutter/screens/home/recent_transactions.dart';
 import 'package:piggy_flutter/screens/transaction/transaction_detail.dart';
 import 'package:piggy_flutter/screens/transaction/transaction_form.dart';
 import 'package:piggy_flutter/theme/piggy_app_theme.dart';
@@ -206,7 +206,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                   return;
                 }
                 setState(() {
-                  tabBody = RecentPage();
+                  tabBody = RecentTransactionsPage();
                 });
               });
             } else if (index == 2) {

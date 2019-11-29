@@ -4,8 +4,9 @@ import 'package:piggy_flutter/blocs/accounts/accounts_state.dart';
 import 'package:piggy_flutter/blocs/auth/auth.dart';
 import 'package:piggy_flutter/blocs/categories/categories_bloc.dart';
 import 'package:piggy_flutter/blocs/categories/categories_state.dart';
+import 'package:piggy_flutter/models/models.dart';
 import 'package:piggy_flutter/screens/category/category_list.dart';
-import 'package:piggy_flutter/screens/home/home.dart';
+import 'package:piggy_flutter/screens/home/home_screen.dart';
 import 'package:piggy_flutter/screens/reports/categorywise_recent_months_report_screen.dart';
 import 'package:piggy_flutter/widgets/about_tile.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -30,7 +31,7 @@ class CommonDrawer extends StatelessWidget {
               color: Colors.blue,
             ),
             onTap: (() => Navigator.of(context)
-                .push(MaterialPageRoute(builder: (context) => HomePage()))),
+                .push(MaterialPageRoute(builder: (context) => HomeScreen()))),
           ),
           ListTile(
               title: Text(
@@ -43,9 +44,10 @@ class CommonDrawer extends StatelessWidget {
               ),
               onTap: (() => Navigator.of(context).push(
                     MaterialPageRoute(
-                        builder: (context) => HomePage(
-                              startpage: StartPage.Accounts,
-                            )),
+                      builder: (context) => HomeScreen(
+                        startpage: StartPage.Accounts,
+                      ),
+                    ),
                   )),
               trailing: BlocBuilder<AccountsBloc, AccountsState>(
                   builder: (context, state) {

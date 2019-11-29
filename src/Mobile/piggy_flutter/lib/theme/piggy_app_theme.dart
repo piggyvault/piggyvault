@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 
 class PiggyAppTheme {
+  PiggyAppTheme._();
+  static const Color background = Color(0xFFF2F3F8);
+
   static TextTheme _buildTextTheme(TextTheme base) {
     const String fontName = 'WorkSans';
     return base.copyWith(

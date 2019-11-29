@@ -12,7 +12,7 @@ import 'package:piggy_flutter/blocs/transaction_summary/transaction_summary_bloc
 import 'package:piggy_flutter/dashboard/dashboard_bloc.dart';
 import 'package:piggy_flutter/repositories/repositories.dart';
 import 'package:piggy_flutter/screens/category/category_list.dart';
-import 'package:piggy_flutter/screens/home/home.dart';
+import 'package:piggy_flutter/screens/home/home_screen.dart';
 import 'package:piggy_flutter/screens/reports/categorywise_recent_months_report_screen.dart';
 import 'package:piggy_flutter/splash/splash.dart';
 import 'package:piggy_flutter/themes.dart';
@@ -130,7 +130,7 @@ class App extends StatelessWidget {
         theme: lightAppTheme.data,
         home: BlocBuilder<AuthBloc, AuthState>(builder: (context, state) {
           if (state is AuthAuthenticated) {
-            return HomePage();
+            return HomeScreen();
           }
           if (state is AuthUnauthenticated) {
             return LoginPage(userRepository: userRepository);
@@ -141,7 +141,7 @@ class App extends StatelessWidget {
           UIData.loginRoute: (BuildContext context) => LoginPage(
                 userRepository: userRepository,
               ),
-          UIData.dashboardRoute: (BuildContext context) => HomePage(),
+          UIData.dashboardRoute: (BuildContext context) => HomeScreen(),
           UIData.categoriesRoute: (BuildContext context) => CategoryListPage(),
           CategoryWiseRecentMonthsReportScreen.routeName:
               (BuildContext context) => CategoryWiseRecentMonthsReportScreen(),

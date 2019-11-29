@@ -347,7 +347,7 @@ class _RecentPageState extends State<RecentPage> with TickerProviderStateMixin {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           Text(
-                            'Current Balance',
+                            'Expense / Income',
                             style: TextStyle(
                                 fontWeight: FontWeight.w100,
                                 fontSize: 16,
@@ -356,49 +356,50 @@ class _RecentPageState extends State<RecentPage> with TickerProviderStateMixin {
                           const SizedBox(
                             height: 8,
                           ),
-                          // BlocBuilder<AccountBloc, AccountState>(
-                          //     bloc: accountBloc,
-                          //     builder: (context, state) {
-                          //       if (state is AccountLoaded) {
-                          //         return Text(
-                          //           ' ${state.account.currentBalance} ${state.account.currencySymbol}',
-                          //           style: TextStyle(
-                          //             fontWeight: FontWeight.w100,
-                          //             fontSize: 16,
-                          //           ),
-                          //         );
-                          //       }
-                          //       if (state is AccountLoading) {
-                          //         return Row(
-                          //           mainAxisAlignment:
-                          //               MainAxisAlignment.spaceEvenly,
-                          //           children: [
-                          //             SpinKitWave(
-                          //                 size: 16,
-                          //                 color: PiggyAppTheme.buildLightTheme()
-                          //                     .accentColor,
-                          //                 type: SpinKitWaveType.start),
-                          //             SpinKitWave(
-                          //                 size: 16,
-                          //                 color: PiggyAppTheme.buildLightTheme()
-                          //                     .accentColor,
-                          //                 type: SpinKitWaveType.center),
-                          //             SpinKitWave(
-                          //                 size: 16,
-                          //                 color: PiggyAppTheme.buildLightTheme()
-                          //                     .accentColor,
-                          //                 type: SpinKitWaveType.end),
-                          //           ],
-                          //         );
-                          //       }
-                          //       return Text(
-                          //         '---',
-                          //         style: TextStyle(
-                          //           fontWeight: FontWeight.w100,
-                          //           fontSize: 16,
-                          //         ),
-                          //       );
-                          //     })
+                          BlocBuilder<RecentTransactionsBloc,
+                                  RecentTransactionsState>(
+                              bloc: recentTransactionsBloc,
+                              builder: (context, state) {
+                                if (state is RecentTransactionsLoaded) {
+                                  return Text(
+                                    ' ${state.filteredTransactions.totalExpense} / ${state.filteredTransactions.totalIncome}',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w100,
+                                      fontSize: 16,
+                                    ),
+                                  );
+                                }
+                                if (state is RecentTransactionsLoading) {
+                                  return Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      SpinKitWave(
+                                          size: 16,
+                                          color: PiggyAppTheme.buildLightTheme()
+                                              .accentColor,
+                                          type: SpinKitWaveType.start),
+                                      SpinKitWave(
+                                          size: 16,
+                                          color: PiggyAppTheme.buildLightTheme()
+                                              .accentColor,
+                                          type: SpinKitWaveType.center),
+                                      SpinKitWave(
+                                          size: 16,
+                                          color: PiggyAppTheme.buildLightTheme()
+                                              .accentColor,
+                                          type: SpinKitWaveType.end),
+                                    ],
+                                  );
+                                }
+                                return Text(
+                                  '---',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w100,
+                                    fontSize: 16,
+                                  ),
+                                );
+                              })
                         ],
                       ),
                     ),

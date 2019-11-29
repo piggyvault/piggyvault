@@ -3,21 +3,38 @@ import 'package:flutter/cupertino.dart';
 import 'package:piggy_flutter/models/models.dart';
 
 abstract class RecentTransactionsState extends Equatable {
-  const RecentTransactionsState();
+  final GetTransactionsInput filters;
+
+  const RecentTransactionsState(this.filters);
   @override
-  List<Object> get props => [];
+  List<Object> get props => [filters];
 }
 
-class RecentTransactionsEmpty extends RecentTransactionsState {}
+class RecentTransactionsEmpty extends RecentTransactionsState {
+  RecentTransactionsEmpty(GetTransactionsInput filters) : super(filters);
+}
 
-class RecentTransactionsLoading extends RecentTransactionsState {}
+class RecentTransactionsLoading extends RecentTransactionsState {
+  RecentTransactionsLoading(GetTransactionsInput filters) : super(filters);
+}
 
 class RecentTransactionsLoaded extends RecentTransactionsState {
-  final TransactionsResult result;
+  final TransactionsResult allTransactions;
+  final TransactionsResult filteredTransactions;
   final String latestTransactionDate;
+  final GetTransactionsInput filters;
 
   RecentTransactionsLoaded(
-      {@required this.result, @required this.latestTransactionDate});
+      {@required this.allTransactions,
+      @required this.filteredTransactions,
+      @required this.latestTransactionDate,
+      @required this.filters})
+      : super(filters);
+
+  @override
+  List<Object> get props => [allTransactions, filteredTransactions, filters];
 }
 
-class RecentTransactionsError extends RecentTransactionsState {}
+class RecentTransactionsError extends RecentTransactionsState {
+  RecentTransactionsError(GetTransactionsInput filters) : super(filters);
+}

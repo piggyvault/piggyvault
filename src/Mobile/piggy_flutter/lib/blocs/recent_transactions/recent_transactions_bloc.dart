@@ -13,9 +13,10 @@ class RecentTransactionsBloc
   final AuthBloc authBloc;
   StreamSubscription authBlocSubscription;
 
+  final TransactionRepository transactionRepository;
+
   final TransactionBloc transactionsBloc;
   StreamSubscription transactionBlocSubscription;
-  final TransactionRepository transactionRepository;
 
   RecentTransactionsBloc(
       {@required this.transactionRepository,
@@ -26,52 +27,58 @@ class RecentTransactionsBloc
         assert(transactionsBloc != null) {
     authBlocSubscription = authBloc.listen((state) {
       if (state is AuthAuthenticated) {
-        add(LoadRecentTransactions());
+        add(FetchRecentTransactions(
+            input: GetTransactionsInput(
+                type: 'tenant',
+                accountId: null,
+                startDate: DateTime.now().add(Duration(days: -30)),
+                endDate: DateTime.now().add(Duration(days: 1)),
+                groupBy: TransactionsGroupBy.Date)));
       }
     });
 
     transactionBlocSubscription = transactionsBloc.listen((state) {
       if (state is TransactionSaved) {
-        add(LoadRecentTransactions());
+        add(FetchRecentTransactions(
+            input: GetTransactionsInput(
+                type: 'tenant',
+                accountId: null,
+                startDate: DateTime.now().add(Duration(days: -30)),
+                endDate: DateTime.now().add(Duration(days: 1)),
+                groupBy: TransactionsGroupBy.Date)));
       }
     });
   }
 
   @override
-  RecentTransactionsState get initialState => RecentTransactionsEmpty();
+  RecentTransactionsState get initialState => RecentTransactionsEmpty(null);
 
   @override
   Stream<RecentTransactionsState> mapEventToState(
     RecentTransactionsEvent event,
   ) async* {
-    if (event is LoadRecentTransactions) {
-      yield RecentTransactionsLoading();
+    if (event is FetchRecentTransactions) {
+      yield RecentTransactionsLoading(event.input);
       try {
-        final result = await transactionRepository.getTransactions(
-            GetTransactionsInput(
-                type: 'tenant',
-                accountId: null,
-                startDate: DateTime.now().add(Duration(days: -30)),
-                endDate: DateTime.now().add(Duration(days: 1)),
-                groupBy: TransactionsGroupBy.Date));
+        final result = await transactionRepository.getTransactions(event.input);
 
         if (result.isEmpty) {
-          yield RecentTransactionsEmpty();
+          yield RecentTransactionsEmpty(event.input);
         } else {
           final DateFormat formatter = DateFormat("EEE, MMM d, ''yy");
 
           yield RecentTransactionsLoaded(
-              result: result,
+              allTransactions: result,
+              filteredTransactions: result,
+              filters: event.input,
               latestTransactionDate: formatter.format(
                   DateTime.parse(result.transactions[0].transactionTime)));
         }
       } catch (e) {
-        RecentTransactionsError();
+        RecentTransactionsError(event.input);
       }
-    }
-
-    if (event is GroupRecentTransactions) {
-      yield RecentTransactionsLoading();
+    } else if (event is GroupRecentTransactions) {
+      yield RecentTransactionsLoading(state.filters);
       try {
         final result = await transactionRepository.getTransactions(
             GetTransactionsInput(
@@ -82,17 +89,53 @@ class RecentTransactionsBloc
                 groupBy: event.groupBy));
 
         if (result.isEmpty) {
-          yield RecentTransactionsEmpty();
+          yield RecentTransactionsEmpty(state.filters);
         } else {
           final DateFormat formatter = DateFormat("EEE, MMM d, ''yy");
 
           yield RecentTransactionsLoaded(
-              result: result,
+              allTransactions: result,
+              filteredTransactions: result,
+              filters: state.filters,
               latestTransactionDate: formatter.format(
                   DateTime.parse(result.transactions[0].transactionTime)));
         }
       } catch (e) {
-        RecentTransactionsError();
+        RecentTransactionsError(state.filters);
+      }
+    } else if (event is FilterRecentTransactions) {
+      if (this.state is RecentTransactionsLoaded) {
+        if (event.query == null || event.query == "") {
+          yield RecentTransactionsLoaded(
+              allTransactions:
+                  (state as RecentTransactionsLoaded).allTransactions,
+              filteredTransactions:
+                  (state as RecentTransactionsLoaded).allTransactions,
+              latestTransactionDate:
+                  (state as RecentTransactionsLoaded).latestTransactionDate,
+              filters: state.filters);
+        } else {
+          var filteredTransactions = (state as RecentTransactionsLoaded)
+              .allTransactions
+              .transactions
+              .where((t) => t.description
+                  .toLowerCase()
+                  .contains(event.query.toLowerCase()))
+              .toList();
+          var filteredTransactionsResult = TransactionsResult(
+              sections: transactionRepository.groupTransactions(
+                  transactions: filteredTransactions,
+                  groupBy: TransactionsGroupBy.Date),
+              transactions: filteredTransactions);
+
+          yield RecentTransactionsLoaded(
+              allTransactions:
+                  (state as RecentTransactionsLoaded).allTransactions,
+              filteredTransactions: filteredTransactionsResult,
+              latestTransactionDate:
+                  (state as RecentTransactionsLoaded).latestTransactionDate,
+              filters: state.filters);
+        }
       }
     }
   }

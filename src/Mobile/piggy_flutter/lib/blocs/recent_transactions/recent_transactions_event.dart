@@ -18,4 +18,14 @@ class GroupRecentTransactions extends RecentTransactionsEvent {
   List<Object> get props => [groupBy];
 }
 
-class LoadRecentTransactions extends RecentTransactionsEvent {}
+class FetchRecentTransactions extends RecentTransactionsEvent {
+  final GetTransactionsInput input;
+
+  FetchRecentTransactions({@required this.input}) : assert(input != null);
+}
+
+class FilterRecentTransactions extends RecentTransactionsEvent {
+  final String query;
+
+  FilterRecentTransactions(this.query);
+}

@@ -75,7 +75,7 @@ class RecentTransactionsBloc
                   DateTime.parse(result.transactions[0].transactionTime)));
         }
       } catch (e) {
-        RecentTransactionsError(event.input);
+        yield RecentTransactionsError(event.input);
       }
     } else if (event is GroupRecentTransactions) {
       yield RecentTransactionsLoading(state.filters);
@@ -101,7 +101,7 @@ class RecentTransactionsBloc
                   DateTime.parse(result.transactions[0].transactionTime)));
         }
       } catch (e) {
-        RecentTransactionsError(state.filters);
+        yield RecentTransactionsError(state.filters);
       }
     } else if (event is FilterRecentTransactions) {
       if (this.state is RecentTransactionsLoaded) {

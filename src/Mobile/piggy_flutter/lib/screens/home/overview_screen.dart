@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:piggy_flutter/screens/home/transaction_summary_view.dart';
 import 'package:piggy_flutter/screens/ui_view/title_view.dart';
 import 'package:piggy_flutter/widgets/overall_view.dart';
-import 'package:piggy_flutter/widgets/widgets.dart';
 
 import '../fintness_app_theme.dart';
 

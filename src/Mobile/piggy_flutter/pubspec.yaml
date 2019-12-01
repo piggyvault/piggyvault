@@ -7,7 +7,7 @@ description: A new Flutter application.
 # Both the version and the builder number may be overridden in flutter
 # build by specifying --build-name and --build-number, respectively.
 # Read more about versioning at semver.org.
-version: 0.17.0+22
+version: 0.18.1+24
 
 environment:
   sdk: ">=2.2.2 <3.0.0"
@@ -49,6 +49,7 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - graphics/logo.png
+    - assets/images/
     - assets/
   # To add custom fonts to your application, add a fonts section here,
   # in this "flutter" section. Each entry in this list should have a

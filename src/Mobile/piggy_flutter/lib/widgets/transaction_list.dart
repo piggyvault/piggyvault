@@ -30,6 +30,7 @@ class TransactionList extends StatelessWidget {
       duration: Duration(milliseconds: 300),
       opacity: visible ? 1.0 : 0.0,
       child: ListView(
+        padding: EdgeInsets.all(0),
         children: groupedTransactionList.toList(),
       ),
     );
@@ -95,14 +96,12 @@ class TransactionList extends StatelessWidget {
             style: textTheme.body2,
           ),
           subtitle: Text(
-            "${transaction.description}\n${transaction
-              .creatorUserName}'s ${transaction.accountName}",
+            "${transaction.description}\n${transaction.creatorUserName}'s ${transaction.accountName}",
             // style: textTheme.caption,
           ),
           isThreeLine: true,
           trailing: Text(
-            '${transaction.amount
-              .toString()} ${transaction.accountCurrencySymbol}',
+            '${transaction.amount.toString()} ${transaction.accountCurrencySymbol}',
           ),
           leading: CircleAvatar(
             child: Text(
@@ -121,8 +120,8 @@ class TransactionList extends StatelessWidget {
                 context,
                 MaterialPageRoute(
                   builder: (BuildContext context) => TransactionDetailPage(
-                        transaction: transaction,
-                      ),
+                    transaction: transaction,
+                  ),
                   fullscreenDialog: true,
                 ));
           }),

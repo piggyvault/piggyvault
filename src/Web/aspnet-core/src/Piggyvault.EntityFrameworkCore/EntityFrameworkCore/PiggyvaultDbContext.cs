@@ -25,6 +25,7 @@ namespace Piggyvault.EntityFrameworkCore
         public virtual DbSet<Category> Categories { get; set; }
 
         public virtual DbSet<Currency> Currencies { get; set; }
+        public virtual DbSet<CurrencyRate> CurrencyRates { get; set; }
 
         public virtual DbSet<TransactionComment> TransactionComments { get; set; }
 

@@ -7,6 +7,7 @@ class TransactionSummary {
       tenantExpense = 0.0,
       tenantSaved = 0.0,
       userSaved = 0.0;
+  String networthPercentage = "0%", currencySymbol = "";
   int totalFamilyTransactionsCount = 0;
 
   TransactionSummary(
@@ -18,6 +19,8 @@ class TransactionSummary {
       this.tenantExpense,
       this.tenantSaved,
       this.userSaved,
+      this.networthPercentage,
+      this.currencySymbol,
       this.totalFamilyTransactionsCount);
 
   TransactionSummary.fromJson(Map<String, dynamic> json)
@@ -29,5 +32,7 @@ class TransactionSummary {
         userExpense = json['userExprense'],
         tenantSaved = json['tenantSaved'],
         userSaved = json['userSaved'],
+        networthPercentage = json['netWorthPercentage'],
+        currencySymbol = json['currencySymbol'],
         totalFamilyTransactionsCount = json['totalFamilyTransactionsCount'];
 }

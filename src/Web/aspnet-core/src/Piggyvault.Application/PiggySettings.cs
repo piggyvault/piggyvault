@@ -1,9 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Piggyvault
+﻿namespace Piggyvault
 {
+    public class FixerSettings
+    {
+        public string ApiKey { get; set; }
+    }
+
     public class OneSignalSettings
     {
         public string ApiKey { get; set; }
@@ -12,6 +13,7 @@ namespace Piggyvault
 
     public class PiggySettings
     {
+        public FixerSettings Fixer { get; set; }
         public OneSignalSettings OneSignal { get; set; }
     }
 }

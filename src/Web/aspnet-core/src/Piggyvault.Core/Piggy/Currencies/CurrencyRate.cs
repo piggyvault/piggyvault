@@ -20,6 +20,7 @@ namespace Piggyvault.Piggy.Currencies
         public DateTime CreationTime { get; set; }
 
         [Required]
+        [Column(TypeName = "decimal(18, 6)")]
         public decimal Rate { get; set; }
     }
 }

@@ -29,13 +29,13 @@ namespace Piggyvault.Piggy.Transactions
         /// </summary>
         private readonly IRepository<Account, Guid> _accountRepository;
 
-        private readonly ICurrencyRateExchangeAppService _currencyRateExchangeService;
+        private readonly ICurrencyRateAppService _currencyRateExchangeService;
         private readonly INotificationAppService _notificationService;
         private readonly ISessionAppService _sessionAppService;
         private readonly IRepository<TransactionComment, Guid> _transactionCommentRepository;
         private readonly IRepository<Transaction, Guid> _transactionRepository;
 
-        public TransactionAppService(IRepository<Transaction, Guid> transactionRepository, IRepository<Account, Guid> accountRepository, ISessionAppService sessionAppService, ICurrencyRateExchangeAppService currencyRateExchangeService, IRepository<TransactionComment, Guid> transactionCommentRepository, INotificationAppService notificationService)
+        public TransactionAppService(IRepository<Transaction, Guid> transactionRepository, IRepository<Account, Guid> accountRepository, ISessionAppService sessionAppService, ICurrencyRateAppService currencyRateExchangeService, IRepository<TransactionComment, Guid> transactionCommentRepository, INotificationAppService notificationService)
         {
             _transactionRepository = transactionRepository;
             _accountRepository = accountRepository;

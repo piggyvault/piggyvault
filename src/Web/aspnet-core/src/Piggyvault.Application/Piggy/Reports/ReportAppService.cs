@@ -17,11 +17,11 @@ namespace Piggyvault.Piggy.Reports
     [AbpAuthorize]
     public class ReportAppService : PiggyvaultAppServiceBase, IReportAppService
     {
-        private readonly ICurrencyRateExchangeAppService _currencyRateExchangeService;
+        private readonly ICurrencyRateAppService _currencyRateExchangeService;
         private readonly IReportRepository _reportRepository;
         private readonly IRepository<Transaction, Guid> _transactionRepository;
 
-        public ReportAppService(IReportRepository reportRepository, IRepository<Transaction, Guid> transactionRepository, ICurrencyRateExchangeAppService currencyRateExchangeService)
+        public ReportAppService(IReportRepository reportRepository, IRepository<Transaction, Guid> transactionRepository, ICurrencyRateAppService currencyRateExchangeService)
         {
             _reportRepository = reportRepository;
             _transactionRepository = transactionRepository;

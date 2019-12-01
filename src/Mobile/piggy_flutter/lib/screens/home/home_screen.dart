@@ -206,7 +206,9 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                   return;
                 }
                 setState(() {
-                  tabBody = RecentTransactionsPage();
+                  tabBody = RecentTransactionsPage(
+                    animationController: animationController,
+                  );
                 });
               });
             } else if (index == 2) {

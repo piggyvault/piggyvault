@@ -9,7 +9,6 @@ import 'package:piggy_flutter/blocs/recent_transactions/bloc.dart';
 import 'package:piggy_flutter/models/models.dart';
 import 'package:piggy_flutter/models/transaction_group_item.dart';
 import 'package:piggy_flutter/theme/piggy_app_theme.dart';
-import 'package:piggy_flutter/widgets/add_transaction_fab.dart';
 import 'package:piggy_flutter/widgets/common/calendar_popup_view.dart';
 import 'package:piggy_flutter/widgets/common/common.dart';
 import 'package:piggy_flutter/widgets/common/empty_result_widget.dart';
@@ -17,8 +16,12 @@ import 'package:piggy_flutter/widgets/common/error_display_widget.dart';
 import 'package:piggy_flutter/widgets/common/loading_widget.dart';
 import 'package:piggy_flutter/widgets/transaction_list.dart';
 
+import '../fintness_app_theme.dart';
+
 class RecentTransactionsPage extends StatefulWidget {
-  RecentTransactionsPage({Key key}) : super(key: key);
+  final AnimationController animationController;
+
+  RecentTransactionsPage({Key key, this.animationController}) : super(key: key);
 
   @override
   _RecentTransactionsPageState createState() => _RecentTransactionsPageState();
@@ -26,8 +29,13 @@ class RecentTransactionsPage extends StatefulWidget {
 
 class _RecentTransactionsPageState extends State<RecentTransactionsPage>
     with TickerProviderStateMixin {
-  AnimationController animationController;
-  final ScrollController _scrollController = ScrollController();
+  Animation<double> topBarAnimation;
+  Animation<double> listAnimation;
+
+  final ScrollController scrollController = ScrollController();
+  double topBarOpacity = 0.0;
+
+  List<Widget> listViews = <Widget>[];
 
   Completer<void> _refreshCompleter;
   RecentTransactionsBloc recentTransactionsBloc;
@@ -37,147 +45,210 @@ class _RecentTransactionsPageState extends State<RecentTransactionsPage>
 
   @override
   void initState() {
+    topBarAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+        CurvedAnimation(
+            parent: widget.animationController,
+            curve: Interval(0, 0.5, curve: Curves.fastOutSlowIn)));
+
+    listAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
+        parent: widget.animationController,
+        curve: Interval(0.5, 1.0, curve: Curves.fastOutSlowIn)));
+
+    scrollController.addListener(() {
+      if (scrollController.offset >= 24) {
+        if (topBarOpacity != 1.0) {
+          setState(() {
+            topBarOpacity = 1.0;
+          });
+        }
+      } else if (scrollController.offset <= 24 &&
+          scrollController.offset >= 0) {
+        if (topBarOpacity != scrollController.offset / 24) {
+          setState(() {
+            topBarOpacity = scrollController.offset / 24;
+          });
+        }
+      } else if (scrollController.offset <= 0) {
+        if (topBarOpacity != 0.0) {
+          setState(() {
+            topBarOpacity = 0.0;
+          });
+        }
+      }
+    });
+
     recentTransactionsBloc = BlocProvider.of<RecentTransactionsBloc>(context);
-    animationController = AnimationController(
-        duration: const Duration(milliseconds: 1000), vsync: this);
+
     _refreshCompleter = Completer<void>();
     super.initState();
   }
 
-  final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
-      GlobalKey<RefreshIndicatorState>();
-
-  @override
-  void dispose() {
-    animationController.dispose();
-    super.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
-    return Theme(
-      data: PiggyAppTheme.buildLightTheme(),
-      child: Container(
-        child: Scaffold(
-          body: Stack(
-            children: <Widget>[
-              InkWell(
-                splashColor: Colors.transparent,
-                focusColor: Colors.transparent,
-                highlightColor: Colors.transparent,
-                hoverColor: Colors.transparent,
-                onTap: () {
-                  FocusScope.of(context).requestFocus(FocusNode());
-                },
-                child: Column(
-                  children: <Widget>[
-                    getAppBarUI(),
-                    Expanded(
-                      child: NestedScrollView(
-                        controller: _scrollController,
-                        headerSliverBuilder:
-                            (BuildContext context, bool innerBoxIsScrolled) {
-                          return <Widget>[
-                            SliverList(
-                              delegate: SliverChildBuilderDelegate(
-                                  (BuildContext context, int index) {
-                                return Column(
-                                  children: <Widget>[
-                                    getSearchBarUI(),
-                                    getTimeDateUI(recentTransactionsBloc),
-                                  ],
-                                );
-                              }, childCount: 1),
-                            ),
-                            SliverPersistentHeader(
-                              pinned: true,
-                              floating: true,
-                              delegate: ContestTabHeader(
-                                getFilterBarUI(),
-                              ),
-                            ),
-                          ];
-                        },
-                        body: Container(
-                          color:
-                              PiggyAppTheme.buildLightTheme().backgroundColor,
-                          child: BlocBuilder<RecentTransactionsBloc,
-                              RecentTransactionsState>(
-                            bloc: recentTransactionsBloc,
-                            builder: (context, state) {
-                              if (state is RecentTransactionsLoaded) {
-                                _refreshCompleter?.complete();
-                                _refreshCompleter = Completer();
-                              }
-
-                              return RefreshIndicator(
-                                key: _refreshIndicatorKey,
-                                onRefresh: () {
-                                  recentTransactionsBloc.add(
-                                    FetchRecentTransactions(
-                                      input: GetTransactionsInput(
-                                          type: 'tenant',
-                                          accountId: null,
-                                          startDate: startDate,
-                                          endDate: endDate,
-                                          groupBy: TransactionsGroupBy.Date),
-                                    ),
-                                  );
-                                  return _refreshCompleter.future;
-                                },
-                                child: SafeArea(
-                                  top: false,
-                                  bottom: false,
-                                  child: Column(
-                                    children: <Widget>[
-                                      Expanded(
-                                        child: Stack(
-                                          children: <Widget>[
-                                            // Fade in a loading screen when results are being fetched
-                                            LoadingWidget(
-                                                visible: state
-                                                    is RecentTransactionsLoading),
-
-                                            // Fade in an Empty Result screen if the search contained
-                                            // no items
-                                            EmptyResultWidget(
-                                                visible: state
-                                                    is RecentTransactionsEmpty),
-
-                                            // Fade in an error if something went wrong when fetching
-                                            // the results
-                                            ErrorDisplayWidget(
-                                                visible: state
-                                                    is RecentTransactionsError),
-
-                                            // Fade in the Result if available
-                                            TransactionList(
-                                              items: state
-                                                      is RecentTransactionsLoaded
-                                                  ? state.filteredTransactions
-                                                      .sections
-                                                  : [],
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              );
-                            },
-                          ),
-                        ),
-                      ),
-                    )
-                  ],
-                ),
-              ),
-            ],
-          ),
+    return Container(
+      color: FintnessAppTheme.background,
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        body: Stack(
+          children: <Widget>[
+            getMainListViewUI(),
+            getAppBarUI(),
+            SizedBox(
+              height: MediaQuery.of(context).padding.bottom,
+            )
+          ],
         ),
       ),
     );
+  }
+
+  Future<bool> getData() async {
+    await Future<dynamic>.delayed(const Duration(milliseconds: 50));
+    return true;
+  }
+
+  Widget getMainListViewUI() {
+    return FutureBuilder<bool>(
+        future: getData(),
+        builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+          if (!snapshot.hasData) {
+            return const SizedBox();
+          } else {
+            widget.animationController.forward();
+            return AnimatedBuilder(
+                animation: widget.animationController,
+                builder: (BuildContext context, Widget child) {
+                  return FadeTransition(
+                      opacity: listAnimation,
+                      child: new Transform(
+                        transform: new Matrix4.translationValues(
+                            0.0, 30 * (1.0 - listAnimation.value), 0.0),
+                        child: InkWell(
+                          splashColor: Colors.transparent,
+                          focusColor: Colors.transparent,
+                          highlightColor: Colors.transparent,
+                          hoverColor: Colors.transparent,
+                          onTap: () {
+                            FocusScope.of(context).requestFocus(FocusNode());
+                          },
+                          child: Padding(
+                            padding: EdgeInsets.only(
+                              top: AppBar().preferredSize.height +
+                                  MediaQuery.of(context).padding.top,
+                              bottom:
+                                  62 + MediaQuery.of(context).padding.bottom,
+                            ),
+                            child: Column(
+                              children: <Widget>[
+                                Expanded(
+                                  child: NestedScrollView(
+                                    controller: scrollController,
+                                    headerSliverBuilder: (BuildContext context,
+                                        bool innerBoxIsScrolled) {
+                                      return <Widget>[
+                                        SliverList(
+                                          delegate: SliverChildBuilderDelegate(
+                                              (BuildContext context,
+                                                  int index) {
+                                            return Column(
+                                              children: <Widget>[
+                                                getSearchBarUI(),
+                                              ],
+                                            );
+                                          }, childCount: 1),
+                                        ),
+                                        SliverPersistentHeader(
+                                          pinned: true,
+                                          floating: true,
+                                          delegate: ContestTabHeader(
+                                            getFilterBarUI(),
+                                          ),
+                                        ),
+                                      ];
+                                    },
+                                    body: Container(
+                                      color: PiggyAppTheme.buildLightTheme()
+                                          .backgroundColor,
+                                      child: BlocBuilder<RecentTransactionsBloc,
+                                          RecentTransactionsState>(
+                                        bloc: recentTransactionsBloc,
+                                        builder: (context, state) {
+                                          if (state
+                                              is RecentTransactionsLoaded) {
+                                            _refreshCompleter?.complete();
+                                            _refreshCompleter = Completer();
+                                          }
+
+                                          return RefreshIndicator(
+                                            onRefresh: () {
+                                              recentTransactionsBloc.add(
+                                                FetchRecentTransactions(
+                                                  input: GetTransactionsInput(
+                                                      type: 'tenant',
+                                                      accountId: null,
+                                                      startDate: startDate,
+                                                      endDate: endDate,
+                                                      groupBy:
+                                                          TransactionsGroupBy
+                                                              .Date),
+                                                ),
+                                              );
+                                              return _refreshCompleter.future;
+                                            },
+                                            child: SafeArea(
+                                              top: false,
+                                              bottom: false,
+                                              child: Column(
+                                                children: <Widget>[
+                                                  Expanded(
+                                                    child: Stack(
+                                                      children: <Widget>[
+                                                        // Fade in a loading screen when results are being fetched
+                                                        LoadingWidget(
+                                                            visible: state
+                                                                is RecentTransactionsLoading),
+
+                                                        // Fade in an Empty Result screen if the search contained
+                                                        // no items
+                                                        EmptyResultWidget(
+                                                            visible: state
+                                                                is RecentTransactionsEmpty),
+
+                                                        // Fade in an error if something went wrong when fetching
+                                                        // the results
+                                                        ErrorDisplayWidget(
+                                                            visible: state
+                                                                is RecentTransactionsError),
+
+                                                        // Fade in the Result if available
+                                                        TransactionList(
+                                                          items: state
+                                                                  is RecentTransactionsLoaded
+                                                              ? state
+                                                                  .filteredTransactions
+                                                                  .sections
+                                                              : [],
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                      ),
+                                    ),
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+                      ));
+                });
+          }
+        });
   }
 
   Widget getSearchBarUI() {
@@ -250,162 +321,6 @@ class _RecentTransactionsPageState extends State<RecentTransactionsPage>
                       color: PiggyAppTheme.buildLightTheme().backgroundColor),
                 ),
               ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget getTimeDateUI(RecentTransactionsBloc recentTransactionsBloc) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 18, bottom: 16),
-      child: Row(
-        children: <Widget>[
-          Expanded(
-            child: Row(
-              children: <Widget>[
-                Material(
-                  color: Colors.transparent,
-                  child: InkWell(
-                    focusColor: Colors.transparent,
-                    highlightColor: Colors.transparent,
-                    hoverColor: Colors.transparent,
-                    splashColor: Colors.grey.withOpacity(0.2),
-                    borderRadius: const BorderRadius.all(
-                      Radius.circular(4.0),
-                    ),
-                    onTap: () {
-                      FocusScope.of(context).requestFocus(FocusNode());
-                      // setState(() {
-                      //   isDatePopupOpen = true;
-                      // });
-                      showDemoDialog(
-                          context: context, bloc: recentTransactionsBloc);
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.only(
-                          left: 8, right: 8, top: 4, bottom: 4),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Text(
-                            'Choose date',
-                            style: TextStyle(
-                                fontWeight: FontWeight.w100,
-                                fontSize: 16,
-                                color: Colors.grey.withOpacity(0.8)),
-                          ),
-                          const SizedBox(
-                            height: 8,
-                          ),
-                          Text(
-                            '${DateFormat("dd, MMM").format(startDate)} - ${DateFormat("dd, MMM").format(endDate)}',
-                            style: TextStyle(
-                              fontWeight: FontWeight.w100,
-                              fontSize: 16,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(right: 8),
-            child: Container(
-              width: 1,
-              height: 42,
-              color: Colors.grey.withOpacity(0.8),
-            ),
-          ),
-          Expanded(
-            child: Row(
-              children: <Widget>[
-                Material(
-                  color: Colors.transparent,
-                  child: InkWell(
-                    focusColor: Colors.transparent,
-                    highlightColor: Colors.transparent,
-                    hoverColor: Colors.transparent,
-                    splashColor: Colors.grey.withOpacity(0.2),
-                    borderRadius: const BorderRadius.all(
-                      Radius.circular(4.0),
-                    ),
-                    onTap: () {
-                      FocusScope.of(context).requestFocus(FocusNode());
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.only(
-                          left: 8, right: 8, top: 4, bottom: 4),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Text(
-                            'Expense / Income',
-                            style: TextStyle(
-                                fontWeight: FontWeight.w100,
-                                fontSize: 16,
-                                color: Colors.grey.withOpacity(0.8)),
-                          ),
-                          const SizedBox(
-                            height: 8,
-                          ),
-                          BlocBuilder<RecentTransactionsBloc,
-                                  RecentTransactionsState>(
-                              bloc: recentTransactionsBloc,
-                              builder: (context, state) {
-                                if (state is RecentTransactionsLoaded) {
-                                  return Text(
-                                    ' ${state.filteredTransactions.totalExpense} / ${state.filteredTransactions.totalIncome}',
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.w100,
-                                      fontSize: 16,
-                                    ),
-                                  );
-                                }
-                                if (state is RecentTransactionsLoading) {
-                                  return Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
-                                    children: [
-                                      SpinKitWave(
-                                          size: 16,
-                                          color: PiggyAppTheme.buildLightTheme()
-                                              .accentColor,
-                                          type: SpinKitWaveType.start),
-                                      SpinKitWave(
-                                          size: 16,
-                                          color: PiggyAppTheme.buildLightTheme()
-                                              .accentColor,
-                                          type: SpinKitWaveType.center),
-                                      SpinKitWave(
-                                          size: 16,
-                                          color: PiggyAppTheme.buildLightTheme()
-                                              .accentColor,
-                                          type: SpinKitWaveType.end),
-                                    ],
-                                  );
-                                }
-                                return Text(
-                                  '---',
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w100,
-                                    fontSize: 16,
-                                  ),
-                                );
-                              })
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              ],
             ),
           ),
         ],
@@ -579,6 +494,143 @@ class _RecentTransactionsPageState extends State<RecentTransactionsPage>
   }
 
   Widget getAppBarUI() {
+    return Column(
+      children: <Widget>[
+        AnimatedBuilder(
+          animation: widget.animationController,
+          builder: (BuildContext context, Widget child) {
+            return FadeTransition(
+              opacity: topBarAnimation,
+              child: Transform(
+                transform: Matrix4.translationValues(
+                    0.0, 30 * (1.0 - topBarAnimation.value), 0.0),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: FintnessAppTheme.white.withOpacity(topBarOpacity),
+                    borderRadius: const BorderRadius.only(
+                      bottomLeft: Radius.circular(32.0),
+                    ),
+                    boxShadow: <BoxShadow>[
+                      BoxShadow(
+                          color: FintnessAppTheme.grey
+                              .withOpacity(0.4 * topBarOpacity),
+                          offset: const Offset(1.1, 1.1),
+                          blurRadius: 10.0),
+                    ],
+                  ),
+                  child: Column(
+                    children: <Widget>[
+                      SizedBox(
+                        height: MediaQuery.of(context).padding.top,
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(
+                            left: 16,
+                            right: 16,
+                            top: 16 - 8.0 * topBarOpacity,
+                            bottom: 12 - 8.0 * topBarOpacity),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Expanded(
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text(
+                                  'Recent',
+                                  textAlign: TextAlign.left,
+                                  style: TextStyle(
+                                    fontFamily: FintnessAppTheme.fontName,
+                                    fontWeight: FontWeight.w700,
+                                    fontSize: 22 + 6 - 6 * topBarOpacity,
+                                    letterSpacing: 1.2,
+                                    color: FintnessAppTheme.darkerText,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                left: 8,
+                                right: 8,
+                              ),
+                              child: Row(
+                                children: <Widget>[
+                                  Padding(
+                                    padding: const EdgeInsets.only(right: 8),
+                                    child: Icon(
+                                      Icons.calendar_today,
+                                      color: FintnessAppTheme.grey,
+                                      size: 18,
+                                    ),
+                                  ),
+                                  Material(
+                                    color: Colors.transparent,
+                                    child: InkWell(
+                                      focusColor: Colors.transparent,
+                                      highlightColor: Colors.transparent,
+                                      hoverColor: Colors.transparent,
+                                      splashColor: Colors.grey.withOpacity(0.2),
+                                      borderRadius: const BorderRadius.all(
+                                        Radius.circular(4.0),
+                                      ),
+                                      onTap: () {
+                                        FocusScope.of(context)
+                                            .requestFocus(FocusNode());
+                                        // setState(() {
+                                        //   isDatePopupOpen = true;
+                                        // });
+                                        showDemoDialog(
+                                            context: context,
+                                            bloc: recentTransactionsBloc);
+                                      },
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(
+                                            left: 8,
+                                            right: 8,
+                                            top: 4,
+                                            bottom: 4),
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: <Widget>[
+                                            Text(
+                                              '${DateFormat("dd, MMM").format(startDate)} - ${DateFormat("dd, MMM").format(endDate)}',
+                                              textAlign: TextAlign.left,
+                                              style: TextStyle(
+                                                fontFamily:
+                                                    FintnessAppTheme.fontName,
+                                                fontWeight: FontWeight.normal,
+                                                fontSize: 18,
+                                                letterSpacing: -0.2,
+                                                color:
+                                                    FintnessAppTheme.darkerText,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            );
+          },
+        )
+      ],
+    );
+  }
+
+  Widget getAppBarUIOld() {
     return AppBar(
       title: Text('Recent Transactions'),
       actions: <Widget>[

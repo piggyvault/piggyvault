@@ -20,16 +20,21 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   ) async* {
     if (event is AppStarted) {
       initOnesignal();
-      final bool hasToken = await userRepository.hasToken();
-      if (hasToken) {
-        final user = await userRepository.getCurrentLoginInformation();
-        if (user == null || user.id == null) {
-          yield AuthUnauthenticated();
-        } else {
-          yield AuthAuthenticated(user: user);
-        }
+      final bool isFirstAccess = await userRepository.isFirstAccess();
+      if (isFirstAccess) {
+        yield FirstAccess();
       } else {
-        yield AuthUnauthenticated();
+        final bool hasToken = await userRepository.hasToken();
+        if (hasToken) {
+          final user = await userRepository.getCurrentLoginInformation();
+          if (user == null || user.id == null) {
+            yield AuthUnauthenticated();
+          } else {
+            yield AuthAuthenticated(user: user);
+          }
+        } else {
+          yield AuthUnauthenticated();
+        }
       }
     }
 

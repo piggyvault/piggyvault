@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:piggy_flutter/blocs/auth/auth.dart';
 import 'package:piggy_flutter/intro_views/Models/page_view_model.dart';
 import 'package:piggy_flutter/intro_views/intro_views_flutter.dart';
-import 'package:piggy_flutter/screens/home/home_screen.dart';
 import 'package:piggy_flutter/utils/uidata.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -78,12 +79,7 @@ class IntroViews extends StatelessWidget {
       showNextButton: true,
       showBackButton: true,
       onTapDoneButton: () {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (context) => HomeScreen(),
-          ), //MaterialPageRoute
-        );
+        BlocProvider.of<AuthBloc>(context).add(AppStarted());
       },
       pageButtonTextStyles: TextStyle(
         color: Colors.white,

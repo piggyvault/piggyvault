@@ -45,6 +45,11 @@ class UserRepository {
     return token != null;
   }
 
+  Future<bool> isFirstAccess() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getBool(UIData.firstAccess) ?? true;
+  }
+
   Future<void> deleteToken() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove(UIData.authToken);

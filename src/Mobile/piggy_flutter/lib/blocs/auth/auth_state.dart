@@ -20,17 +20,6 @@ class AuthAuthenticated extends AuthState {
 
 class AuthUnauthenticated extends AuthState {}
 
+class FirstAccess extends AuthState {}
+
 class AuthLoading extends AuthState {}
-
-// class GettingCurrentLoginInformation extends AuthState {}
-
-// class UserLoggedIn extends AuthState {
-//   final User user;
-
-//   const UserLoggedIn({@required this.user}) : assert(user != null);
-
-//   @override
-//   List<Object> get props => [user];
-// }
-
-// class GettingCurrentLoginInformationError extends AuthState {}

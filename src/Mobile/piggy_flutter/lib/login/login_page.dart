@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:piggy_flutter/blocs/auth/auth.dart';
+import 'package:piggy_flutter/dashboard/dashboard_page.dart';
 import 'package:piggy_flutter/login/login.dart';
 import 'package:piggy_flutter/login/login_bloc.dart';
 import 'package:piggy_flutter/repositories/repositories.dart';
+import 'package:piggy_flutter/screens/intro_views/intro_views.dart';
+import 'package:piggy_flutter/utils/uidata.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatelessWidget {
   final UserRepository userRepository;
@@ -14,6 +18,8 @@ class LoginPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    authCheck(context);
+    
     return Scaffold(
         backgroundColor: Colors.white,
         body: BlocProvider(
@@ -24,6 +30,30 @@ class LoginPage extends StatelessWidget {
           },
           child: LoginForm(),
         ));
+  }
+
+  void authCheck(BuildContext context) async {
+    final prefs = await SharedPreferences.getInstance();
+
+    var token = prefs.getString(UIData.authToken);
+    var firstAccess = prefs.getBool(UIData.firstAccess) ?? true;
+
+    if (token != null && token.length > 0 && !firstAccess) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => DashboardPage(),
+        ),
+      );
+    } else {
+      if (firstAccess)
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => IntroViews(),
+          ),
+        );
+    }
   }
 }
 
@@ -64,30 +94,4 @@ class LoginPage extends StatelessWidget {
 //     _apiSubscription?.cancel();
 //     super.dispose();
 //   }
-
-//   void authCheck() async {
-//     final prefs = await SharedPreferences.getInstance();
-
-//     var token = prefs.getString(UIData.authToken);
-//     var firstAccess = prefs.getBool(UIData.firstAccess) ?? true;
-
-//     if (token != null && token.length > 0 && !firstAccess) {
-//       Navigator.pushReplacement(
-//         context,
-//         MaterialPageRoute(
-//           builder: (context) => HomePage(
-//             isInitialLoading: true,
-//           ),
-//         ),
-//       );
-//     } else {
-//       if (firstAccess)
-//         Navigator.pushReplacement(
-//           context,
-//           MaterialPageRoute(
-//             builder: (context) => IntroViews(),
-//           ),
-//         );
-//     }
-//   }
-// }
+//}

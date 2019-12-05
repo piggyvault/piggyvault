@@ -6,9 +6,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:piggy_flutter/utils/uidata.dart';
 
 class RestClient {
-  static const ApiEndpointUrl = "https://piggyvault.in/api";
+  // static const ApiEndpointUrl = "https://piggyvault.in/api";
   // static const ApiEndpointUrl = "http://10.0.2.2:21021/api";
-  // static const ApiEndpointUrl = "http://localhost:21021/api";
+  static const ApiEndpointUrl = "http://localhost:21021/api";
 
   Future<ApiResponse<T>> getAsync<T>(String resourcePath) async {
     final prefs = await SharedPreferences.getInstance();

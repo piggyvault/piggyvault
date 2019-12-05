@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:piggy_flutter/intro_views/Models/page_view_model.dart';
 import 'package:piggy_flutter/intro_views/intro_views_flutter.dart';
-import 'package:piggy_flutter/login/login.dart';
+import 'package:piggy_flutter/screens/home/home_screen.dart';
 import 'package:piggy_flutter/utils/uidata.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -73,31 +73,23 @@ class IntroViews extends StatelessWidget {
   Widget build(BuildContext context) {
     setAccess();
 
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'IntroViews Flutter', //title of app
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ), //ThemeData
-      home: Builder(
-        builder: (context) => IntroViewsFlutter(
-          pages,
-          showNextButton: true,
-          showBackButton: true,
-          onTapDoneButton: () {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                builder: (context) => LoginPage(),
-              ), //MaterialPageRoute
-            );
-          },
-          pageButtonTextStyles: TextStyle(
-            color: Colors.white,
-            fontSize: 18.0,
-          ),
-        ), //IntroViewsFlutter
-      ), //Builder
+    return IntroViewsFlutter(
+      pages,
+      showNextButton: true,
+      showBackButton: true,
+      onTapDoneButton: () {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => HomeScreen(),
+          ), //MaterialPageRoute
+        );
+      },
+      pageButtonTextStyles: TextStyle(
+        color: Colors.white,
+        fontSize: 18.0,
+      ),
+      //Builder
     ); //Material App
   }
 }

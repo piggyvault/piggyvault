@@ -5,6 +5,7 @@ import 'package:piggy_flutter/screens/reports/categorywise_recent_months_report_
 import 'package:piggy_flutter/screens/reports/reports_service.dart';
 import 'package:rxdart/rxdart.dart';
 
+// TODO: replace with bloc package
 class ReportsBloc implements BlocBase {
   final ReportsService _reportService = ReportsService();
 

@@ -8,8 +8,10 @@ namespace Piggyvault.Users
 {
     public interface IUserAppService : IAsyncCrudAppService<UserDto, long, PagedUserResultRequestDto, CreateUserDto, UserDto>
     {
-        Task<ListResultDto<RoleDto>> GetRoles();
+        Task ChangeDefaultCurrency(ChangeUserDefaultCurrencyDto input);
 
         Task ChangeLanguage(ChangeUserLanguageDto input);
+
+        Task<ListResultDto<RoleDto>> GetRoles();
     }
 }

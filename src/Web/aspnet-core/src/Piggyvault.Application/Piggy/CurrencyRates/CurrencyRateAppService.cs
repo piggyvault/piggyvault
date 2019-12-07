@@ -1,28 +1,25 @@
 ﻿using Abp.Auditing;
-using Abp.AutoMapper;
 using Abp.Domain.Repositories;
 using Flurl;
 using Flurl.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Piggyvault.Configuration;
 using Piggyvault.Piggy.Currencies;
 using Piggyvault.Piggy.CurrencyRates.Dto;
 using Piggyvault.Piggy.Transactions;
 using Piggyvault.Piggy.Transactions.Dto;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Piggyvault.Piggy.CurrencyRateExchange
 {
+    // TODO: consider caching. Ref: https://aspnetboilerplate.com/Pages/Documents/Caching
     [DisableAuditing]
     public class CurrencyRateAppService : PiggyvaultAppServiceBase, ICurrencyRateAppService
     {
-        // TODO: Get currency exchange rate from external service like currencylayer.
-        /// <summary>
-        /// The _aed to inr.
-        /// </summary>
-        private const decimal _aedToInr = 17.63m;
-
         private readonly IRepository<CurrencyRate, Guid> _currencyRateRepository;
         private readonly PiggySettings _settings;
 
@@ -41,30 +38,34 @@ namespace Piggyvault.Piggy.CurrencyRateExchange
         /// <returns>
         /// The <see cref="decimal"/>.
         /// </returns>
-        public decimal GetAmountInDefaultCurrency(Transaction input)
+        public async Task<decimal> GetAmountInDefaultCurrency(Transaction input)
         {
-            var currencyConvertionRate = GetCurrencyConversionRate(input);
+            var currencyConvertionRate = await GetCurrencyConversionRate(input);
             return Math.Round(input.Amount * currencyConvertionRate, 2);
         }
 
-        public decimal GetCurrencyConversionRate(Transaction input)
+        public async Task<decimal> GetCurrencyConversionRate(Transaction input)
         {
-            decimal currencyConversionRate;
-            switch (input.Account.Currency.Code)
+            try
             {
-                case "INR":
-                    currencyConversionRate = 1;
-                    break;
+                var defaultCurrency = SettingManager.GetSettingValue(AppSettingNames.DefaultCurrency);
 
-                case "AED":
-                    currencyConversionRate = _aedToInr;
-                    break;
+                if (input.Account.Currency.Code == defaultCurrency)
+                {
+                    return 1;
+                }
 
-                default:
-                    currencyConversionRate = 1;
-                    break;
+                var defaultCurrencyRate = await _currencyRateRepository.GetAll().Where(r => r.Code == defaultCurrency).OrderByDescending(r => r.CreationTime).FirstOrDefaultAsync();
+
+                var inputCurrencyRate = await _currencyRateRepository.GetAll().Where(r => r.Code == input.Account.Currency.Code).OrderByDescending(r => r.CreationTime).FirstOrDefaultAsync();
+
+                return defaultCurrencyRate.Rate / inputCurrencyRate.Rate;
             }
-            return currencyConversionRate;
+            catch (Exception)
+            {
+                // TODO: log
+                return 1;
+            }
         }
 
         /// <summary>
@@ -76,14 +77,15 @@ namespace Piggyvault.Piggy.CurrencyRateExchange
         /// <returns>
         /// The <see cref="IEnumerable"/>.
         /// </returns>
-        public IEnumerable<TransactionPreviewDto> GetTransactionsWithAmountInDefaultCurrency(IEnumerable<Transaction> input)
+        public async Task<IEnumerable<TransactionPreviewDto>> GetTransactionsWithAmountInDefaultCurrency(IEnumerable<Transaction> input)
         {
             var output = new List<TransactionPreviewDto>();
 
             foreach (var transaction in input)
             {
-                var dto = transaction.MapTo<TransactionPreviewDto>();
-                dto.AmountInDefaultCurrency = GetAmountInDefaultCurrency(transaction);
+                var dto = ObjectMapper.Map<TransactionPreviewDto>(transaction);
+
+                dto.AmountInDefaultCurrency = await GetAmountInDefaultCurrency(transaction);
                 output.Add(dto);
             }
 

@@ -131,7 +131,7 @@ namespace Piggyvault.Piggy.Transactions
 
             foreach (var transaction in tenantTransactions)
             {
-                var currencyConversionRate = _currencyRateExchangeService.GetCurrencyConversionRate(transaction);
+                var currencyConversionRate = await _currencyRateExchangeService.GetCurrencyConversionRate(transaction);
                 if (transaction.Amount > 0)
                 {
                     tenantIncome += transaction.Amount * currencyConversionRate;
@@ -190,7 +190,7 @@ namespace Piggyvault.Piggy.Transactions
 
                 if (lastTransaction != null)
                 {
-                    decimal currencyConversionRate = _currencyRateExchangeService.GetCurrencyConversionRate(lastTransaction);
+                    decimal currencyConversionRate = await _currencyRateExchangeService.GetCurrencyConversionRate(lastTransaction);
 
                     var convertedAmount = lastTransaction.Balance * currencyConversionRate;
 
@@ -341,7 +341,7 @@ namespace Piggyvault.Piggy.Transactions
                                         .ThenByDescending(t => t.CreationTime)
                                         .ToListAsync();
 
-            output.Items = _currencyRateExchangeService.GetTransactionsWithAmountInDefaultCurrency(transactions).ToList();
+            output.Items = (await _currencyRateExchangeService.GetTransactionsWithAmountInDefaultCurrency(transactions)).ToList();
 
             return output;
         }

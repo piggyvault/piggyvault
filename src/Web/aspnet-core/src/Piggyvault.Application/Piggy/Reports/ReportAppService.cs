@@ -36,12 +36,6 @@ namespace Piggyvault.Piggy.Reports
         /// <summary>
         /// The get category wise transaction summary history.
         /// </summary>
-        /// <param name="input">
-        /// The input.
-        /// </param>
-        /// <returns>
-        /// The <see cref="Task"/>.
-        /// </returns>
         public async Task<Abp.Application.Services.Dto.ListResultDto<GetCategoryWiseTransactionSummaryHistoryOuputDto>> GetCategoryWiseTransactionSummaryHistory(GetCategoryWiseTransactionSummaryHistoryInputDto input)
         {
             var categoryDatasetList = new List<GetCategoryWiseTransactionSummaryHistoryOuputDto>();
@@ -77,8 +71,12 @@ namespace Piggyvault.Piggy.Reports
 
                     var transactions = await newQuery.ToListAsync();
 
-                    summaryDto.Total = transactions.Any() ? transactions.Sum(t => _currencyRateExchangeService.GetAmountInDefaultCurrency(t)) : 0;
-                    summaryDto.Transactions = transactions.MapTo<List<TransactionPreviewDto>>();
+                    foreach (var transaction in transactions)
+                    {
+                        summaryDto.Total += await _currencyRateExchangeService.GetAmountInDefaultCurrency(transaction);
+                    }
+
+                    summaryDto.Transactions = ObjectMapper.Map<List<TransactionPreviewDto>>(transactions);
                     categoryDto.Datasets.Add(summaryDto);
                 }
 

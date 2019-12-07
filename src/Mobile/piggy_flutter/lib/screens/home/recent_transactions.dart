@@ -46,9 +46,11 @@ class _RecentTransactionsPageState extends State<RecentTransactionsPage>
   @override
   void initState() {
     topBarAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
-        CurvedAnimation(
-            parent: widget.animationController,
-            curve: Interval(0, 0.5, curve: Curves.fastOutSlowIn)));
+      CurvedAnimation(
+        parent: widget.animationController,
+        curve: Interval(0, 0.5, curve: Curves.fastOutSlowIn),
+      ),
+    );
 
     listAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
         parent: widget.animationController,

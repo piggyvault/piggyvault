@@ -133,6 +133,16 @@ namespace Piggyvault.Users
             return new ListResultDto<RoleDto>(ObjectMapper.Map<List<RoleDto>>(roles));
         }
 
+        public async Task<UserSettingsDto> GetUserSettings()
+        {
+            var output = new UserSettingsDto
+            {
+                DefaultCurrencyCode = await SettingManager.GetSettingValueAsync(AppSettingNames.DefaultCurrency)
+            };
+
+            return output;
+        }
+
         [AbpAuthorize(PermissionNames.Pages_Users)]
         public async Task<bool> ResetPassword(ResetPasswordDto input)
         {

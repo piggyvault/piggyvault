@@ -13,5 +13,7 @@ namespace Piggyvault.Users
         Task ChangeLanguage(ChangeUserLanguageDto input);
 
         Task<ListResultDto<RoleDto>> GetRoles();
+
+        Task<UserSettingsDto> GetUserSettings();
     }
 }

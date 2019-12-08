@@ -8,7 +8,10 @@ import 'package:piggy_flutter/widgets/common/message_placeholder.dart';
 import 'package:piggy_flutter/utils/common.dart';
 
 class CategoryListPage extends StatelessWidget {
-  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  final AnimationController animationController;
+
+  const CategoryListPage({Key key, @required this.animationController})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -32,12 +35,13 @@ class CategoryListPage extends StatelessWidget {
     // }).asBroadcastStream();
 
     return new Scaffold(
-      key: _scaffoldKey,
       appBar: new AppBar(
         title: Text('Categories'),
       ),
       body: _categoryListBuilder(),
-      drawer: CommonDrawer(),
+      drawer: CommonDrawer(
+        animationController: animationController,
+      ),
       floatingActionButton: FloatingActionButton(
           key: ValueKey<Color>(Theme.of(context).buttonColor),
           tooltip: 'Add new category',

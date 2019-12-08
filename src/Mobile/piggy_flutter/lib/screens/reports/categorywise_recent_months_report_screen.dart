@@ -24,8 +24,14 @@ class CategoryWiseRecentMonthsReportItem {
 }
 
 class CategoryWiseRecentMonthsReportScreen extends StatefulWidget {
+  final AnimationController animationController;
+
   static const String routeName =
       '/reports/categorywise-recent-months-report-screen';
+
+  const CategoryWiseRecentMonthsReportScreen(
+      {Key key, @required this.animationController})
+      : super(key: key);
 
   @override
   _CategoryWiseRecentMonthsReportScreenState createState() =>
@@ -68,29 +74,29 @@ class _CategoryWiseRecentMonthsReportScreenState
                     rows: snapshot.data
                         .map(
                           (item) => DataRow(
-                                cells: [
-                                  DataCell(
-                                    Text(item.categoryName),
-                                    showEditIcon: false,
-                                    placeholder: false,
-                                  ),
-                                  DataCell(
-                                    Text(item.datasets[0].total.toString()),
-                                    showEditIcon: false,
-                                    placeholder: false,
-                                  ),
-                                  DataCell(
-                                    Text(item.datasets[1].total.toString()),
-                                    showEditIcon: false,
-                                    placeholder: false,
-                                  ),
-                                  DataCell(
-                                    Text(item.datasets[2].total.toString()),
-                                    showEditIcon: false,
-                                    placeholder: false,
-                                  )
-                                ],
+                            cells: [
+                              DataCell(
+                                Text(item.categoryName),
+                                showEditIcon: false,
+                                placeholder: false,
                               ),
+                              DataCell(
+                                Text(item.datasets[0].total.toString()),
+                                showEditIcon: false,
+                                placeholder: false,
+                              ),
+                              DataCell(
+                                Text(item.datasets[1].total.toString()),
+                                showEditIcon: false,
+                                placeholder: false,
+                              ),
+                              DataCell(
+                                Text(item.datasets[2].total.toString()),
+                                showEditIcon: false,
+                                placeholder: false,
+                              )
+                            ],
+                          ),
                         )
                         .toList()),
               )
@@ -108,7 +114,9 @@ class _CategoryWiseRecentMonthsReportScreenState
     return Scaffold(
       appBar: AppBar(title: const Text('Categorywise Recent Months')),
       body: bodyData(),
-      drawer: CommonDrawer(),
+      drawer: CommonDrawer(
+        animationController: widget.animationController,
+      ),
     );
   }
 

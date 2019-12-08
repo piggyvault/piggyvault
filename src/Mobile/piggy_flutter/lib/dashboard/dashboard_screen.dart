@@ -8,7 +8,6 @@ import 'package:piggy_flutter/blocs/transaction/transaction.dart';
 import 'package:piggy_flutter/blocs/transaction_summary/transaction_summary_bloc.dart';
 import 'package:piggy_flutter/blocs/transaction_summary/transaction_summary_state.dart';
 import 'package:piggy_flutter/dashboard/index.dart';
-import 'package:piggy_flutter/screens/reports/categorywise_recent_months_report_screen.dart';
 import 'package:piggy_flutter/screens/transaction/transaction_form.dart';
 import 'package:piggy_flutter/utils/common.dart';
 
@@ -296,33 +295,31 @@ class DashboardScreenState extends State<DashboardScreen> {
               _balanceTile(),
               _transactionsCountTile(),
               _buildTile(
-                  Padding(
-                    padding: const EdgeInsets.all(24.0),
-                    child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Material(
-                              color: Colors.amber,
-                              shape: CircleBorder(),
-                              child: Padding(
-                                padding: EdgeInsets.all(16.0),
-                                child: Icon(Icons.multiline_chart,
-                                    color: Colors.white, size: 30.0),
-                              )),
-                          Padding(padding: EdgeInsets.only(bottom: 16.0)),
-                          Text('Reports',
-                              style: TextStyle(
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.w700,
-                                  fontSize: 24.0)),
-                          Text('Categorywise Recent',
-                              style: TextStyle(color: Colors.black45)),
-                        ]),
-                  ),
-                  onTap: (() => Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) =>
-                          CategoryWiseRecentMonthsReportScreen())))),
+                Padding(
+                  padding: const EdgeInsets.all(24.0),
+                  child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Material(
+                            color: Colors.amber,
+                            shape: CircleBorder(),
+                            child: Padding(
+                              padding: EdgeInsets.all(16.0),
+                              child: Icon(Icons.multiline_chart,
+                                  color: Colors.white, size: 30.0),
+                            )),
+                        Padding(padding: EdgeInsets.only(bottom: 16.0)),
+                        Text('Reports',
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.w700,
+                                fontSize: 24.0)),
+                        Text('Categorywise Recent',
+                            style: TextStyle(color: Colors.black45)),
+                      ]),
+                ),
+              ),
               _buildTile(
                 Padding(
                     padding: const EdgeInsets.all(24.0),

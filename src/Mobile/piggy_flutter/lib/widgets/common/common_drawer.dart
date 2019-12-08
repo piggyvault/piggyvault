@@ -77,8 +77,13 @@ class CommonDrawer extends StatelessWidget {
               Icons.insert_chart,
               color: Colors.amber,
             ),
-            onTap: (() => Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => CategoryWiseRecentMonthsReportScreen()))),
+            onTap: (() => Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => CategoryWiseRecentMonthsReportScreen(
+                      animationController: animationController,
+                    ),
+                  ),
+                )),
           ),
           ListTile(
             title: Text(
@@ -121,8 +126,13 @@ class CommonDrawer extends StatelessWidget {
           Icons.category,
           color: Colors.cyan,
         ),
-        onTap: (() => Navigator.of(context)
-            .push(MaterialPageRoute(builder: (context) => CategoryListPage()))),
+        onTap: (() => Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => CategoryListPage(
+                  animationController: animationController,
+                ),
+              ),
+            )),
         trailing: BlocBuilder<CategoriesBloc, CategoriesState>(
             builder: (context, state) {
           if (state is CategoriesLoaded) {

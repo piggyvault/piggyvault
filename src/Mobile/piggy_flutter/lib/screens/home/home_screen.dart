@@ -124,7 +124,9 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             }
           },
         ),
-        drawer: CommonDrawer(),
+        drawer: CommonDrawer(
+          animationController: animationController,
+        ),
       ),
     );
   }

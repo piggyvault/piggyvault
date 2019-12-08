@@ -125,6 +125,9 @@ class App extends StatelessWidget {
         RepositoryProvider<AccountRepository>(
           builder: (context) => accountRepository,
         ),
+        RepositoryProvider<UserRepository>(
+          builder: (context) => userRepository,
+        ),
       ],
       child: MaterialApp(
         title: 'Piggy',

@@ -15,3 +15,7 @@ export 'transactions_result.dart';
 export 'transaction.dart';
 export 'get_transactions_input.dart';
 export 'start_page.dart';
+export 'account_form_model.dart';
+export 'account_type_model.dart';
+export 'currency.dart';
+export 'user_settings.dart';

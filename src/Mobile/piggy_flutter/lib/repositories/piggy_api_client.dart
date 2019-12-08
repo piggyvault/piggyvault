@@ -166,6 +166,65 @@ class PiggyApiClient {
     return null;
   }
 
+  Future<ApiResponse<dynamic>> createOrUpdateAccount(
+      AccountFormModel input) async {
+    print(input);
+    final result = await postAsync(
+        '$baseUrl/api/services/app/account/CreateOrUpdateAccount', {
+      "account": {
+        "id": input.id,
+        "name": input.name,
+        "currencyId": input.currencyId,
+        "accountTypeId": input.accountTypeId
+      }
+    });
+
+    return result;
+  }
+
+  Future<List<Currency>> getCurrencies() async {
+    List<Currency> currencies = [];
+    var result =
+        await getAsync('$baseUrl/api/services/app/currency/GetCurrencies');
+
+    if (result.success) {
+      currencies = result.result['items']
+          .map<Currency>((currency) => Currency.fromJson(currency))
+          .toList();
+    }
+    return currencies;
+  }
+
+  Future<List<AccountType>> getAccountTypes() async {
+    List<AccountType> output = [];
+    var result =
+        await getAsync('$baseUrl/api/services/app/account/GetAccountTypes');
+
+    if (result.success) {
+      output = result.result['items']
+          .map<AccountType>((item) => AccountType.fromJson(item))
+          .toList();
+    }
+    return output;
+  }
+
+  // USER
+  Future<UserSettings> getUserSettings() async {
+    var result = await getAsync('$baseUrl/api/services/app/User/GetSettings');
+
+    if (result.success) {
+      return UserSettings.fromJson(result.result);
+    }
+    return null;
+  }
+
+  Future<void> changeDefaultCurrency(String currencyCode) async {
+    final result = await postAsync(
+        '$baseUrl/api/services/app/User/ChangeDefaultCurrency',
+        {"currencyCode": currencyCode});
+    return result;
+  }
+
 // utils
 
   Future<ApiResponse<T>> getAsync<T>(String resourcePath) async {

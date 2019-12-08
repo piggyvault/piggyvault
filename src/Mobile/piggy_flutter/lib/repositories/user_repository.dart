@@ -63,4 +63,12 @@ class UserRepository {
     await prefs.setString(UIData.authToken, token);
     return;
   }
+
+  Future<UserSettings> getUserSettings() async {
+    return await piggyApiClient.getUserSettings();
+  }
+
+  Future<void> changeDefaultCurrency(String currencyCode) async {
+    return await piggyApiClient.changeDefaultCurrency(currencyCode);
+  }
 }

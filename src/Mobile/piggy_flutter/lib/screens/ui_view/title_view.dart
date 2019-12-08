@@ -1,19 +1,25 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import '../fintness_app_theme.dart';
+
+typedef TitleViewCallback = FutureOr<void> Function();
 
 class TitleView extends StatelessWidget {
   final String titleTxt;
   final String subTxt;
   final AnimationController animationController;
   final Animation animation;
+  final TitleViewCallback onPress;
 
   const TitleView(
       {Key key,
       this.titleTxt: "",
       this.subTxt: "",
       this.animationController,
-      this.animation})
+      this.animation,
+      this.onPress})
       : super(key: key);
 
   @override
@@ -47,7 +53,22 @@ class TitleView extends StatelessWidget {
                     InkWell(
                       highlightColor: Colors.transparent,
                       borderRadius: BorderRadius.all(Radius.circular(4.0)),
-                      onTap: () {},
+                      onTap: () async {
+                        if (this.onPress != null) {
+                          // setState(() {
+                          //   pressed = true;
+                          // });
+                          await this.onPress();
+                          // Future.delayed(
+                          //   Duration(milliseconds: 150),
+                          //   () {
+                          //     setState(() {
+                          //       pressed = false;
+                          //     });
+                          //   },
+                          // );
+                        }
+                      },
                       child: Padding(
                         padding: const EdgeInsets.only(left: 8),
                         child: Row(

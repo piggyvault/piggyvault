@@ -8,11 +8,17 @@ import 'package:piggy_flutter/models/models.dart';
 import 'package:piggy_flutter/screens/category/category_list.dart';
 import 'package:piggy_flutter/screens/home/home_screen.dart';
 import 'package:piggy_flutter/screens/reports/categorywise_recent_months_report_screen.dart';
+import 'package:piggy_flutter/screens/settings/settings_screen.dart';
 import 'package:piggy_flutter/widgets/about_tile.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class CommonDrawer extends StatelessWidget {
-  final menuTextStyle = TextStyle(fontWeight: FontWeight.w700, fontSize: 18.0);
+  final menuTextStyle =
+      const TextStyle(fontWeight: FontWeight.w700, fontSize: 18.0);
+  final AnimationController animationController;
+
+  const CommonDrawer({Key key, @required this.animationController})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -73,6 +79,16 @@ class CommonDrawer extends StatelessWidget {
             ),
             onTap: (() => Navigator.of(context).push(MaterialPageRoute(
                 builder: (context) => CategoryWiseRecentMonthsReportScreen()))),
+          ),
+          ListTile(
+            title: Text(
+              "Settings",
+              style: menuTextStyle,
+            ),
+            leading: Icon(Icons.settings, color: Colors.brown),
+            onTap: (() => Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) =>
+                    SettingsScreen(animationController: animationController)))),
           ),
           Divider(),
           ListTile(

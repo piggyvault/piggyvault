@@ -17,4 +17,17 @@ class AccountRepository {
   Future<Account> getAccountDetails(String accountId) async {
     return await piggyApiClient.getAccountDetails(accountId);
   }
+
+  Future<ApiResponse<dynamic>> createOrUpdateAccount(
+      AccountFormModel input) async {
+    return await piggyApiClient.createOrUpdateAccount(input);
+  }
+
+  Future<List<Currency>> getCurrencies() async {
+    return await piggyApiClient.getCurrencies();
+  }
+
+  Future<List<AccountType>> getAccountTypes() async {
+    return await piggyApiClient.getAccountTypes();
+  }
 }

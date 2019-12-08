@@ -14,6 +14,6 @@ namespace Piggyvault.Users
 
         Task<ListResultDto<RoleDto>> GetRoles();
 
-        Task<UserSettingsDto> GetUserSettings();
+        Task<UserSettingsDto> GetSettings();
     }
 }

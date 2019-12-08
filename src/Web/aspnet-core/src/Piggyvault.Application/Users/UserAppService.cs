@@ -133,7 +133,7 @@ namespace Piggyvault.Users
             return new ListResultDto<RoleDto>(ObjectMapper.Map<List<RoleDto>>(roles));
         }
 
-        public async Task<UserSettingsDto> GetUserSettings()
+        public async Task<UserSettingsDto> GetSettings()
         {
             var output = new UserSettingsDto
             {

@@ -123,7 +123,7 @@ class TransactionDetailPageState extends State<TransactionDetailPage> {
                               child: new AlertDialog(
                                   title: const Text('Delete Transaction?'),
                                   content: new Text(
-                                      'Are you sure you want to delete transaction with description "${widget.transaction.description}" and amount ${widget.transaction.amount.toString()}${widget.transaction.accountCurrencySymbol}',
+                                      'Are you sure you want to delete transaction "${widget.transaction.description}" - ${widget.transaction.amount.toString()}${widget.transaction.accountCurrencySymbol}',
                                       style: dialogTextStyle),
                                   actions: <Widget>[
                                     new FlatButton(

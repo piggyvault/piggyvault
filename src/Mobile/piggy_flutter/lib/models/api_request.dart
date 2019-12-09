@@ -4,8 +4,6 @@ enum ApiType {
   createOrUpdateTransaction,
   createCategory,
   updateCategory,
-  deleteTransaction,
-  login,
   createAccount,
   updateAccount
 }

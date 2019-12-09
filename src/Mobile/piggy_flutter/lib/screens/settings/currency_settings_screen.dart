@@ -109,8 +109,6 @@ class _CurrencySettingsScreenState extends State<CurrencySettingsScreen>
   }
 
   void addAllListData() {
-    const int count = 1;
-
     listViews.add(
       BlocBuilder(
         bloc: currenciesBloc,

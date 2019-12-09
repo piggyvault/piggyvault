@@ -1,7 +1,9 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:piggy_flutter/blocs/transaction_detail/bloc.dart';
 import 'package:piggy_flutter/models/transaction.dart';
 import 'package:piggy_flutter/models/transaction_group_item.dart';
 import 'package:piggy_flutter/screens/transaction/transaction_detail.dart';
@@ -120,6 +122,8 @@ class TransactionList extends StatelessWidget {
                 context,
                 MaterialPageRoute(
                   builder: (BuildContext context) => TransactionDetailPage(
+                    transactionDetailBloc:
+                        BlocProvider.of<TransactionDetailBloc>(context),
                     transaction: transaction,
                   ),
                   fullscreenDialog: true,

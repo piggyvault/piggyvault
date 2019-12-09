@@ -3,6 +3,7 @@ import 'package:bloc/bloc.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:piggy_flutter/blocs/auth/auth.dart';
 import 'package:piggy_flutter/blocs/transaction/transaction.dart';
+import 'package:piggy_flutter/blocs/transaction_detail/bloc.dart';
 import 'package:piggy_flutter/blocs/transaction_summary/transaction_summary.dart';
 import 'dart:developer' as developer;
 
@@ -16,15 +17,20 @@ class TransactionSummaryBloc
   final TransactionBloc transactionsBloc;
   StreamSubscription transactionBlocSubscription;
 
+  final TransactionDetailBloc transactionDetailBloc;
+  StreamSubscription transactionDetailBlocSubscription;
+
   final TransactionRepository transactionRepository;
 
   TransactionSummaryBloc(
       {@required this.transactionRepository,
       @required this.authBloc,
-      @required this.transactionsBloc})
+      @required this.transactionsBloc,
+      @required this.transactionDetailBloc})
       : assert(transactionRepository != null),
         assert(authBloc != null),
-        assert(transactionsBloc != null) {
+        assert(transactionsBloc != null),
+        assert(transactionDetailBloc != null) {
     authBlocSubscription = authBloc.listen((state) {
       if (state is AuthAuthenticated) {
         add(RefreshTransactionSummary());
@@ -33,6 +39,12 @@ class TransactionSummaryBloc
 
     transactionBlocSubscription = transactionsBloc.listen((state) {
       if (state is TransactionSaved) {
+        add(RefreshTransactionSummary());
+      }
+    });
+
+    transactionDetailBlocSubscription = transactionDetailBloc.listen((state) {
+      if (state is TransactionDeleted) {
         add(RefreshTransactionSummary());
       }
     });
@@ -60,6 +72,7 @@ class TransactionSummaryBloc
   @override
   Future<void> close() {
     authBlocSubscription.cancel();
+    transactionDetailBlocSubscription.cancel();
     transactionBlocSubscription.cancel();
     return super.close();
   }

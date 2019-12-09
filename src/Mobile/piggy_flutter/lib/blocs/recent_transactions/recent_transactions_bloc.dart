@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
 import 'package:piggy_flutter/blocs/auth/auth.dart';
 import 'package:piggy_flutter/blocs/transaction/transaction.dart';
+import 'package:piggy_flutter/blocs/transaction_detail/bloc.dart';
 import 'package:piggy_flutter/models/models.dart';
 import 'package:piggy_flutter/repositories/repositories.dart';
 import './bloc.dart';
@@ -18,13 +19,19 @@ class RecentTransactionsBloc
   final TransactionBloc transactionsBloc;
   StreamSubscription transactionBlocSubscription;
 
+  final TransactionDetailBloc transactionDetailBloc;
+  StreamSubscription transactionDetailBlocSubscription;
+
   RecentTransactionsBloc(
       {@required this.transactionRepository,
       @required this.authBloc,
-      @required this.transactionsBloc})
+      @required this.transactionsBloc,
+      @required this.transactionDetailBloc})
       : assert(transactionRepository != null),
         assert(authBloc != null),
-        assert(transactionsBloc != null) {
+        assert(transactionsBloc != null),
+        assert(transactionDetailBloc != null) {
+    // TODO: DRY
     authBlocSubscription = authBloc.listen((state) {
       if (state is AuthAuthenticated) {
         add(FetchRecentTransactions(
@@ -39,6 +46,18 @@ class RecentTransactionsBloc
 
     transactionBlocSubscription = transactionsBloc.listen((state) {
       if (state is TransactionSaved) {
+        add(FetchRecentTransactions(
+            input: GetTransactionsInput(
+                type: 'tenant',
+                accountId: null,
+                startDate: DateTime.now().add(Duration(days: -30)),
+                endDate: DateTime.now().add(Duration(days: 1)),
+                groupBy: TransactionsGroupBy.Date)));
+      }
+    });
+
+    transactionDetailBlocSubscription = transactionDetailBloc.listen((state) {
+      if (state is TransactionDeleted) {
         add(FetchRecentTransactions(
             input: GetTransactionsInput(
                 type: 'tenant',
@@ -144,6 +163,7 @@ class RecentTransactionsBloc
   Future<void> close() {
     authBlocSubscription.cancel();
     transactionBlocSubscription.cancel();
+    transactionDetailBlocSubscription.cancel();
     return super.close();
   }
 }

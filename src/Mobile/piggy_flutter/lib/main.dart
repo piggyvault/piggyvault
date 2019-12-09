@@ -8,6 +8,7 @@ import 'package:piggy_flutter/blocs/auth/auth.dart';
 import 'package:piggy_flutter/blocs/categories/categories_bloc.dart';
 import 'package:piggy_flutter/blocs/recent_transactions/recent_transactions_bloc.dart';
 import 'package:piggy_flutter/blocs/transaction/transaction_bloc.dart';
+import 'package:piggy_flutter/blocs/transaction_detail/bloc.dart';
 import 'package:piggy_flutter/blocs/transaction_summary/transaction_summary_bloc.dart';
 import 'package:piggy_flutter/dashboard/dashboard_bloc.dart';
 import 'package:piggy_flutter/repositories/repositories.dart';
@@ -68,6 +69,10 @@ Future<void> main() async {
         builder: (context) =>
             TransactionBloc(transactionRepository: transactionRepository),
       ),
+      BlocProvider<TransactionDetailBloc>(
+        builder: (context) =>
+            TransactionDetailBloc(transactionRepository: transactionRepository),
+      ),
       BlocProvider<CategoriesBloc>(
           builder: (context) => CategoriesBloc(
               categoryRepository: categoryRepository,
@@ -76,15 +81,21 @@ Future<void> main() async {
           builder: (context) => AccountsBloc(
               accountRepository: accountRepository,
               transactionsBloc: BlocProvider.of<TransactionBloc>(context),
+              transactionDetailBloc:
+                  BlocProvider.of<TransactionDetailBloc>(context),
               authBloc: BlocProvider.of<AuthBloc>(context))),
       BlocProvider<RecentTransactionsBloc>(
         builder: (context) => RecentTransactionsBloc(
+            transactionDetailBloc:
+                BlocProvider.of<TransactionDetailBloc>(context),
             transactionRepository: transactionRepository,
             transactionsBloc: BlocProvider.of<TransactionBloc>(context),
             authBloc: BlocProvider.of<AuthBloc>(context)),
       ),
       BlocProvider<TransactionSummaryBloc>(
         builder: (context) => TransactionSummaryBloc(
+            transactionDetailBloc:
+                BlocProvider.of<TransactionDetailBloc>(context),
             transactionsBloc: BlocProvider.of<TransactionBloc>(context),
             authBloc: BlocProvider.of<AuthBloc>(context),
             transactionRepository: transactionRepository),

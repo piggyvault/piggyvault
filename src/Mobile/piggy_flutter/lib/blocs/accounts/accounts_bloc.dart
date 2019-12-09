@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:piggy_flutter/blocs/accounts/accounts.dart';
 import 'package:piggy_flutter/blocs/auth/auth.dart';
 import 'package:piggy_flutter/blocs/transaction/transaction.dart';
+import 'package:piggy_flutter/blocs/transaction_detail/bloc.dart';
 import 'package:piggy_flutter/repositories/repositories.dart';
 
 class AccountsBloc extends Bloc<AccountsEvent, AccountsState> {
@@ -16,13 +17,18 @@ class AccountsBloc extends Bloc<AccountsEvent, AccountsState> {
   final TransactionBloc transactionsBloc;
   StreamSubscription transactionBlocSubscription;
 
+  final TransactionDetailBloc transactionDetailBloc;
+  StreamSubscription transactionDetailBlocSubscription;
+
   AccountsBloc(
       {@required this.accountRepository,
       @required this.authBloc,
-      @required this.transactionsBloc})
+      @required this.transactionsBloc,
+      @required this.transactionDetailBloc})
       : assert(accountRepository != null),
         assert(authBloc != null),
-        assert(transactionsBloc != null) {
+        assert(transactionsBloc != null),
+        assert(transactionDetailBloc != null) {
     authBlocSubscription = authBloc.listen((state) {
       if (state is AuthAuthenticated) {
         add(LoadAccounts());
@@ -31,6 +37,12 @@ class AccountsBloc extends Bloc<AccountsEvent, AccountsState> {
 
     transactionBlocSubscription = transactionsBloc.listen((state) {
       if (state is TransactionSaved) {
+        add(LoadAccounts());
+      }
+    });
+
+    transactionDetailBlocSubscription = transactionDetailBloc.listen((state) {
+      if (state is TransactionDeleted) {
         add(LoadAccounts());
       }
     });
@@ -62,6 +74,7 @@ class AccountsBloc extends Bloc<AccountsEvent, AccountsState> {
   Future<void> close() {
     authBlocSubscription.cancel();
     transactionBlocSubscription.cancel();
+    transactionDetailBlocSubscription.cancel();
     return super.close();
   }
 }

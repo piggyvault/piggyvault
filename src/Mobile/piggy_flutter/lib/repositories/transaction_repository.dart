@@ -34,6 +34,20 @@ class TransactionRepository {
         transactions: transactions);
   }
 
+  Future<void> deleteTransaction(String id) async {
+    await piggyApiClient.deleteTransaction(id);
+  }
+
+  Future<void> createOrUpdateTransactionComment(
+      String transactionId, String content) async {
+    await piggyApiClient.createOrUpdateTransactionComment(
+        transactionId, content);
+  }
+
+  Future<List<TransactionComment>> getTransactionComments(String id) async {
+    return await piggyApiClient.getTransactionComments(id);
+  }
+
   // Utils
 
   List<TransactionGroupItem> groupTransactions(

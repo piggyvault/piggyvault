@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:piggy_flutter/blocs/transaction/transaction.dart';
+import 'package:piggy_flutter/blocs/transaction_detail/bloc.dart';
 import 'package:piggy_flutter/dashboard/dashboard_page.dart';
 import 'package:piggy_flutter/models/models.dart';
 import 'package:piggy_flutter/screens/account/account_list.dart';
@@ -162,6 +163,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             new MaterialPageRoute(
               builder: (BuildContext context) => TransactionDetailPage(
                 transaction: transaction,
+                transactionDetailBloc:
+                    BlocProvider.of<TransactionDetailBloc>(context),
               ),
               fullscreenDialog: true,
             ));

@@ -9,6 +9,7 @@ import 'package:piggy_flutter/widgets/common/common_dialogs.dart';
 import 'package:piggy_flutter/utils/uidata.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
+// TODO: revisit apiSubscription
 apiSubscription(
     {@required Stream<ApiRequest> stream,
     @required BuildContext context,
@@ -22,37 +23,14 @@ apiSubscription(
       if (p.response.success == false) {
         showError(context, p.response);
       } else {
-        // final HomeBloc homeBloc =
-        //     oldProvider.BlocProvider.of<HomeBloc>(context);
         final AccountsBloc accountsBloc =
             BlocProvider.of<AccountsBloc>(context);
 
         switch (p.type) {
-          case ApiType.login:
-            {
-              if (p.response.result == null) {
-                showErrorMessage(
-                    key: key,
-                    errorMessage:
-                        'Something went wrong, check the credentials and try again.');
-              } else {
-                // Navigator.pushReplacement(
-                //   context,
-                //   MaterialPageRoute(
-                //     builder: (context) => HomePage(
-                //       isInitialLoading: true,
-                //     ),
-                //   ),
-                // );
-              }
-            }
-            break;
           case ApiType.createOrUpdateTransaction:
-          case ApiType.deleteTransaction:
           case ApiType.updateAccount:
             {
               accountsBloc.add(LoadAccounts());
-              // homeBloc.syncData(true);
               showSuccess(
                   context: context,
                   message: UIData.success,

@@ -18,7 +18,7 @@ class PiggyApiClient {
   Future<IsTenantAvailableResult> isTenantAvailable(String tenancyName) async {
     final tenantUrl = '$baseUrl/api/services/app/Account/IsTenantAvailable';
     final response =
-        await this.postAsync(tenantUrl, {"tenancyName": tenancyName});
+        await this.postAsync<dynamic>(tenantUrl, {"tenancyName": tenancyName});
 
     if (!response.success) {
       throw Exception('invalid credentials');
@@ -31,7 +31,7 @@ class PiggyApiClient {
       {@required String usernameOrEmailAddress,
       @required String password}) async {
     final loginUrl = '$baseUrl/api/TokenAuth/Authenticate';
-    final loginResult = await this.postAsync(loginUrl, {
+    final loginResult = await this.postAsync<dynamic>(loginUrl, {
       "usernameOrEmailAddress": usernameOrEmailAddress,
       "password": password,
       "rememberClient": true
@@ -46,7 +46,7 @@ class PiggyApiClient {
   Future<User> getCurrentLoginInformations() async {
     final userUrl =
         '$baseUrl/api/services/app/session/GetCurrentLoginInformations';
-    final response = await this.getAsync(userUrl);
+    final response = await this.getAsync<dynamic>(userUrl);
 
     if (response.success && response.result['user'] != null) {
       return User.fromJson(response.result['user']);
@@ -197,8 +197,8 @@ class PiggyApiClient {
 
   Future<List<AccountType>> getAccountTypes() async {
     List<AccountType> output = [];
-    var result =
-        await getAsync('$baseUrl/api/services/app/account/GetAccountTypes');
+    var result = await getAsync<dynamic>(
+        '$baseUrl/api/services/app/account/GetAccountTypes');
 
     if (result.success) {
       output = result.result['items']
@@ -208,9 +208,41 @@ class PiggyApiClient {
     return output;
   }
 
+  // Transaction
+  Future<void> deleteTransaction(String id) async {
+    final result = await deleteAsync<dynamic>(
+        '$baseUrl/api/services/app/transaction/DeleteTransaction?id=$id');
+
+    return result;
+  }
+
+  Future<void> createOrUpdateTransactionComment(
+      String transactionId, String content) async {
+    await postAsync<dynamic>(
+        '$baseUrl/api/services/app/transaction/CreateOrUpdateTransactionComment',
+        {
+          "transactionId": transactionId,
+          "content": content,
+        });
+  }
+
+  Future<List<TransactionComment>> getTransactionComments(String id) async {
+    var comments = List<TransactionComment>();
+    var result = await getAsync<dynamic>(
+        '$baseUrl/api/services/app/transaction/GetTransactionComments?id=$id');
+    if (result.success) {
+      result.result['items'].forEach((comment) {
+        comments.add(TransactionComment.fromJson(comment));
+      });
+    }
+
+    return comments;
+  }
+
   // USER
   Future<UserSettings> getUserSettings() async {
-    var result = await getAsync('$baseUrl/api/services/app/User/GetSettings');
+    var result =
+        await getAsync<dynamic>('$baseUrl/api/services/app/User/GetSettings');
 
     if (result.success) {
       return UserSettings.fromJson(result.result);
@@ -219,7 +251,7 @@ class PiggyApiClient {
   }
 
   Future<void> changeDefaultCurrency(String currencyCode) async {
-    final result = await postAsync(
+    final result = await postAsync<dynamic>(
         '$baseUrl/api/services/app/User/ChangeDefaultCurrency',
         {"currencyCode": currencyCode});
     return result;
@@ -266,6 +298,34 @@ class PiggyApiClient {
     // print(content);
     var response =
         await http.post(resourcePath, body: content, headers: headers);
+    return processResponse<T>(response);
+  }
+
+  Future<ApiResponse<T>> deleteAsync<T>(String resourcePath) async {
+    final prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString(UIData.authToken);
+    var tenantId = prefs.getInt(UIData.tenantId);
+
+    Map<String, String> headers;
+
+    if (token == null) {
+      // TODO: throw exception
+      headers = {
+        'Content-type': 'application/json',
+        'Accept': 'application/json',
+        'Piggy-TenantId': tenantId.toString()
+      };
+    } else {
+      headers = {
+        'Content-type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $token',
+        'Piggy-TenantId': tenantId.toString()
+      };
+    }
+
+    // print(content);
+    var response = await http.delete(resourcePath, headers: headers);
     return processResponse<T>(response);
   }
 

@@ -2,3 +2,4 @@
 .DS_Store
 src/Web/aspnet-core/src/Piggyvault.Web.Host/appsettings.Production.json
 src/Web/aspnet-core/src/Piggyvault.Web.Host/appsettings.Development.json
+src/Mobile/piggy_flutter/.flutter-plugins-dependencies

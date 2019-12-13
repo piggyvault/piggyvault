@@ -259,131 +259,132 @@ class DashboardScreenState extends State<DashboardScreen> {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<DashboardBloc, DashboardState>(
-        bloc: widget._dashboardBloc,
-        builder: (
-          BuildContext context,
-          DashboardState currentState,
-        ) {
-          if (currentState is UnDashboardState) {
-            return Center(
-              child: CircularProgressIndicator(),
-            );
-          }
-          if (currentState is ErrorDashboardState) {
-            return Center(
-                child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Text(currentState.errorMessage ?? 'Error'),
-                Padding(
-                  padding: const EdgeInsets.only(top: 32.0),
-                  child: RaisedButton(
-                    color: Colors.blue,
-                    child: Text("reload"),
-                    onPressed: () => this._load(),
-                  ),
-                ),
-              ],
-            ));
-          }
-          return StaggeredGridView.count(
-            crossAxisCount: 2,
-            crossAxisSpacing: 12.0,
-            mainAxisSpacing: 12.0,
-            padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+      bloc: widget._dashboardBloc,
+      builder: (
+        BuildContext context,
+        DashboardState currentState,
+      ) {
+        if (currentState is UnDashboardState) {
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        }
+        if (currentState is ErrorDashboardState) {
+          return Center(
+              child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              _balanceTile(),
-              _transactionsCountTile(),
-              _buildTile(
-                Padding(
+              Text(currentState.errorMessage ?? 'Error'),
+              Padding(
+                padding: const EdgeInsets.only(top: 32.0),
+                child: RaisedButton(
+                  color: Colors.blue,
+                  child: Text("reload"),
+                  onPressed: () => this._load(),
+                ),
+              ),
+            ],
+          ));
+        }
+        return StaggeredGridView.count(
+          crossAxisCount: 2,
+          crossAxisSpacing: 12.0,
+          mainAxisSpacing: 12.0,
+          padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+          children: <Widget>[
+            _balanceTile(),
+            _transactionsCountTile(),
+            _buildTile(
+              Padding(
+                padding: const EdgeInsets.all(24.0),
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Material(
+                          color: Colors.amber,
+                          shape: CircleBorder(),
+                          child: Padding(
+                            padding: EdgeInsets.all(16.0),
+                            child: Icon(Icons.multiline_chart,
+                                color: Colors.white, size: 30.0),
+                          )),
+                      Padding(padding: EdgeInsets.only(bottom: 16.0)),
+                      Text('Reports',
+                          style: TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.w700,
+                              fontSize: 24.0)),
+                      Text('Categorywise Recent',
+                          style: TextStyle(color: Colors.black45)),
+                    ]),
+              ),
+            ),
+            _buildTile(
+              Padding(
                   padding: const EdgeInsets.all(24.0),
                   child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Material(
-                            color: Colors.amber,
-                            shape: CircleBorder(),
-                            child: Padding(
-                              padding: EdgeInsets.all(16.0),
-                              child: Icon(Icons.multiline_chart,
-                                  color: Colors.white, size: 30.0),
-                            )),
-                        Padding(padding: EdgeInsets.only(bottom: 16.0)),
-                        Text('Reports',
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.w700,
-                                fontSize: 24.0)),
-                        Text('Categorywise Recent',
-                            style: TextStyle(color: Colors.black45)),
-                      ]),
-                ),
-              ),
-              _buildTile(
-                Padding(
-                    padding: const EdgeInsets.all(24.0),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                Text('Expense',
-                                    style: TextStyle(color: Colors.green)),
-                                Text('\$16K',
-                                    style: TextStyle(
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.w700,
-                                        fontSize: 34.0)),
-                              ],
-                            ),
-                            DropdownButton(
-                                isDense: true,
-                                value: actualDropdown,
-                                onChanged: (String value) => setState(() {
-                                      actualDropdown = value;
-                                      actualChart = chartDropdownItems
-                                          .indexOf(value); // Refresh the chart
-                                    }),
-                                items: chartDropdownItems.map((String title) {
-                                  return DropdownMenuItem(
-                                    value: title,
-                                    child: Text(title,
-                                        style: TextStyle(
-                                            color: Colors.blue,
-                                            fontWeight: FontWeight.w400,
-                                            fontSize: 14.0)),
-                                  );
-                                }).toList())
-                          ],
-                        ),
-                        Padding(padding: EdgeInsets.only(bottom: 4.0)),
-                        Sparkline(
-                          data: charts[actualChart],
-                          lineWidth: 5.0,
-                          lineColor: Colors.greenAccent,
-                        )
-                      ],
-                    )),
-              ),
-              _lastTransactionTile()
-            ],
-            staggeredTiles: [
-              StaggeredTile.extent(2, 110.0),
-              StaggeredTile.extent(1, 180.0),
-              StaggeredTile.extent(1, 180.0),
-              StaggeredTile.extent(2, 220.0),
-              StaggeredTile.extent(2, 110.0),
-            ],
-          );
-        });
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Text('Expense',
+                                  style: TextStyle(color: Colors.green)),
+                              Text('\$16K',
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.w700,
+                                      fontSize: 34.0)),
+                            ],
+                          ),
+                          DropdownButton(
+                              isDense: true,
+                              value: actualDropdown,
+                              onChanged: (String value) => setState(() {
+                                    actualDropdown = value;
+                                    actualChart = chartDropdownItems
+                                        .indexOf(value); // Refresh the chart
+                                  }),
+                              items: chartDropdownItems.map((String title) {
+                                return DropdownMenuItem(
+                                  value: title,
+                                  child: Text(title,
+                                      style: TextStyle(
+                                          color: Colors.blue,
+                                          fontWeight: FontWeight.w400,
+                                          fontSize: 14.0)),
+                                );
+                              }).toList())
+                        ],
+                      ),
+                      Padding(padding: EdgeInsets.only(bottom: 4.0)),
+                      Sparkline(
+                        data: charts[actualChart],
+                        lineWidth: 5.0,
+                        lineColor: Colors.greenAccent,
+                      )
+                    ],
+                  )),
+            ),
+            _lastTransactionTile()
+          ],
+          staggeredTiles: [
+            StaggeredTile.extent(2, 110.0),
+            StaggeredTile.extent(1, 180.0),
+            StaggeredTile.extent(1, 180.0),
+            StaggeredTile.extent(2, 220.0),
+            StaggeredTile.extent(2, 110.0),
+          ],
+        );
+      },
+    );
   }
 
   void _load([bool isError = false]) {

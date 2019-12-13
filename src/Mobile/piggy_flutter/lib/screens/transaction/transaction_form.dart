@@ -395,7 +395,7 @@ class TransactionFormPageState extends State<TransactionFormPage> {
     ));
   }
 
-  void onSave() async {
+  void onSave() {
     final FormState form = _formKey.currentState;
 
     if (!form.validate()) {

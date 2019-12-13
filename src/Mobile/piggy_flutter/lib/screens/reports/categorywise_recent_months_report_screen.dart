@@ -1,51 +1,50 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:piggy_flutter/screens/reports/reports_bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:piggy_flutter/blocs/categorywise_recent_months_report/bloc.dart';
+import 'package:piggy_flutter/blocs/categorywise_recent_months_report/categorywise_recent_months_report_bloc.dart';
+import 'package:piggy_flutter/models/category_wise_recent_months_report_item.dart';
+import 'package:piggy_flutter/repositories/repositories.dart';
 import 'package:piggy_flutter/widgets/common/common_drawer.dart';
 import 'package:piggy_flutter/widgets/common/loading_widget.dart';
 
-class Dataset {
-  final double total;
-  Dataset(this.total);
-
-  Dataset.fromJson(Map<String, dynamic> json) : total = json['total'];
-}
-
-class CategoryWiseRecentMonthsReportItem {
-  final String categoryName;
-  final List<Dataset> datasets;
-
-  CategoryWiseRecentMonthsReportItem(this.categoryName, this.datasets);
-
-  CategoryWiseRecentMonthsReportItem.fromJson(Map<String, dynamic> json)
-      : categoryName = json['categoryName'],
-        datasets =
-            (json['datasets'] as List).map((i) => Dataset.fromJson(i)).toList();
-}
-
 class CategoryWiseRecentMonthsReportScreen extends StatefulWidget {
+  const CategoryWiseRecentMonthsReportScreen(
+      {Key key, @required this.animationController})
+      : super(key: key);
+
   final AnimationController animationController;
 
   static const String routeName =
       '/reports/categorywise-recent-months-report-screen';
 
-  const CategoryWiseRecentMonthsReportScreen(
-      {Key key, @required this.animationController})
-      : super(key: key);
-
   @override
   _CategoryWiseRecentMonthsReportScreenState createState() =>
-      new _CategoryWiseRecentMonthsReportScreenState();
+      _CategoryWiseRecentMonthsReportScreenState();
 }
 
 class _CategoryWiseRecentMonthsReportScreenState
     extends State<CategoryWiseRecentMonthsReportScreen> {
-  final ReportsBloc _bloc = ReportsBloc();
+  CategorywiseRecentMonthsReportBloc _bloc;
 
-  Widget bodyData() => StreamBuilder<List<CategoryWiseRecentMonthsReportItem>>(
-        stream: _bloc.categoryWiseTransactionSummaryHistory,
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
+  @override
+  void initState() {
+    super.initState();
+    _bloc = CategorywiseRecentMonthsReportBloc(
+        reportRepository: RepositoryProvider.of<ReportRepository>(context));
+    _bloc.add(CategorywiseRecentMonthsReportLoad());
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Categorywise Recent Months')),
+      body: BlocBuilder<CategorywiseRecentMonthsReportBloc,
+          CategorywiseRecentMonthsReportState>(
+        bloc: _bloc,
+        builder:
+            (BuildContext context, CategorywiseRecentMonthsReportState state) {
+          if (state is CategorywiseRecentMonthsReportLoaded) {
             return ListView(children: [
               SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
@@ -53,27 +52,27 @@ class _CategoryWiseRecentMonthsReportScreenState
                     onSelectAll: (b) {},
                     sortColumnIndex: 0,
                     sortAscending: true,
-                    columns: <DataColumn>[
+                    columns: const <DataColumn>[
                       DataColumn(
-                        label: Text("Category"),
+                        label: Text('Category'),
                         numeric: false,
                       ),
                       DataColumn(
-                        label: Text("3 Months Ago"),
+                        label: Text('3 Months Ago'),
                         numeric: true,
                       ),
                       DataColumn(
-                        label: Text("Last Month"),
+                        label: Text('Last Month'),
                         numeric: true,
                       ),
                       DataColumn(
-                        label: Text("This Month"),
+                        label: Text('This Month'),
                         numeric: true,
                       ),
                     ],
-                    rows: snapshot.data
+                    rows: state.result
                         .map(
-                          (item) => DataRow(
+                          (CategoryWiseRecentMonthsReportItem item) => DataRow(
                             cells: [
                               DataCell(
                                 Text(item.categoryName),
@@ -101,19 +100,12 @@ class _CategoryWiseRecentMonthsReportScreenState
                         .toList()),
               )
             ]);
-          } else {
-            return LoadingWidget(
-              visible: true,
-            );
           }
+          return const LoadingWidget(
+            visible: true,
+          );
         },
-      );
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Categorywise Recent Months')),
-      body: bodyData(),
+      ),
       drawer: CommonDrawer(
         animationController: widget.animationController,
       ),
@@ -122,7 +114,6 @@ class _CategoryWiseRecentMonthsReportScreenState
 
   @override
   void dispose() {
-    _bloc?.dispose();
     super.dispose();
   }
 }

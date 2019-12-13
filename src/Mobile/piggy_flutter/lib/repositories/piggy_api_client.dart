@@ -216,6 +216,20 @@ class PiggyApiClient {
     return output;
   }
 
+  // Reports
+  Future<List<CategoryWiseRecentMonthsReportItem>>
+      getCategoryWiseTransactionSummaryHistory() async {
+    List<CategoryWiseRecentMonthsReportItem> data = [];
+    var result = await getAsync(
+        '$baseUrl/api/services/app/Report/GetCategoryWiseTransactionSummaryHistory?numberOfIteration=3&periodOfIteration=month&typeOfTransaction=expense');
+
+    if (result.success) {
+      result.result['items'].forEach((item) =>
+          data.add(CategoryWiseRecentMonthsReportItem.fromJson(item)));
+    }
+    return data;
+  }
+
   // Transaction
   Future<void> deleteTransaction(String id) async {
     final result = await deleteAsync<dynamic>(

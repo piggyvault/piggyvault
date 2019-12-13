@@ -20,3 +20,5 @@ export 'transactions_result.dart';
 export 'transfer_input.dart';
 export 'user.dart';
 export 'user_settings.dart';
+export 'category_wise_recent_months_report_item.dart';
+export 'dataset.dart';

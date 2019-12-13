@@ -8,12 +8,20 @@ import 'package:piggy_flutter/utils/uidata.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class PiggyApiClient {
-  static const baseUrl = 'https://piggyvault.in';
+  PiggyApiClient({@required this.httpClient}) : assert(httpClient != null);
+
+  static const String baseUrl = 'https://piggyvault.in';
   // static const baseUrl = 'http://10.0.2.2:21021';
   // static const baseUrl = 'http://localhost:21021';
+
   final http.Client httpClient;
 
-  PiggyApiClient({@required this.httpClient}) : assert(httpClient != null);
+  // CATEGORY
+  Future<void> createOrUpdateCategory(Category input) async {
+    await postAsync<dynamic>(
+        '$baseUrl/api/services/app/Category/CreateOrUpdateCategory',
+        {'id': input.id, 'name': input.name, 'icon': input.icon});
+  }
 
   Future<IsTenantAvailableResult> isTenantAvailable(String tenancyName) async {
     final tenantUrl = '$baseUrl/api/services/app/Account/IsTenantAvailable';

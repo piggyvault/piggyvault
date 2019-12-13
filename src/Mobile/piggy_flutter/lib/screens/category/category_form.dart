@@ -1,20 +1,24 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:piggy_flutter/models/api_request.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:piggy_flutter/blocs/categories/categories.dart';
 import 'package:piggy_flutter/models/category.dart';
-import 'package:piggy_flutter/screens/category/category_form_bloc.dart';
-import 'package:piggy_flutter/utils/api_subscription.dart';
+import 'package:piggy_flutter/utils/uidata.dart';
+import 'package:piggy_flutter/widgets/common/common.dart';
 import 'package:piggy_flutter/widgets/primary_color_override.dart';
 
 class CategoryFormPage extends StatefulWidget {
-  final Category category;
-  final String title;
-
-  CategoryFormPage({
+  const CategoryFormPage({
+    this.category,
     Key key,
     @required this.title,
-    this.category,
+    @required this.categoriesBloc,
   }) : super(key: key);
+
+  final Category category;
+  final CategoriesBloc categoriesBloc;
+  final String title;
 
   @override
   CategoryFormPageState createState() => CategoryFormPageState();
@@ -23,24 +27,21 @@ class CategoryFormPage extends StatefulWidget {
 class CategoryFormPageState extends State<CategoryFormPage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  bool _autoValidate = false;
-  bool _formWasEdited = false;
+  final bool _autoValidate = false;
+  final bool _formWasEdited = false;
 
-  StreamSubscription<ApiRequest> _apiStreamSubscription;
-  CategoryFormBloc _bloc;
   TextEditingController _categorynameFieldController;
+
   @override
   void initState() {
     super.initState();
-    _bloc = CategoryFormBloc(category: widget.category);
+
     if (widget.category == null) {
       _categorynameFieldController = TextEditingController();
     } else {
       _categorynameFieldController =
           TextEditingController(text: widget.category.name);
     }
-    _apiStreamSubscription = apiSubscription(
-        stream: _bloc.state, context: context, key: _scaffoldKey);
   }
 
   @override
@@ -52,22 +53,37 @@ class CategoryFormPageState extends State<CategoryFormPage> {
         title: Text(widget.title),
         actions: <Widget>[submitButton(theme)],
       ),
-      body: DropdownButtonHideUnderline(
-        child: SafeArea(
-          top: false,
-          bottom: false,
-          child: Form(
-            key: _formKey,
-            autovalidate: _autoValidate,
-            onWillPop: _onWillPop,
-            child: ListView(
-              padding: const EdgeInsets.all(16.0),
-              children: <Widget>[
-                _categoryField(theme),
-                const SizedBox(height: 24.0),
-                Text('* all fields are mandatory',
-                    style: Theme.of(context).textTheme.caption),
-              ].where((child) => child != null).toList(),
+      body: BlocListener<CategoriesBloc, CategoriesState>(
+        listener: (BuildContext context, CategoriesState state) {
+          if (state is CategoriesLoading) {
+            showProgress(context);
+          }
+
+          if (state is CategorySaved) {
+            hideProgress(context);
+            showSuccess(
+                context: context,
+                message: UIData.success,
+                icon: FontAwesomeIcons.check);
+          }
+        },
+        child: DropdownButtonHideUnderline(
+          child: SafeArea(
+            top: false,
+            bottom: false,
+            child: Form(
+              key: _formKey,
+              autovalidate: _autoValidate,
+              onWillPop: _onWillPop,
+              child: ListView(
+                padding: const EdgeInsets.all(16.0),
+                children: <Widget>[
+                  _categoryField(theme),
+                  const SizedBox(height: 24.0),
+                  Text('* all fields are mandatory',
+                      style: Theme.of(context).textTheme.caption),
+                ].where((child) => child != null).toList(),
+              ),
             ),
           ),
         ),
@@ -78,41 +94,44 @@ class CategoryFormPageState extends State<CategoryFormPage> {
   @override
   void dispose() {
     // Clean up the controller when the Widget is removed from the Widget tree
-    _apiStreamSubscription?.cancel();
     _categorynameFieldController?.dispose();
-    _bloc?.dispose();
     super.dispose();
   }
 
   Widget _categoryField(ThemeData theme) {
-    return StreamBuilder(
-      stream: _bloc.categoryName,
-      builder: (context, snapshot) {
-        return PrimaryColorOverride(
-          child: TextField(
-            controller: _categorynameFieldController,
-            decoration: InputDecoration(
-                labelText: 'Category name',
-                border: OutlineInputBorder(),
-                errorText: snapshot.error),
-            style: theme.textTheme.headline,
-            onChanged: _bloc.changeCategoryName,
-          ),
-        );
-      },
+    return PrimaryColorOverride(
+      child: TextField(
+        controller: _categorynameFieldController,
+        decoration: const InputDecoration(
+          labelText: 'Category name',
+          border: OutlineInputBorder(),
+          // errorText: snapshot.error
+        ),
+        style: theme.textTheme.headline,
+      ),
     );
   }
 
   Widget submitButton(ThemeData theme) {
-    return StreamBuilder(
-      stream: _bloc.categoryName,
-      builder: (context, snapshot) {
-        return FlatButton(
-          child: Text('SAVE', style: theme.textTheme.button),
-          onPressed: snapshot.hasData ? _bloc.submit : null,
-        );
+    return FlatButton(
+      child: Text('SAVE', style: theme.textTheme.button),
+      onPressed: () {
+        saveCategory();
       },
     );
+  }
+
+  void saveCategory() {
+    Category category;
+
+    if (widget.category == null) {
+      category = Category(id: null, icon: 'icon-question');
+    } else {
+      category = widget.category;
+    }
+
+    category.name = _categorynameFieldController.text;
+    widget.categoriesBloc.add(CategorySave(category: category));
   }
 
   Future<bool> _onWillPop() async {

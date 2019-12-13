@@ -11,12 +11,14 @@ abstract class CategoriesState extends Equatable {
 class CategoriesLoading extends CategoriesState {}
 
 class CategoriesLoaded extends CategoriesState {
-  final List<Category> categories;
-
   const CategoriesLoaded([this.categories = const []]);
+
+  final List<Category> categories;
 
   @override
   List<Object> get props => [categories];
 }
 
 class CategoriesNotLoaded extends CategoriesState {}
+
+class CategorySaved extends CategoriesState {}

@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:piggy_flutter/blocs/accounts/accounts.dart';
-import 'package:piggy_flutter/blocs/categories/categories.dart';
 import 'package:piggy_flutter/models/api_request.dart';
 import 'package:piggy_flutter/widgets/common/common_dialogs.dart';
 import 'package:piggy_flutter/utils/uidata.dart';
@@ -37,22 +36,7 @@ apiSubscription(
                   icon: FontAwesomeIcons.check);
             }
             break;
-          case ApiType.createCategory:
-          case ApiType.updateCategory:
-            {
-              final CategoriesBloc categoriesBloc =
-                  BlocProvider.of<CategoriesBloc>(context);
-              categoriesBloc.add(LoadCategories());
 
-              if (p.type == ApiType.updateCategory) {
-                // homeBloc.syncData(true);
-              }
-              showSuccess(
-                  context: context,
-                  message: UIData.category_update_success_message,
-                  icon: FontAwesomeIcons.check);
-            }
-            break;
           case ApiType.createAccount:
             {
               accountsBloc.add(LoadAccounts());

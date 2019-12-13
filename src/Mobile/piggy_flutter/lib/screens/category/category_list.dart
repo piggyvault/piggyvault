@@ -2,20 +2,20 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:piggy_flutter/blocs/categories/categories.dart';
+import 'package:piggy_flutter/models/category.dart';
 import 'package:piggy_flutter/screens/category/category_form.dart';
 import 'package:piggy_flutter/widgets/common/common_drawer.dart';
 import 'package:piggy_flutter/widgets/common/message_placeholder.dart';
 import 'package:piggy_flutter/utils/common.dart';
 
 class CategoryListPage extends StatelessWidget {
-  final AnimationController animationController;
-
   const CategoryListPage({Key key, @required this.animationController})
       : super(key: key);
+  final AnimationController animationController;
 
   @override
   Widget build(BuildContext context) {
-// TODO: show recent number of transactions against categories
+    // TODO(abhith): show recent number of transactions against categories
     // Stream<List<CategoryListItem>> categoriesWithTransactionCount = Observable
     //     .combineLatest2(
     //         categoryBloc.categories, homeBloc.recentTransactionsState,
@@ -34,9 +34,9 @@ class CategoryListPage extends StatelessWidget {
     //       .toList();
     // }).asBroadcastStream();
 
-    return new Scaffold(
-      appBar: new AppBar(
-        title: Text('Categories'),
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Categories'),
       ),
       body: _categoryListBuilder(),
       drawer: CommonDrawer(
@@ -52,7 +52,8 @@ class CategoryListPage extends StatelessWidget {
                 context,
                 MaterialPageRoute<DismissDialogAction>(
                   builder: (BuildContext context) => CategoryFormPage(
-                    title: "Add Category",
+                    title: 'Add Category',
+                    categoriesBloc: BlocProvider.of<CategoriesBloc>(context),
                   ),
                   fullscreenDialog: true,
                 ));
@@ -60,12 +61,12 @@ class CategoryListPage extends StatelessWidget {
     );
   }
 
-  Widget _categoryListBuilder() =>
-      BlocBuilder<CategoriesBloc, CategoriesState>(builder: (context, state) {
+  Widget _categoryListBuilder() => BlocBuilder<CategoriesBloc, CategoriesState>(
+          builder: (BuildContext context, CategoriesState state) {
         if (state is CategoriesLoaded) {
-          final categories = state.categories;
-          if (categories.length > 0) {
-            Iterable<Widget> categoryTiles = categories.map((category) {
+          if (state.categories.isNotEmpty) {
+            final Iterable<Widget> categoryTiles =
+                state.categories.map((Category category) {
               return MergeSemantics(
                 child: ListTile(
                   leading: CircleAvatar(
@@ -85,6 +86,8 @@ class CategoryListPage extends StatelessWidget {
                             builder: (BuildContext context) => CategoryFormPage(
                               category: category,
                               title: 'Edit Category',
+                              categoriesBloc:
+                                  BlocProvider.of<CategoriesBloc>(context),
                             ),
                             fullscreenDialog: true,
                           ));
@@ -98,6 +101,6 @@ class CategoryListPage extends StatelessWidget {
             return MessagePlaceholder();
           }
         }
-        return Center(child: CircularProgressIndicator());
+        return const Center(child: CircularProgressIndicator());
       });
 }

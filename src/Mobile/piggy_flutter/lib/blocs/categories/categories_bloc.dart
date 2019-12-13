@@ -4,23 +4,24 @@ import 'package:flutter/cupertino.dart';
 import 'package:piggy_flutter/blocs/auth/auth.dart';
 
 import 'package:piggy_flutter/blocs/categories/categories.dart';
+import 'package:piggy_flutter/models/models.dart';
 import 'package:piggy_flutter/repositories/category_repository.dart';
 
 class CategoriesBloc extends Bloc<CategoriesEvent, CategoriesState> {
-  final CategoryRepository categoryRepository;
-
-  final AuthBloc authBloc;
-  StreamSubscription authBlocSubscription;
-
   CategoriesBloc({@required this.categoryRepository, @required this.authBloc})
       : assert(categoryRepository != null),
         assert(authBloc != null) {
-    authBlocSubscription = authBloc.listen((state) {
+    authBlocSubscription = authBloc.listen((AuthState state) {
       if (state is AuthAuthenticated) {
-        add(LoadCategories());
+        add(CategoriesLoad());
       }
     });
   }
+
+  final CategoryRepository categoryRepository;
+  final AuthBloc authBloc;
+
+  StreamSubscription<AuthState> authBlocSubscription;
 
   @override
   CategoriesState get initialState => CategoriesLoading();
@@ -29,14 +30,24 @@ class CategoriesBloc extends Bloc<CategoriesEvent, CategoriesState> {
   Stream<CategoriesState> mapEventToState(
     CategoriesEvent event,
   ) async* {
-    if (event is LoadCategories) {
+    if (event is CategoriesLoad) {
       yield* _mapLoadCategoriesToState();
+    } else if (event is CategorySave) {
+      yield CategoriesLoading();
+      try {
+        await categoryRepository.createOrUpdateCategory(event.category);
+        yield CategorySaved();
+        add(CategoriesLoad());
+      } catch (error) {
+        CategoriesNotLoaded();
+      }
     }
   }
 
   Stream<CategoriesState> _mapLoadCategoriesToState() async* {
     try {
-      final categories = await categoryRepository.getTenantCategories();
+      final List<Category> categories =
+          await categoryRepository.getTenantCategories();
       yield CategoriesLoaded(categories);
     } catch (e) {
       CategoriesNotLoaded();

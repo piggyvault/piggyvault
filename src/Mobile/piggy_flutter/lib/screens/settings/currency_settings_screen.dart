@@ -10,16 +10,16 @@ import 'package:piggy_flutter/widgets/widgets.dart';
 import '../fintness_app_theme.dart';
 
 class CurrencySettingsScreen extends StatefulWidget {
-  final AnimationController animationController;
-  final String selectedCurrencyCode;
-  final SettingsBloc settingsBloc;
-
   const CurrencySettingsScreen(
       {Key key,
       @required this.selectedCurrencyCode,
       @required this.settingsBloc,
       @required this.animationController})
       : super(key: key);
+
+  final AnimationController animationController;
+  final String selectedCurrencyCode;
+  final SettingsBloc settingsBloc;
 
   @override
   _CurrencySettingsScreenState createState() => _CurrencySettingsScreenState();
@@ -141,7 +141,7 @@ class _CurrencySettingsScreenState extends State<CurrencySettingsScreen>
                   'calculations'),
             );
           } else {
-            return LinearProgressIndicator();
+            return const LinearProgressIndicator();
           }
         },
       ),

@@ -16,6 +16,18 @@ class PiggyApiClient {
 
   final http.Client httpClient;
 
+  // ACCOUNT
+  Future<AccountFormModel> getAccountForEdit(String id) async {
+    final ApiResponse<dynamic> result = await getAsync<dynamic>(
+        '$baseUrl/api/services/app/account/getAccountForEdit?id=$id');
+
+    if (result.success) {
+      return AccountFormModel.fromJson(result.result);
+    }
+
+    return null;
+  }
+
   // CATEGORY
   Future<void> createOrUpdateCategory(Category input) async {
     await postAsync<dynamic>(

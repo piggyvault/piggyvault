@@ -25,16 +25,16 @@ import 'package:piggy_flutter/widgets/transaction_list.dart';
 import 'account_form.dart';
 
 class AccountDetailPage extends StatefulWidget {
-  final Account account;
-  final TransactionRepository transactionRepository;
-  final AccountRepository accountRepository;
-
-  AccountDetailPage(
+  const AccountDetailPage(
       {Key key,
       @required this.account,
       @required this.transactionRepository,
       @required this.accountRepository})
       : super(key: key);
+
+  final Account account;
+  final TransactionRepository transactionRepository;
+  final AccountRepository accountRepository;
 
   @override
   _AccountDetailPageState createState() => _AccountDetailPageState();

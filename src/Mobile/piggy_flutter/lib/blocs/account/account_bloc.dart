@@ -3,18 +3,11 @@ import 'package:bloc/bloc.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:piggy_flutter/blocs/transaction/transaction.dart';
 import 'package:piggy_flutter/blocs/transaction_detail/bloc.dart';
+import 'package:piggy_flutter/models/account.dart';
 import 'package:piggy_flutter/repositories/account_repository.dart';
 import './bloc.dart';
 
 class AccountBloc extends Bloc<AccountEvent, AccountState> {
-  final AccountRepository accountRepository;
-
-  final TransactionBloc transactionsBloc;
-  StreamSubscription transactionBlocSubscription;
-
-  final TransactionDetailBloc transactionDetailBloc;
-  StreamSubscription transactionDetailBlocSubscription;
-
   AccountBloc(
       {@required this.accountRepository,
       @required this.transactionsBloc,
@@ -35,6 +28,14 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
     });
   }
 
+  final AccountRepository accountRepository;
+
+  final TransactionBloc transactionsBloc;
+  StreamSubscription transactionBlocSubscription;
+
+  final TransactionDetailBloc transactionDetailBloc;
+  StreamSubscription transactionDetailBlocSubscription;
+
   @override
   AccountState get initialState => AccountEmpty(null);
 
@@ -46,7 +47,7 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
       yield AccountLoading(event.accountId);
 
       try {
-        var account =
+        final Account account =
             await accountRepository.getAccountDetails(event.accountId);
 
         yield AccountLoaded(account: account);
@@ -56,7 +57,7 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
     }
 
     if (event is RefreshAccount) {
-      add(FetchAccount(accountId: this.state.accountId));
+      add(FetchAccount(accountId: state.accountId));
     }
   }
 

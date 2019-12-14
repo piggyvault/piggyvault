@@ -18,13 +18,7 @@ import 'package:piggy_flutter/widgets/date_time_picker.dart';
 import 'package:piggy_flutter/widgets/primary_color_override.dart';
 
 class TransactionFormPage extends StatefulWidget {
-  final TransactionBloc transactionsBloc;
-  final Account account;
-  final Transaction transaction;
-  final String title;
-  final bool isCopy;
-
-  TransactionFormPage(
+  const TransactionFormPage(
       {Key key,
       @required this.transactionsBloc,
       this.title,
@@ -32,6 +26,12 @@ class TransactionFormPage extends StatefulWidget {
       this.transaction,
       this.isCopy = false})
       : super(key: key);
+
+  final TransactionBloc transactionsBloc;
+  final Account account;
+  final Transaction transaction;
+  final String title;
+  final bool isCopy;
 
   @override
   TransactionFormPageState createState() => TransactionFormPageState();

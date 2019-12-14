@@ -6,20 +6,10 @@ import 'package:piggy_flutter/blocs/accounts/accounts.dart';
 import 'package:piggy_flutter/blocs/auth/auth.dart';
 import 'package:piggy_flutter/blocs/transaction/transaction.dart';
 import 'package:piggy_flutter/blocs/transaction_detail/bloc.dart';
+import 'package:piggy_flutter/models/tenant_accounts_result.dart';
 import 'package:piggy_flutter/repositories/repositories.dart';
 
 class AccountsBloc extends Bloc<AccountsEvent, AccountsState> {
-  final AccountRepository accountRepository;
-
-  final AuthBloc authBloc;
-  StreamSubscription authBlocSubscription;
-
-  final TransactionBloc transactionsBloc;
-  StreamSubscription transactionBlocSubscription;
-
-  final TransactionDetailBloc transactionDetailBloc;
-  StreamSubscription transactionDetailBlocSubscription;
-
   AccountsBloc(
       {@required this.accountRepository,
       @required this.authBloc,
@@ -48,6 +38,17 @@ class AccountsBloc extends Bloc<AccountsEvent, AccountsState> {
     });
   }
 
+  final AccountRepository accountRepository;
+
+  final AuthBloc authBloc;
+  StreamSubscription authBlocSubscription;
+
+  final TransactionBloc transactionsBloc;
+  StreamSubscription transactionBlocSubscription;
+
+  final TransactionDetailBloc transactionDetailBloc;
+  StreamSubscription transactionDetailBlocSubscription;
+
   @override
   AccountsState get initialState => AccountsLoading();
 
@@ -62,7 +63,8 @@ class AccountsBloc extends Bloc<AccountsEvent, AccountsState> {
 
   Stream<AccountsState> _mapLoadAccountsToState() async* {
     try {
-      final allAccounts = await accountRepository.getTenantAccounts();
+      final TenantAccountsResult allAccounts =
+          await accountRepository.getTenantAccounts();
       yield AccountsLoaded(
           allAccounts.userAccounts, allAccounts.familyAccounts);
     } catch (e) {

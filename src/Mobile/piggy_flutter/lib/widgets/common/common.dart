@@ -7,3 +7,4 @@ export 'common_dialogs.dart';
 export 'common_drawer.dart';
 export 'loading_widget.dart';
 export 'message_placeholder.dart';
+export 'title_view.dart';

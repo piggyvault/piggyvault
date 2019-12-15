@@ -1,8 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-
-import '../fintness_app_theme.dart';
+import 'package:piggy_flutter/screens/fintness_app_theme.dart';
 
 typedef TitleViewCallback = FutureOr<void> Function();
 

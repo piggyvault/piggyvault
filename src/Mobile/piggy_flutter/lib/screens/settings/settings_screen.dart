@@ -8,7 +8,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:piggy_flutter/blocs/settings/bloc.dart';
 import 'package:piggy_flutter/repositories/repositories.dart';
 import 'package:piggy_flutter/screens/settings/currency_settings_screen.dart';
-import 'package:piggy_flutter/screens/ui_view/title_view.dart';
+import 'package:piggy_flutter/widgets/common/common.dart';
 
 import '../fintness_app_theme.dart';
 

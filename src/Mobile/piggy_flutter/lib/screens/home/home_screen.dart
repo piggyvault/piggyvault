@@ -5,6 +5,7 @@ import 'package:piggy_flutter/blocs/transaction/transaction.dart';
 import 'package:piggy_flutter/blocs/transaction_detail/bloc.dart';
 import 'package:piggy_flutter/dashboard/dashboard_page.dart';
 import 'package:piggy_flutter/models/models.dart';
+import 'package:piggy_flutter/screens/account/account_form.dart';
 import 'package:piggy_flutter/screens/account/account_list.dart';
 import 'package:piggy_flutter/screens/home/overview_screen.dart';
 import 'package:piggy_flutter/screens/home/recent_transactions.dart';
@@ -65,9 +66,10 @@ class TabIconData {
 }
 
 class HomeScreen extends StatefulWidget {
-  final StartPage startpage;
+  const HomeScreen({Key key, this.startpage = StartPage.Dashboard})
+      : super(key: key);
 
-  HomeScreen({Key key, this.startpage = StartPage.Dashboard}) : super(key: key);
+  final StartPage startpage;
 
   @override
   _HomeScreenState createState() => _HomeScreenState();
@@ -77,6 +79,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   AnimationController animationController;
 
   List<TabIconData> tabIconsList = TabIconData.tabIconsList;
+  int _selectedNavIndex = 0;
 
   Widget tabBody = Container(
     color: PiggyAppTheme.background,
@@ -95,7 +98,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     if (widget.startpage == StartPage.Dashboard) {
       tabBody = OverviewScreen(animationController: animationController);
     } else if (widget.startpage == StartPage.Accounts) {
-      tabBody = AccountListPage();
+      tabBody = const AccountListPage();
     }
 
     initPlatformState();
@@ -146,7 +149,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       //     "########## Opened notification: \n${result.notification.jsonRepresentation().replaceAll("\\n", "\n")}");
       var transactionData = result.notification.payload.additionalData;
       try {
-        var transaction = Transaction(
+        final Transaction transaction = Transaction(
             id: transactionData['TransactionId'],
             transactionTime: transactionData['TransactionTime'],
             description: transactionData['Description'],
@@ -159,7 +162,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         //     "########## Opened notification: \n${result.notification.jsonRepresentation().replaceAll("\\n", "\n")}");
         Navigator.push(
             context,
-            new MaterialPageRoute(
+            MaterialPageRoute(
               builder: (BuildContext context) => TransactionDetailPage(
                 transaction: transaction,
                 transactionDetailBloc:
@@ -186,13 +189,23 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         ),
         BottomBarView(
           tabIconsList: tabIconsList,
-          addClick: () => Navigator.of(context).push(
-            MaterialPageRoute<DismissDialogAction>(
-              builder: (_) => TransactionFormPage(
-                transactionsBloc: BlocProvider.of<TransactionBloc>(context),
+          addClick: () {
+            if (_selectedNavIndex == 2) {
+              return Navigator.of(context)
+                  .push(MaterialPageRoute<DismissDialogAction>(
+                builder: (_) => const AccountFormScreen(
+                  title: 'Add Account',
+                ),
+              ));
+            }
+            return Navigator.of(context).push(
+              MaterialPageRoute<DismissDialogAction>(
+                builder: (_) => TransactionFormPage(
+                  transactionsBloc: BlocProvider.of<TransactionBloc>(context),
+                ),
               ),
-            ),
-          ),
+            );
+          },
           changeIndex: (int index) {
             if (index == 0) {
               animationController.reverse().then<dynamic>((data) {
@@ -202,6 +215,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                 setState(() {
                   tabBody =
                       OverviewScreen(animationController: animationController);
+                  _selectedNavIndex = index;
                 });
               });
             } else if (index == 1) {
@@ -213,6 +227,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                   tabBody = RecentTransactionsPage(
                     animationController: animationController,
                   );
+                  _selectedNavIndex = index;
                 });
               });
             } else if (index == 2) {
@@ -221,7 +236,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                   return;
                 }
                 setState(() {
-                  tabBody = AccountListPage();
+                  tabBody = const AccountListPage();
+                  _selectedNavIndex = index;
                 });
               });
             } else if (index == 3) {
@@ -231,6 +247,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                 }
                 setState(() {
                   tabBody = DashboardPage();
+                  _selectedNavIndex = index;
                   // TrainingScreen(animationController: animationController);
                 });
               });

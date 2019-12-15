@@ -1,1 +1,1 @@
-enum StartPage { Dashboard, Recent, Accounts, Summary }
+enum StartPage { Overview, Dashboard, Recent, Accounts }

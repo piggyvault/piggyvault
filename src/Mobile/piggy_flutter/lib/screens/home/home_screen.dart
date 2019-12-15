@@ -98,7 +98,9 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     if (widget.startpage == StartPage.Dashboard) {
       tabBody = OverviewScreen(animationController: animationController);
     } else if (widget.startpage == StartPage.Accounts) {
-      tabBody = const AccountListPage();
+      tabBody = AccountListPage(
+        animationController: animationController,
+      );
     }
 
     initPlatformState();
@@ -236,7 +238,9 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                   return;
                 }
                 setState(() {
-                  tabBody = const AccountListPage();
+                  tabBody = AccountListPage(
+                    animationController: animationController,
+                  );
                   _selectedNavIndex = index;
                 });
               });

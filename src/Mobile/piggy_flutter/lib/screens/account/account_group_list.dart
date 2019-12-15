@@ -5,24 +5,24 @@ import 'package:piggy_flutter/repositories/repositories.dart';
 import 'package:piggy_flutter/screens/account/account_detail.dart';
 
 class AccountGroupList extends StatelessWidget {
+  const AccountGroupList({@required this.accounts, @required this.title});
+
   final List<Account> accounts;
   final String title;
-
-  AccountGroupList({@required this.accounts, @required this.title});
 
   @override
   Widget build(BuildContext context) {
     Iterable<Widget> accountTiles;
+
     if (accounts == null) {
-      accountTiles = [new Center(child: LinearProgressIndicator())];
+      accountTiles = [const Center(child: LinearProgressIndicator())];
     } else {
       accountTiles =
           accounts.map((dynamic item) => buildAccountListTile(context, item));
     }
 
     return ExpansionTile(
-        key: PageStorageKey(this.title),
-        title: Text(this.title,
+        title: Text(title,
             style: Theme.of(context).textTheme.title.copyWith(
                 fontSize: 16.0, color: Theme.of(context).accentColor)),
         initiallyExpanded: true,
@@ -30,7 +30,7 @@ class AccountGroupList extends StatelessWidget {
         children: accountTiles.toList());
   }
 
-  buildAccountListTile(BuildContext context, Account account) {
+  Widget buildAccountListTile(BuildContext context, Account account) {
     return MergeSemantics(
       child: ListTile(
         dense: true,
@@ -40,18 +40,17 @@ class AccountGroupList extends StatelessWidget {
         subtitle: Text(account.accountType),
         trailing: Text(
             '${account.currentBalance.toString()} ${account.currencySymbol}'),
-        onTap: (() => Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => AccountDetailPage(
-                        account: account,
-                        accountRepository:
-                            RepositoryProvider.of<AccountRepository>(context),
-                        transactionRepository:
-                            RepositoryProvider.of<TransactionRepository>(
-                                context),
-                      )),
-            )),
+        onTap: () => Navigator.of(context).push(
+          MaterialPageRoute<AccountDetailPage>(
+            builder: (BuildContext context) => AccountDetailPage(
+              account: account,
+              accountRepository:
+                  RepositoryProvider.of<AccountRepository>(context),
+              transactionRepository:
+                  RepositoryProvider.of<TransactionRepository>(context),
+            ),
+          ),
+        ),
       ),
     );
   }

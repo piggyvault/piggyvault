@@ -14,7 +14,6 @@ import 'package:piggy_flutter/theme/piggy_app_theme.dart';
 import 'package:piggy_flutter/utils/common.dart';
 import 'package:piggy_flutter/widgets/common/common.dart';
 
-import '../fintness_app_theme.dart';
 import 'bottom_bar_view.dart';
 
 class TabIconData {
@@ -107,7 +106,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: FintnessAppTheme.background,
+      color: PiggyAppTheme.background,
       child: Scaffold(
         backgroundColor: Colors.transparent,
         body: FutureBuilder<bool>(

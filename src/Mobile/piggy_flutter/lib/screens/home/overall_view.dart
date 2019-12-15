@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:piggy_flutter/blocs/transaction_summary/transaction_summary.dart';
-import 'package:piggy_flutter/screens/fintness_app_theme.dart';
+import 'package:piggy_flutter/theme/theme.dart';
 
 class OverallView extends StatelessWidget {
   final AnimationController animationController;
@@ -28,7 +28,7 @@ class OverallView extends StatelessWidget {
                       left: 24, right: 24, top: 16, bottom: 18),
                   child: Container(
                     decoration: BoxDecoration(
-                      color: FintnessAppTheme.white,
+                      color: PiggyAppTheme.white,
                       borderRadius: BorderRadius.only(
                           topLeft: Radius.circular(8.0),
                           bottomLeft: Radius.circular(8.0),
@@ -36,7 +36,7 @@ class OverallView extends StatelessWidget {
                           topRight: Radius.circular(68.0)),
                       boxShadow: <BoxShadow>[
                         BoxShadow(
-                            color: FintnessAppTheme.grey.withOpacity(0.2),
+                            color: PiggyAppTheme.grey.withOpacity(0.2),
                             offset: Offset(1.1, 1.1),
                             blurRadius: 10.0),
                       ],
@@ -57,11 +57,11 @@ class OverallView extends StatelessWidget {
                                   'Balance',
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
-                                      fontFamily: FintnessAppTheme.fontName,
+                                      fontFamily: PiggyAppTheme.fontName,
                                       fontWeight: FontWeight.w500,
                                       fontSize: 16,
                                       letterSpacing: -0.1,
-                                      color: FintnessAppTheme.darkText),
+                                      color: PiggyAppTheme.darkText),
                                 ),
                               ),
                               Row(
@@ -80,12 +80,10 @@ class OverallView extends StatelessWidget {
                                           '${state.summary.userNetWorth.toStringAsFixed(2)}',
                                           textAlign: TextAlign.center,
                                           style: TextStyle(
-                                            fontFamily:
-                                                FintnessAppTheme.fontName,
+                                            fontFamily: PiggyAppTheme.fontName,
                                             fontWeight: FontWeight.w600,
                                             fontSize: 32,
-                                            color:
-                                                FintnessAppTheme.nearlyDarkBlue,
+                                            color: PiggyAppTheme.nearlyDarkBlue,
                                           ),
                                         ),
                                       ),
@@ -96,13 +94,11 @@ class OverallView extends StatelessWidget {
                                           state.summary.currencySymbol,
                                           textAlign: TextAlign.center,
                                           style: TextStyle(
-                                            fontFamily:
-                                                FintnessAppTheme.fontName,
+                                            fontFamily: PiggyAppTheme.fontName,
                                             fontWeight: FontWeight.w500,
                                             fontSize: 18,
                                             letterSpacing: -0.2,
-                                            color:
-                                                FintnessAppTheme.nearlyDarkBlue,
+                                            color: PiggyAppTheme.nearlyDarkBlue,
                                           ),
                                         ),
                                       ),
@@ -118,7 +114,7 @@ class OverallView extends StatelessWidget {
                                   //       children: <Widget>[
                                   //         Icon(
                                   //           Icons.access_time,
-                                  //           color: FintnessAppTheme.grey
+                                  //           color: PiggyAppTheme.grey
                                   //               .withOpacity(0.5),
                                   //           size: 16,
                                   //         ),
@@ -130,11 +126,11 @@ class OverallView extends StatelessWidget {
                                   //             textAlign: TextAlign.center,
                                   //             style: TextStyle(
                                   //               fontFamily:
-                                  //                   FintnessAppTheme.fontName,
+                                  //                   PiggyAppTheme.fontName,
                                   //               fontWeight: FontWeight.w500,
                                   //               fontSize: 14,
                                   //               letterSpacing: 0.0,
-                                  //               color: FintnessAppTheme.grey
+                                  //               color: PiggyAppTheme.grey
                                   //                   .withOpacity(0.5),
                                   //             ),
                                   //           ),
@@ -149,12 +145,12 @@ class OverallView extends StatelessWidget {
                                   //         textAlign: TextAlign.center,
                                   //         style: TextStyle(
                                   //           fontFamily:
-                                  //               FintnessAppTheme.fontName,
+                                  //               PiggyAppTheme.fontName,
                                   //           fontWeight: FontWeight.w500,
                                   //           fontSize: 12,
                                   //           letterSpacing: 0.0,
                                   //           color:
-                                  //               FintnessAppTheme.nearlyDarkBlue,
+                                  //               PiggyAppTheme.nearlyDarkBlue,
                                   //         ),
                                   //       ),
                                   //     ),
@@ -171,7 +167,7 @@ class OverallView extends StatelessWidget {
                           child: Container(
                             height: 2,
                             decoration: BoxDecoration(
-                              color: FintnessAppTheme.background,
+                              color: PiggyAppTheme.background,
                               borderRadius:
                                   BorderRadius.all(Radius.circular(4.0)),
                             ),
@@ -191,11 +187,11 @@ class OverallView extends StatelessWidget {
                                       '${state.summary.tenantNetWorth.toStringAsFixed(2)} ${state.summary.currencySymbol}',
                                       textAlign: TextAlign.center,
                                       style: TextStyle(
-                                        fontFamily: FintnessAppTheme.fontName,
+                                        fontFamily: PiggyAppTheme.fontName,
                                         fontWeight: FontWeight.w500,
                                         fontSize: 16,
                                         letterSpacing: -0.2,
-                                        color: FintnessAppTheme.darkText,
+                                        color: PiggyAppTheme.darkText,
                                       ),
                                     ),
                                     Padding(
@@ -204,10 +200,10 @@ class OverallView extends StatelessWidget {
                                         'Family',
                                         textAlign: TextAlign.center,
                                         style: TextStyle(
-                                          fontFamily: FintnessAppTheme.fontName,
+                                          fontFamily: PiggyAppTheme.fontName,
                                           fontWeight: FontWeight.w600,
                                           fontSize: 12,
-                                          color: FintnessAppTheme.grey
+                                          color: PiggyAppTheme.grey
                                               .withOpacity(0.5),
                                         ),
                                       ),
@@ -230,12 +226,11 @@ class OverallView extends StatelessWidget {
                                           '${state.summary.totalFamilyTransactionsCount.toString()}',
                                           textAlign: TextAlign.center,
                                           style: TextStyle(
-                                            fontFamily:
-                                                FintnessAppTheme.fontName,
+                                            fontFamily: PiggyAppTheme.fontName,
                                             fontWeight: FontWeight.w500,
                                             fontSize: 16,
                                             letterSpacing: -0.2,
-                                            color: FintnessAppTheme.darkText,
+                                            color: PiggyAppTheme.darkText,
                                           ),
                                         ),
                                         Padding(
@@ -246,10 +241,10 @@ class OverallView extends StatelessWidget {
                                             textAlign: TextAlign.center,
                                             style: TextStyle(
                                               fontFamily:
-                                                  FintnessAppTheme.fontName,
+                                                  PiggyAppTheme.fontName,
                                               fontWeight: FontWeight.w600,
                                               fontSize: 12,
-                                              color: FintnessAppTheme.grey
+                                              color: PiggyAppTheme.grey
                                                   .withOpacity(0.5),
                                             ),
                                           ),
@@ -273,12 +268,11 @@ class OverallView extends StatelessWidget {
                                         Text(
                                           state.summary.networthPercentage,
                                           style: TextStyle(
-                                            fontFamily:
-                                                FintnessAppTheme.fontName,
+                                            fontFamily: PiggyAppTheme.fontName,
                                             fontWeight: FontWeight.w500,
                                             fontSize: 16,
                                             letterSpacing: -0.2,
-                                            color: FintnessAppTheme.darkText,
+                                            color: PiggyAppTheme.darkText,
                                           ),
                                         ),
                                         Padding(
@@ -289,10 +283,10 @@ class OverallView extends StatelessWidget {
                                             textAlign: TextAlign.center,
                                             style: TextStyle(
                                               fontFamily:
-                                                  FintnessAppTheme.fontName,
+                                                  PiggyAppTheme.fontName,
                                               fontWeight: FontWeight.w600,
                                               fontSize: 12,
-                                              color: FintnessAppTheme.grey
+                                              color: PiggyAppTheme.grey
                                                   .withOpacity(0.5),
                                             ),
                                           ),

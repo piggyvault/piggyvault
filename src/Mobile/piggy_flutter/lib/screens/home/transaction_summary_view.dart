@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:piggy_flutter/blocs/transaction_summary/transaction_summary.dart';
-import 'package:piggy_flutter/screens/fintness_app_theme.dart';
 import 'package:piggy_flutter/theme/piggy_app_theme.dart';
 import 'dart:math' as math;
 
@@ -31,7 +30,7 @@ class TransactionSummaryView extends StatelessWidget {
                       left: 24, right: 24, top: 16, bottom: 18),
                   child: Container(
                     decoration: BoxDecoration(
-                      color: FintnessAppTheme.white,
+                      color: PiggyAppTheme.white,
                       borderRadius: BorderRadius.only(
                           topLeft: Radius.circular(8.0),
                           bottomLeft: Radius.circular(8.0),
@@ -39,7 +38,7 @@ class TransactionSummaryView extends StatelessWidget {
                           topRight: Radius.circular(68.0)),
                       boxShadow: <BoxShadow>[
                         BoxShadow(
-                            color: FintnessAppTheme.grey.withOpacity(0.2),
+                            color: PiggyAppTheme.grey.withOpacity(0.2),
                             offset: Offset(1.1, 1.1),
                             blurRadius: 10.0),
                       ],
@@ -85,15 +84,13 @@ class TransactionSummaryView extends StatelessWidget {
                                                     'Income',
                                                     textAlign: TextAlign.center,
                                                     style: TextStyle(
-                                                      fontFamily:
-                                                          FintnessAppTheme
-                                                              .fontName,
+                                                      fontFamily: PiggyAppTheme
+                                                          .fontName,
                                                       fontWeight:
                                                           FontWeight.w500,
                                                       fontSize: 16,
                                                       letterSpacing: -0.1,
-                                                      color: FintnessAppTheme
-                                                          .grey
+                                                      color: PiggyAppTheme.grey
                                                           .withOpacity(0.5),
                                                     ),
                                                   ),
@@ -121,14 +118,13 @@ class TransactionSummaryView extends StatelessWidget {
                                                             TextAlign.center,
                                                         style: TextStyle(
                                                           fontFamily:
-                                                              FintnessAppTheme
+                                                              PiggyAppTheme
                                                                   .fontName,
                                                           fontWeight:
                                                               FontWeight.w600,
                                                           fontSize: 16,
-                                                          color:
-                                                              FintnessAppTheme
-                                                                  .darkerText,
+                                                          color: PiggyAppTheme
+                                                              .darkerText,
                                                         ),
                                                       ),
                                                     ),
@@ -143,17 +139,15 @@ class TransactionSummaryView extends StatelessWidget {
                                                             TextAlign.center,
                                                         style: TextStyle(
                                                           fontFamily:
-                                                              FintnessAppTheme
+                                                              PiggyAppTheme
                                                                   .fontName,
                                                           fontWeight:
                                                               FontWeight.w600,
                                                           fontSize: 12,
                                                           letterSpacing: -0.2,
-                                                          color:
-                                                              FintnessAppTheme
-                                                                  .grey
-                                                                  .withOpacity(
-                                                                      0.5),
+                                                          color: PiggyAppTheme
+                                                              .grey
+                                                              .withOpacity(0.5),
                                                         ),
                                                       ),
                                                     ),
@@ -195,15 +189,13 @@ class TransactionSummaryView extends StatelessWidget {
                                                     'Expense',
                                                     textAlign: TextAlign.center,
                                                     style: TextStyle(
-                                                      fontFamily:
-                                                          FintnessAppTheme
-                                                              .fontName,
+                                                      fontFamily: PiggyAppTheme
+                                                          .fontName,
                                                       fontWeight:
                                                           FontWeight.w500,
                                                       fontSize: 16,
                                                       letterSpacing: -0.1,
-                                                      color: FintnessAppTheme
-                                                          .grey
+                                                      color: PiggyAppTheme.grey
                                                           .withOpacity(0.5),
                                                     ),
                                                   ),
@@ -231,14 +223,13 @@ class TransactionSummaryView extends StatelessWidget {
                                                             TextAlign.center,
                                                         style: TextStyle(
                                                           fontFamily:
-                                                              FintnessAppTheme
+                                                              PiggyAppTheme
                                                                   .fontName,
                                                           fontWeight:
                                                               FontWeight.w600,
                                                           fontSize: 16,
-                                                          color:
-                                                              FintnessAppTheme
-                                                                  .darkerText,
+                                                          color: PiggyAppTheme
+                                                              .darkerText,
                                                         ),
                                                       ),
                                                     ),
@@ -253,17 +244,15 @@ class TransactionSummaryView extends StatelessWidget {
                                                             TextAlign.center,
                                                         style: TextStyle(
                                                           fontFamily:
-                                                              FintnessAppTheme
+                                                              PiggyAppTheme
                                                                   .fontName,
                                                           fontWeight:
                                                               FontWeight.w600,
                                                           fontSize: 12,
                                                           letterSpacing: -0.2,
-                                                          color:
-                                                              FintnessAppTheme
-                                                                  .grey
-                                                                  .withOpacity(
-                                                                      0.5),
+                                                          color: PiggyAppTheme
+                                                              .grey
+                                                              .withOpacity(0.5),
                                                         ),
                                                       ),
                                                     ),
@@ -290,13 +279,13 @@ class TransactionSummaryView extends StatelessWidget {
                                           width: 100,
                                           height: 100,
                                           decoration: BoxDecoration(
-                                            color: FintnessAppTheme.white,
+                                            color: PiggyAppTheme.white,
                                             borderRadius: BorderRadius.all(
                                               Radius.circular(100.0),
                                             ),
                                             border: new Border.all(
                                                 width: 4,
-                                                color: FintnessAppTheme
+                                                color: PiggyAppTheme
                                                     .nearlyDarkBlue
                                                     .withOpacity(0.2)),
                                           ),
@@ -311,11 +300,11 @@ class TransactionSummaryView extends StatelessWidget {
                                                 textAlign: TextAlign.center,
                                                 style: TextStyle(
                                                   fontFamily:
-                                                      FintnessAppTheme.fontName,
+                                                      PiggyAppTheme.fontName,
                                                   fontWeight: FontWeight.normal,
                                                   fontSize: 20,
                                                   letterSpacing: 0.0,
-                                                  color: FintnessAppTheme
+                                                  color: PiggyAppTheme
                                                       .nearlyDarkBlue,
                                                 ),
                                               ),
@@ -324,11 +313,11 @@ class TransactionSummaryView extends StatelessWidget {
                                                 textAlign: TextAlign.center,
                                                 style: TextStyle(
                                                   fontFamily:
-                                                      FintnessAppTheme.fontName,
+                                                      PiggyAppTheme.fontName,
                                                   fontWeight: FontWeight.bold,
                                                   fontSize: 12,
                                                   letterSpacing: 0.0,
-                                                  color: FintnessAppTheme.grey
+                                                  color: PiggyAppTheme.grey
                                                       .withOpacity(0.5),
                                                 ),
                                               ),
@@ -341,7 +330,7 @@ class TransactionSummaryView extends StatelessWidget {
                                         child: CustomPaint(
                                           painter: CurvePainter(
                                               colors: [
-                                                FintnessAppTheme.nearlyDarkBlue,
+                                                PiggyAppTheme.nearlyDarkBlue,
                                                 HexColor("#8A98E8"),
                                                 HexColor("#8A98E8")
                                               ],
@@ -367,7 +356,7 @@ class TransactionSummaryView extends StatelessWidget {
                           child: Container(
                             height: 2,
                             decoration: BoxDecoration(
-                              color: FintnessAppTheme.background,
+                              color: PiggyAppTheme.background,
                               borderRadius:
                                   BorderRadius.all(Radius.circular(4.0)),
                             ),
@@ -387,11 +376,11 @@ class TransactionSummaryView extends StatelessWidget {
                                       'Family Income',
                                       textAlign: TextAlign.center,
                                       style: TextStyle(
-                                        fontFamily: FintnessAppTheme.fontName,
+                                        fontFamily: PiggyAppTheme.fontName,
                                         fontWeight: FontWeight.w500,
                                         fontSize: 16,
                                         letterSpacing: -0.2,
-                                        color: FintnessAppTheme.darkText,
+                                        color: PiggyAppTheme.darkText,
                                       ),
                                     ),
                                     Padding(
@@ -432,10 +421,10 @@ class TransactionSummaryView extends StatelessWidget {
                                         '${state.summary.tenantIncome.toStringAsFixed(2)} ${state.summary.currencySymbol}',
                                         textAlign: TextAlign.center,
                                         style: TextStyle(
-                                          fontFamily: FintnessAppTheme.fontName,
+                                          fontFamily: PiggyAppTheme.fontName,
                                           fontWeight: FontWeight.w600,
                                           fontSize: 12,
-                                          color: FintnessAppTheme.grey
+                                          color: PiggyAppTheme.grey
                                               .withOpacity(0.5),
                                         ),
                                       ),
@@ -458,12 +447,11 @@ class TransactionSummaryView extends StatelessWidget {
                                           'Expense',
                                           textAlign: TextAlign.center,
                                           style: TextStyle(
-                                            fontFamily:
-                                                FintnessAppTheme.fontName,
+                                            fontFamily: PiggyAppTheme.fontName,
                                             fontWeight: FontWeight.w500,
                                             fontSize: 16,
                                             letterSpacing: -0.2,
-                                            color: FintnessAppTheme.darkText,
+                                            color: PiggyAppTheme.darkText,
                                           ),
                                         ),
                                         Padding(
@@ -510,10 +498,10 @@ class TransactionSummaryView extends StatelessWidget {
                                             textAlign: TextAlign.center,
                                             style: TextStyle(
                                               fontFamily:
-                                                  FintnessAppTheme.fontName,
+                                                  PiggyAppTheme.fontName,
                                               fontWeight: FontWeight.w600,
                                               fontSize: 12,
-                                              color: FintnessAppTheme.grey
+                                              color: PiggyAppTheme.grey
                                                   .withOpacity(0.5),
                                             ),
                                           ),
@@ -537,12 +525,11 @@ class TransactionSummaryView extends StatelessWidget {
                                         Text(
                                           'Saved',
                                           style: TextStyle(
-                                            fontFamily:
-                                                FintnessAppTheme.fontName,
+                                            fontFamily: PiggyAppTheme.fontName,
                                             fontWeight: FontWeight.w500,
                                             fontSize: 16,
                                             letterSpacing: -0.2,
-                                            color: FintnessAppTheme.darkText,
+                                            color: PiggyAppTheme.darkText,
                                           ),
                                         ),
                                         Padding(
@@ -589,10 +576,10 @@ class TransactionSummaryView extends StatelessWidget {
                                             textAlign: TextAlign.center,
                                             style: TextStyle(
                                               fontFamily:
-                                                  FintnessAppTheme.fontName,
+                                                  PiggyAppTheme.fontName,
                                               fontWeight: FontWeight.w600,
                                               fontSize: 12,
-                                              color: FintnessAppTheme.grey
+                                              color: PiggyAppTheme.grey
                                                   .withOpacity(0.5),
                                             ),
                                           ),

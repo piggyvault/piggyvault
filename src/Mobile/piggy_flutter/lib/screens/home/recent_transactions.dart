@@ -16,8 +16,6 @@ import 'package:piggy_flutter/widgets/common/error_display_widget.dart';
 import 'package:piggy_flutter/widgets/common/loading_widget.dart';
 import 'package:piggy_flutter/widgets/transaction_list.dart';
 
-import '../fintness_app_theme.dart';
-
 class RecentTransactionsPage extends StatefulWidget {
   final AnimationController animationController;
 
@@ -88,7 +86,7 @@ class _RecentTransactionsPageState extends State<RecentTransactionsPage>
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: FintnessAppTheme.background,
+      color: PiggyAppTheme.background,
       child: Scaffold(
         backgroundColor: Colors.transparent,
         body: Stack(
@@ -508,13 +506,13 @@ class _RecentTransactionsPageState extends State<RecentTransactionsPage>
                     0.0, 30 * (1.0 - topBarAnimation.value), 0.0),
                 child: Container(
                   decoration: BoxDecoration(
-                    color: FintnessAppTheme.white.withOpacity(topBarOpacity),
+                    color: PiggyAppTheme.white.withOpacity(topBarOpacity),
                     borderRadius: const BorderRadius.only(
                       bottomLeft: Radius.circular(32.0),
                     ),
                     boxShadow: <BoxShadow>[
                       BoxShadow(
-                          color: FintnessAppTheme.grey
+                          color: PiggyAppTheme.grey
                               .withOpacity(0.4 * topBarOpacity),
                           offset: const Offset(1.1, 1.1),
                           blurRadius: 10.0),
@@ -541,11 +539,11 @@ class _RecentTransactionsPageState extends State<RecentTransactionsPage>
                                   'Recent',
                                   textAlign: TextAlign.left,
                                   style: TextStyle(
-                                    fontFamily: FintnessAppTheme.fontName,
+                                    fontFamily: PiggyAppTheme.fontName,
                                     fontWeight: FontWeight.w700,
                                     fontSize: 22 + 6 - 6 * topBarOpacity,
                                     letterSpacing: 1.2,
-                                    color: FintnessAppTheme.darkerText,
+                                    color: PiggyAppTheme.darkerText,
                                   ),
                                 ),
                               ),
@@ -561,7 +559,7 @@ class _RecentTransactionsPageState extends State<RecentTransactionsPage>
                                     padding: const EdgeInsets.only(right: 8),
                                     child: Icon(
                                       Icons.calendar_today,
-                                      color: FintnessAppTheme.grey,
+                                      color: PiggyAppTheme.grey,
                                       size: 18,
                                     ),
                                   ),
@@ -602,12 +600,11 @@ class _RecentTransactionsPageState extends State<RecentTransactionsPage>
                                               textAlign: TextAlign.left,
                                               style: TextStyle(
                                                 fontFamily:
-                                                    FintnessAppTheme.fontName,
+                                                    PiggyAppTheme.fontName,
                                                 fontWeight: FontWeight.normal,
                                                 fontSize: 18,
                                                 letterSpacing: -0.2,
-                                                color:
-                                                    FintnessAppTheme.darkerText,
+                                                color: PiggyAppTheme.darkerText,
                                               ),
                                             ),
                                           ],

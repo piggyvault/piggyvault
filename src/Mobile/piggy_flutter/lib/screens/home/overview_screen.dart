@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:piggy_flutter/screens/home/transaction_summary_view.dart';
+import 'package:piggy_flutter/theme/theme.dart';
 import 'package:piggy_flutter/widgets/common/common.dart';
 
-import '../fintness_app_theme.dart';
 import 'overall_view.dart';
 
 class OverviewScreen extends StatefulWidget {
@@ -116,7 +116,7 @@ class _OverviewScreenState extends State<OverviewScreen>
     today = formatter.format(DateTime.now());
 
     return Container(
-      color: FintnessAppTheme.background,
+      color: PiggyAppTheme.background,
       child: Scaffold(
         backgroundColor: Colors.transparent,
         body: Stack(
@@ -172,13 +172,13 @@ class _OverviewScreenState extends State<OverviewScreen>
                     0.0, 30 * (1.0 - topBarAnimation.value), 0.0),
                 child: Container(
                   decoration: BoxDecoration(
-                    color: FintnessAppTheme.white.withOpacity(topBarOpacity),
+                    color: PiggyAppTheme.white.withOpacity(topBarOpacity),
                     borderRadius: const BorderRadius.only(
                       bottomLeft: Radius.circular(32.0),
                     ),
                     boxShadow: <BoxShadow>[
                       BoxShadow(
-                          color: FintnessAppTheme.grey
+                          color: PiggyAppTheme.grey
                               .withOpacity(0.4 * topBarOpacity),
                           offset: const Offset(1.1, 1.1),
                           blurRadius: 10.0),
@@ -205,11 +205,11 @@ class _OverviewScreenState extends State<OverviewScreen>
                                   'Overview',
                                   textAlign: TextAlign.left,
                                   style: TextStyle(
-                                    fontFamily: FintnessAppTheme.fontName,
+                                    fontFamily: PiggyAppTheme.fontName,
                                     fontWeight: FontWeight.w700,
                                     fontSize: 22 + 6 - 6 * topBarOpacity,
                                     letterSpacing: 1.2,
-                                    color: FintnessAppTheme.darkerText,
+                                    color: PiggyAppTheme.darkerText,
                                   ),
                                 ),
                               ),
@@ -225,7 +225,7 @@ class _OverviewScreenState extends State<OverviewScreen>
                             //     child: Center(
                             //       child: Icon(
                             //         Icons.keyboard_arrow_left,
-                            //         color: FintnessAppTheme.grey,
+                            //         color: PiggyAppTheme.grey,
                             //       ),
                             //     ),
                             //   ),
@@ -241,7 +241,7 @@ class _OverviewScreenState extends State<OverviewScreen>
                                     padding: const EdgeInsets.only(right: 8),
                                     child: Icon(
                                       Icons.calendar_today,
-                                      color: FintnessAppTheme.grey,
+                                      color: PiggyAppTheme.grey,
                                       size: 18,
                                     ),
                                   ),
@@ -249,11 +249,11 @@ class _OverviewScreenState extends State<OverviewScreen>
                                     today,
                                     textAlign: TextAlign.left,
                                     style: TextStyle(
-                                      fontFamily: FintnessAppTheme.fontName,
+                                      fontFamily: PiggyAppTheme.fontName,
                                       fontWeight: FontWeight.normal,
                                       fontSize: 18,
                                       letterSpacing: -0.2,
-                                      color: FintnessAppTheme.darkerText,
+                                      color: PiggyAppTheme.darkerText,
                                     ),
                                   ),
                                 ],
@@ -270,7 +270,7 @@ class _OverviewScreenState extends State<OverviewScreen>
                             //     child: Center(
                             //       child: Icon(
                             //         Icons.keyboard_arrow_right,
-                            //         color: FintnessAppTheme.grey,
+                            //         color: PiggyAppTheme.grey,
                             //       ),
                             //     ),
                             //   ),

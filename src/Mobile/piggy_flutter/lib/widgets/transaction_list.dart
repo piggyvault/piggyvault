@@ -7,6 +7,7 @@ import 'package:piggy_flutter/blocs/transaction_detail/bloc.dart';
 import 'package:piggy_flutter/models/transaction.dart';
 import 'package:piggy_flutter/models/transaction_group_item.dart';
 import 'package:piggy_flutter/screens/transaction/transaction_detail.dart';
+import 'package:piggy_flutter/theme/piggy_app_theme.dart';
 
 class TransactionList extends StatelessWidget {
   final List<TransactionGroupItem> items;
@@ -56,33 +57,33 @@ class TransactionList extends StatelessWidget {
         buildTransactionList(context, transaction, item.groupby));
 
     return ExpansionTile(
-        key: PageStorageKey(item.title),
-        title: Row(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            Text('${item.title}',
-                style: Theme.of(context).textTheme.title.copyWith(
-                    fontSize: 16.0, color: Theme.of(context).accentColor)),
-            Row(
-              children: <Widget>[
-                Chip(
-                  label: Text('${item.totalInflow.toStringAsFixed(2)}Rs'),
-                  backgroundColor: Colors.greenAccent.shade100,
+      key: PageStorageKey(item.title),
+      title: Row(
+        mainAxisSize: MainAxisSize.max,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          Text('${item.title}',
+              style: Theme.of(context).textTheme.title.copyWith(
+                  fontSize: 16.0, color: Theme.of(context).accentColor)),
+          Row(
+            children: <Widget>[
+              Chip(
+                label: Text('${item.totalInflow.toStringAsFixed(2)}Rs'),
+                backgroundColor: Colors.greenAccent.shade100,
+              ),
+              Chip(
+                label: Text(
+                  '${item.totalOutflow.toStringAsFixed(2)}Rs',
                 ),
-                Chip(
-                  label: Text(
-                    '${item.totalOutflow.toStringAsFixed(2)}Rs',
-                  ),
-                  backgroundColor: Colors.red.shade100,
-                )
-              ],
-            )
-          ],
-        ),
-        initiallyExpanded: true,
-        // backgroundColor: Theme.of(context).accentColor.withOpacity(0.025),
-        children: transactionList.toList());
+                backgroundColor: Colors.red.shade100,
+              )
+            ],
+          )
+        ],
+      ),
+      initiallyExpanded: true,
+      children: transactionList.toList(),
+    );
   }
 
   buildTransactionList(BuildContext context, Transaction transaction,
@@ -91,6 +92,37 @@ class TransactionList extends StatelessWidget {
     return MergeSemantics(
       child: new ListTile(
           dense: true,
+          leading: Container(
+            decoration: BoxDecoration(
+              color: transaction.amount > 0
+                  ? PiggyAppTheme.nearlyDarkBlue
+                  : PiggyAppTheme.grey,
+              gradient: transaction.amount > 0
+                  ? LinearGradient(
+                      colors: [Colors.green, Colors.green[100]],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight)
+                  : LinearGradient(colors: [
+                      Colors.red,
+                      Colors.red[100],
+                    ], begin: Alignment.topLeft, end: Alignment.bottomRight),
+              shape: BoxShape.circle,
+            ),
+            child: Material(
+              color: Colors.transparent,
+              child: transaction.amount > 0
+                  ? Icon(
+                      Icons.radio_button_unchecked,
+                      color: PiggyAppTheme.white,
+                      size: 32,
+                    )
+                  : Icon(
+                      Icons.radio_button_unchecked,
+                      color: PiggyAppTheme.white,
+                      size: 32,
+                    ),
+            ),
+          ),
           title: Text(
             groupBy == TransactionsGroupBy.Date
                 ? transaction.categoryName
@@ -99,23 +131,23 @@ class TransactionList extends StatelessWidget {
           ),
           subtitle: Text(
             "${transaction.description}\n${transaction.creatorUserName}'s ${transaction.accountName}",
-            // style: textTheme.caption,
           ),
           isThreeLine: true,
-          trailing: Text(
-            '${transaction.amount.toString()} ${transaction.accountCurrencySymbol}',
-          ),
-          leading: CircleAvatar(
-            child: Text(
-              groupBy == TransactionsGroupBy.Category
-                  ? DateTime.parse(transaction.transactionTime).day.toString()
-                  : transaction.categoryName[0],
-              style: TextStyle(
-                  color: transaction.amount > 0 ? Colors.white : Colors.black),
-            ),
-            backgroundColor: transaction.amount > 0
-                ? Theme.of(context).accentColor
-                : Theme.of(context).disabledColor,
+          trailing: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Text(
+                '${transaction.amount.toString()} ${transaction.accountCurrencySymbol}',
+              ),
+              Text(
+                '${transaction.balance.toString()} ${transaction.accountCurrencySymbol}',
+                style: TextStyle(
+                  color: PiggyAppTheme.nearlyBlue,
+                  fontSize: 12,
+                  fontWeight: FontWeight.w300,
+                ),
+              )
+            ],
           ),
           onTap: () {
             Navigator.push(

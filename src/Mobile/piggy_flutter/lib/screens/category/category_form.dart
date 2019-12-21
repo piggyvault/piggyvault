@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:flutter_icons/flutter_icons.dart';
 import 'package:piggy_flutter/blocs/categories/categories.dart';
 import 'package:piggy_flutter/models/category.dart';
 import 'package:piggy_flutter/utils/uidata.dart';
@@ -64,7 +64,7 @@ class CategoryFormPageState extends State<CategoryFormPage> {
             showSuccess(
                 context: context,
                 message: UIData.success,
-                icon: FontAwesomeIcons.check);
+                icon: MaterialCommunityIcons.check);
           }
         },
         child: DropdownButtonHideUnderline(

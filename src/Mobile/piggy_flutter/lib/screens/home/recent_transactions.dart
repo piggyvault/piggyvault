@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_icons/flutter_icons.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:piggy_flutter/blocs/recent_transactions/bloc.dart';
 import 'package:piggy_flutter/models/models.dart';
@@ -316,7 +316,7 @@ class _RecentTransactionsPageState extends State<RecentTransactionsPage>
                 },
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),
-                  child: Icon(FontAwesomeIcons.search,
+                  child: Icon(FontAwesome5Solid.search_dollar,
                       size: 20,
                       color: PiggyAppTheme.buildLightTheme().backgroundColor),
                 ),

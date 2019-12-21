@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_icons/flutter_icons.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:piggy_flutter/blocs/account/bloc.dart';
 import 'package:piggy_flutter/blocs/account_transactions/bloc.dart';
@@ -261,7 +261,7 @@ class _AccountDetailPageState extends State<AccountDetailPage>
                 },
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),
-                  child: Icon(FontAwesomeIcons.search,
+                  child: Icon(FontAwesome5Solid.search_dollar,
                       size: 20,
                       color: PiggyAppTheme.buildLightTheme().backgroundColor),
                 ),

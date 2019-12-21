@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:flutter_icons/flutter_icons.dart';
 import 'package:piggy_flutter/blocs/account_form/bloc.dart';
 import 'package:piggy_flutter/blocs/account_types/bloc.dart';
 import 'package:piggy_flutter/blocs/accounts/accounts.dart';
@@ -87,7 +87,7 @@ class _AccountFormScreenState extends State<AccountFormScreen> {
             showSuccess(
                 context: context,
                 message: UIData.success,
-                icon: FontAwesomeIcons.check);
+                icon: MaterialCommunityIcons.check);
           }
         },
         child: BlocBuilder<AccountFormBloc, AccountFormState>(

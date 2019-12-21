@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:flutter_icons/flutter_icons.dart';
 import 'package:piggy_flutter/blocs/accounts/accounts.dart';
 import 'package:piggy_flutter/blocs/categories/categories_bloc.dart';
 import 'package:piggy_flutter/blocs/categories/categories_state.dart';
@@ -134,7 +134,7 @@ class TransactionFormPageState extends State<TransactionFormPage> {
               showSuccess(
                   context: context,
                   message: UIData.success,
-                  icon: FontAwesomeIcons.check);
+                  icon: MaterialCommunityIcons.check);
             }
           },
           child: DropdownButtonHideUnderline(

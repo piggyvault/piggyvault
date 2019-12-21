@@ -1,5 +1,6 @@
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
+import 'package:flutter_icons/flutter_icons.dart';
 import 'package:piggy_flutter/theme/piggy_app_theme.dart';
 
 import 'home_screen.dart';
@@ -137,7 +138,6 @@ class _BottomBarViewState extends State<BottomBarView>
                             parent: animationController,
                             curve: Curves.fastOutSlowIn)),
                     child: Container(
-                      // alignment: Alignment.center,s
                       decoration: BoxDecoration(
                         color: PiggyAppTheme.nearlyDarkBlue,
                         gradient: LinearGradient(
@@ -214,7 +214,9 @@ class _TabIconsState extends State<TabIcons> with TickerProviderStateMixin {
       duration: const Duration(milliseconds: 400),
     )..addStatusListener((AnimationStatus status) {
         if (status == AnimationStatus.completed) {
-          if (!mounted) return;
+          if (!mounted) {
+            return;
+          }
           widget.removeAllSelect();
           widget.tabIconData.animationController.reverse();
         }
@@ -248,13 +250,17 @@ class _TabIconsState extends State<TabIcons> with TickerProviderStateMixin {
                 ScaleTransition(
                   alignment: Alignment.center,
                   scale: Tween<double>(begin: 0.88, end: 1.0).animate(
-                      CurvedAnimation(
-                          parent: widget.tabIconData.animationController,
-                          curve:
-                              Interval(0.1, 1.0, curve: Curves.fastOutSlowIn))),
-                  child: Image.asset(widget.tabIconData.isSelected
-                      ? widget.tabIconData.selectedImagePath
-                      : widget.tabIconData.imagePath),
+                    CurvedAnimation(
+                      parent: widget.tabIconData.animationController,
+                      curve: Interval(0.1, 1.0, curve: Curves.fastOutSlowIn),
+                    ),
+                  ),
+                  child: IconToggle(
+                    activeColor: PiggyAppTheme.nearlyDarkBlue,
+                    selectedIconData: widget.tabIconData.iconData,
+                    unselectedIconData: widget.tabIconData.iconData,
+                    value: widget.tabIconData.isSelected,
+                  ),
                 ),
                 Positioned(
                   top: 4,

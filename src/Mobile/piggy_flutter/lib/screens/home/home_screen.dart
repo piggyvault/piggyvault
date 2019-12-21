@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_icons/flutter_icons.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:piggy_flutter/blocs/transaction/transaction.dart';
 import 'package:piggy_flutter/blocs/transaction_detail/bloc.dart';
@@ -19,45 +20,39 @@ import 'bottom_bar_view.dart';
 
 class TabIconData {
   TabIconData({
-    this.imagePath = '',
     this.index = 0,
-    this.selectedImagePath = '',
     this.isSelected = false,
+    this.iconData,
     this.animationController,
   });
 
-  String imagePath;
-  String selectedImagePath;
   bool isSelected;
   int index;
+  IconData iconData;
 
   AnimationController animationController;
 
   static List<TabIconData> tabIconsList = <TabIconData>[
     TabIconData(
-      imagePath: 'assets/images/tab_1.png',
-      selectedImagePath: 'assets/images/tab_1s.png',
+      iconData: MaterialCommunityIcons.desktop_mac_dashboard,
       index: 0,
       isSelected: true,
       animationController: null,
     ),
     TabIconData(
-      imagePath: 'assets/images/tab_2.png',
-      selectedImagePath: 'assets/images/tab_2s.png',
+      iconData: MaterialCommunityIcons.calendar_month_outline,
       index: 1,
       isSelected: false,
       animationController: null,
     ),
     TabIconData(
-      imagePath: 'assets/images/tab_3.png',
-      selectedImagePath: 'assets/images/tab_3s.png',
+      iconData: MaterialCommunityIcons.bank,
       index: 2,
       isSelected: false,
       animationController: null,
     ),
     TabIconData(
-      imagePath: 'assets/images/tab_4.png',
-      selectedImagePath: 'assets/images/tab_4s.png',
+      iconData: MaterialCommunityIcons.finance,
       index: 3,
       isSelected: false,
       animationController: null,
@@ -87,9 +82,9 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
   @override
   void initState() {
-    tabIconsList.forEach((TabIconData tab) {
+    for (TabIconData tab in tabIconsList) {
       tab.isSelected = false;
-    });
+    }
     tabIconsList[0].isSelected = true;
 
     animationController = AnimationController(
@@ -147,9 +142,9 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
     OneSignal.shared
         .setNotificationOpenedHandler((OSNotificationOpenedResult result) {
-      // print(
-      //     "########## Opened notification: \n${result.notification.jsonRepresentation().replaceAll("\\n", "\n")}");
-      var transactionData = result.notification.payload.additionalData;
+      final Map<String, dynamic> transactionData =
+          result.notification.payload.additionalData;
+
       try {
         final Transaction transaction = Transaction(
             id: transactionData['TransactionId'],
@@ -159,9 +154,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             categoryName: transactionData['CategoryName'],
             creatorUserName: transactionData['CreatorUserName'],
             accountName: transactionData['AccountName']);
-        // TODO: get data from Id rather than sending over notification
-        // print(
-        //     "########## Opened notification: \n${result.notification.jsonRepresentation().replaceAll("\\n", "\n")}");
+        // TODO(abhith): get data from Id rather than sending over notification
+
         Navigator.push(
             context,
             MaterialPageRoute(

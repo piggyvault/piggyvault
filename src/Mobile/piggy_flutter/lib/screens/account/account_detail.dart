@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_icons/flutter_icons.dart';
@@ -29,12 +32,14 @@ class AccountDetailPage extends StatefulWidget {
       {Key key,
       @required this.account,
       @required this.transactionRepository,
-      @required this.accountRepository})
+      @required this.accountRepository,
+      @required this.animationController})
       : super(key: key);
 
   final Account account;
   final TransactionRepository transactionRepository;
   final AccountRepository accountRepository;
+  final AnimationController animationController;
 
   @override
   _AccountDetailPageState createState() => _AccountDetailPageState();
@@ -42,8 +47,13 @@ class AccountDetailPage extends StatefulWidget {
 
 class _AccountDetailPageState extends State<AccountDetailPage>
     with TickerProviderStateMixin {
-  AnimationController animationController;
-  final ScrollController _scrollController = ScrollController();
+  Animation<double> topBarAnimation;
+  Animation<double> listAnimation;
+  final ScrollController scrollController = ScrollController();
+  double topBarOpacity = 0.0;
+
+  List<Widget> listViews = <Widget>[];
+  Completer<void> _refreshCompleter;
 
   AccountTransactionsBloc accountTransactionsBloc;
   AccountBloc accountBloc;
@@ -53,6 +63,42 @@ class _AccountDetailPageState extends State<AccountDetailPage>
 
   @override
   void initState() {
+    topBarAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(
+        parent: widget.animationController,
+        curve: Interval(0, 0.5, curve: Curves.fastOutSlowIn),
+      ),
+    );
+
+    listAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
+        parent: widget.animationController,
+        curve: Interval(0.5, 1.0, curve: Curves.fastOutSlowIn)));
+
+    scrollController.addListener(() {
+      if (scrollController.offset >= 24) {
+        if (topBarOpacity != 1.0) {
+          setState(() {
+            topBarOpacity = 1.0;
+          });
+        }
+      } else if (scrollController.offset <= 24 &&
+          scrollController.offset >= 0) {
+        if (topBarOpacity != scrollController.offset / 24) {
+          setState(() {
+            topBarOpacity = scrollController.offset / 24;
+          });
+        }
+      } else if (scrollController.offset <= 0) {
+        if (topBarOpacity != 0.0) {
+          setState(() {
+            topBarOpacity = 0.0;
+          });
+        }
+      }
+    });
+
+    _refreshCompleter = Completer<void>();
+
     accountTransactionsBloc = AccountTransactionsBloc(
         transactionRepository: widget.transactionRepository,
         transactionBloc: BlocProvider.of<TransactionBloc>(context));
@@ -73,125 +119,310 @@ class _AccountDetailPageState extends State<AccountDetailPage>
             groupBy: TransactionsGroupBy.Date),
       ),
     );
-    animationController = AnimationController(
-        duration: const Duration(milliseconds: 1000), vsync: this);
 
     super.initState();
   }
 
   @override
-  void dispose() {
-    animationController.dispose();
-    super.dispose();
+  Widget build(BuildContext context) {
+    return Container(
+      color: PiggyAppTheme.background,
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        body: Stack(
+          children: <Widget>[
+            getMainListViewUI(),
+            getAppBarUI(),
+            SizedBox(
+              height: MediaQuery.of(context).padding.bottom,
+            )
+          ],
+        ),
+        floatingActionButton: AddTransactionFab(
+          account: widget.account,
+        ),
+      ),
+    );
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Theme(
-      data: PiggyAppTheme.buildLightTheme(),
-      child: Container(
-        child: Scaffold(
-            body: Stack(
-              children: <Widget>[
-                InkWell(
-                  splashColor: Colors.transparent,
-                  focusColor: Colors.transparent,
-                  highlightColor: Colors.transparent,
-                  hoverColor: Colors.transparent,
-                  onTap: () {
-                    FocusScope.of(context).requestFocus(FocusNode());
-                  },
-                  child: Column(
-                    children: <Widget>[
-                      getAppBarUI(),
-                      Expanded(
-                        child: NestedScrollView(
-                          controller: _scrollController,
-                          headerSliverBuilder:
-                              (BuildContext context, bool innerBoxIsScrolled) {
-                            return <Widget>[
-                              SliverList(
-                                delegate: SliverChildBuilderDelegate(
-                                    (BuildContext context, int index) {
-                                  return Column(
-                                    children: <Widget>[
-                                      getSearchBarUI(),
-                                      getTimeDateUI(
-                                          accountTransactionsBloc, accountBloc),
-                                    ],
-                                  );
-                                }, childCount: 1),
-                              ),
-                              SliverPersistentHeader(
-                                pinned: true,
-                                floating: true,
-                                delegate: ContestTabHeader(
-                                  getFilterBarUI(),
-                                ),
-                              ),
-                            ];
+  Future<bool> getData() async {
+    await Future<dynamic>.delayed(const Duration(milliseconds: 50));
+    return true;
+  }
+
+  Widget getMainListViewUI() {
+    return FutureBuilder<bool>(
+        future: getData(),
+        builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+          if (!snapshot.hasData) {
+            return const SizedBox();
+          } else {
+            widget.animationController.forward();
+            return AnimatedBuilder(
+                animation: widget.animationController,
+                builder: (BuildContext context, Widget child) {
+                  return FadeTransition(
+                      opacity: listAnimation,
+                      child: Transform(
+                        transform: Matrix4.translationValues(
+                            0.0, 30 * (1.0 - listAnimation.value), 0.0),
+                        child: InkWell(
+                          splashColor: Colors.transparent,
+                          focusColor: Colors.transparent,
+                          highlightColor: Colors.transparent,
+                          hoverColor: Colors.transparent,
+                          onTap: () {
+                            FocusScope.of(context).requestFocus(FocusNode());
                           },
-                          body: Container(
-                            color:
-                                PiggyAppTheme.buildLightTheme().backgroundColor,
-                            child: BlocBuilder<AccountTransactionsBloc,
-                                AccountTransactionsState>(
-                              bloc: accountTransactionsBloc,
-                              builder: (context, state) {
-                                return SafeArea(
-                                  top: false,
-                                  bottom: false,
-                                  child: Column(
-                                    children: <Widget>[
-                                      Expanded(
-                                        child: Stack(
-                                          children: <Widget>[
-                                            // Fade in a loading screen when results are being fetched
-                                            LoadingWidget(
-                                                visible: state
-                                                    is AccountTransactionsLoading),
-
-                                            // Fade in an Empty Result screen if the search contained
-                                            // no items
-                                            EmptyResultWidget(
-                                                visible: state
-                                                    is AccountTransactionsEmpty),
-
-                                            // Fade in an error if something went wrong when fetching
-                                            // the results
-                                            ErrorDisplayWidget(
-                                                visible: state
-                                                    is AccountTransactionsError),
-
-                                            // Fade in the Result if available
-                                            TransactionList(
-                                              items: state
-                                                      is AccountTransactionsLoaded
-                                                  ? state
-                                                      .filterdAccountTransactions
-                                                      .sections
-                                                  : [],
-                                            ),
-                                          ],
+                          child: Padding(
+                            padding: EdgeInsets.only(
+                              top: AppBar().preferredSize.height +
+                                  MediaQuery.of(context).padding.top,
+                              bottom:
+                                  62 + MediaQuery.of(context).padding.bottom,
+                            ),
+                            child: Column(
+                              children: <Widget>[
+                                Expanded(
+                                  child: NestedScrollView(
+                                    controller: scrollController,
+                                    headerSliverBuilder: (BuildContext context,
+                                        bool innerBoxIsScrolled) {
+                                      return <Widget>[
+                                        SliverList(
+                                          delegate: SliverChildBuilderDelegate(
+                                              (BuildContext context,
+                                                  int index) {
+                                            return Column(
+                                              children: <Widget>[
+                                                getSearchBarUI(),
+                                                getTimeDateUI(
+                                                    accountTransactionsBloc,
+                                                    accountBloc),
+                                              ],
+                                            );
+                                          }, childCount: 1),
                                         ),
+                                        SliverPersistentHeader(
+                                          pinned: true,
+                                          floating: true,
+                                          delegate: ContestTabHeader(
+                                            getFilterBarUI(),
+                                          ),
+                                        ),
+                                      ];
+                                    },
+                                    body: Container(
+                                      color: PiggyAppTheme.buildLightTheme()
+                                          .backgroundColor,
+                                      child: BlocBuilder<
+                                          AccountTransactionsBloc,
+                                          AccountTransactionsState>(
+                                        bloc: accountTransactionsBloc,
+                                        builder: (BuildContext context,
+                                            AccountTransactionsState state) {
+                                          if (state
+                                              is AccountTransactionsLoaded) {
+                                            _refreshCompleter?.complete();
+                                            _refreshCompleter = Completer();
+                                          }
+
+                                          if (state
+                                              is AccountTransactionsEmpty) {
+                                            _refreshCompleter?.complete();
+                                            _refreshCompleter = Completer();
+                                          }
+
+                                          return RefreshIndicator(
+                                            onRefresh: () {
+                                              accountBloc.add(FetchAccount(
+                                                  accountId:
+                                                      widget.account.id));
+                                              accountTransactionsBloc.add(
+                                                FetchAccountTransactions(
+                                                  input: GetTransactionsInput(
+                                                      type: 'account',
+                                                      accountId:
+                                                          widget.account.id,
+                                                      startDate: startDate,
+                                                      endDate: endDate,
+                                                      groupBy:
+                                                          TransactionsGroupBy
+                                                              .Date),
+                                                ),
+                                              );
+                                              return _refreshCompleter.future;
+                                            },
+                                            child: SafeArea(
+                                              top: false,
+                                              bottom: false,
+                                              child: Column(
+                                                children: <Widget>[
+                                                  Expanded(
+                                                    child: Stack(
+                                                      children: <Widget>[
+                                                        // Fade in a loading screen when results are being fetched
+                                                        LoadingWidget(
+                                                            visible: state
+                                                                is AccountTransactionsLoading),
+
+                                                        // Fade in an Empty Result screen if the search contained
+                                                        // no items
+                                                        EmptyResultWidget(
+                                                            visible: state
+                                                                is AccountTransactionsEmpty),
+
+                                                        // Fade in an error if something went wrong when fetching
+                                                        // the results
+                                                        ErrorDisplayWidget(
+                                                            visible: state
+                                                                is AccountTransactionsError),
+
+                                                        // Fade in the Result if available
+                                                        TransactionList(
+                                                          items: state
+                                                                  is AccountTransactionsLoaded
+                                                              ? state
+                                                                  .filterdAccountTransactions
+                                                                  .sections
+                                                              : [],
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          );
+                                        },
                                       ),
-                                    ],
+                                    ),
                                   ),
-                                );
-                              },
+                                )
+                              ],
                             ),
                           ),
+                        ),
+                      ));
+                });
+          }
+        });
+  }
+
+  Widget getAppBarUI() {
+    return Column(
+      children: <Widget>[
+        AnimatedBuilder(
+          animation: widget.animationController,
+          builder: (BuildContext context, Widget child) {
+            return FadeTransition(
+              opacity: topBarAnimation,
+              child: Transform(
+                transform: Matrix4.translationValues(
+                    0.0, 30 * (1.0 - topBarAnimation.value), 0.0),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: PiggyAppTheme.white.withOpacity(topBarOpacity),
+                    borderRadius: const BorderRadius.only(
+                      bottomLeft: Radius.circular(32.0),
+                    ),
+                    boxShadow: <BoxShadow>[
+                      BoxShadow(
+                          color: PiggyAppTheme.grey
+                              .withOpacity(0.4 * topBarOpacity),
+                          offset: const Offset(1.1, 1.1),
+                          blurRadius: 10.0),
+                    ],
+                  ),
+                  child: Column(
+                    children: <Widget>[
+                      SizedBox(
+                        height: MediaQuery.of(context).padding.top,
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(
+                            left: 16,
+                            right: 16,
+                            top: 16 - 8.0 * topBarOpacity,
+                            bottom: 12 - 8.0 * topBarOpacity),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Expanded(
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: AutoSizeText(
+                                  widget.account.name,
+                                  textAlign: TextAlign.left,
+                                  style: TextStyle(
+                                    fontFamily: PiggyAppTheme.fontName,
+                                    fontWeight: FontWeight.w700,
+                                    fontSize: 22 + 6 - 6 * topBarOpacity,
+                                    letterSpacing: 1.2,
+                                    color: PiggyAppTheme.darkerText,
+                                  ),
+                                  maxLines: 1,
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                left: 8,
+                                right: 8,
+                              ),
+                              child: PopupMenuButton<String>(
+                                padding: EdgeInsets.zero,
+                                onSelected: (value) {
+                                  // print('PopupMenuButton onSelected $value');
+                                  switch (value) {
+                                    case UIData.account_edit:
+                                      {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute<
+                                              DismissDialogAction>(
+                                            builder: (BuildContext context) =>
+                                                AccountFormScreen(
+                                              account: widget.account,
+                                              title: 'Edit Account',
+                                            ),
+                                            fullscreenDialog: true,
+                                          ),
+                                        );
+                                      }
+                                      break;
+                                  }
+                                },
+                                itemBuilder: (BuildContext context) =>
+                                    <PopupMenuEntry<String>>[
+                                  const PopupMenuItem<String>(
+                                    value: UIData.account_edit,
+                                    child: ListTile(
+                                      leading: Icon(Icons.edit),
+                                      title: Text(UIData.edit),
+                                    ),
+                                  ),
+                                  const PopupMenuItem<String>(
+                                    value: UIData.adjust_balance,
+                                    child: ListTile(
+                                      leading: Icon(Icons.account_balance),
+                                      title: Text(UIData.adjust_balance),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
                         ),
                       )
                     ],
                   ),
                 ),
-              ],
-            ),
-            floatingActionButton: AddTransactionFab(
-              account: widget.account,
-            )),
-      ),
+              ),
+            );
+          },
+        )
+      ],
     );
   }
 
@@ -561,51 +792,6 @@ class _AccountDetailPageState extends State<AccountDetailPage>
             height: 1,
           ),
         )
-      ],
-    );
-  }
-
-  Widget getAppBarUI() {
-    return AppBar(
-      title: Text(widget.account.name),
-      actions: <Widget>[
-        PopupMenuButton<String>(
-          padding: EdgeInsets.zero,
-          onSelected: (value) {
-            // print('PopupMenuButton onSelected $value');
-            switch (value) {
-              case UIData.account_edit:
-                {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute<DismissDialogAction>(
-                        builder: (BuildContext context) => AccountFormScreen(
-                          account: widget.account,
-                          title: 'Edit Account',
-                        ),
-                        fullscreenDialog: true,
-                      ));
-                }
-                break;
-            }
-          },
-          itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-            const PopupMenuItem<String>(
-              value: UIData.account_edit,
-              child: ListTile(
-                leading: Icon(Icons.edit),
-                title: Text(UIData.edit),
-              ),
-            ),
-            const PopupMenuItem<String>(
-              value: UIData.adjust_balance,
-              child: ListTile(
-                leading: Icon(Icons.account_balance),
-                title: Text(UIData.adjust_balance),
-              ),
-            ),
-          ],
-        ),
       ],
     );
   }

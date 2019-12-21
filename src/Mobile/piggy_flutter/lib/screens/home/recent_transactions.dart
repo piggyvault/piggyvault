@@ -17,9 +17,10 @@ import 'package:piggy_flutter/widgets/common/loading_widget.dart';
 import 'package:piggy_flutter/widgets/transaction_list.dart';
 
 class RecentTransactionsPage extends StatefulWidget {
-  final AnimationController animationController;
+  const RecentTransactionsPage({Key key, @required this.animationController})
+      : super(key: key);
 
-  RecentTransactionsPage({Key key, this.animationController}) : super(key: key);
+  final AnimationController animationController;
 
   @override
   _RecentTransactionsPageState createState() => _RecentTransactionsPageState();

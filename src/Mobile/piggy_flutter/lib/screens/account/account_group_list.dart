@@ -5,10 +5,14 @@ import 'package:piggy_flutter/repositories/repositories.dart';
 import 'package:piggy_flutter/screens/account/account_detail.dart';
 
 class AccountGroupList extends StatelessWidget {
-  const AccountGroupList({@required this.accounts, @required this.title});
+  const AccountGroupList(
+      {@required this.accounts,
+      @required this.title,
+      @required this.animationController});
 
   final List<Account> accounts;
   final String title;
+  final AnimationController animationController;
 
   @override
   Widget build(BuildContext context) {
@@ -43,6 +47,7 @@ class AccountGroupList extends StatelessWidget {
         onTap: () => Navigator.of(context).push(
           MaterialPageRoute<AccountDetailPage>(
             builder: (BuildContext context) => AccountDetailPage(
+              animationController: animationController,
               account: account,
               accountRepository:
                   RepositoryProvider.of<AccountRepository>(context),

@@ -108,8 +108,8 @@ class _AccountListPageState extends State<AccountListPage>
             builder: (BuildContext context, Widget child) {
               return FadeTransition(
                 opacity: listAnimation,
-                child: new Transform(
-                  transform: new Matrix4.translationValues(
+                child: Transform(
+                  transform: Matrix4.translationValues(
                       0.0, 30 * (1.0 - listAnimation.value), 0.0),
                   child: Padding(
                     padding: EdgeInsets.only(
@@ -139,9 +139,13 @@ class _AccountListPageState extends State<AccountListPage>
                               controller: scrollController,
                               children: <Widget>[
                                 AccountGroupList(
+                                    animationController:
+                                        widget.animationController,
                                     accounts: state.userAccounts,
                                     title: 'Your Accounts'),
                                 AccountGroupList(
+                                    animationController:
+                                        widget.animationController,
                                     accounts: state.familyAccounts,
                                     title: 'Family Accounts')
                               ],

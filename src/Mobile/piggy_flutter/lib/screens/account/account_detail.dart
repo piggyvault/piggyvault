@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -47,6 +48,7 @@ class AccountDetailPage extends StatefulWidget {
 
 class _AccountDetailPageState extends State<AccountDetailPage>
     with TickerProviderStateMixin {
+  AnimationController _hideFabAnimation;
   Animation<double> topBarAnimation;
   Animation<double> listAnimation;
   final ScrollController scrollController = ScrollController();
@@ -63,6 +65,9 @@ class _AccountDetailPageState extends State<AccountDetailPage>
 
   @override
   void initState() {
+    _hideFabAnimation =
+        AnimationController(vsync: this, duration: kThemeAnimationDuration);
+    _hideFabAnimation.forward();
     topBarAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(
         parent: widget.animationController,
@@ -125,21 +130,53 @@ class _AccountDetailPageState extends State<AccountDetailPage>
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: PiggyAppTheme.background,
-      child: Scaffold(
-        backgroundColor: Colors.transparent,
-        body: Stack(
-          children: <Widget>[
-            getMainListViewUI(),
-            getAppBarUI(),
-          ],
-        ),
-        floatingActionButton: AddTransactionFab(
-          account: widget.account,
+    return NotificationListener<ScrollNotification>(
+      onNotification: _handleScrollNotification,
+      child: Container(
+        color: PiggyAppTheme.background,
+        child: Scaffold(
+          backgroundColor: Colors.transparent,
+          body: Stack(
+            children: <Widget>[
+              getMainListViewUI(),
+              getAppBarUI(),
+            ],
+          ),
+          floatingActionButton: ScaleTransition(
+            scale: _hideFabAnimation,
+            alignment: Alignment.bottomCenter,
+            child: AddTransactionFab(
+              account: widget.account,
+            ),
+          ),
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _hideFabAnimation.dispose();
+    super.dispose();
+  }
+
+  bool _handleScrollNotification(ScrollNotification notification) {
+    if (notification.depth == 0) {
+      if (notification is UserScrollNotification) {
+        final UserScrollNotification userScroll = notification;
+        switch (userScroll.direction) {
+          case ScrollDirection.forward:
+            _hideFabAnimation.forward();
+            break;
+          case ScrollDirection.reverse:
+            _hideFabAnimation.reverse();
+            break;
+          case ScrollDirection.idle:
+            break;
+        }
+      }
+    }
+    return false;
   }
 
   Future<bool> getData() async {

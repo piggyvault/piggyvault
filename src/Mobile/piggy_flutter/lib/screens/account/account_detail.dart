@@ -133,9 +133,6 @@ class _AccountDetailPageState extends State<AccountDetailPage>
           children: <Widget>[
             getMainListViewUI(),
             getAppBarUI(),
-            SizedBox(
-              height: MediaQuery.of(context).padding.bottom,
-            )
           ],
         ),
         floatingActionButton: AddTransactionFab(
@@ -152,161 +149,154 @@ class _AccountDetailPageState extends State<AccountDetailPage>
 
   Widget getMainListViewUI() {
     return FutureBuilder<bool>(
-        future: getData(),
-        builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
-          if (!snapshot.hasData) {
-            return const SizedBox();
-          } else {
-            widget.animationController.forward();
-            return AnimatedBuilder(
-                animation: widget.animationController,
-                builder: (BuildContext context, Widget child) {
-                  return FadeTransition(
-                      opacity: listAnimation,
-                      child: Transform(
-                        transform: Matrix4.translationValues(
-                            0.0, 30 * (1.0 - listAnimation.value), 0.0),
-                        child: InkWell(
-                          splashColor: Colors.transparent,
-                          focusColor: Colors.transparent,
-                          highlightColor: Colors.transparent,
-                          hoverColor: Colors.transparent,
-                          onTap: () {
-                            FocusScope.of(context).requestFocus(FocusNode());
-                          },
-                          child: Padding(
-                            padding: EdgeInsets.only(
-                              top: AppBar().preferredSize.height +
-                                  MediaQuery.of(context).padding.top,
-                              bottom:
-                                  62 + MediaQuery.of(context).padding.bottom,
-                            ),
-                            child: Column(
-                              children: <Widget>[
-                                Expanded(
-                                  child: NestedScrollView(
-                                    controller: scrollController,
-                                    headerSliverBuilder: (BuildContext context,
-                                        bool innerBoxIsScrolled) {
-                                      return <Widget>[
-                                        SliverList(
-                                          delegate: SliverChildBuilderDelegate(
-                                              (BuildContext context,
-                                                  int index) {
-                                            return Column(
-                                              children: <Widget>[
-                                                getSearchBarUI(),
-                                                getTimeDateUI(
-                                                    accountTransactionsBloc,
-                                                    accountBloc),
-                                              ],
-                                            );
-                                          }, childCount: 1),
-                                        ),
-                                        SliverPersistentHeader(
-                                          pinned: true,
-                                          floating: true,
-                                          delegate: ContestTabHeader(
-                                            getFilterBarUI(),
+      future: getData(),
+      builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+        if (!snapshot.hasData) {
+          return const SizedBox();
+        } else {
+          widget.animationController.forward();
+          return AnimatedBuilder(
+            animation: widget.animationController,
+            builder: (BuildContext context, Widget child) {
+              return FadeTransition(
+                opacity: listAnimation,
+                child: Transform(
+                  transform: Matrix4.translationValues(
+                      0.0, 30 * (1.0 - listAnimation.value), 0.0),
+                  child: InkWell(
+                    splashColor: Colors.transparent,
+                    focusColor: Colors.transparent,
+                    highlightColor: Colors.transparent,
+                    hoverColor: Colors.transparent,
+                    onTap: () {
+                      FocusScope.of(context).requestFocus(FocusNode());
+                    },
+                    child: Padding(
+                      padding: EdgeInsets.only(
+                        top: AppBar().preferredSize.height +
+                            MediaQuery.of(context).padding.top,
+                      ),
+                      child: Column(
+                        children: <Widget>[
+                          Expanded(
+                            child: NestedScrollView(
+                              controller: scrollController,
+                              headerSliverBuilder: (BuildContext context,
+                                  bool innerBoxIsScrolled) {
+                                return <Widget>[
+                                  SliverList(
+                                    delegate: SliverChildBuilderDelegate(
+                                        (BuildContext context, int index) {
+                                      return Column(
+                                        children: <Widget>[
+                                          getSearchBarUI(),
+                                          getTimeDateUI(accountTransactionsBloc,
+                                              accountBloc),
+                                        ],
+                                      );
+                                    }, childCount: 1),
+                                  ),
+                                  SliverPersistentHeader(
+                                    pinned: true,
+                                    floating: true,
+                                    delegate: ContestTabHeader(
+                                      getFilterBarUI(),
+                                    ),
+                                  ),
+                                ];
+                              },
+                              body: Container(
+                                color: PiggyAppTheme.buildLightTheme()
+                                    .backgroundColor,
+                                child: BlocBuilder<AccountTransactionsBloc,
+                                    AccountTransactionsState>(
+                                  bloc: accountTransactionsBloc,
+                                  builder: (BuildContext context,
+                                      AccountTransactionsState state) {
+                                    if (state is AccountTransactionsLoaded) {
+                                      _refreshCompleter?.complete();
+                                      _refreshCompleter = Completer();
+                                    }
+
+                                    if (state is AccountTransactionsEmpty) {
+                                      _refreshCompleter?.complete();
+                                      _refreshCompleter = Completer();
+                                    }
+
+                                    return RefreshIndicator(
+                                      onRefresh: () {
+                                        accountBloc.add(FetchAccount(
+                                            accountId: widget.account.id));
+                                        accountTransactionsBloc.add(
+                                          FetchAccountTransactions(
+                                            input: GetTransactionsInput(
+                                                type: 'account',
+                                                accountId: widget.account.id,
+                                                startDate: startDate,
+                                                endDate: endDate,
+                                                groupBy:
+                                                    TransactionsGroupBy.Date),
                                           ),
-                                        ),
-                                      ];
-                                    },
-                                    body: Container(
-                                      color: PiggyAppTheme.buildLightTheme()
-                                          .backgroundColor,
-                                      child: BlocBuilder<
-                                          AccountTransactionsBloc,
-                                          AccountTransactionsState>(
-                                        bloc: accountTransactionsBloc,
-                                        builder: (BuildContext context,
-                                            AccountTransactionsState state) {
-                                          if (state
-                                              is AccountTransactionsLoaded) {
-                                            _refreshCompleter?.complete();
-                                            _refreshCompleter = Completer();
-                                          }
-
-                                          if (state
-                                              is AccountTransactionsEmpty) {
-                                            _refreshCompleter?.complete();
-                                            _refreshCompleter = Completer();
-                                          }
-
-                                          return RefreshIndicator(
-                                            onRefresh: () {
-                                              accountBloc.add(FetchAccount(
-                                                  accountId:
-                                                      widget.account.id));
-                                              accountTransactionsBloc.add(
-                                                FetchAccountTransactions(
-                                                  input: GetTransactionsInput(
-                                                      type: 'account',
-                                                      accountId:
-                                                          widget.account.id,
-                                                      startDate: startDate,
-                                                      endDate: endDate,
-                                                      groupBy:
-                                                          TransactionsGroupBy
-                                                              .Date),
-                                                ),
-                                              );
-                                              return _refreshCompleter.future;
-                                            },
-                                            child: SafeArea(
-                                              top: false,
-                                              bottom: false,
-                                              child: Column(
+                                        );
+                                        return _refreshCompleter.future;
+                                      },
+                                      child: SafeArea(
+                                        top: false,
+                                        bottom: false,
+                                        child: Column(
+                                          children: <Widget>[
+                                            Expanded(
+                                              child: Stack(
                                                 children: <Widget>[
-                                                  Expanded(
-                                                    child: Stack(
-                                                      children: <Widget>[
-                                                        // Fade in a loading screen when results are being fetched
-                                                        LoadingWidget(
-                                                            visible: state
-                                                                is AccountTransactionsLoading),
+                                                  // Fade in a loading screen when results are being fetched
+                                                  LoadingWidget(
+                                                      visible: state
+                                                          is AccountTransactionsLoading),
 
-                                                        // Fade in an Empty Result screen if the search contained
-                                                        // no items
-                                                        EmptyResultWidget(
-                                                            visible: state
-                                                                is AccountTransactionsEmpty),
+                                                  // Fade in an Empty Result screen if the search contained
+                                                  // no items
+                                                  EmptyResultWidget(
+                                                      visible: state
+                                                          is AccountTransactionsEmpty),
 
-                                                        // Fade in an error if something went wrong when fetching
-                                                        // the results
-                                                        ErrorDisplayWidget(
-                                                            visible: state
-                                                                is AccountTransactionsError),
+                                                  // Fade in an error if something went wrong when fetching
+                                                  // the results
+                                                  ErrorDisplayWidget(
+                                                      visible: state
+                                                          is AccountTransactionsError),
 
-                                                        // Fade in the Result if available
-                                                        TransactionList(
-                                                          items: state
-                                                                  is AccountTransactionsLoaded
-                                                              ? state
-                                                                  .filterdAccountTransactions
-                                                                  .sections
-                                                              : [],
-                                                        ),
-                                                      ],
-                                                    ),
+                                                  // Fade in the Result if available
+                                                  TransactionList(
+                                                    items: state
+                                                            is AccountTransactionsLoaded
+                                                        ? state
+                                                            .filterdAccountTransactions
+                                                            .sections
+                                                        : [],
                                                   ),
                                                 ],
                                               ),
                                             ),
-                                          );
-                                        },
+                                          ],
+                                        ),
                                       ),
-                                    ),
-                                  ),
-                                )
-                              ],
+                                    );
+                                  },
+                                ),
+                              ),
                             ),
-                          ),
-                        ),
-                      ));
-                });
-          }
-        });
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              );
+            },
+          );
+        }
+      },
+    );
   }
 
   Widget getAppBarUI() {

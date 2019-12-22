@@ -552,9 +552,6 @@ class _AccountDetailPageState extends State<AccountDetailPage>
                     ),
                     onTap: () {
                       FocusScope.of(context).requestFocus(FocusNode());
-                      // setState(() {
-                      //   isDatePopupOpen = true;
-                      // });
                       showDemoDialog(
                           context: context, bloc: accountTransactionsBloc);
                     },

@@ -10,30 +10,30 @@ import 'package:piggy_flutter/screens/transaction/transaction_detail.dart';
 import 'package:piggy_flutter/theme/piggy_app_theme.dart';
 
 class TransactionList extends StatelessWidget {
+  TransactionList({Key key, @required this.items, this.isLoading, bool visible})
+      : visible = visible ?? items.isNotEmpty,
+        super(key: key);
+
   final List<TransactionGroupItem> items;
   final Stream<bool> isLoading;
   final DateFormat formatter = DateFormat("EEE, MMM d, ''yy");
   final bool visible;
 
-  TransactionList({Key key, @required this.items, this.isLoading, bool visible})
-      : this.visible = visible ?? items.isNotEmpty,
-        super(key: key);
-
   @override
   Widget build(BuildContext context) {
-    List<Widget> groupedTransactionList = [];
+    final List<Widget> groupedTransactionList = [];
     if (isLoading != null) {
       groupedTransactionList.add(_loadingInfo(isLoading));
     }
 
-    groupedTransactionList.addAll(
-        items.map((item) => buildGroupedTransactionTile(context, item)));
+    groupedTransactionList.addAll(items.map((TransactionGroupItem item) =>
+        buildGroupedTransactionTile(context, item)));
 
     return AnimatedOpacity(
-      duration: Duration(milliseconds: 300),
+      duration: const Duration(milliseconds: 300),
       opacity: visible ? 1.0 : 0.0,
       child: ListView(
-        padding: EdgeInsets.all(0),
+        padding: const EdgeInsets.all(0),
         children: groupedTransactionList.toList(),
       ),
     );
@@ -42,9 +42,9 @@ class TransactionList extends StatelessWidget {
   Widget _loadingInfo(Stream<bool> isLoading) {
     return StreamBuilder<bool>(
       stream: isLoading,
-      builder: (context, snapshot) {
+      builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
         if (snapshot.hasData && snapshot.data) {
-          return LinearProgressIndicator();
+          return const LinearProgressIndicator();
         } else {
           return Container();
         }
@@ -52,12 +52,14 @@ class TransactionList extends StatelessWidget {
     );
   }
 
-  buildGroupedTransactionTile(BuildContext context, TransactionGroupItem item) {
-    Iterable<Widget> transactionList = item.transactions.map((transaction) =>
-        buildTransactionList(context, transaction, item.groupby));
+  ExpansionTile buildGroupedTransactionTile(
+      BuildContext context, TransactionGroupItem item) {
+    final Iterable<Widget> transactionList = item.transactions.map(
+        (Transaction transaction) =>
+            buildTransactionList(context, transaction, item.groupby));
 
     return ExpansionTile(
-      key: PageStorageKey(item.title),
+      key: PageStorageKey<String>(item.title),
       title: Row(
         mainAxisSize: MainAxisSize.max,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -86,11 +88,11 @@ class TransactionList extends StatelessWidget {
     );
   }
 
-  buildTransactionList(BuildContext context, Transaction transaction,
-      TransactionsGroupBy groupBy) {
+  MergeSemantics buildTransactionList(BuildContext context,
+      Transaction transaction, TransactionsGroupBy groupBy) {
     final TextTheme textTheme = Theme.of(context).textTheme;
     return MergeSemantics(
-      child: new ListTile(
+      child: ListTile(
           dense: true,
           leading: Container(
             decoration: BoxDecoration(
@@ -152,7 +154,7 @@ class TransactionList extends StatelessWidget {
           onTap: () {
             Navigator.push(
                 context,
-                MaterialPageRoute(
+                MaterialPageRoute<dynamic>(
                   builder: (BuildContext context) => TransactionDetailPage(
                     transactionDetailBloc:
                         BlocProvider.of<TransactionDetailBloc>(context),

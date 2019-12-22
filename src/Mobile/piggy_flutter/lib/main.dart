@@ -1,7 +1,9 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:piggy_flutter/blocs/accounts/accounts_bloc.dart';
 import 'package:piggy_flutter/blocs/auth/auth.dart';
@@ -133,6 +135,16 @@ class App extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent,
+      statusBarIconBrightness: Brightness.dark,
+      statusBarBrightness:
+          Platform.isAndroid ? Brightness.dark : Brightness.light,
+      systemNavigationBarColor: Colors.white,
+      systemNavigationBarDividerColor: Colors.grey,
+      systemNavigationBarIconBrightness: Brightness.dark,
+    ));
+
     return MultiRepositoryProvider(
       providers: [
         RepositoryProvider<TransactionRepository>(

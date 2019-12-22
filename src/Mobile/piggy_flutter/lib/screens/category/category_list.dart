@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:piggy_flutter/blocs/categories/categories.dart';
 import 'package:piggy_flutter/models/category.dart';
 import 'package:piggy_flutter/screens/category/category_form.dart';
+import 'package:piggy_flutter/theme/piggy_app_theme.dart';
 import 'package:piggy_flutter/widgets/common/common_drawer.dart';
 import 'package:piggy_flutter/widgets/common/message_placeholder.dart';
 import 'package:piggy_flutter/utils/common.dart';
@@ -45,7 +46,7 @@ class CategoryListPage extends StatelessWidget {
       floatingActionButton: FloatingActionButton(
           key: ValueKey<Color>(Theme.of(context).buttonColor),
           tooltip: 'Add new category',
-          backgroundColor: Theme.of(context).accentColor,
+          backgroundColor: PiggyAppTheme.nearlyDarkBlue,
           child: Icon(Icons.add, color: Theme.of(context).primaryColor),
           onPressed: () async {
             await Navigator.push(

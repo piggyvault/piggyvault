@@ -17,7 +17,7 @@ import 'package:piggy_flutter/repositories/repositories.dart';
 import 'package:piggy_flutter/screens/home/home_screen.dart';
 import 'package:piggy_flutter/screens/intro_views/intro_views.dart';
 import 'package:piggy_flutter/splash/splash.dart';
-import 'package:piggy_flutter/themes.dart';
+import 'package:piggy_flutter/theme/piggy_app_theme.dart';
 import 'package:piggy_flutter/utils/uidata.dart';
 import 'package:http/http.dart' as http;
 
@@ -162,10 +162,14 @@ class App extends StatelessWidget {
       ],
       child: MaterialApp(
         title: 'Piggy',
-        theme: lightAppTheme.data,
+        theme: ThemeData(
+            primarySwatch: Colors.blue,
+            textTheme: PiggyAppTheme.textTheme,
+            platform: TargetPlatform.iOS,
+            primaryColor: Colors.white),
         home: BlocBuilder<AuthBloc, AuthState>(builder: (context, state) {
           if (state is AuthAuthenticated) {
-            return HomeScreen();
+            return const HomeScreen();
           }
           if (state is AuthUnauthenticated) {
             return LoginPage(userRepository: userRepository);

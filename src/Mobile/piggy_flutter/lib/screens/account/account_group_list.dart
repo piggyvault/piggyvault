@@ -41,7 +41,9 @@ class AccountGroupList extends StatelessWidget {
         leading: Icon(Icons.account_balance_wallet,
             color: Theme.of(context).disabledColor),
         title: Text(account.name, style: Theme.of(context).textTheme.body2),
-        subtitle: Text(account.accountType),
+        subtitle: Text(
+          account.accountType,
+        ),
         trailing: Text(
             '${account.currentBalance.toString()} ${account.currencySymbol}'),
         onTap: () => Navigator.of(context).push(

@@ -22,3 +22,7 @@ export 'user.dart';
 export 'user_settings.dart';
 export 'category_wise_recent_months_report_item.dart';
 export 'dataset.dart';
+export 'get_category_report_input.dart';
+export 'category_report_list_dto.dart';
+export 'category_report_grouped_list_item.dart';
+export 'category_report_grouped_list_item_account.dart';

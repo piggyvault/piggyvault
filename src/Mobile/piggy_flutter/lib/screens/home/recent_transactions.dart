@@ -121,8 +121,8 @@ class _RecentTransactionsPageState extends State<RecentTransactionsPage>
                 builder: (BuildContext context, Widget child) {
                   return FadeTransition(
                       opacity: listAnimation,
-                      child: new Transform(
-                        transform: new Matrix4.translationValues(
+                      child: Transform(
+                        transform: Matrix4.translationValues(
                             0.0, 30 * (1.0 - listAnimation.value), 0.0),
                         child: InkWell(
                           splashColor: Colors.transparent,

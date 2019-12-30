@@ -7,10 +7,10 @@ import 'package:piggy_flutter/models/models.dart';
 import 'package:piggy_flutter/repositories/piggy_api_client.dart';
 
 class TransactionRepository {
-  final PiggyApiClient piggyApiClient;
-
   TransactionRepository({@required this.piggyApiClient})
       : assert(piggyApiClient != null);
+
+  final PiggyApiClient piggyApiClient;
 
   Future<TransactionSummary> getTransactionSummary(String duration) async {
     return await piggyApiClient.getTransactionSummary(duration);
@@ -26,7 +26,8 @@ class TransactionRepository {
   }
 
   Future<TransactionsResult> getTransactions(GetTransactionsInput input) async {
-    var transactions = await piggyApiClient.getTransactions(input);
+    final List<Transaction> transactions =
+        await piggyApiClient.getTransactions(input);
 
     return TransactionsResult(
         sections: groupTransactions(
@@ -57,15 +58,16 @@ class TransactionRepository {
     var formatter = DateFormat("EEE, MMM d, ''yy");
     String key;
 
-    transactions.forEach((transaction) {
+    transactions.forEach((Transaction transaction) {
       if (groupBy == TransactionsGroupBy.Date) {
         key = formatter.format(DateTime.parse(transaction.transactionTime));
       } else if (groupBy == TransactionsGroupBy.Category) {
         key = transaction.categoryName;
       }
 
-      var section =
-          sections.firstWhere((o) => o.title == key, orElse: () => null);
+      TransactionGroupItem section = sections.firstWhere(
+          (TransactionGroupItem o) => o.title == key,
+          orElse: () => null);
 
       if (section == null) {
         section = TransactionGroupItem(title: key, groupby: groupBy);

@@ -152,7 +152,7 @@ class PiggyApiClient {
   Future<List<Transaction>> getTransactions(GetTransactionsInput input) async {
     List<Transaction> transactions = [];
 
-    var params = '';
+    String params = '';
 
     if (input.type != null) params += 'type=${input.type}';
 
@@ -238,6 +238,19 @@ class PiggyApiClient {
     if (result.success) {
       result.result['items'].forEach((item) =>
           data.add(CategoryWiseRecentMonthsReportItem.fromJson(item)));
+    }
+    return data;
+  }
+
+  Future<List<CategoryReportListDto>> getCategoryReport(
+      GetCategoryReportInput input) async {
+    final List<CategoryReportListDto> data = [];
+    final ApiResponse result = await getAsync<dynamic>(
+        '$baseUrl/api/services/app/Report/GetCategoryReport?startDate=${input.startDate}&endDate=${input.endDate}');
+
+    if (result.success) {
+      result.result['items']
+          .forEach((item) => data.add(CategoryReportListDto.fromJson(item)));
     }
     return data;
   }

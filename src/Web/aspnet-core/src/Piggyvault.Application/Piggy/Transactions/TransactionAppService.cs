@@ -6,7 +6,6 @@ using Code.Library;
 using Microsoft.EntityFrameworkCore;
 using Piggyvault.Notifications.Dto;
 using Piggyvault.Piggy.Accounts;
-using Piggyvault.Piggy.CurrencyRateExchange;
 using Piggyvault.Piggy.Notifications;
 using Piggyvault.Piggy.Transactions.Dto;
 using Piggyvault.Sessions;
@@ -15,6 +14,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
+using Piggyvault.Piggy.CurrencyRates;
 
 namespace Piggyvault.Piggy.Transactions
 {
@@ -131,7 +131,8 @@ namespace Piggyvault.Piggy.Transactions
 
             foreach (var transaction in tenantTransactions)
             {
-                var currencyConversionRate = await _currencyRateExchangeService.GetCurrencyConversionRate(transaction);
+                var currencyConversionRate = await _currencyRateExchangeService.GetExchangeRate(transaction.Account.Currency.Code);
+
                 if (transaction.Amount > 0)
                 {
                     tenantIncome += transaction.Amount * currencyConversionRate;
@@ -190,7 +191,7 @@ namespace Piggyvault.Piggy.Transactions
 
                 if (lastTransaction != null)
                 {
-                    decimal currencyConversionRate = await _currencyRateExchangeService.GetCurrencyConversionRate(lastTransaction);
+                    decimal currencyConversionRate = await _currencyRateExchangeService.GetExchangeRate(lastTransaction.Account.Currency.Code);
 
                     var convertedAmount = lastTransaction.Balance * currencyConversionRate;
 

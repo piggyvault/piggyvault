@@ -1,4 +1,8 @@
-﻿using Abp.Auditing;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Abp.Auditing;
 using Abp.Domain.Repositories;
 using Flurl;
 using Flurl.Http;
@@ -9,14 +13,10 @@ using Piggyvault.Piggy.Currencies;
 using Piggyvault.Piggy.CurrencyRates.Dto;
 using Piggyvault.Piggy.Transactions;
 using Piggyvault.Piggy.Transactions.Dto;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
-namespace Piggyvault.Piggy.CurrencyRateExchange
+namespace Piggyvault.Piggy.CurrencyRates
 {
-    // TODO: consider caching. Ref: https://aspnetboilerplate.com/Pages/Documents/Caching
+    // TODO(abhith): consider caching. Ref: https://aspnetboilerplate.com/Pages/Documents/Caching
     [DisableAuditing]
     public class CurrencyRateAppService : PiggyvaultAppServiceBase, ICurrencyRateAppService
     {
@@ -40,24 +40,24 @@ namespace Piggyvault.Piggy.CurrencyRateExchange
         /// </returns>
         public async Task<decimal> GetAmountInDefaultCurrency(Transaction input)
         {
-            var currencyConvertionRate = await GetCurrencyConversionRate(input);
-            return Math.Round(input.Amount * currencyConvertionRate, 2);
+            var exchangeRate = await GetExchangeRate(input.Account.Currency.Code);
+            return Math.Round(input.Amount * exchangeRate, 2);
         }
 
-        public async Task<decimal> GetCurrencyConversionRate(Transaction input)
+        public async Task<decimal> GetExchangeRate(string currencyCode)
         {
             try
             {
                 var defaultCurrency = SettingManager.GetSettingValue(AppSettingNames.DefaultCurrency);
 
-                if (input.Account.Currency.Code == defaultCurrency)
+                if (currencyCode == defaultCurrency)
                 {
                     return 1;
                 }
 
                 var defaultCurrencyRate = await _currencyRateRepository.GetAll().Where(r => r.Code == defaultCurrency).OrderByDescending(r => r.CreationTime).FirstOrDefaultAsync();
 
-                var inputCurrencyRate = await _currencyRateRepository.GetAll().Where(r => r.Code == input.Account.Currency.Code).OrderByDescending(r => r.CreationTime).FirstOrDefaultAsync();
+                var inputCurrencyRate = await _currencyRateRepository.GetAll().Where(r => r.Code == currencyCode).OrderByDescending(r => r.CreationTime).FirstOrDefaultAsync();
 
                 return defaultCurrencyRate.Rate / inputCurrencyRate.Rate;
             }

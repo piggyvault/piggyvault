@@ -7,7 +7,7 @@ namespace Piggyvault.Piggy.Reports
 {
     public interface IReportAppService : IApplicationService
     {
-        Task<ListResultDto<CategoryReportOutputDto>> GetCategoryReport(GetCategoryReportInput input);
+        Task<ListResultDto<CategoryReportListDto>> GetCategoryReport(GetCategoryReportRequestDto input);
 
         Task<ListResultDto<GetCategoryWiseTransactionSummaryHistoryOuputDto>>
             GetCategoryWiseTransactionSummaryHistory(GetCategoryWiseTransactionSummaryHistoryInputDto input);

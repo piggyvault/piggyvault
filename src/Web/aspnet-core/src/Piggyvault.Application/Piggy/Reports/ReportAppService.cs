@@ -1,9 +1,7 @@
 ﻿using Abp.Authorization;
-using Abp.AutoMapper;
 using Abp.Domain.Repositories;
 using Code.Library;
 using Microsoft.EntityFrameworkCore;
-using Piggyvault.Piggy.CurrencyRateExchange;
 using Piggyvault.Piggy.Reports.Dto;
 using Piggyvault.Piggy.Transactions;
 using Piggyvault.Piggy.Transactions.Dto;
@@ -11,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Piggyvault.Piggy.CurrencyRates;
 
 namespace Piggyvault.Piggy.Reports
 {
@@ -28,9 +27,24 @@ namespace Piggyvault.Piggy.Reports
             _currencyRateExchangeService = currencyRateExchangeService;
         }
 
-        public async Task<Abp.Application.Services.Dto.ListResultDto<CategoryReportOutputDto>> GetCategoryReport(GetCategoryReportInput input)
+        public async Task<Abp.Application.Services.Dto.ListResultDto<CategoryReportListDto>> GetCategoryReport(GetCategoryReportRequestDto input)
         {
-            return await _reportRepository.GetCategoryReport(input);
+            var items = await _reportRepository.GetCategoryReport(new GetCategoryReportInput
+            {
+                StartDate = input.StartDate,
+                EndDate = input.EndDate,
+                UserId = AbpSession.UserId.Value
+            });
+
+            var output = ObjectMapper.Map<List<CategoryReportListDto>>(items.Items);
+
+            foreach (var dto in output)
+            {
+                dto.AmountInDefaultCurrency =
+                    (await _currencyRateExchangeService.GetExchangeRate(dto.CurrencyCode)) * dto.Amount;
+            }
+
+            return new Abp.Application.Services.Dto.ListResultDto<CategoryReportListDto>(output);
         }
 
         /// <summary>
@@ -43,7 +57,8 @@ namespace Piggyvault.Piggy.Reports
             var query = _transactionRepository.GetAll()
                       .Include(t => t.Account)
                         .ThenInclude(account => account.Currency)
-                      .Include(t => t.Category).Where(t => !t.IsTransferred).Where(t => t.CreatorUserId == AbpSession.UserId);
+                      .Include(t => t.Category)
+                      .Where(t => !t.IsTransferred && t.CreatorUserId == AbpSession.UserId);
 
             var startDate = DateTime.Today.FirstDayOfMonth().AddMonths(-input.NumberOfIteration);
             var endDate = DateTime.Today.FirstDayOfMonth().AddMonths(1);
@@ -59,7 +74,7 @@ namespace Piggyvault.Piggy.Reports
             {
                 var categoryDto = new GetCategoryWiseTransactionSummaryHistoryOuputDto { CategoryName = category.Name };
 
-                for (int i = 1; i <= input.NumberOfIteration; i++)
+                for (var i = 1; i <= input.NumberOfIteration; i++)
                 {
                     var summaryDto = new TransactionSummaryInGetCategoryWiseTransactionSummaryHistoryOuputDto();
 

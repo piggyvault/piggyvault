@@ -9,6 +9,6 @@ namespace Piggyvault.Piggy.Reports
 {
     public interface IReportRepository : IRepository<Transaction, Guid>
     {
-        Task<ListResultDto<CategoryReportOutputDto>> GetCategoryReport(GetCategoryReportInput input);
+        Task<ListResultDto<CategoryReportListItem>> GetCategoryReport(GetCategoryReportInput input);
     }
 }

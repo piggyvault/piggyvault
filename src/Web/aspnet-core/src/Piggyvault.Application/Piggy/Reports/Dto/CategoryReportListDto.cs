@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Piggyvault.Piggy.Reports.Dto
+﻿namespace Piggyvault.Piggy.Reports.Dto
 {
-    public class CategoryReportOutputDto
+    public class CategoryReportListDto
     {
         public string AccountName { get; set; }
         public decimal Amount { get; set; }

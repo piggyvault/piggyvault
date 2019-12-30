@@ -4,10 +4,12 @@ using Piggyvault.Piggy.Reports;
 using Piggyvault.Piggy.Reports.Dto;
 using Piggyvault.Piggy.Transactions;
 using System;
-using System.Collections.Generic;
-using System.Data.SqlClient;
-using System.Text;
+using System.Data;
+using System.Linq;
 using System.Threading.Tasks;
+using Dapper;
+using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 
 namespace Piggyvault.EntityFrameworkCore.Repositories
 {
@@ -17,24 +19,15 @@ namespace Piggyvault.EntityFrameworkCore.Repositories
         {
         }
 
-        public async Task<ListResultDto<CategoryReportOutputDto>> GetCategoryReport(GetCategoryReportInput input)
+        public async Task<ListResultDto<CategoryReportListItem>> GetCategoryReport(GetCategoryReportInput input)
         {
-            try
-            {
-                // TODO
-                //var creatorUserIdParameter = new SqlParameter("@creatorUserId", input.UserId);
-                //var startDateParameter = new SqlParameter("@startDate", input.StartDate);
-                //var endDateParameter = new SqlParameter("@endDate", input.EndDate);
+            await using var dbConn = new SqlConnection(Context.Database.GetDbConnection().ConnectionString);
 
-                //var output = await Context.Database.SqlQuery<CategoryReportOutputDto>("exec GetCategoryReport @creatorUserId, @startDate, @endDate", creatorUserIdParameter, startDateParameter, endDateParameter).ToListAsync();
+            dbConn.Open();
 
-                return new ListResultDto<CategoryReportOutputDto>();
-            }
-            catch (Exception ex)
-            {
-                // TODO : log
-                return null;
-            }
+            var output = await dbConn.QueryAsync<CategoryReportListItem>("GetCategoryReport", new { creatorUserId = input.UserId, startDate = input.StartDate, endDate = input.EndDate }, commandType: CommandType.StoredProcedure);
+
+            return new ListResultDto<CategoryReportListItem>(output.ToList());
         }
     }
 }

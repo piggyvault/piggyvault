@@ -630,7 +630,8 @@ class _AccountDetailPageState extends State<AccountDetailPage>
                           ),
                           BlocBuilder<AccountBloc, AccountState>(
                               bloc: accountBloc,
-                              builder: (context, state) {
+                              builder:
+                                  (BuildContext context, AccountState state) {
                                 if (state is AccountLoaded) {
                                   return Text(
                                     ' ${state.account.currentBalance} ${state.account.currencySymbol}',

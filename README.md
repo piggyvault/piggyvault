@@ -35,23 +35,27 @@ High level planned items can be viewed under organization's projects.
 ## Mobile App Screenshots
 
 <p float="left">
-  <img src="images/screenshots/login.jpg" width="200" />
-  <img src="images/screenshots/dashboard.jpg" width="200" /> 
-  <img src="images/screenshots/recent.jpg" width="200" />
-  <img src="images/screenshots/recent_by_category.jpg" width="200" />
-  <img src="images/screenshots/recent-collapsed.jpg" width="200" />
-  <img src="images/screenshots/accounts.jpg" width="200" />
-  <img src="images/screenshots/account-add.jpg" width="200" />
-  <img src="images/screenshots/summary.jpg" width="200" />
-  <img src="images/screenshots/drawer.jpg" width="200" />
-  <img src="images/screenshots/categories.jpg" width="200" />
-  <img src="images/screenshots/category-add.jpg" width="200" />
-  <img src="images/screenshots/report-categorywise-recent-months.jpg" width="200" />
-  <img src="images/screenshots/add-transaction.jpg" width="200" />
-  <img src="images/screenshots/push-notification-new-transaction.jpg" width="200" />
-  <img src="images/screenshots/transaction-details.jpg" width="200" />
-  <img src="images/screenshots/transaction_details_with_comments.jpg" width="200" />
-  <img src="images/screenshots/account_details_current_month.jpg" width="200" />
-  <img src="images/screenshots/account_details_prev_month.jpg" width="200" />
-  <img src="images/screenshots/about.jpg" width="200" />
+  <img src="images/screenshots/01-login.jpg" width="200" />
+  <img src="images/screenshots/02-overview.jpg" width="200" /> 
+  <img src="images/screenshots/03-accounts.jpg" width="200" />
+  <img src="images/screenshots/04-accounts-collapsed.jpg" width="200" />
+  <img src="images/screenshots/05-account-add.jpg" width="200" />
+  <img src="images/screenshots/06-account-detail-no-transactions.jpg" width="200" />
+  <img src="images/screenshots/07-account-details.jpg" width="200" />
+  <img src="images/screenshots/08-account-details-popup-menu.jpg" width="200" />
+  <img src="images/screenshots/09-recent.jpg" width="200" />
+  <img src="images/screenshots/10-recent-collapsed.jpg" width="200" />
+  <img src="images/screenshots/11-add-transaction.jpg" width="200" />
+  <img src="images/screenshots/12-push-notification.jpg" width="200" />
+  <img src="images/screenshots/13-transaction_details_with_comments.jpg" width="200" />
+  <img src="images/screenshots/14-categories.jpg" width="200" />
+  <img src="images/screenshots/15-category-add.jpg" width="200" />
+  <img src="images/screenshots/16-drawer.jpg" width="200" />
+  <img src="images/screenshots/17-reports-screen.jpg" width="200" />
+  <img src="images/screenshots/18-categorywise-accounts-report.jpg" width="200" />
+  <img src="images/screenshots/19-category-accounts-date-select.jpg" width="200" />
+  <img src="images/screenshots/20-categorywise-recent-months-report.jpg" width="200" />
+  <img src="images/screenshots/21-settings.jpg" width="200" />
+  <img src="images/screenshots/22-default-currency-settings.jpg" width="200" />
+  <img src="images/screenshots/23-about.jpg" width="200" />
 </p>

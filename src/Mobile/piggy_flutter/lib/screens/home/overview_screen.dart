@@ -22,8 +22,8 @@ class _OverviewScreenState extends State<OverviewScreen>
   final ScrollController scrollController = ScrollController();
   double topBarOpacity = 0.0;
 
-  final DateFormat formatter = DateFormat("EEE, d MMM");
-  final DateFormat monthformatter = DateFormat("MMMM yyyy");
+  final DateFormat formatter = DateFormat('EEE, d MMM y');
+  final DateFormat monthformatter = DateFormat('MMMM yyyy');
 
   String today;
 

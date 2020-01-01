@@ -141,6 +141,21 @@ class _CategorywiseAccountsReportScreenState
                           Expanded(
                             child: NestedScrollView(
                               controller: scrollController,
+                              headerSliverBuilder: (BuildContext context,
+                                  bool innerBoxIsScrolled) {
+                                return <Widget>[
+                                  SliverList(
+                                    delegate: SliverChildBuilderDelegate(
+                                        (BuildContext context, int index) {
+                                      return Column(
+                                        children: <Widget>[
+                                          getTimeDateUI(),
+                                        ],
+                                      );
+                                    }, childCount: 1),
+                                  )
+                                ];
+                              },
                               body: Container(
                                 color: PiggyAppTheme.buildLightTheme()
                                     .backgroundColor,
@@ -192,28 +207,6 @@ class _CategorywiseAccountsReportScreenState
                                   },
                                 ),
                               ),
-                              headerSliverBuilder: (BuildContext context,
-                                  bool innerBoxIsScrolled) {
-                                return <Widget>[
-                                  SliverList(
-                                    delegate: SliverChildBuilderDelegate(
-                                        (BuildContext context, int index) {
-                                      return Column(
-                                        children: <Widget>[
-                                          Container(),
-                                        ],
-                                      );
-                                    }, childCount: 1),
-                                  ),
-                                  SliverPersistentHeader(
-                                    pinned: true,
-                                    floating: true,
-                                    delegate: ContestTabHeader(
-                                      Container(),
-                                    ),
-                                  ),
-                                ];
-                              },
                             ),
                           )
                         ],
@@ -226,6 +219,222 @@ class _CategorywiseAccountsReportScreenState
           );
         }
       },
+    );
+  }
+
+  Widget getTimeDateUI() {
+    return Padding(
+      padding: const EdgeInsets.only(left: 18, bottom: 16),
+      child: Row(
+        children: <Widget>[
+          Expanded(
+            child: Row(
+              children: <Widget>[
+                Material(
+                  color: Colors.transparent,
+                  child: InkWell(
+                    focusColor: Colors.transparent,
+                    highlightColor: Colors.transparent,
+                    hoverColor: Colors.transparent,
+                    splashColor: Colors.grey.withOpacity(0.2),
+                    borderRadius: const BorderRadius.all(
+                      Radius.circular(4.0),
+                    ),
+                    onTap: () {
+                      FocusScope.of(context).requestFocus(FocusNode());
+                      showDemoDialog(
+                        context: context,
+                      );
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.only(
+                          left: 8, right: 8, top: 4, bottom: 4),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Text(
+                            'Choose date',
+                            style: TextStyle(
+                                fontWeight: FontWeight.w100,
+                                fontSize: 16,
+                                color: Colors.grey.withOpacity(0.8)),
+                          ),
+                          const SizedBox(
+                            height: 8,
+                          ),
+                          Text(
+                            '${DateFormat("dd, MMM yy").format(startDate)} - ${DateFormat("dd, MMM yy").format(endDate)}',
+                            style: TextStyle(
+                              fontWeight: FontWeight.w100,
+                              fontSize: 16,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(right: 8),
+            child: Container(
+              width: 1,
+              height: 42,
+              color: Colors.grey.withOpacity(0.8),
+            ),
+          ),
+          Expanded(
+            child: Row(
+              children: <Widget>[
+                Material(
+                  color: Colors.transparent,
+                  child: InkWell(
+                    focusColor: Colors.transparent,
+                    highlightColor: Colors.transparent,
+                    hoverColor: Colors.transparent,
+                    splashColor: Colors.grey.withOpacity(0.2),
+                    borderRadius: const BorderRadius.all(
+                      Radius.circular(4.0),
+                    ),
+                    onTap: () {
+                      FocusScope.of(context).requestFocus(FocusNode());
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.only(
+                          left: 8, right: 8, top: 4, bottom: 4),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Text(
+                            'Transactions Type',
+                            style: TextStyle(
+                                fontWeight: FontWeight.w100,
+                                fontSize: 16,
+                                color: Colors.grey.withOpacity(0.8)),
+                          ),
+                          const SizedBox(
+                            height: 8,
+                          ),
+                          Text(
+                            'Expense',
+                            style: TextStyle(
+                              fontWeight: FontWeight.w100,
+                              fontSize: 16,
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget getFilterBarUI() {
+    return Stack(
+      children: <Widget>[
+        Positioned(
+          top: 0,
+          left: 0,
+          right: 0,
+          child: Container(
+            height: 24,
+            decoration: BoxDecoration(
+              color: PiggyAppTheme.buildLightTheme().backgroundColor,
+              boxShadow: <BoxShadow>[
+                BoxShadow(
+                    color: Colors.grey.withOpacity(0.2),
+                    offset: const Offset(0, -2),
+                    blurRadius: 8.0),
+              ],
+            ),
+          ),
+        ),
+        Container(
+          color: PiggyAppTheme.buildLightTheme().backgroundColor,
+          child: Padding(
+            padding:
+                const EdgeInsets.only(left: 16, right: 16, top: 8, bottom: 4),
+            child: Row(
+              children: <Widget>[
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 8, right: 8),
+                    child: Row(
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.only(right: 8),
+                          child: Icon(
+                            Icons.date_range,
+                            color: PiggyAppTheme.grey,
+                            size: 18,
+                          ),
+                        ),
+                        Material(
+                          color: Colors.transparent,
+                          child: InkWell(
+                            focusColor: Colors.transparent,
+                            highlightColor: Colors.transparent,
+                            hoverColor: Colors.transparent,
+                            splashColor: Colors.grey.withOpacity(0.2),
+                            borderRadius: const BorderRadius.all(
+                              Radius.circular(4.0),
+                            ),
+                            onTap: () {
+                              FocusScope.of(context).requestFocus(FocusNode());
+                              showDemoDialog(
+                                context: context,
+                              );
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.only(
+                                  left: 8, right: 8, top: 4, bottom: 4),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  Text(
+                                    '${DateFormat("dd, MMM yy").format(startDate)} - ${DateFormat("dd, MMM yy").format(endDate)}',
+                                    textAlign: TextAlign.left,
+                                    style: TextStyle(
+                                      fontFamily: PiggyAppTheme.fontName,
+                                      fontWeight: FontWeight.normal,
+                                      fontSize: 18,
+                                      letterSpacing: -0.2,
+                                      color: PiggyAppTheme.darkerText,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        const Positioned(
+          top: 0,
+          left: 0,
+          right: 0,
+          child: Divider(
+            height: 1,
+          ),
+        )
+      ],
     );
   }
 
@@ -313,70 +522,6 @@ class _CategorywiseAccountsReportScreenState
                                   ),
                                   maxLines: 1,
                                 ),
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                left: 8,
-                                right: 8,
-                              ),
-                              child: Row(
-                                children: <Widget>[
-                                  Padding(
-                                    padding: const EdgeInsets.only(right: 8),
-                                    child: Icon(
-                                      Icons.calendar_today,
-                                      color: PiggyAppTheme.grey,
-                                      size: 18,
-                                    ),
-                                  ),
-                                  Material(
-                                    color: Colors.transparent,
-                                    child: InkWell(
-                                      focusColor: Colors.transparent,
-                                      highlightColor: Colors.transparent,
-                                      hoverColor: Colors.transparent,
-                                      splashColor: Colors.grey.withOpacity(0.2),
-                                      borderRadius: const BorderRadius.all(
-                                        Radius.circular(4.0),
-                                      ),
-                                      onTap: () {
-                                        FocusScope.of(context)
-                                            .requestFocus(FocusNode());
-                                        showDemoDialog(
-                                          context: context,
-                                        );
-                                      },
-                                      child: Padding(
-                                        padding: const EdgeInsets.only(
-                                            left: 8,
-                                            right: 8,
-                                            top: 4,
-                                            bottom: 4),
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: <Widget>[
-                                            Text(
-                                              '${DateFormat("dd, MMM").format(startDate)} - ${DateFormat("dd, MMM").format(endDate)}',
-                                              textAlign: TextAlign.left,
-                                              style: TextStyle(
-                                                fontFamily:
-                                                    PiggyAppTheme.fontName,
-                                                fontWeight: FontWeight.normal,
-                                                fontSize: 18,
-                                                letterSpacing: -0.2,
-                                                color: PiggyAppTheme.darkerText,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  )
-                                ],
                               ),
                             ),
                           ],

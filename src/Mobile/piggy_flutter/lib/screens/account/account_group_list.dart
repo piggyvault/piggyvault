@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:piggy_flutter/models/account.dart';
 import 'package:piggy_flutter/repositories/repositories.dart';
 import 'package:piggy_flutter/screens/account/account_detail.dart';
+import 'package:piggy_flutter/theme/piggy_app_theme.dart';
 
 class AccountGroupList extends StatelessWidget {
   const AccountGroupList(
@@ -30,7 +31,7 @@ class AccountGroupList extends StatelessWidget {
             style: Theme.of(context).textTheme.title.copyWith(
                 fontSize: 16.0, color: Theme.of(context).accentColor)),
         initiallyExpanded: true,
-        backgroundColor: Theme.of(context).accentColor.withOpacity(0.025),
+        backgroundColor: PiggyAppTheme.white,
         children: accountTiles.toList());
   }
 

@@ -8,9 +8,9 @@ import 'package:piggy_flutter/screens/account/account_group_list.dart';
 import 'package:piggy_flutter/theme/theme.dart';
 
 class AccountListPage extends StatefulWidget {
-  final AnimationController animationController;
   const AccountListPage({Key key, @required this.animationController})
       : super(key: key);
+  final AnimationController animationController;
 
   @override
   _AccountListPageState createState() => _AccountListPageState();
@@ -111,49 +111,58 @@ class _AccountListPageState extends State<AccountListPage>
                 child: Transform(
                   transform: Matrix4.translationValues(
                       0.0, 30 * (1.0 - listAnimation.value), 0.0),
-                  child: Padding(
-                    padding: EdgeInsets.only(
-                      top: AppBar().preferredSize.height +
-                          MediaQuery.of(context).padding.top,
-                      bottom: 62 + MediaQuery.of(context).padding.bottom,
-                    ),
-                    child: BlocBuilder<AccountsBloc, AccountsState>(
-                      builder: (BuildContext context, AccountsState state) {
-                        if (state is AccountsLoading) {
-                          return const Center(
-                              child: CircularProgressIndicator());
-                        }
+                  child: InkWell(
+                    splashColor: Colors.transparent,
+                    focusColor: Colors.transparent,
+                    highlightColor: Colors.transparent,
+                    hoverColor: Colors.transparent,
+                    onTap: () {
+                      FocusScope.of(context).requestFocus(FocusNode());
+                    },
+                    child: Padding(
+                      padding: EdgeInsets.only(
+                        top: AppBar().preferredSize.height +
+                            MediaQuery.of(context).padding.top,
+                        bottom: 62 + MediaQuery.of(context).padding.bottom,
+                      ),
+                      child: BlocBuilder<AccountsBloc, AccountsState>(
+                        builder: (BuildContext context, AccountsState state) {
+                          if (state is AccountsLoading) {
+                            return const Center(
+                                child: CircularProgressIndicator());
+                          }
 
-                        if (state is AccountsLoaded) {
-                          _refreshCompleter?.complete();
-                          _refreshCompleter = Completer();
+                          if (state is AccountsLoaded) {
+                            _refreshCompleter?.complete();
+                            _refreshCompleter = Completer<void>();
 
-                          return RefreshIndicator(
-                            key: _refreshIndicatorKey,
-                            onRefresh: () {
-                              BlocProvider.of<AccountsBloc>(context)
-                                  .add(LoadAccounts());
-                              return _refreshCompleter.future;
-                            },
-                            child: ListView(
-                              controller: scrollController,
-                              children: <Widget>[
-                                AccountGroupList(
-                                    animationController:
-                                        widget.animationController,
-                                    accounts: state.userAccounts,
-                                    title: 'Your Accounts'),
-                                AccountGroupList(
-                                    animationController:
-                                        widget.animationController,
-                                    accounts: state.familyAccounts,
-                                    title: 'Family Accounts')
-                              ],
-                            ),
-                          );
-                        }
-                        return const Center(child: Text('Accounts'));
-                      },
+                            return RefreshIndicator(
+                              key: _refreshIndicatorKey,
+                              onRefresh: () {
+                                BlocProvider.of<AccountsBloc>(context)
+                                    .add(LoadAccounts());
+                                return _refreshCompleter.future;
+                              },
+                              child: ListView(
+                                controller: scrollController,
+                                children: <Widget>[
+                                  AccountGroupList(
+                                      animationController:
+                                          widget.animationController,
+                                      accounts: state.userAccounts,
+                                      title: 'Your Accounts'),
+                                  AccountGroupList(
+                                      animationController:
+                                          widget.animationController,
+                                      accounts: state.familyAccounts,
+                                      title: 'Family Accounts')
+                                ],
+                              ),
+                            );
+                          }
+                          return const Center(child: Text('Accounts'));
+                        },
+                      ),
                     ),
                   ),
                 ),

@@ -93,76 +93,78 @@ class TransactionList extends StatelessWidget {
     final TextTheme textTheme = Theme.of(context).textTheme;
     return MergeSemantics(
       child: ListTile(
-          dense: true,
-          leading: Container(
-            decoration: BoxDecoration(
-              color: transaction.amount > 0
-                  ? PiggyAppTheme.nearlyDarkBlue
-                  : PiggyAppTheme.grey,
-              gradient: transaction.amount > 0
-                  ? LinearGradient(
-                      colors: [Colors.green, Colors.green[100]],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight)
-                  : LinearGradient(colors: [
-                      Colors.red,
-                      Colors.red[100],
-                    ], begin: Alignment.topLeft, end: Alignment.bottomRight),
-              shape: BoxShape.circle,
-            ),
-            child: Material(
-              color: Colors.transparent,
-              child: transaction.amount > 0
-                  ? Icon(
-                      Icons.radio_button_unchecked,
-                      color: PiggyAppTheme.white,
-                      size: 32,
-                    )
-                  : Icon(
-                      Icons.radio_button_unchecked,
-                      color: PiggyAppTheme.white,
-                      size: 32,
-                    ),
-            ),
+        dense: true,
+        leading: Container(
+          decoration: BoxDecoration(
+            color: transaction.amount > 0
+                ? PiggyAppTheme.nearlyDarkBlue
+                : PiggyAppTheme.grey,
+            gradient: transaction.amount > 0
+                ? LinearGradient(
+                    colors: [Colors.green, Colors.green[100]],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight)
+                : LinearGradient(colors: [
+                    Colors.red,
+                    Colors.red[100],
+                  ], begin: Alignment.topLeft, end: Alignment.bottomRight),
+            shape: BoxShape.circle,
           ),
-          title: Text(
-            groupBy == TransactionsGroupBy.Date
-                ? transaction.categoryName
-                : formatter.format(DateTime.parse(transaction.transactionTime)),
-            style: textTheme.body2,
-          ),
-          subtitle: Text(
-            "${transaction.description}\n${transaction.creatorUserName}'s ${transaction.accountName}",
-          ),
-          isThreeLine: true,
-          trailing: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              Text(
-                '${transaction.amount.toString()} ${transaction.accountCurrencySymbol}',
-              ),
-              Text(
-                '${transaction.balance.toString()} ${transaction.accountCurrencySymbol}',
-                style: TextStyle(
-                  color: PiggyAppTheme.nearlyBlue,
-                  fontSize: 12,
-                  fontWeight: FontWeight.w300,
-                ),
-              )
-            ],
-          ),
-          onTap: () {
-            Navigator.push(
-                context,
-                MaterialPageRoute<dynamic>(
-                  builder: (BuildContext context) => TransactionDetailPage(
-                    transactionDetailBloc:
-                        BlocProvider.of<TransactionDetailBloc>(context),
-                    transaction: transaction,
+          child: Material(
+            color: Colors.transparent,
+            child: transaction.amount > 0
+                ? Icon(
+                    Icons.radio_button_unchecked,
+                    color: PiggyAppTheme.white,
+                    size: 32,
+                  )
+                : Icon(
+                    Icons.radio_button_unchecked,
+                    color: PiggyAppTheme.white,
+                    size: 32,
                   ),
-                  fullscreenDialog: true,
-                ));
-          }),
+          ),
+        ),
+        title: Text(
+          groupBy == TransactionsGroupBy.Date
+              ? transaction.categoryName
+              : formatter.format(DateTime.parse(transaction.transactionTime)),
+          style: textTheme.body2,
+        ),
+        subtitle: Text(
+          "${transaction.description}\n${transaction.creatorUserName}'s ${transaction.accountName}",
+        ),
+        isThreeLine: true,
+        trailing: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Text(
+              '${transaction.amount.toString()} ${transaction.accountCurrencySymbol}',
+            ),
+            Text(
+              '${transaction.balance.toString()} ${transaction.accountCurrencySymbol}',
+              style: TextStyle(
+                color: PiggyAppTheme.nearlyBlue,
+                fontSize: 12,
+                fontWeight: FontWeight.w300,
+              ),
+            )
+          ],
+        ),
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute<dynamic>(
+              builder: (BuildContext context) => TransactionDetailPage(
+                transactionDetailBloc:
+                    BlocProvider.of<TransactionDetailBloc>(context),
+                transaction: transaction,
+              ),
+              fullscreenDialog: true,
+            ),
+          );
+        },
+      ),
     );
   }
 }

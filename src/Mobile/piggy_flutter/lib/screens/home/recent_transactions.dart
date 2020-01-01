@@ -173,11 +173,13 @@ class _RecentTransactionsPageState extends State<RecentTransactionsPage>
                                       child: BlocBuilder<RecentTransactionsBloc,
                                           RecentTransactionsState>(
                                         bloc: recentTransactionsBloc,
-                                        builder: (context, state) {
+                                        builder: (BuildContext context,
+                                            RecentTransactionsState state) {
                                           if (state
                                               is RecentTransactionsLoaded) {
                                             _refreshCompleter?.complete();
-                                            _refreshCompleter = Completer();
+                                            _refreshCompleter =
+                                                Completer<void>();
                                           }
 
                                           return RefreshIndicator(

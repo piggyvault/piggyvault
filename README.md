@@ -34,13 +34,11 @@ High level planned items can be viewed under organization's projects.
 
 ## Mobile App Screenshots
 
-<p  align="center">
- <img src="images/screenshots/24-main.gif" width="200" />
- <img src="images/screenshots/25-add-transaction.gif" width="200" />
- <img src="images/screenshots/26-add-account.gif" width="200" />
- <img src="images/screenshots/27-account-details-with-search.gif" width="200" />
-</p>
-<p float="left">
+<p  float="left">
+  <img src="images/screenshots/24-main.gif" width="200" />
+  <img src="images/screenshots/25-add-transaction.gif" width="200" />
+  <img src="images/screenshots/26-add-account.gif" width="200" />
+  <img src="images/screenshots/27-account-details-with-search.gif" width="200" />
   <img src="images/screenshots/01-login.jpg" width="200" />
   <img src="images/screenshots/02-overview.jpg" width="200" /> 
   <img src="images/screenshots/03-accounts.jpg" width="200" />

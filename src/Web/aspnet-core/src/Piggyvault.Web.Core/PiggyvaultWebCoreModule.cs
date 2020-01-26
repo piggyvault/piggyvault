@@ -19,17 +19,22 @@ namespace Piggyvault
          typeof(PiggyvaultApplicationModule),
          typeof(PiggyvaultEntityFrameworkModule),
          typeof(AbpAspNetCoreModule)
-        ,typeof(AbpAspNetCoreSignalRModule)
+        , typeof(AbpAspNetCoreSignalRModule)
      )]
     public class PiggyvaultWebCoreModule : AbpModule
     {
-        private readonly IHostingEnvironment _env;
         private readonly IConfigurationRoot _appConfiguration;
+        private readonly IHostingEnvironment _env;
 
         public PiggyvaultWebCoreModule(IHostingEnvironment env)
         {
             _env = env;
             _appConfiguration = env.GetAppConfiguration();
+        }
+
+        public override void Initialize()
+        {
+            IocManager.RegisterAssemblyByConvention(typeof(PiggyvaultWebCoreModule).GetAssembly());
         }
 
         public override void PreInitialize()
@@ -58,12 +63,7 @@ namespace Piggyvault
             tokenAuthConfig.Issuer = _appConfiguration["Authentication:JwtBearer:Issuer"];
             tokenAuthConfig.Audience = _appConfiguration["Authentication:JwtBearer:Audience"];
             tokenAuthConfig.SigningCredentials = new SigningCredentials(tokenAuthConfig.SecurityKey, SecurityAlgorithms.HmacSha256);
-            tokenAuthConfig.Expiration = TimeSpan.FromDays(1);
-        }
-
-        public override void Initialize()
-        {
-            IocManager.RegisterAssemblyByConvention(typeof(PiggyvaultWebCoreModule).GetAssembly());
+            tokenAuthConfig.Expiration = TimeSpan.FromDays(180);
         }
     }
 }

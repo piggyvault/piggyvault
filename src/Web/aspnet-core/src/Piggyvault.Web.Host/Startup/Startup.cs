@@ -122,6 +122,8 @@ namespace Piggyvault.Web.Host.Startup
                 });
             });
 
+            services.AddApplicationInsightsTelemetry();
+
             // Configure Abp and Dependency Injection
             return services.AddAbp<PiggyvaultWebHostModule>(
                 // Configure Log4Net logging

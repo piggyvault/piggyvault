@@ -11,6 +11,7 @@
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <GenerateBindingRedirectsOutputType>true</GenerateBindingRedirectsOutputType>
     <LangVersion>7.2</LangVersion>
+    <ApplicationInsightsResourceId>/subscriptions/2893d942-22c2-4b7e-81ed-0265422b7b6b/resourcegroups/Piggy/providers/microsoft.insights/components/Piggy-AppInsights</ApplicationInsightsResourceId>
   </PropertyGroup>
   <ItemGroup>
     <Content Remove="wwwroot\swagger\ui\index.html" />
@@ -33,6 +34,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Abp.Castle.Log4Net" Version="5.0.0" />
+    <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.12.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.0.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -42,5 +44,8 @@
     <EmbeddedResource Include="wwwroot\swagger\ui\index.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services" />
   </ItemGroup>
 </Project>

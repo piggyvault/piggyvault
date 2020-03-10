@@ -4,7 +4,6 @@ using Abp.Domain.Repositories;
 using Abp.Extensions;
 using Code.Library;
 using Microsoft.EntityFrameworkCore;
-using Piggyvault.Notifications.Dto;
 using Piggyvault.Piggy.Accounts;
 using Piggyvault.Piggy.Notifications;
 using Piggyvault.Piggy.Transactions.Dto;
@@ -15,6 +14,7 @@ using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Piggyvault.Piggy.CurrencyRates;
+using Piggyvault.Piggy.Notifications.Dto;
 
 namespace Piggyvault.Piggy.Transactions
 {
@@ -32,10 +32,11 @@ namespace Piggyvault.Piggy.Transactions
         private readonly ICurrencyRateAppService _currencyRateExchangeService;
         private readonly INotificationAppService _notificationService;
         private readonly ISessionAppService _sessionAppService;
+        private readonly PiggySettings _settings;
         private readonly IRepository<TransactionComment, Guid> _transactionCommentRepository;
         private readonly IRepository<Transaction, Guid> _transactionRepository;
 
-        public TransactionAppService(IRepository<Transaction, Guid> transactionRepository, IRepository<Account, Guid> accountRepository, ISessionAppService sessionAppService, ICurrencyRateAppService currencyRateExchangeService, IRepository<TransactionComment, Guid> transactionCommentRepository, INotificationAppService notificationService)
+        public TransactionAppService(IRepository<Transaction, Guid> transactionRepository, IRepository<Account, Guid> accountRepository, ISessionAppService sessionAppService, ICurrencyRateAppService currencyRateExchangeService, IRepository<TransactionComment, Guid> transactionCommentRepository, INotificationAppService notificationService, PiggySettings settings)
         {
             _transactionRepository = transactionRepository;
             _accountRepository = accountRepository;
@@ -43,6 +44,7 @@ namespace Piggyvault.Piggy.Transactions
             _currencyRateExchangeService = currencyRateExchangeService;
             _transactionCommentRepository = transactionCommentRepository;
             _notificationService = notificationService;
+            _settings = settings;
         }
 
         /// <summary>
@@ -389,7 +391,7 @@ namespace Piggyvault.Piggy.Transactions
                     .ThenInclude(account => account.Currency)
                 .Include(t => t.Category).Include(t => t.CreatorUser).Where(t => t.Id == transactionId).FirstOrDefaultAsync();
 
-            var transactionPreviewDto = transaction.MapTo<TransactionPreviewDto>();
+            var transactionPreviewDto = ObjectMapper.Map<TransactionPreviewDto>(transaction);
 
             var notificationHeading = transaction.Amount > 0 ? "🐷 Inflow" : "🔥 Outflow";
             var notificationHeadingFromOrTo = transaction.Amount > 0 ? "to" : "from";
@@ -402,7 +404,8 @@ namespace Piggyvault.Piggy.Transactions
             {
                 Contents = transaction.Description,
                 Data = GetTransactionDataInDictionary(transactionPreviewDto),
-                Headings = notificationHeading
+                Headings = notificationHeading,
+                ChannelId = _settings.OneSignal.Channels.NewTransaction
             });
         }
 

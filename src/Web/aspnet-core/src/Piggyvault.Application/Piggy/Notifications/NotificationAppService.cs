@@ -1,10 +1,10 @@
 ﻿using Abp.Authorization;
 using Code.Library;
 using Flurl.Http;
-using Piggyvault.Notifications.Dto;
 using Piggyvault.Sessions;
 using System;
 using System.Threading.Tasks;
+using Piggyvault.Piggy.Notifications.Dto;
 
 namespace Piggyvault.Piggy.Notifications
 {
@@ -39,7 +39,8 @@ namespace Piggyvault.Piggy.Notifications
                         headings = new { en = input.Headings },
                         contents = new { en = $"{input.Contents}" },
                         data = input.Data,
-                        filters = new object[] { new { field = "tag", key = "tenancyName", value = currentUser.Tenant.TenancyName.Trim().ToLowerInvariant(), relation = "=" } }
+                        filters = new object[] { new { field = "tag", key = "tenancyName", value = currentUser.Tenant.TenancyName.Trim().ToLowerInvariant(), relation = "=" } },
+                        android_channel_id = input.ChannelId
                     };
 
                     var result = await "https://onesignal.com/api/v1/notifications"

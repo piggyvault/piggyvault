@@ -1,6 +1,6 @@
 ﻿using Code.Library;
-using Piggyvault.Notifications.Dto;
 using System.Threading.Tasks;
+using Piggyvault.Piggy.Notifications.Dto;
 
 namespace Piggyvault.Piggy.Notifications
 {

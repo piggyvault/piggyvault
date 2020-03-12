@@ -1,15 +1,15 @@
 // Copyright 2014 The Flutter Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
-
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:piggy_flutter/blocs/settings/bloc.dart';
-import 'package:piggy_flutter/repositories/repositories.dart';
-import 'package:piggy_flutter/screens/settings/currency_settings_screen.dart';
-import 'package:piggy_flutter/theme/theme.dart';
-import 'package:piggy_flutter/widgets/common/common.dart';
+import "package:app_settings/app_settings.dart";
+import "package:flutter/cupertino.dart";
+import "package:flutter/material.dart";
+import "package:flutter_bloc/flutter_bloc.dart";
+import "package:piggy_flutter/blocs/settings/bloc.dart";
+import "package:piggy_flutter/repositories/repositories.dart";
+import "package:piggy_flutter/screens/settings/currency_settings_screen.dart";
+import "package:piggy_flutter/theme/theme.dart";
+import "package:piggy_flutter/widgets/common/common.dart";
 
 class SettingsScreen extends StatefulWidget {
   final AnimationController animationController;
@@ -137,6 +137,19 @@ class _SettingsScreenState extends State<SettingsScreen>
             },
           );
         },
+      ),
+    );
+
+    listViews.add(
+      TitleView(
+        titleTxt: "Notifications",
+        subTxt: "Manage",
+        animation: Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
+            parent: widget.animationController,
+            curve:
+                Interval((1 / count) * 0, 1.0, curve: Curves.fastOutSlowIn))),
+        animationController: widget.animationController,
+        onPress: () => AppSettings.openAppSettings(),
       ),
     );
   }

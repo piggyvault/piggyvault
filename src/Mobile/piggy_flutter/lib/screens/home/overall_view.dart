@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:piggy_flutter/blocs/transaction_summary/transaction_summary.dart';
 import 'package:piggy_flutter/theme/theme.dart';
+import 'package:piggy_flutter/utils/common.dart';
 
 class OverallView extends StatelessWidget {
   final AnimationController animationController;
@@ -77,7 +78,7 @@ class OverallView extends StatelessWidget {
                                         padding: const EdgeInsets.only(
                                             left: 4, bottom: 3),
                                         child: Text(
-                                          '${state.summary.userNetWorth.toStringAsFixed(2)}',
+                                          '${state.summary.userNetWorth.toMoney()}',
                                           textAlign: TextAlign.center,
                                           style: TextStyle(
                                             fontFamily: PiggyAppTheme.fontName,
@@ -184,7 +185,7 @@ class OverallView extends StatelessWidget {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: <Widget>[
                                     Text(
-                                      '${state.summary.tenantNetWorth.toStringAsFixed(2)} ${state.summary.currencySymbol}',
+                                      '${state.summary.tenantNetWorth.toMoney()} ${state.summary.currencySymbol}',
                                       textAlign: TextAlign.center,
                                       style: TextStyle(
                                         fontFamily: PiggyAppTheme.fontName,

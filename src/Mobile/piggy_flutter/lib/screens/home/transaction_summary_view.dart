@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:piggy_flutter/blocs/transaction_summary/transaction_summary.dart';
 import 'package:piggy_flutter/theme/piggy_app_theme.dart';
 import 'dart:math' as math;
+import 'package:piggy_flutter/utils/common.dart';
 
 class TransactionSummaryView extends StatelessWidget {
   final AnimationController animationController;
@@ -418,7 +419,7 @@ class TransactionSummaryView extends StatelessWidget {
                                     Padding(
                                       padding: const EdgeInsets.only(top: 6),
                                       child: Text(
-                                        '${state.summary.tenantIncome.toStringAsFixed(2)} ${state.summary.currencySymbol}',
+                                        '${state.summary.tenantIncome.toMoney()} ${state.summary.currencySymbol}',
                                         textAlign: TextAlign.center,
                                         style: TextStyle(
                                           fontFamily: PiggyAppTheme.fontName,
@@ -494,7 +495,7 @@ class TransactionSummaryView extends StatelessWidget {
                                           padding:
                                               const EdgeInsets.only(top: 6),
                                           child: Text(
-                                            '${state.summary.tenantExpense.toStringAsFixed(2)} ${state.summary.currencySymbol}',
+                                            '${state.summary.tenantExpense.toMoney()} ${state.summary.currencySymbol}',
                                             textAlign: TextAlign.center,
                                             style: TextStyle(
                                               fontFamily:
@@ -572,7 +573,7 @@ class TransactionSummaryView extends StatelessWidget {
                                           padding:
                                               const EdgeInsets.only(top: 6),
                                           child: Text(
-                                            '${state.summary.tenantSaved.toStringAsFixed(2)} ${state.summary.currencySymbol}',
+                                            '${state.summary.tenantSaved.toMoney()} ${state.summary.currencySymbol}',
                                             textAlign: TextAlign.center,
                                             style: TextStyle(
                                               fontFamily:

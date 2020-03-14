@@ -4,6 +4,7 @@ import 'package:piggy_flutter/models/account.dart';
 import 'package:piggy_flutter/repositories/repositories.dart';
 import 'package:piggy_flutter/screens/account/account_detail.dart';
 import 'package:piggy_flutter/theme/piggy_app_theme.dart';
+import 'package:piggy_flutter/utils/common.dart';
 
 class AccountGroupList extends StatelessWidget {
   const AccountGroupList(
@@ -46,7 +47,7 @@ class AccountGroupList extends StatelessWidget {
           account.accountType,
         ),
         trailing: Text(
-            '${account.currentBalance.toString()} ${account.currencySymbol}'),
+            '${account.currentBalance.toMoney()} ${account.currencySymbol}'),
         onTap: () => Navigator.of(context).push(
           MaterialPageRoute<AccountDetailPage>(
             builder: (BuildContext context) => AccountDetailPage(

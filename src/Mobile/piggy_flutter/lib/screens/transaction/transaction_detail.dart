@@ -137,19 +137,19 @@ class TransactionDetailPageState extends State<TransactionDetailPage> {
                         onPressed: () {
                           showDeleteConfirmationDialog<DialogAction>(
                               context: context,
-                              child: new AlertDialog(
+                              child: AlertDialog(
                                   title: const Text('Delete Transaction?'),
-                                  content: new Text(
-                                      'Are you sure you want to delete transaction "${widget.transaction.description}" of ${widget.transaction.amount.toString()}${widget.transaction.accountCurrencySymbol}',
+                                  content: Text(
+                                      'Are you sure you want to delete transaction "${widget.transaction.description}" of ${widget.transaction.amount.toMoney()}${widget.transaction.accountCurrencySymbol}',
                                       style: dialogTextStyle),
                                   actions: <Widget>[
-                                    new FlatButton(
+                                    FlatButton(
                                         child: const Text('CANCEL'),
                                         onPressed: () {
                                           Navigator.pop(
                                               context, DialogAction.disagree);
                                         }),
-                                    new FlatButton(
+                                    FlatButton(
                                         child: const Text('DELETE'),
                                         onPressed: () {
                                           Navigator.pop(
@@ -248,7 +248,7 @@ class TransactionDetailPageState extends State<TransactionDetailPage> {
           ListTile(
             leading: const Icon(Icons.attach_money),
             title: Text(
-                '${widget.transaction.amount.toString()} ${widget.transaction.accountCurrencySymbol}'),
+                '${widget.transaction.amount.toMoney()} ${widget.transaction.accountCurrencySymbol}'),
           ),
           ListTile(
             leading: const Icon(Icons.event_note),

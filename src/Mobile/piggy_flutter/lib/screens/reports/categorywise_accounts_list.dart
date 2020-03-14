@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:piggy_flutter/models/models.dart';
 import 'package:piggy_flutter/theme/piggy_app_theme.dart';
+import 'package:piggy_flutter/utils/common.dart';
 
 class CategorywiseAccountsList extends StatelessWidget {
   CategorywiseAccountsList({Key key, @required this.items, bool visible})
@@ -49,12 +50,12 @@ class CategorywiseAccountsList extends StatelessWidget {
           Row(
             children: <Widget>[
               // Chip(
-              //   label: Text('${item.totalInflow.toStringAsFixed(2)}Rs'),
+              //   label: Text('${item.totalInflow.toMoney()}Rs'),
               //   backgroundColor: Colors.greenAccent.shade100,
               // ),
               Chip(
                 label: Text(
-                  '${item.totalAmountInDefaultCurrency.toStringAsFixed(2)} Rs',
+                  '${item.totalAmountInDefaultCurrency.toMoney()} Rs',
                 ),
                 backgroundColor: Colors.red.shade100,
               )
@@ -78,7 +79,7 @@ class CategorywiseAccountsList extends StatelessWidget {
           style: textTheme.body2,
         ),
         subtitle: Text(
-          '${account.amountInDefaultCurrency.toStringAsFixed(2)}',
+          '${account.amountInDefaultCurrency.toMoney()}',
           style: TextStyle(
             color: PiggyAppTheme.nearlyBlue,
             fontSize: 12,
@@ -86,7 +87,7 @@ class CategorywiseAccountsList extends StatelessWidget {
           ),
         ),
         trailing: Text(
-          '${account.amount.toString()} ${account.currencyCode}',
+          '${account.amount.toMoney()} ${account.currencyCode}',
         ),
       ),
     );

@@ -7,6 +7,7 @@ import 'package:piggy_flutter/models/category_wise_recent_months_report_item.dar
 import 'package:piggy_flutter/repositories/repositories.dart';
 import 'package:piggy_flutter/widgets/common/common_drawer.dart';
 import 'package:piggy_flutter/widgets/common/loading_widget.dart';
+import 'package:piggy_flutter/utils/common.dart';
 
 class CategoryWiseRecentMonthsReportScreen extends StatefulWidget {
   const CategoryWiseRecentMonthsReportScreen(
@@ -80,17 +81,17 @@ class _CategoryWiseRecentMonthsReportScreenState
                                 placeholder: false,
                               ),
                               DataCell(
-                                Text(item.datasets[0].total.toString()),
+                                Text(item.datasets[0].total.toMoney()),
                                 showEditIcon: false,
                                 placeholder: false,
                               ),
                               DataCell(
-                                Text(item.datasets[1].total.toString()),
+                                Text(item.datasets[1].total.toMoney()),
                                 showEditIcon: false,
                                 placeholder: false,
                               ),
                               DataCell(
-                                Text(item.datasets[2].total.toString()),
+                                Text(item.datasets[2].total.toMoney()),
                                 showEditIcon: false,
                                 placeholder: false,
                               )

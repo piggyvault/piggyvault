@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:piggy_flutter/models/transaction.dart';
 import 'package:piggy_flutter/models/transaction_group_item.dart';
+import 'package:piggy_flutter/utils/common.dart';
 
 class TransactionsResult {
   final List<TransactionGroupItem> sections;
@@ -23,6 +24,6 @@ class TransactionsResult {
 
   bool get isEmpty => sections.isEmpty;
 
-  String get totalExpense => _totalExpense.toStringAsFixed(2);
-  String get totalIncome => _totalIncome.toStringAsFixed(2);
+  String get totalExpense => _totalExpense.toMoney();
+  String get totalIncome => _totalIncome.toMoney();
 }

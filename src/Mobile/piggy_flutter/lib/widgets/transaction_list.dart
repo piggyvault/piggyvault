@@ -8,6 +8,7 @@ import 'package:piggy_flutter/models/transaction.dart';
 import 'package:piggy_flutter/models/transaction_group_item.dart';
 import 'package:piggy_flutter/screens/transaction/transaction_detail.dart';
 import 'package:piggy_flutter/theme/piggy_app_theme.dart';
+import 'package:piggy_flutter/utils/common.dart';
 
 class TransactionList extends StatelessWidget {
   TransactionList({Key key, @required this.items, this.isLoading, bool visible})
@@ -70,12 +71,12 @@ class TransactionList extends StatelessWidget {
           Row(
             children: <Widget>[
               Chip(
-                label: Text('${item.totalInflow.toStringAsFixed(2)}Rs'),
+                label: Text('${item.totalInflow.toMoney()}Rs'),
                 backgroundColor: Colors.greenAccent.shade100,
               ),
               Chip(
                 label: Text(
-                  '${item.totalOutflow.toStringAsFixed(2)}Rs',
+                  '${item.totalOutflow.toMoney()}Rs',
                 ),
                 backgroundColor: Colors.red.shade100,
               )
@@ -139,10 +140,10 @@ class TransactionList extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             Text(
-              '${transaction.amount.toString()} ${transaction.accountCurrencySymbol}',
+              '${transaction.amount.toMoney()} ${transaction.accountCurrencySymbol}',
             ),
             Text(
-              '${transaction.balance.toString()} ${transaction.accountCurrencySymbol}',
+              '${transaction.balance.toMoney()} ${transaction.accountCurrencySymbol}',
               style: TextStyle(
                 color: PiggyAppTheme.nearlyBlue,
                 fontSize: 12,

@@ -381,31 +381,40 @@ namespace Piggyvault.Piggy.Transactions
         /// <param name="transactionId">
         /// The transaction id.
         /// </param>
+        /// <param name="notificationType"></param>
         /// <returns>
         /// The <see cref="Task"/>.
         /// </returns>
-        public async Task SendNotificationAsync(Guid transactionId)
+        public async Task SendNotificationAsync(Guid transactionId, NotificationTypes notificationType)
         {
             var transaction = await _transactionRepository.GetAll()
                 .Include(t => t.Account)
                     .ThenInclude(account => account.Currency)
-                .Include(t => t.Category).Include(t => t.CreatorUser).Where(t => t.Id == transactionId).FirstOrDefaultAsync();
+                .Include(t => t.Category)
+                .Include(t => t.CreatorUser)
+                .Where(t => t.Id == transactionId)
+                .FirstOrDefaultAsync();
 
             var transactionPreviewDto = ObjectMapper.Map<TransactionPreviewDto>(transaction);
 
-            var notificationHeading = transaction.Amount > 0 ? "🐷 Inflow" : "🔥 Outflow";
+            var contentHeading = transaction.Amount > 0 ? "🐷 Inflow" : "🔥 Outflow";
             var notificationHeadingFromOrTo = transaction.Amount > 0 ? "to" : "from";
-
             var amount = transaction.Amount > 0 ? transaction.Amount : -transaction.Amount;
+            contentHeading += $" of {transaction.Account.Currency.Symbol} {amount} {notificationHeadingFromOrTo} {transaction.CreatorUser.UserName.ToPascalCase()}'s {transaction.Account.Name}";
 
-            notificationHeading += $" of {transaction.Account.Currency.Symbol} {amount} {notificationHeadingFromOrTo} {transaction.CreatorUser.UserName.ToPascalCase()}'s {transaction.Account.Name}";
+            var notificationHeading = notificationType switch
+            {
+                NotificationTypes.NewTransaction => $"New Transaction By {transaction.CreatorUser.UserName.ToPascalCase()}",
+                NotificationTypes.UpdateTransaction => $"Transaction Updated By {transaction.CreatorUser.UserName.ToPascalCase()}",
+                _ => "New Activity",
+            };
 
             await _notificationService.SendPushNotificationAsync(new PushNotificationInput()
             {
-                Contents = transaction.Description,
+                Contents = $"{contentHeading}{Environment.NewLine}{transaction.Description}",
                 Data = GetTransactionDataInDictionary(transactionPreviewDto),
                 Headings = notificationHeading,
-                ChannelId = _settings.OneSignal.Channels.NewTransaction
+                ChannelId = notificationType == NotificationTypes.NewTransaction ? _settings.OneSignal.Channels.NewTransaction : _settings.OneSignal.Channels.UpdateTransaction
             });
         }
 
@@ -477,18 +486,16 @@ namespace Piggyvault.Piggy.Transactions
             }
         }
 
-        private async Task InsertTransactionAsync(TransactionEditDto input, bool isTranfer = false)
+        private async Task InsertTransactionAsync(TransactionEditDto input, bool isTransfer = false)
         {
-            var transaction = input.MapTo<Transaction>();
+            var transaction = ObjectMapper.Map<Transaction>(input);
             transaction.Balance = 0;
-            transaction.IsTransferred = isTranfer;
+            transaction.IsTransferred = isTransfer;
 
             var transactionId = await _transactionRepository.InsertAndGetIdAsync(transaction);
             await CurrentUnitOfWork.SaveChangesAsync();
-
             await UpdateTransactionsBalanceInAccountAsync(input.AccountId);
-
-            await this.SendNotificationAsync(transactionId);
+            await SendNotificationAsync(transactionId, NotificationTypes.NewTransaction).ConfigureAwait(false);
         }
 
         private async Task<Result> SendTransactionCommentPushNotificationAsync(TransactionCommentEditDto input)
@@ -526,10 +533,11 @@ namespace Piggyvault.Piggy.Transactions
         {
             var tenantId = AbpSession.TenantId;
             var transaction = await _transactionRepository.FirstOrDefaultAsync(t => t.Id == input.Id && t.Account.TenantId == tenantId);
-            input.MapTo(transaction);
+            ObjectMapper.Map(input, transaction);
 
             await CurrentUnitOfWork.SaveChangesAsync();
             await UpdateTransactionsBalanceInAccountAsync(input.AccountId);
+            await SendNotificationAsync(transaction.Id, NotificationTypes.UpdateTransaction).ConfigureAwait(false);
         }
 
         private async Task<Result> UpdateTransactionCommentAsync(TransactionCommentEditDto input)

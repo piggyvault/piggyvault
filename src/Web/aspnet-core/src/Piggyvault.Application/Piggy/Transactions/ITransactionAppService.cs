@@ -3,6 +3,7 @@ using Abp.Application.Services.Dto;
 using Piggyvault.Piggy.Transactions.Dto;
 using System;
 using System.Threading.Tasks;
+using Piggyvault.Piggy.Notifications;
 
 namespace Piggyvault.Piggy.Transactions
 {
@@ -61,7 +62,7 @@ namespace Piggyvault.Piggy.Transactions
         /// </returns>
         Task ReCalculateAllAccountsTransactionBalanceOfUserAsync();
 
-        Task SendNotificationAsync(Guid transactionId);
+        Task SendNotificationAsync(Guid transactionId, NotificationTypes notificationType);
 
         /// <summary>
         /// The transfer async.

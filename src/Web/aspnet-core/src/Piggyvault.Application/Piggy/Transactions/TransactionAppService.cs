@@ -409,12 +409,20 @@ namespace Piggyvault.Piggy.Transactions
                 _ => "New Activity",
             };
 
-            await _notificationService.SendPushNotificationAsync(new PushNotificationInput()
+            // Avoid waiting for below call to finish to increase the response time for the dependent call
+#pragma warning disable 4014
+            Task.Run(() =>
+#pragma warning restore 4014
             {
-                Contents = $"{contentHeading}{Environment.NewLine}{transaction.Description}",
-                Data = GetTransactionDataInDictionary(transactionPreviewDto),
-                Headings = notificationHeading,
-                ChannelId = notificationType == NotificationTypes.NewTransaction ? _settings.OneSignal.Channels.NewTransaction : _settings.OneSignal.Channels.UpdateTransaction
+                _notificationService.SendPushNotificationAsync(new PushNotificationInput()
+                {
+                    Contents = $"{contentHeading}{Environment.NewLine}{transaction.Description}",
+                    Data = GetTransactionDataInDictionary(transactionPreviewDto),
+                    Headings = notificationHeading,
+                    ChannelId = notificationType == NotificationTypes.NewTransaction
+                        ? _settings.OneSignal.Channels.NewTransaction
+                        : _settings.OneSignal.Channels.UpdateTransaction
+                });
             });
         }
 

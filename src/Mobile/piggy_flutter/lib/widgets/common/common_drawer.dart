@@ -40,33 +40,34 @@ class CommonDrawer extends StatelessWidget {
                 .push(MaterialPageRoute(builder: (context) => HomeScreen()))),
           ),
           ListTile(
-              title: Text(
-                "Accounts",
-                style: menuTextStyle,
-              ),
-              leading: Icon(
-                Icons.account_balance_wallet,
-                color: Colors.green,
-              ),
-              onTap: (() => Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => HomeScreen(
-                        startpage: StartPage.Accounts,
-                      ),
+            title: Text(
+              "Accounts",
+              style: menuTextStyle,
+            ),
+            leading: Icon(
+              Icons.account_balance_wallet,
+              color: Colors.green,
+            ),
+            onTap: (() => Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => HomeScreen(
+                      startpage: StartPage.Accounts,
                     ),
-                  )),
-              trailing: BlocBuilder<AccountsBloc, AccountsState>(
-                  builder: (context, state) {
-                if (state is AccountsLoaded) {
-                  return Chip(
-                    backgroundColor: Colors.green,
-                    label: Text(state.userAccounts.length.toString()),
-                  );
-                }
+                  ),
+                )),
+            trailing: BlocBuilder<AccountsBloc, AccountsState>(
+                builder: (context, state) {
+              if (state is AccountsLoaded) {
                 return Chip(
-                  label: Icon(Icons.hourglass_empty),
+                  backgroundColor: Colors.green,
+                  label: Text(state.userAccounts.length.toString()),
                 );
-              })),
+              }
+              return Chip(
+                label: Icon(Icons.hourglass_empty),
+              );
+            }),
+          ),
           categoriesTile(context),
           ListTile(
             title: Text(
@@ -91,9 +92,12 @@ class CommonDrawer extends StatelessWidget {
               style: menuTextStyle,
             ),
             leading: Icon(Icons.settings, color: Colors.brown),
-            onTap: (() => Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) =>
-                    SettingsScreen(animationController: animationController)))),
+            onTap: (() => Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => SettingsScreen(
+                        animationController: animationController),
+                  ),
+                )),
           ),
           Divider(),
           ListTile(
@@ -118,33 +122,34 @@ class CommonDrawer extends StatelessWidget {
 
   Widget categoriesTile(BuildContext context) {
     return ListTile(
-        title: Text(
-          "Categories",
-          style: menuTextStyle,
-        ),
-        leading: Icon(
-          Icons.category,
-          color: Colors.cyan,
-        ),
-        onTap: (() => Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => CategoryListPage(
-                  animationController: animationController,
-                ),
+      title: Text(
+        "Categories",
+        style: menuTextStyle,
+      ),
+      leading: Icon(
+        Icons.category,
+        color: Colors.cyan,
+      ),
+      onTap: (() => Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => CategoryListPage(
+                animationController: animationController,
               ),
-            )),
-        trailing: BlocBuilder<CategoriesBloc, CategoriesState>(
-            builder: (context, state) {
-          if (state is CategoriesLoaded) {
-            return Chip(
-              backgroundColor: Colors.cyan,
-              label: Text(state.categories.length.toString()),
-            );
-          }
+            ),
+          )),
+      trailing: BlocBuilder<CategoriesBloc, CategoriesState>(
+          builder: (context, state) {
+        if (state is CategoriesLoaded) {
           return Chip(
-            label: Icon(Icons.hourglass_empty),
+            backgroundColor: Colors.cyan,
+            label: Text(state.categories.length.toString()),
           );
-        }));
+        }
+        return Chip(
+          label: Icon(Icons.hourglass_empty),
+        );
+      }),
+    );
   }
 
   Widget drawerHeader() {
@@ -157,7 +162,7 @@ class CommonDrawer extends StatelessWidget {
           accountEmail: Text(
             state.user.emailAddress,
           ),
-          currentAccountPicture: new CircleAvatar(
+          currentAccountPicture: CircleAvatar(
 //              backgroundImage: new AssetImage(UIData.pkImage),
               ),
         );

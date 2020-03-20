@@ -4,12 +4,12 @@ import 'package:flutter_icons/flutter_icons.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:piggy_flutter/blocs/transaction/transaction.dart';
 import 'package:piggy_flutter/blocs/transaction_detail/bloc.dart';
-import 'package:piggy_flutter/dashboard/dashboard_page.dart';
 import 'package:piggy_flutter/models/models.dart';
 import 'package:piggy_flutter/screens/account/account_form.dart';
 import 'package:piggy_flutter/screens/account/account_list.dart';
 import 'package:piggy_flutter/screens/home/overview_screen.dart';
 import 'package:piggy_flutter/screens/home/recent_transactions.dart';
+import 'package:piggy_flutter/screens/home/user_screen.dart';
 import 'package:piggy_flutter/screens/transaction/transaction_detail.dart';
 import 'package:piggy_flutter/screens/transaction/transaction_form.dart';
 import 'package:piggy_flutter/theme/piggy_app_theme.dart';
@@ -52,7 +52,7 @@ class TabIconData {
       animationController: null,
     ),
     TabIconData(
-      iconData: MaterialCommunityIcons.finance,
+      iconData: MaterialCommunityIcons.account,
       index: 3,
       isSelected: false,
       animationController: null,
@@ -244,9 +244,10 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                   return;
                 }
                 setState(() {
-                  tabBody = DashboardPage();
+                  tabBody = UserScreen(
+                    animationController: animationController,
+                  );
                   _selectedNavIndex = index;
-                  // TrainingScreen(animationController: animationController);
                 });
               });
             }

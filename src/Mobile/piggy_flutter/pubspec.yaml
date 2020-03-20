@@ -7,7 +7,7 @@ description: Family finance management app.
 # Both the version and the builder number may be overridden in flutter
 # build by specifying --build-name and --build-number, respectively.
 # Read more about versioning at semver.org.
-version: 0.24.2+36
+version: 0.25.0+37
 
 environment:
   sdk: ">=2.6.0 <3.0.0"

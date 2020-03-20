@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Piggyvault.Piggy.Transactions.Dto
 {
@@ -13,6 +11,8 @@ namespace Piggyvault.Piggy.Transactions.Dto
         /// Gets or sets the account id.
         /// </summary>
         public Guid? AccountId { get; set; }
+
+        public Guid? CategoryId { get; set; }
 
         /// <summary>
         /// Gets or sets the end date.

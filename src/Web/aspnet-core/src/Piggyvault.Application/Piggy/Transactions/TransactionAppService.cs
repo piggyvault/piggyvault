@@ -308,6 +308,14 @@ namespace Piggyvault.Piggy.Transactions
                     .Where(t => t.AccountId == input.AccountId.Value);
                     break;
 
+                case "category":
+                    query = _transactionRepository.GetAll()
+                        .Include(t => t.Account)
+                        .ThenInclude(account => account.Currency)
+                        .Include(t => t.Category)
+                        .Where(t => t.CategoryId == input.CategoryId.Value);
+                    break;
+
                 default:
                     query = _transactionRepository.GetAll()
                     .Include(t => t.Account)

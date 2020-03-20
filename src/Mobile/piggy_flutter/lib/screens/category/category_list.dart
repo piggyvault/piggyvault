@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:piggy_flutter/blocs/categories/categories.dart';
 import 'package:piggy_flutter/models/category.dart';
+import 'package:piggy_flutter/repositories/repositories.dart';
+import 'package:piggy_flutter/screens/category/category_detail.dart';
 import 'package:piggy_flutter/screens/category/category_form.dart';
 import 'package:piggy_flutter/theme/piggy_app_theme.dart';
 import 'package:piggy_flutter/widgets/common/common_drawer.dart';
@@ -78,22 +80,20 @@ class CategoryListPage extends StatelessWidget {
                   //     ? Text(
                   //         '${category.noOfTransactions} transactions recently')
                   //     : null,
-                  trailing: IconButton(
-                    icon: Icon(Icons.edit),
-                    onPressed: () async {
-                      await Navigator.push(
-                          context,
-                          MaterialPageRoute<DismissDialogAction>(
-                            builder: (BuildContext context) => CategoryFormPage(
-                              category: category,
-                              title: 'Edit Category',
-                              categoriesBloc:
-                                  BlocProvider.of<CategoriesBloc>(context),
-                            ),
-                            fullscreenDialog: true,
-                          ));
-                    },
-                  ),
+
+                  onTap: () async {
+                    await Navigator.of(context)
+                        .push(MaterialPageRoute<CategoryDetailPage>(
+                      builder: (BuildContext context) => CategoryDetailPage(
+                        animationController: animationController,
+                        category: category,
+                        transactionRepository:
+                            RepositoryProvider.of<TransactionRepository>(
+                                context),
+                      ),
+                      fullscreenDialog: true,
+                    ));
+                  },
                 ),
               );
             });

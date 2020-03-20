@@ -4,12 +4,6 @@ import 'package:piggy_flutter/models/transaction_group_item.dart';
 import 'package:piggy_flutter/utils/common.dart';
 
 class TransactionsResult {
-  final List<TransactionGroupItem> sections;
-  final List<Transaction> transactions;
-
-  double _totalExpense = 0;
-  double _totalIncome = 0;
-
   TransactionsResult({@required this.sections, @required this.transactions}) {
     transactions.forEach((t) {
       if (t.amount > 0) {
@@ -19,6 +13,12 @@ class TransactionsResult {
       }
     });
   }
+
+  final List<TransactionGroupItem> sections;
+  final List<Transaction> transactions;
+
+  double _totalExpense = 0;
+  double _totalIncome = 0;
 
   bool get isPopulated => sections.isNotEmpty;
 

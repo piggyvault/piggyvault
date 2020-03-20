@@ -150,13 +150,21 @@ class PiggyApiClient {
   }
 
   Future<List<Transaction>> getTransactions(GetTransactionsInput input) async {
-    List<Transaction> transactions = [];
+    final List<Transaction> transactions = <Transaction>[];
 
     String params = '';
 
-    if (input.type != null) params += 'type=${input.type}';
+    if (input.type != null) {
+      params += 'type=${input.type}';
+    }
 
-    if (input.accountId != null) params += '&accountId=${input.accountId}';
+    if (input.accountId != null) {
+      params += '&accountId=${input.accountId}';
+    }
+
+    if (input.categoryId != null) {
+      params += '&categoryId=${input.categoryId}';
+    }
 
     if (input.startDate != null && input.startDate.toString() != '')
       params += '&startDate=${input.startDate}';
@@ -164,11 +172,11 @@ class PiggyApiClient {
     if (input.endDate != null && input.endDate.toString() != '')
       params += '&endDate=${input.endDate}';
 
-    var result = await getAsync<dynamic>(
+    final ApiResponse<dynamic> result = await getAsync<dynamic>(
         '$baseUrl/api/services/app/transaction/GetTransactions?$params');
 
     if (result.success) {
-      result.result['items'].forEach((transaction) {
+      result.result['items'].forEach((dynamic transaction) {
         transactions.add(Transaction.fromJson(transaction));
       });
     }
@@ -188,7 +196,6 @@ class PiggyApiClient {
 
   Future<ApiResponse<dynamic>> createOrUpdateAccount(
       AccountFormModel input) async {
-    print(input);
     final result = await postAsync(
         '$baseUrl/api/services/app/account/CreateOrUpdateAccount', {
       "account": {

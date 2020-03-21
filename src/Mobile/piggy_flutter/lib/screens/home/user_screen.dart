@@ -189,17 +189,33 @@ class _UserScreenState extends State<UserScreen> with TickerProviderStateMixin {
                             Expanded(
                               child: Padding(
                                 padding: const EdgeInsets.all(8.0),
-                                child: Text(
-                                  'Piggyvault',
-                                  textAlign: TextAlign.left,
-                                  style: TextStyle(
-                                    fontFamily: PiggyAppTheme.fontName,
-                                    fontWeight: FontWeight.w700,
-                                    fontSize: 22 + 6 - 6 * topBarOpacity,
-                                    letterSpacing: 1.2,
-                                    color: PiggyAppTheme.darkerText,
-                                  ),
-                                ),
+                                child: BlocBuilder<AuthBloc, AuthState>(builder:
+                                    (BuildContext context, AuthState state) {
+                                  if (state is AuthAuthenticated) {
+                                    return Text(
+                                      '${state.tenant.tenancyName}',
+                                      textAlign: TextAlign.left,
+                                      style: TextStyle(
+                                        fontFamily: PiggyAppTheme.fontName,
+                                        fontWeight: FontWeight.w700,
+                                        fontSize: 22 + 6 - 6 * topBarOpacity,
+                                        letterSpacing: 1.2,
+                                        color: PiggyAppTheme.darkerText,
+                                      ),
+                                    );
+                                  }
+                                  return Text(
+                                    'User not logged in',
+                                    textAlign: TextAlign.left,
+                                    style: TextStyle(
+                                      fontFamily: PiggyAppTheme.fontName,
+                                      fontWeight: FontWeight.w700,
+                                      fontSize: 22 + 6 - 6 * topBarOpacity,
+                                      letterSpacing: 1.2,
+                                      color: PiggyAppTheme.darkerText,
+                                    ),
+                                  );
+                                }),
                               ),
                             ),
                             Padding(

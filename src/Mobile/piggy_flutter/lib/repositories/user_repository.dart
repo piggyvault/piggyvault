@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:piggy_flutter/models/models.dart';
-import 'package:piggy_flutter/models/user.dart';
 import 'package:piggy_flutter/repositories/piggy_api_client.dart';
 import 'package:piggy_flutter/utils/uidata.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -34,7 +33,7 @@ class UserRepository {
     return null;
   }
 
-  Future<User> getCurrentLoginInformation() async {
+  Future<LoginInformationResult> getCurrentLoginInformation() async {
     return await piggyApiClient.getCurrentLoginInformations();
   }
 

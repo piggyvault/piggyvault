@@ -10,9 +10,10 @@ abstract class AuthState extends Equatable {
 class AuthUninitialized extends AuthState {}
 
 class AuthAuthenticated extends AuthState {
-  final User user;
+  AuthAuthenticated({@required this.user, @required this.tenant});
 
-  AuthAuthenticated({@required this.user});
+  final User user;
+  final Tenant tenant;
 
   @override
   List<Object> get props => [user];

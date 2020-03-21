@@ -1,7 +1,4 @@
 class User {
-  final String name, surname, userName, emailAddress, profilePictureId;
-  final int id;
-
   User(
       {this.id,
       this.name,
@@ -17,4 +14,7 @@ class User {
         userName = json['userName'],
         emailAddress = json['emailAddress'],
         profilePictureId = json['profilePictureId'];
+
+  final String name, surname, userName, emailAddress, profilePictureId;
+  final int id;
 }

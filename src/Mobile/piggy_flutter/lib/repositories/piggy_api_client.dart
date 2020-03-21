@@ -63,13 +63,15 @@ class PiggyApiClient {
     return AuthenticateResult.fromJson(loginResult.result);
   }
 
-  Future<User> getCurrentLoginInformations() async {
-    final userUrl =
+  Future<LoginInformationResult> getCurrentLoginInformations() async {
+    const String userUrl =
         '$baseUrl/api/services/app/session/GetCurrentLoginInformations';
-    final response = await this.getAsync<dynamic>(userUrl);
+    final ApiResponse<dynamic> response = await getAsync<dynamic>(userUrl);
 
     if (response.success && response.result['user'] != null) {
-      return User.fromJson(response.result['user']);
+      return LoginInformationResult(
+          user: User.fromJson(response.result['user']),
+          tenant: Tenant.fromJson(response.result['tenant']));
     }
 
     return null;

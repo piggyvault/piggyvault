@@ -3,7 +3,7 @@ import 'package:bloc/bloc.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:piggy_flutter/blocs/auth/auth.dart';
-import 'package:piggy_flutter/models/user.dart';
+import 'package:piggy_flutter/models/login_information_result.dart';
 
 import 'package:piggy_flutter/repositories/repositories.dart';
 
@@ -27,11 +27,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       } else {
         final bool hasToken = await userRepository.hasToken();
         if (hasToken) {
-          final User user = await userRepository.getCurrentLoginInformation();
-          if (user == null || user.id == null) {
+          final LoginInformationResult result =
+              await userRepository.getCurrentLoginInformation();
+          if (result == null || result.user == null || result.user.id == null) {
             yield AuthUnauthenticated();
           } else {
-            yield AuthAuthenticated(user: user);
+            yield AuthAuthenticated(user: result.user, tenant: result.tenant);
           }
         } else {
           yield AuthUnauthenticated();
@@ -50,13 +51,13 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         print(e);
       }
 
-      final User user = await userRepository.getCurrentLoginInformation();
-      if (user == null || user.id == null) {
+      final LoginInformationResult result =
+          await userRepository.getCurrentLoginInformation();
+      if (result == null || result.user == null || result.user.id == null) {
         yield AuthUnauthenticated();
       } else {
-        yield AuthAuthenticated(user: user);
+        yield AuthAuthenticated(user: result.user, tenant: result.tenant);
       }
-      yield AuthAuthenticated(user: user);
     }
 
     if (event is LoggedOut) {

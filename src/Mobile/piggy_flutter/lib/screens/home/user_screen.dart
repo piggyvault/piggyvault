@@ -7,40 +7,292 @@ import 'package:piggy_flutter/blocs/auth/auth_bloc.dart';
 import 'package:piggy_flutter/blocs/categories/categories.dart';
 import 'package:piggy_flutter/screens/reports/reports_screen.dart';
 import 'package:piggy_flutter/screens/settings/settings_screen.dart';
+import 'package:piggy_flutter/theme/theme.dart';
 import 'package:piggy_flutter/utils/uidata.dart';
 import 'package:styled_widget/styled_widget.dart';
 
-class UserScreen extends StatelessWidget {
+class UserScreen extends StatefulWidget {
   const UserScreen({Key key, @required this.animationController})
       : super(key: key);
 
   final AnimationController animationController;
 
   @override
-  Widget build(BuildContext context) {
-    final page = ({Widget child}) => Styled.widget(child: child)
-        .padding(vertical: 30, horizontal: 20)
-        .constrained(minHeight: MediaQuery.of(context).size.height - (2 * 30))
-        .scrollable();
+  _UserScreenState createState() => _UserScreenState();
+}
 
-    return page(
-      child: <Widget>[
-        const Text('User settings')
-            .bold()
-            .fontSize(24)
-            .alignment(Alignment.centerLeft)
-            .padding(bottom: 20),
-        UserCard().padding(bottom: 20),
-        // ActionsRow(),
-        Settings(
-          animationController: animationController,
+class _UserScreenState extends State<UserScreen> with TickerProviderStateMixin {
+  Animation<double> topBarAnimation;
+  double topBarOpacity = 0.0;
+  Animation<double> bodyAnimation;
+  List<Widget> listViews = <Widget>[];
+  final ScrollController scrollController = ScrollController();
+
+  @override
+  void initState() {
+    topBarAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(
+        parent: widget.animationController,
+        curve: Interval(0, 0.5, curve: Curves.fastOutSlowIn),
+      ),
+    );
+
+    bodyAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(
+        parent: widget.animationController,
+        curve: Interval(0.5, 1.0, curve: Curves.fastOutSlowIn),
+      ),
+    );
+
+    scrollController.addListener(() {
+      if (scrollController.offset >= 24) {
+        if (topBarOpacity != 1.0) {
+          setState(() {
+            topBarOpacity = 1.0;
+          });
+        }
+      } else if (scrollController.offset <= 24 &&
+          scrollController.offset >= 0) {
+        if (topBarOpacity != scrollController.offset / 24) {
+          setState(() {
+            topBarOpacity = scrollController.offset / 24;
+          });
+        }
+      } else if (scrollController.offset <= 0) {
+        if (topBarOpacity != 0.0) {
+          setState(() {
+            topBarOpacity = 0.0;
+          });
+        }
+      }
+    });
+
+    addAllListData();
+
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: PiggyAppTheme.background,
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        body: Stack(
+          children: <Widget>[
+            getMainListViewUI().padding(horizontal: 20),
+            getAppBarUI(),
+            SizedBox(
+              height: MediaQuery.of(context).padding.bottom,
+            )
+          ],
         ),
-      ].toColumn(),
+      ),
+    );
+  }
+
+  void addAllListData() {
+    const int count = 3;
+
+    listViews.add(UserCard(
+      animation: Tween<double>(begin: 0.0, end: 1.0).animate(
+        CurvedAnimation(
+          parent: widget.animationController,
+          curve: Interval((1 / count) * 0, 1.0, curve: Curves.fastOutSlowIn),
+        ),
+      ),
+      animationController: widget.animationController,
+    ).padding(bottom: 15));
+
+    listViews.add(Settings(
+      animationController: widget.animationController,
+      animation: Tween<double>(begin: 0.0, end: 1.0).animate(
+        CurvedAnimation(
+          parent: widget.animationController,
+          curve: Interval((1 / count) * 1, 1.0, curve: Curves.fastOutSlowIn),
+        ),
+      ),
+    ));
+  }
+
+  Future<bool> getData() async {
+    await Future<dynamic>.delayed(const Duration(milliseconds: 50));
+    return true;
+  }
+
+  Widget getMainListViewUI() {
+    return FutureBuilder<bool>(
+      future: getData(),
+      builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+        if (!snapshot.hasData) {
+          return const SizedBox();
+        } else {
+          return ListView.builder(
+            controller: scrollController,
+            padding: EdgeInsets.only(
+              top: AppBar().preferredSize.height +
+                  MediaQuery.of(context).padding.top +
+                  24,
+              bottom: 62 + MediaQuery.of(context).padding.bottom,
+            ),
+            itemCount: listViews.length,
+            scrollDirection: Axis.vertical,
+            itemBuilder: (BuildContext context, int index) {
+              widget.animationController.forward();
+              return listViews[index];
+            },
+          );
+        }
+      },
+    );
+  }
+
+  Widget getAppBarUI() {
+    return Column(
+      children: <Widget>[
+        AnimatedBuilder(
+          animation: widget.animationController,
+          builder: (BuildContext context, Widget child) {
+            return FadeTransition(
+              opacity: topBarAnimation,
+              child: Transform(
+                transform: Matrix4.translationValues(
+                    0.0, 30 * (1.0 - topBarAnimation.value), 0.0),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: PiggyAppTheme.white.withOpacity(topBarOpacity),
+                    borderRadius: const BorderRadius.only(
+                      bottomLeft: Radius.circular(32.0),
+                    ),
+                    boxShadow: <BoxShadow>[
+                      BoxShadow(
+                          color: PiggyAppTheme.grey
+                              .withOpacity(0.4 * topBarOpacity),
+                          offset: const Offset(1.1, 1.1),
+                          blurRadius: 10.0),
+                    ],
+                  ),
+                  child: Column(
+                    children: <Widget>[
+                      SizedBox(
+                        height: MediaQuery.of(context).padding.top,
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(
+                            left: 16,
+                            right: 16,
+                            top: 16 - 8.0 * topBarOpacity,
+                            bottom: 12 - 8.0 * topBarOpacity),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Expanded(
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text(
+                                  'Piggyvault',
+                                  textAlign: TextAlign.left,
+                                  style: TextStyle(
+                                    fontFamily: PiggyAppTheme.fontName,
+                                    fontWeight: FontWeight.w700,
+                                    fontSize: 22 + 6 - 6 * topBarOpacity,
+                                    letterSpacing: 1.2,
+                                    color: PiggyAppTheme.darkerText,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                left: 8,
+                                right: 8,
+                              ),
+                              child: Row(
+                                children: <Widget>[
+                                  Padding(
+                                    padding: const EdgeInsets.only(right: 8),
+                                    // child: Icon(
+                                    //   Icons.calendar_today,
+                                    //   color: PiggyAppTheme.grey,
+                                    //   size: 18,
+                                    // ),
+                                  ),
+                                  Material(
+                                    color: Colors.transparent,
+                                    child: InkWell(
+                                      focusColor: Colors.transparent,
+                                      highlightColor: Colors.transparent,
+                                      hoverColor: Colors.transparent,
+                                      splashColor: Colors.grey.withOpacity(0.2),
+                                      borderRadius: const BorderRadius.all(
+                                        Radius.circular(4.0),
+                                      ),
+                                      onTap: () {
+                                        FocusScope.of(context)
+                                            .requestFocus(FocusNode());
+                                        // // setState(() {
+                                        // //   isDatePopupOpen = true;
+                                        // // });
+                                        // showDemoDialog(
+                                        //     context: context,
+                                        //     bloc: recentTransactionsBloc);
+                                      },
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(
+                                            left: 8,
+                                            right: 8,
+                                            top: 4,
+                                            bottom: 4),
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: <Widget>[
+                                            // Text(
+                                            //   '${DateFormat("dd, MMM").format(startDate)} - ${DateFormat("dd, MMM").format(endDate)}',
+                                            //   textAlign: TextAlign.left,
+                                            //   style: TextStyle(
+                                            //     fontFamily:
+                                            //         PiggyAppTheme.fontName,
+                                            //     fontWeight: FontWeight.normal,
+                                            //     fontSize: 18,
+                                            //     letterSpacing: -0.2,
+                                            //     color:
+                                            //         PiggyAppTheme.darkerText,
+                                            //   ),
+                                            // ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            );
+          },
+        )
+      ],
     );
   }
 }
 
 class UserCard extends StatelessWidget {
+  const UserCard(
+      {Key key, @required this.animationController, @required this.animation})
+      : super(key: key);
+
+  final AnimationController animationController;
+  final Animation<double> animation;
+
   Widget _buildUserRow() {
     return BlocBuilder<AuthBloc, AuthState>(
         builder: (BuildContext context, AuthState state) {
@@ -101,18 +353,29 @@ class UserCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return <Widget>[_buildUserRow(), _buildUserStats()]
-        .toColumn(mainAxisAlignment: MainAxisAlignment.spaceAround)
-        .padding(horizontal: 20, vertical: 10)
-        .decorated(
-            color: Color(0xff3977ff), borderRadius: BorderRadius.circular(20))
-        .elevation(
-          5,
-          shadowColor: Color(0xff3977ff),
-          borderRadius: BorderRadius.circular(20),
-        )
-        .height(175)
-        .alignment(Alignment.center);
+    return AnimatedBuilder(
+        animation: animationController,
+        builder: (BuildContext context, Widget child) {
+          return FadeTransition(
+              opacity: animation,
+              child: Transform(
+                  transform: Matrix4.translationValues(
+                      0.0, 30 * (1.0 - animation.value), 0.0),
+                  child: <Widget>[_buildUserRow(), _buildUserStats()]
+                      .toColumn(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround)
+                      .padding(horizontal: 20, vertical: 10)
+                      .decorated(
+                          color: Color(0xff3977ff),
+                          borderRadius: BorderRadius.circular(20))
+                      .elevation(
+                        5,
+                        shadowColor: Color(0xff3977ff),
+                        borderRadius: BorderRadius.circular(20),
+                      )
+                      .height(175)
+                      .alignment(Alignment.center)));
+        });
   }
 }
 
@@ -192,25 +455,52 @@ const List<SettingsItemModel> settingsItems = [
   // ),
 ];
 
-class Settings extends StatelessWidget {
-  const Settings({Key key, @required this.animationController})
+class Settings extends StatefulWidget {
+  const Settings(
+      {Key key, @required this.animationController, @required this.animation})
       : super(key: key);
   final AnimationController animationController;
+  final Animation<double> animation;
+
+  @override
+  _SettingsState createState() => _SettingsState();
+}
+
+class _SettingsState extends State<Settings> {
+  int widgetPositionIndex = 0;
 
   @override
   Widget build(BuildContext context) => settingsItems
-      .map((SettingsItemModel settingsItem) => SettingsItem(
-          settingsItem.icon,
-          settingsItem.color,
-          settingsItem.title,
-          settingsItem.description,
-          animationController))
+      .map(
+        (SettingsItemModel settingsItem) {
+          widgetPositionIndex += 1;
+
+          return AnimatedBuilder(
+            animation: widget.animationController,
+            builder: (BuildContext context, Widget child) {
+              return FadeTransition(
+                opacity: widget.animation,
+                child: Transform(
+                  transform: Matrix4.translationValues(
+                      0.0, 30 * (1.0 - widget.animation.value), 0.0),
+                  child: SettingsItem(
+                      settingsItem.icon,
+                      settingsItem.color,
+                      settingsItem.title,
+                      settingsItem.description,
+                      widget.animationController),
+                ),
+              );
+            },
+          );
+        },
+      )
       .toList()
       .toColumn();
 }
 
 class SettingsItem extends StatefulWidget {
-  SettingsItem(this.icon, this.iconBgColor, this.title, this.description,
+  const SettingsItem(this.icon, this.iconBgColor, this.title, this.description,
       this.animationController);
 
   final IconData icon;
@@ -266,7 +556,7 @@ class _SettingsItemState extends State<SettingsItem> {
           },
         )
         .scale(pressed ? 0.95 : 1.0, animate: true)
-        .animate(Duration(milliseconds: 150), Curves.easeOut);
+        .animate(const Duration(milliseconds: 150), Curves.easeOut);
 
     final Widget icon = Icon(widget.icon)
         .iconColor(Colors.white)

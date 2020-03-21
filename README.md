@@ -63,3 +63,10 @@ High level planned items can be viewed under organization's projects.
   <img src="images/screenshots/22-default-currency-settings.jpg" width="200" />
   <img src="images/screenshots/23-about.jpg" width="200" />
 </p>
+
+## Credits
+
+### Flutter
+
+- [mitesh77/Best-Flutter-UI-Templates](https://github.com/mitesh77/Best-Flutter-UI-Templates)
+- [ReinBentdal/styled_widget](https://github.com/ReinBentdal/styled_widget)

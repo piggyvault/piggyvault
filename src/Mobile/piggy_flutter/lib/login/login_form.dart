@@ -19,8 +19,8 @@ class _LoginFormState extends State<LoginForm> {
     _onLoginButtonPressed() {
       BlocProvider.of<LoginBloc>(context).add(
         LoginButtonPressed(
-          tenancyName: _tenancyNameController.text,
-          username: _usernameController.text,
+          tenancyName: _tenancyNameController.text.trim(),
+          username: _usernameController.text.trim(),
           password: _passwordController.text,
         ),
       );

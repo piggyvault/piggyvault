@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Abp.Auditing;
+using Abp.Authorization;
 using Abp.Domain.Repositories;
 using Flurl;
 using Flurl.Http;
@@ -17,6 +18,7 @@ using Piggyvault.Piggy.Transactions.Dto;
 namespace Piggyvault.Piggy.CurrencyRates
 {
     // TODO(abhith): consider caching. Ref: https://aspnetboilerplate.com/Pages/Documents/Caching
+    [AbpAuthorize]
     [DisableAuditing]
     public class CurrencyRateAppService : PiggyvaultAppServiceBase, ICurrencyRateAppService
     {
@@ -68,6 +70,19 @@ namespace Piggyvault.Piggy.CurrencyRates
             }
         }
 
+        public async Task<ExchangeRateResult> GetExchangeRate(GetExchangeRateInput input)
+        {
+            var output = new ExchangeRateResult();
+
+            var fromCurrencyRate = await _currencyRateRepository.GetAll().Where(r => r.Code == input.From).OrderByDescending(r => r.CreationTime).FirstOrDefaultAsync();
+
+            var toCurrencyRate = await _currencyRateRepository.GetAll().Where(r => r.Code == input.To).OrderByDescending(r => r.CreationTime).FirstOrDefaultAsync();
+
+            output.Rate = fromCurrencyRate.Rate / toCurrencyRate.Rate;
+            output.LastUpdatedTime = fromCurrencyRate.CreationTime;
+            return output;
+        }
+
         /// <summary>
         /// The get transactions with amount in default currency.
         /// </summary>
@@ -92,20 +107,27 @@ namespace Piggyvault.Piggy.CurrencyRates
             return output;
         }
 
+        [AbpAllowAnonymous]
         [HttpGet]
         public async Task UpdateCurrencyRates()
         {
             try
             {
-                var quote = await "http://data.fixer.io/api/latest"
-                .SetQueryParams(new
-                {
-                    access_key = _settings.Fixer.ApiKey
-                }).GetJsonAsync<Quote>();
+                var lastUpdatedDateTime = await _currencyRateRepository.GetAll().OrderByDescending(r => r.CreationTime).FirstOrDefaultAsync();
 
-                foreach (var rate in quote.Rates)
+                // limit update call one per day
+                if (lastUpdatedDateTime.CreationTime.AddHours(1) < DateTime.UtcNow)
                 {
-                    await _currencyRateRepository.InsertAsync(new CurrencyRate { Code = rate.Key, Rate = rate.Value });
+                    var quote = await "http://data.fixer.io/api/latest"
+                        .SetQueryParams(new
+                        {
+                            access_key = _settings.Fixer.ApiKey
+                        }).GetJsonAsync<Quote>();
+
+                    foreach (var rate in quote.Rates)
+                    {
+                        await _currencyRateRepository.InsertAsync(new CurrencyRate { Code = rate.Key, Rate = rate.Value });
+                    }
                 }
             }
             catch (Exception ex)

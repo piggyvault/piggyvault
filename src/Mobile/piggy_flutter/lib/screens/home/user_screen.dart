@@ -471,7 +471,7 @@ const List<SettingsItemModel> settingsItems = [
   // ),
 ];
 
-class Settings extends StatefulWidget {
+class Settings extends StatelessWidget {
   const Settings(
       {Key key, @required this.animationController, @required this.animation})
       : super(key: key);
@@ -479,32 +479,23 @@ class Settings extends StatefulWidget {
   final Animation<double> animation;
 
   @override
-  _SettingsState createState() => _SettingsState();
-}
-
-class _SettingsState extends State<Settings> {
-  int widgetPositionIndex = 0;
-
-  @override
   Widget build(BuildContext context) => settingsItems
       .map(
         (SettingsItemModel settingsItem) {
-          widgetPositionIndex += 1;
-
           return AnimatedBuilder(
-            animation: widget.animationController,
+            animation: animationController,
             builder: (BuildContext context, Widget child) {
               return FadeTransition(
-                opacity: widget.animation,
+                opacity: animation,
                 child: Transform(
                   transform: Matrix4.translationValues(
-                      0.0, 30 * (1.0 - widget.animation.value), 0.0),
+                      0.0, 30 * (1.0 - animation.value), 0.0),
                   child: SettingsItem(
                       settingsItem.icon,
                       settingsItem.color,
                       settingsItem.title,
                       settingsItem.description,
-                      widget.animationController),
+                      animationController),
                 ),
               );
             },

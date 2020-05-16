@@ -10,5 +10,7 @@ namespace Piggyvault.Piggy.Notifications.Dto
         public string Contents { get; set; }
         public Dictionary<string, string> Data { get; set; }
         public string Headings { get; set; }
+
+        public string TenancyName { get; set; }
     }
 }

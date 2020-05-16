@@ -1,22 +1,26 @@
 ﻿using Abp.BackgroundJobs;
 using Abp.Dependency;
 using Abp.Threading;
+using Microsoft.Extensions.Logging;
 using Piggyvault.Piggy.Notifications.Dto;
 
 namespace Piggyvault.Piggy.Notifications
 {
     public class SendPushNotificationJob : BackgroundJob<SendPushNotificationJobArgs>, ITransientDependency
     {
-        private readonly INotificationAppService _notificationService;
+        private readonly ILogger<SendPushNotificationJob> _logger;
+        private readonly PushNotificationSender _notificationSender;
 
-        public SendPushNotificationJob(INotificationAppService notificationService)
+        public SendPushNotificationJob(PushNotificationSender notificationSender, ILogger<SendPushNotificationJob> logger)
         {
-            _notificationService = notificationService;
+            _notificationSender = notificationSender;
+            _logger = logger;
         }
 
         public override void Execute(SendPushNotificationJobArgs args)
         {
-            AsyncHelper.RunSync(() => _notificationService.SendPushNotificationAsync(args));
+            _logger.LogDebug("----- Sending push notification");
+            AsyncHelper.RunSync(() => _notificationSender.SendAsync(args));
         }
     }
 }

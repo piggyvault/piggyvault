@@ -418,6 +418,8 @@ namespace Piggyvault.Piggy.Transactions
                 _ => "New Activity",
             };
 
+            var currentUser = await _sessionAppService.GetCurrentLoginInformations();
+
             await _backgroundJobManager.EnqueueAsync<SendPushNotificationJob, SendPushNotificationJobArgs>(
                 new SendPushNotificationJobArgs
                 {
@@ -426,7 +428,8 @@ namespace Piggyvault.Piggy.Transactions
                     Headings = notificationHeading,
                     ChannelId = notificationType == NotificationTypes.NewTransaction
                         ? _settings.OneSignal.Channels.NewTransaction
-                        : _settings.OneSignal.Channels.UpdateTransaction
+                        : _settings.OneSignal.Channels.UpdateTransaction,
+                    TenancyName = currentUser.Tenant.TenancyName.Trim().ToLowerInvariant()
                 });
         }
 
@@ -525,7 +528,8 @@ namespace Piggyvault.Piggy.Transactions
                     Headings = input.Id.HasValue
                         ? $"{currentUser.User.UserName.ToPascalCase()} updated a comment on a transaction done by {transactionPreviewDto.CreatorUserName}"
                         : $"New comment added by {currentUser.User.UserName.ToPascalCase()} on a transaction done by {transactionPreviewDto.CreatorUserName}.",
-                    Data = GetTransactionDataInDictionary(transactionPreviewDto)
+                    Data = GetTransactionDataInDictionary(transactionPreviewDto),
+                    TenancyName = currentUser.Tenant.TenancyName.Trim().ToLowerInvariant()
                 });
         }
 

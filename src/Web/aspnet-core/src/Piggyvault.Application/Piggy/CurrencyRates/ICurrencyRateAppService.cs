@@ -13,7 +13,7 @@ namespace Piggyvault.Piggy.CurrencyRates
 
         Task<decimal> GetExchangeRate(string currencyCode);
 
-        Task<ExchangeRateResult> GetExchangeRate(GetExchangeRateInput input);
+        //Task<ExchangeRateResult> GetExchangeRate(GetExchangeRateInput input);
 
         Task<IEnumerable<TransactionPreviewDto>> GetTransactionsWithAmountInDefaultCurrency(IEnumerable<Transaction> input);
 

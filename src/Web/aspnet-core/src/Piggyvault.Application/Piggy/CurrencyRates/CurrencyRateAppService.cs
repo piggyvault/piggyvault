@@ -70,18 +70,18 @@ namespace Piggyvault.Piggy.CurrencyRates
             }
         }
 
-        public async Task<ExchangeRateResult> GetExchangeRate(GetExchangeRateInput input)
-        {
-            var output = new ExchangeRateResult();
+        //public async Task<ExchangeRateResult> GetExchangeRate(GetExchangeRateInput input)
+        //{
+        //    var output = new ExchangeRateResult();
 
-            var fromCurrencyRate = await _currencyRateRepository.GetAll().Where(r => r.Code == input.From).OrderByDescending(r => r.CreationTime).FirstOrDefaultAsync();
+        //    var fromCurrencyRate = await _currencyRateRepository.GetAll().Where(r => r.Code == input.From).OrderByDescending(r => r.CreationTime).FirstOrDefaultAsync();
 
-            var toCurrencyRate = await _currencyRateRepository.GetAll().Where(r => r.Code == input.To).OrderByDescending(r => r.CreationTime).FirstOrDefaultAsync();
+        //    var toCurrencyRate = await _currencyRateRepository.GetAll().Where(r => r.Code == input.To).OrderByDescending(r => r.CreationTime).FirstOrDefaultAsync();
 
-            output.Rate = fromCurrencyRate.Rate / toCurrencyRate.Rate;
-            output.LastUpdatedTime = fromCurrencyRate.CreationTime;
-            return output;
-        }
+        //    output.Rate = fromCurrencyRate.Rate / toCurrencyRate.Rate;
+        //    output.LastUpdatedTime = fromCurrencyRate.CreationTime;
+        //    return output;
+        //}
 
         /// <summary>
         /// The get transactions with amount in default currency.

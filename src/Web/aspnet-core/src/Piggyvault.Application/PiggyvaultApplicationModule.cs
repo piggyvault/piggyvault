@@ -28,6 +28,8 @@ namespace Piggyvault
 
             //Adding custom AutoMapper configuration
             Configuration.Modules.AbpAutoMapper().Configurators.Add(CustomDtoMapper.CreateMappings);
+
+            Configuration.BackgroundJobs.IsJobExecutionEnabled = true;
         }
     }
 }

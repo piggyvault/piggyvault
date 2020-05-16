@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
+using Abp.BackgroundJobs;
 using Piggyvault.Piggy.CurrencyRates;
 using Piggyvault.Piggy.Notifications.Dto;
 
@@ -29,22 +30,22 @@ namespace Piggyvault.Piggy.Transactions
         /// </summary>
         private readonly IRepository<Account, Guid> _accountRepository;
 
+        private readonly IBackgroundJobManager _backgroundJobManager;
         private readonly ICurrencyRateAppService _currencyRateExchangeService;
-        private readonly INotificationAppService _notificationService;
         private readonly ISessionAppService _sessionAppService;
         private readonly PiggySettings _settings;
         private readonly IRepository<TransactionComment, Guid> _transactionCommentRepository;
         private readonly IRepository<Transaction, Guid> _transactionRepository;
 
-        public TransactionAppService(IRepository<Transaction, Guid> transactionRepository, IRepository<Account, Guid> accountRepository, ISessionAppService sessionAppService, ICurrencyRateAppService currencyRateExchangeService, IRepository<TransactionComment, Guid> transactionCommentRepository, INotificationAppService notificationService, PiggySettings settings)
+        public TransactionAppService(IRepository<Transaction, Guid> transactionRepository, IRepository<Account, Guid> accountRepository, ISessionAppService sessionAppService, ICurrencyRateAppService currencyRateExchangeService, IRepository<TransactionComment, Guid> transactionCommentRepository, PiggySettings settings, IBackgroundJobManager backgroundJobManager)
         {
             _transactionRepository = transactionRepository;
             _accountRepository = accountRepository;
             _sessionAppService = sessionAppService;
             _currencyRateExchangeService = currencyRateExchangeService;
             _transactionCommentRepository = transactionCommentRepository;
-            _notificationService = notificationService;
             _settings = settings;
+            _backgroundJobManager = backgroundJobManager;
         }
 
         /// <summary>
@@ -417,12 +418,8 @@ namespace Piggyvault.Piggy.Transactions
                 _ => "New Activity",
             };
 
-            // Avoid waiting for below call to finish to increase the response time for the dependent call
-#pragma warning disable 4014
-            Task.Run(() =>
-#pragma warning restore 4014
-            {
-                _notificationService.SendPushNotificationAsync(new PushNotificationInput()
+            await _backgroundJobManager.EnqueueAsync<SendPushNotificationJob, SendPushNotificationJobArgs>(
+                new SendPushNotificationJobArgs
                 {
                     Contents = $"{contentHeading}{Environment.NewLine}{transaction.Description}",
                     Data = GetTransactionDataInDictionary(transactionPreviewDto),
@@ -431,7 +428,6 @@ namespace Piggyvault.Piggy.Transactions
                         ? _settings.OneSignal.Channels.NewTransaction
                         : _settings.OneSignal.Channels.UpdateTransaction
                 });
-            });
         }
 
         public async Task TransferAsync(TransferEditDto input)
@@ -488,18 +484,11 @@ namespace Piggyvault.Piggy.Transactions
             };
         }
 
-        private async Task<Result> CreateTransactionCommentAsync(TransactionCommentEditDto input)
+        private async Task CreateTransactionCommentAsync(TransactionCommentEditDto input)
         {
-            try
-            {
-                var transactionComment = input.MapTo<TransactionComment>();
-                await _transactionCommentRepository.InsertAndGetIdAsync(transactionComment);
-                return await SendTransactionCommentPushNotificationAsync(input);
-            }
-            catch (Exception exception)
-            {
-                return Result.Fail(exception.Message);
-            }
+            var transactionComment = ObjectMapper.Map<TransactionComment>(input);
+            await _transactionCommentRepository.InsertAndGetIdAsync(transactionComment);
+            await SendTransactionCommentPushNotificationAsync(input);
         }
 
         private async Task InsertTransactionAsync(TransactionEditDto input, bool isTransfer = false)
@@ -511,38 +500,33 @@ namespace Piggyvault.Piggy.Transactions
             var transactionId = await _transactionRepository.InsertAndGetIdAsync(transaction);
             await CurrentUnitOfWork.SaveChangesAsync();
             await UpdateTransactionsBalanceInAccountAsync(input.AccountId);
+
             await SendNotificationAsync(transactionId, NotificationTypes.NewTransaction).ConfigureAwait(false);
         }
 
-        private async Task<Result> SendTransactionCommentPushNotificationAsync(TransactionCommentEditDto input)
+        private async Task SendTransactionCommentPushNotificationAsync(TransactionCommentEditDto input)
         {
-            try
-            {
-                var currentUser = await _sessionAppService.GetCurrentLoginInformations();
+            var currentUser = await _sessionAppService.GetCurrentLoginInformations();
 
-                var transaction = await _transactionRepository.GetAll()
-                    .Include(t => t.Account)
-                        .ThenInclude(account => account.Currency)
-                    .Include(t => t.Category)
-                    .Include(t => t.CreatorUser)
-                    .Where(t => t.Id == input.TransactionId)
-                    .FirstOrDefaultAsync();
+            var transaction = await _transactionRepository.GetAll()
+                .Include(t => t.Account)
+                    .ThenInclude(account => account.Currency)
+                .Include(t => t.Category)
+                .Include(t => t.CreatorUser)
+                .Where(t => t.Id == input.TransactionId)
+                .FirstOrDefaultAsync();
 
-                var transactionPreviewDto = transaction.MapTo<TransactionPreviewDto>();
+            var transactionPreviewDto = ObjectMapper.Map<TransactionPreviewDto>(transaction);
 
-                return await _notificationService.SendPushNotificationAsync(new PushNotificationInput()
+            await _backgroundJobManager.EnqueueAsync<SendPushNotificationJob, SendPushNotificationJobArgs>(
+                new SendPushNotificationJobArgs
                 {
                     Contents = input.Content,
                     Headings = input.Id.HasValue
-                         ? $"{currentUser.User.UserName.ToPascalCase()} updated a comment on a transaction done by {transactionPreviewDto.CreatorUserName}"
-                         : $"New comment added by {currentUser.User.UserName.ToPascalCase()} on a transaction done by {transactionPreviewDto.CreatorUserName}.",
+                        ? $"{currentUser.User.UserName.ToPascalCase()} updated a comment on a transaction done by {transactionPreviewDto.CreatorUserName}"
+                        : $"New comment added by {currentUser.User.UserName.ToPascalCase()} on a transaction done by {transactionPreviewDto.CreatorUserName}.",
                     Data = GetTransactionDataInDictionary(transactionPreviewDto)
                 });
-            }
-            catch (Exception exception)
-            {
-                return Result.Fail(exception.Message);
-            }
         }
 
         private async Task UpdateTransactionAsync(TransactionEditDto input)
@@ -556,13 +540,13 @@ namespace Piggyvault.Piggy.Transactions
             await SendNotificationAsync(transaction.Id, NotificationTypes.UpdateTransaction).ConfigureAwait(false);
         }
 
-        private async Task<Result> UpdateTransactionCommentAsync(TransactionCommentEditDto input)
+        private async Task UpdateTransactionCommentAsync(TransactionCommentEditDto input)
         {
             var transactionComment = await _transactionCommentRepository.FirstOrDefaultAsync(c => c.Id == input.Id.Value);
 
             input.MapTo(transactionComment);
 
-            return await SendTransactionCommentPushNotificationAsync(input);
+            await SendTransactionCommentPushNotificationAsync(input);
         }
 
         private async Task UpdateTransactionsBalanceInAccountAsync(Guid accountId)

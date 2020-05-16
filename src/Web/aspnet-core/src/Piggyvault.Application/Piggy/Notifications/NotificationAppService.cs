@@ -4,6 +4,7 @@ using Flurl.Http;
 using Piggyvault.Sessions;
 using System;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using Piggyvault.Piggy.Notifications.Dto;
 
 namespace Piggyvault.Piggy.Notifications
@@ -11,16 +12,18 @@ namespace Piggyvault.Piggy.Notifications
     [AbpAuthorize]
     public class NotificationAppService : PiggyvaultAppServiceBase, INotificationAppService
     {
+        private readonly ILogger<NotificationAppService> _logger;
         private readonly ISessionAppService _sessionAppService;
         private readonly PiggySettings _settings;
 
-        public NotificationAppService(ISessionAppService sessionAppService, PiggySettings settings)
+        public NotificationAppService(ISessionAppService sessionAppService, PiggySettings settings, ILogger<NotificationAppService> logger)
         {
             _sessionAppService = sessionAppService;
             _settings = settings;
+            _logger = logger;
         }
 
-        public async Task<Result> SendPushNotificationAsync(PushNotificationInput input)
+        public async Task<Result> SendPushNotificationAsync(SendPushNotificationJobArgs input)
         {
             if (string.IsNullOrWhiteSpace(_settings.OneSignal.ApiKey) || string.IsNullOrWhiteSpace(_settings.OneSignal.AppId))
             {
@@ -55,7 +58,7 @@ namespace Piggyvault.Piggy.Notifications
             }
             catch (Exception ex)
             {
-                // TODO: log
+                _logger.LogError(ex, "Failed to sent push notification");
             }
 
             return Result.Fail("Something went wrong. Failed to sent push notification");

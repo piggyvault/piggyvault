@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Piggyvault.Piggy.Notifications.Dto
 {
-    public class PushNotificationInput
+    [Serializable]
+    public class SendPushNotificationJobArgs
     {
         public string ChannelId { get; set; }
         public string Contents { get; set; }

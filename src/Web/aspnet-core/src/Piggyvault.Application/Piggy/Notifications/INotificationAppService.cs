@@ -6,6 +6,6 @@ namespace Piggyvault.Piggy.Notifications
 {
     public interface INotificationAppService
     {
-        Task<Result> SendPushNotificationAsync(PushNotificationInput input);
+        Task<Result> SendPushNotificationAsync(SendPushNotificationJobArgs input);
     }
 }

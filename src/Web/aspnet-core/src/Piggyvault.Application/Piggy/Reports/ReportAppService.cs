@@ -1,7 +1,8 @@
 ﻿using Abp.Authorization;
 using Abp.Domain.Repositories;
-using Code.Library;
+using Code.Library.Extensions;
 using Microsoft.EntityFrameworkCore;
+using Piggyvault.Piggy.CurrencyRates;
 using Piggyvault.Piggy.Reports.Dto;
 using Piggyvault.Piggy.Transactions;
 using Piggyvault.Piggy.Transactions.Dto;
@@ -9,7 +10,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Piggyvault.Piggy.CurrencyRates;
 
 namespace Piggyvault.Piggy.Reports
 {

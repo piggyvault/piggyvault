@@ -6,11 +6,12 @@
     "experimentalDecorators": true,
     "lib": [ "es6", "dom" ],
     "mapRoot": "./",
-    "module": "esnext",
+    "module": "es2020",
+    "skipLibCheck": true,
     "moduleResolution": "node",
     "outDir": "../dist/out-tsc",
     "sourceMap": true,
-    "target": "es2015",
+    "target": "es5",
     "typeRoots": [
       "../node_modules/@types"
     ],
@@ -22,7 +23,12 @@
       "@node_modules/*": [ "../node_modules/*" ]
     }
   },
-  "exclude": [
-    "node_modules"
+  "files": [
+    "main.ts",
+    "polyfills.ts"
+  ],
+  "include": [
+    "src/**/*.d.ts",
+    "typings.d.ts"
   ]
 }

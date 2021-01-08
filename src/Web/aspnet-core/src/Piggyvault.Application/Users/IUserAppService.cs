@@ -1,8 +1,8 @@
-using System.Threading.Tasks;
 using Abp.Application.Services;
 using Abp.Application.Services.Dto;
 using Piggyvault.Roles.Dto;
 using Piggyvault.Users.Dto;
+using System.Threading.Tasks;
 
 namespace Piggyvault.Users
 {
@@ -10,9 +10,15 @@ namespace Piggyvault.Users
     {
         Task ChangeDefaultCurrency(ChangeUserDefaultCurrencyDto input);
 
-        Task ChangeLanguage(ChangeUserLanguageDto input);
+        Task DeActivate(EntityDto<long> user);
+
+        Task Activate(EntityDto<long> user);
 
         Task<ListResultDto<RoleDto>> GetRoles();
+
+        Task ChangeLanguage(ChangeUserLanguageDto input);
+
+        Task<bool> ChangePassword(ChangePasswordDto input);
 
         Task<UserSettingsDto> GetSettings();
     }

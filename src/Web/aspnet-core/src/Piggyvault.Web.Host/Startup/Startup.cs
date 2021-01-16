@@ -6,6 +6,7 @@ using Abp.Dependency;
 using Abp.Extensions;
 using Abp.Json;
 using Castle.Facilities.Logging;
+using Code.Library.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -36,6 +37,8 @@ namespace Piggyvault.Web.Host.Startup
 
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
+            services.AddAppInsight(_appConfiguration, "Piggy API");
+
             services.Configure<PiggySettings>(_appConfiguration);
             //MVC
             services.AddControllersWithViews(

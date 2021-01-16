@@ -1,19 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Abp.Auditing;
+﻿using Abp.Auditing;
 using Abp.Authorization;
 using Abp.Domain.Repositories;
 using Flurl;
 using Flurl.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Piggyvault.Configuration;
 using Piggyvault.Piggy.Currencies;
 using Piggyvault.Piggy.CurrencyRates.Dto;
 using Piggyvault.Piggy.Transactions;
 using Piggyvault.Piggy.Transactions.Dto;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Piggyvault.Piggy.CurrencyRates
 {
@@ -25,9 +26,9 @@ namespace Piggyvault.Piggy.CurrencyRates
         private readonly IRepository<CurrencyRate, Guid> _currencyRateRepository;
         private readonly PiggySettings _settings;
 
-        public CurrencyRateAppService(PiggySettings settings, IRepository<CurrencyRate, Guid> currencyRateRepository)
+        public CurrencyRateAppService(IOptions<PiggySettings> settings, IRepository<CurrencyRate, Guid> currencyRateRepository)
         {
-            _settings = settings;
+            _settings = settings.Value;
             _currencyRateRepository = currencyRateRepository;
         }
 

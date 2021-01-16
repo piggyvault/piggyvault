@@ -1,8 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using Abp.Application.Services;
+﻿using Abp.Application.Services;
 using Abp.Application.Services.Dto;
 using Abp.Authorization;
 using Abp.Domain.Entities;
@@ -13,27 +9,31 @@ using Abp.Linq.Extensions;
 using Abp.Localization;
 using Abp.Runtime.Session;
 using Abp.UI;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Piggyvault.Authorization;
 using Piggyvault.Authorization.Accounts;
 using Piggyvault.Authorization.Roles;
 using Piggyvault.Authorization.Users;
+using Piggyvault.Configuration;
 using Piggyvault.Roles.Dto;
 using Piggyvault.Users.Dto;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using Piggyvault.Configuration;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
 namespace Piggyvault.Users
 {
-    [AbpAuthorize]
+    [AbpAuthorize(PermissionNames.Pages_Users)]
     public class UserAppService : AsyncCrudAppService<User, UserDto, long, PagedUserResultRequestDto, CreateUserDto, UserDto>, IUserAppService
     {
-        private readonly IAbpSession _abpSession;
-        private readonly LogInManager _logInManager;
-        private readonly IPasswordHasher<User> _passwordHasher;
+        private readonly UserManager _userManager;
         private readonly RoleManager _roleManager;
         private readonly IRepository<Role> _roleRepository;
-        private readonly UserManager _userManager;
+        private readonly IPasswordHasher<User> _passwordHasher;
+        private readonly IAbpSession _abpSession;
+        private readonly LogInManager _logInManager;
 
         public UserAppService(
             IRepository<User, long> repository,
@@ -62,40 +62,17 @@ namespace Piggyvault.Users
            );
         }
 
-        [AbpAuthorize(PermissionNames.Pages_Users)]
-        public async Task ChangeLanguage(ChangeUserLanguageDto input)
+        public async Task<UserSettingsDto> GetSettings()
+
         {
-            await SettingManager.ChangeSettingForUserAsync(
-                AbpSession.ToUserIdentifier(),
-                LocalizationSettingNames.DefaultLanguage,
-                input.LanguageName
-            );
+            var output = new UserSettingsDto
+            {
+                DefaultCurrencyCode = await SettingManager.GetSettingValueAsync(AppSettingNames.DefaultCurrency)
+            };
+
+            return output;
         }
 
-        [AbpAuthorize(PermissionNames.Pages_Users)]
-        public async Task<bool> ChangePassword(ChangePasswordDto input)
-        {
-            if (_abpSession.UserId == null)
-            {
-                throw new UserFriendlyException("Please log in before attemping to change password.");
-            }
-            long userId = _abpSession.UserId.Value;
-            var user = await _userManager.GetUserByIdAsync(userId);
-            var loginAsync = await _logInManager.LoginAsync(user.UserName, input.CurrentPassword, shouldLockout: false);
-            if (loginAsync.Result != AbpLoginResultType.Success)
-            {
-                throw new UserFriendlyException("Your 'Existing Password' did not match the one on record.  Please try again or contact an administrator for assistance in resetting your password.");
-            }
-            if (!new Regex(AccountAppService.PasswordRegex).IsMatch(input.NewPassword))
-            {
-                throw new UserFriendlyException("Passwords must be at least 8 characters, contain a lowercase, uppercase, and number.");
-            }
-            user.Password = _passwordHasher.HashPassword(user, input.NewPassword);
-            CurrentUnitOfWork.SaveChanges();
-            return true;
-        }
-
-        [AbpAuthorize(PermissionNames.Pages_Users)]
         public override async Task<UserDto> CreateAsync(CreateUserDto input)
         {
             CheckCreatePermission();
@@ -119,31 +96,139 @@ namespace Piggyvault.Users
             return MapToEntityDto(user);
         }
 
-        [AbpAuthorize(PermissionNames.Pages_Users)]
+        public override async Task<UserDto> UpdateAsync(UserDto input)
+        {
+            CheckUpdatePermission();
+
+            var user = await _userManager.GetUserByIdAsync(input.Id);
+
+            MapToEntity(input, user);
+
+            CheckErrors(await _userManager.UpdateAsync(user));
+
+            if (input.RoleNames != null)
+            {
+                CheckErrors(await _userManager.SetRolesAsync(user, input.RoleNames));
+            }
+
+            return await GetAsync(input);
+        }
+
         public override async Task DeleteAsync(EntityDto<long> input)
         {
             var user = await _userManager.GetUserByIdAsync(input.Id);
             await _userManager.DeleteAsync(user);
         }
 
-        [AbpAuthorize(PermissionNames.Pages_Users)]
+        [AbpAuthorize(PermissionNames.Pages_Users_Activation)]
+        public async Task Activate(EntityDto<long> user)
+        {
+            await Repository.UpdateAsync(user.Id, async (entity) =>
+            {
+                entity.IsActive = true;
+            });
+        }
+
+        [AbpAuthorize(PermissionNames.Pages_Users_Activation)]
+        public async Task DeActivate(EntityDto<long> user)
+        {
+            await Repository.UpdateAsync(user.Id, async (entity) =>
+            {
+                entity.IsActive = false;
+            });
+        }
+
         public async Task<ListResultDto<RoleDto>> GetRoles()
         {
             var roles = await _roleRepository.GetAllListAsync();
             return new ListResultDto<RoleDto>(ObjectMapper.Map<List<RoleDto>>(roles));
         }
 
-        public async Task<UserSettingsDto> GetSettings()
+        public async Task ChangeLanguage(ChangeUserLanguageDto input)
         {
-            var output = new UserSettingsDto
-            {
-                DefaultCurrencyCode = await SettingManager.GetSettingValueAsync(AppSettingNames.DefaultCurrency)
-            };
-
-            return output;
+            await SettingManager.ChangeSettingForUserAsync(
+                AbpSession.ToUserIdentifier(),
+                LocalizationSettingNames.DefaultLanguage,
+                input.LanguageName
+            );
         }
 
-        [AbpAuthorize(PermissionNames.Pages_Users)]
+        protected override User MapToEntity(CreateUserDto createInput)
+        {
+            var user = ObjectMapper.Map<User>(createInput);
+            user.SetNormalizedNames();
+            return user;
+        }
+
+        protected override void MapToEntity(UserDto input, User user)
+        {
+            ObjectMapper.Map(input, user);
+            user.SetNormalizedNames();
+        }
+
+        protected override UserDto MapToEntityDto(User user)
+        {
+            var roleIds = user.Roles.Select(x => x.RoleId).ToArray();
+
+            var roles = _roleManager.Roles.Where(r => roleIds.Contains(r.Id)).Select(r => r.NormalizedName);
+
+            var userDto = base.MapToEntityDto(user);
+            userDto.RoleNames = roles.ToArray();
+
+            return userDto;
+        }
+
+        protected override IQueryable<User> CreateFilteredQuery(PagedUserResultRequestDto input)
+        {
+            return Repository.GetAllIncluding(x => x.Roles)
+                .WhereIf(!input.Keyword.IsNullOrWhiteSpace(), x => x.UserName.Contains(input.Keyword) || x.Name.Contains(input.Keyword) || x.EmailAddress.Contains(input.Keyword))
+                .WhereIf(input.IsActive.HasValue, x => x.IsActive == input.IsActive);
+        }
+
+        protected override async Task<User> GetEntityByIdAsync(long id)
+        {
+            var user = await Repository.GetAllIncluding(x => x.Roles).FirstOrDefaultAsync(x => x.Id == id);
+
+            if (user == null)
+            {
+                throw new EntityNotFoundException(typeof(User), id);
+            }
+
+            return user;
+        }
+
+        protected override IQueryable<User> ApplySorting(IQueryable<User> query, PagedUserResultRequestDto input)
+        {
+            return query.OrderBy(r => r.UserName);
+        }
+
+        protected virtual void CheckErrors(IdentityResult identityResult)
+        {
+            identityResult.CheckErrors(LocalizationManager);
+        }
+
+        public async Task<bool> ChangePassword(ChangePasswordDto input)
+        {
+            if (_abpSession.UserId == null)
+            {
+                throw new UserFriendlyException("Please log in before attemping to change password.");
+            }
+            long userId = _abpSession.UserId.Value;
+            var user = await _userManager.GetUserByIdAsync(userId);
+            var loginAsync = await _logInManager.LoginAsync(user.UserName, input.CurrentPassword, shouldLockout: false);
+            if (loginAsync.Result != AbpLoginResultType.Success)
+            {
+                throw new UserFriendlyException("Your 'Existing Password' did not match the one on record.  Please try again or contact an administrator for assistance in resetting your password.");
+            }
+            if (!new Regex(AccountAppService.PasswordRegex).IsMatch(input.NewPassword))
+            {
+                throw new UserFriendlyException("Passwords must be at least 8 characters, contain a lowercase, uppercase, and number.");
+            }
+            user.Password = _passwordHasher.HashPassword(user, input.NewPassword);
+            CurrentUnitOfWork.SaveChanges();
+            return true;
+        }
+
         public async Task<bool> ResetPassword(ResetPasswordDto input)
         {
             if (_abpSession.UserId == null)
@@ -175,79 +260,6 @@ namespace Piggyvault.Users
             }
 
             return true;
-        }
-
-        [AbpAuthorize(PermissionNames.Pages_Users)]
-        public override async Task<UserDto> UpdateAsync(UserDto input)
-        {
-            CheckUpdatePermission();
-
-            var user = await _userManager.GetUserByIdAsync(input.Id);
-
-            MapToEntity(input, user);
-
-            CheckErrors(await _userManager.UpdateAsync(user));
-
-            if (input.RoleNames != null)
-            {
-                CheckErrors(await _userManager.SetRolesAsync(user, input.RoleNames));
-            }
-
-            return await GetAsync(input);
-        }
-
-        protected override IQueryable<User> ApplySorting(IQueryable<User> query, PagedUserResultRequestDto input)
-        {
-            return query.OrderBy(r => r.UserName);
-        }
-
-        protected virtual void CheckErrors(IdentityResult identityResult)
-        {
-            identityResult.CheckErrors(LocalizationManager);
-        }
-
-        protected override IQueryable<User> CreateFilteredQuery(PagedUserResultRequestDto input)
-        {
-            return Repository.GetAllIncluding(x => x.Roles)
-                .WhereIf(!input.Keyword.IsNullOrWhiteSpace(), x => x.UserName.Contains(input.Keyword) || x.Name.Contains(input.Keyword) || x.EmailAddress.Contains(input.Keyword))
-                .WhereIf(input.IsActive.HasValue, x => x.IsActive == input.IsActive);
-        }
-
-        protected override async Task<User> GetEntityByIdAsync(long id)
-        {
-            var user = await Repository.GetAllIncluding(x => x.Roles).FirstOrDefaultAsync(x => x.Id == id);
-
-            if (user == null)
-            {
-                throw new EntityNotFoundException(typeof(User), id);
-            }
-
-            return user;
-        }
-
-        protected override User MapToEntity(CreateUserDto createInput)
-        {
-            var user = ObjectMapper.Map<User>(createInput);
-            user.SetNormalizedNames();
-            return user;
-        }
-
-        protected override void MapToEntity(UserDto input, User user)
-        {
-            ObjectMapper.Map(input, user);
-            user.SetNormalizedNames();
-        }
-
-        protected override UserDto MapToEntityDto(User user)
-        {
-            var roleIds = user.Roles.Select(x => x.RoleId).ToArray();
-
-            var roles = _roleManager.Roles.Where(r => roleIds.Contains(r.Id)).Select(r => r.NormalizedName);
-
-            var userDto = base.MapToEntityDto(user);
-            userDto.RoleNames = roles.ToArray();
-
-            return userDto;
         }
     }
 }

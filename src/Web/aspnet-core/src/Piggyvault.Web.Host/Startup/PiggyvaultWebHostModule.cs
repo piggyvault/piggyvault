@@ -10,10 +10,10 @@ namespace Piggyvault.Web.Host.Startup
        typeof(PiggyvaultWebCoreModule))]
     public class PiggyvaultWebHostModule: AbpModule
     {
-        private readonly IHostingEnvironment _env;
+        private readonly IWebHostEnvironment _env;
         private readonly IConfigurationRoot _appConfiguration;
 
-        public PiggyvaultWebHostModule(IHostingEnvironment env)
+        public PiggyvaultWebHostModule(IWebHostEnvironment env)
         {
             _env = env;
             _appConfiguration = env.GetAppConfiguration();

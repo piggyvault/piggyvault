@@ -1,4 +1,5 @@
-﻿using Abp.Modules;
+﻿using Abp.Localization;
+using Abp.Modules;
 using Abp.Reflection.Extensions;
 using Abp.Timing;
 using Abp.Zero;
@@ -15,16 +16,6 @@ namespace Piggyvault
     [DependsOn(typeof(AbpZeroCoreModule))]
     public class PiggyvaultCoreModule : AbpModule
     {
-        public override void Initialize()
-        {
-            IocManager.RegisterAssemblyByConvention(typeof(PiggyvaultCoreModule).GetAssembly());
-        }
-
-        public override void PostInitialize()
-        {
-            IocManager.Resolve<AppTimes>().StartupTime = Clock.Now;
-        }
-
         public override void PreInitialize()
         {
             Configuration.Auditing.IsEnabledForAnonymousUsers = true;
@@ -44,6 +35,18 @@ namespace Piggyvault
             AppRoleConfig.Configure(Configuration.Modules.Zero().RoleManagement);
 
             Configuration.Settings.Providers.Add<AppSettingProvider>();
+
+            Configuration.Localization.Languages.Add(new LanguageInfo("fa", "فارسی", "famfamfam-flags ir"));
+        }
+
+        public override void Initialize()
+        {
+            IocManager.RegisterAssemblyByConvention(typeof(PiggyvaultCoreModule).GetAssembly());
+        }
+
+        public override void PostInitialize()
+        {
+            IocManager.Resolve<AppTimes>().StartupTime = Clock.Now;
         }
     }
 }

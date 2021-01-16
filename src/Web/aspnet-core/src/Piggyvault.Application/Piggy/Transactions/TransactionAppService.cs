@@ -1,11 +1,15 @@
 ﻿using Abp.Authorization;
 using Abp.AutoMapper;
+using Abp.BackgroundJobs;
 using Abp.Domain.Repositories;
 using Abp.Extensions;
-using Code.Library;
+using Code.Library.Extensions;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Piggyvault.Piggy.Accounts;
+using Piggyvault.Piggy.CurrencyRates;
 using Piggyvault.Piggy.Notifications;
+using Piggyvault.Piggy.Notifications.Dto;
 using Piggyvault.Piggy.Transactions.Dto;
 using Piggyvault.Sessions;
 using System;
@@ -13,9 +17,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
-using Abp.BackgroundJobs;
-using Piggyvault.Piggy.CurrencyRates;
-using Piggyvault.Piggy.Notifications.Dto;
 
 namespace Piggyvault.Piggy.Transactions
 {
@@ -37,14 +38,16 @@ namespace Piggyvault.Piggy.Transactions
         private readonly IRepository<TransactionComment, Guid> _transactionCommentRepository;
         private readonly IRepository<Transaction, Guid> _transactionRepository;
 
-        public TransactionAppService(IRepository<Transaction, Guid> transactionRepository, IRepository<Account, Guid> accountRepository, ISessionAppService sessionAppService, ICurrencyRateAppService currencyRateExchangeService, IRepository<TransactionComment, Guid> transactionCommentRepository, PiggySettings settings, IBackgroundJobManager backgroundJobManager)
+        public TransactionAppService(IRepository<Transaction, Guid> transactionRepository, IRepository<Account, Guid> accountRepository,
+            ISessionAppService sessionAppService, ICurrencyRateAppService currencyRateExchangeService,
+            IRepository<TransactionComment, Guid> transactionCommentRepository, IOptions<PiggySettings> settings, IBackgroundJobManager backgroundJobManager)
         {
             _transactionRepository = transactionRepository;
             _accountRepository = accountRepository;
             _sessionAppService = sessionAppService;
             _currencyRateExchangeService = currencyRateExchangeService;
             _transactionCommentRepository = transactionCommentRepository;
-            _settings = settings;
+            _settings = settings.Value;
             _backgroundJobManager = backgroundJobManager;
         }
 

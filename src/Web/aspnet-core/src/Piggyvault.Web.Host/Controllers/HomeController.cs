@@ -4,6 +4,7 @@ using Abp;
 using Abp.Extensions;
 using Abp.Notifications;
 using Abp.Timing;
+using Abp.Web.Security.AntiForgery;
 using Piggyvault.Controllers;
 
 namespace Piggyvault.Web.Host.Controllers

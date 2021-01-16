@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
@@ -20,38 +20,28 @@ namespace Piggyvault.Migrations
             modelBuilder.Entity("Abp.Application.Editions.Edition", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .ValueGeneratedOnAdd();
 
-                    b.Property<DateTime>("CreationTime")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTime>("CreationTime");
 
-                    b.Property<long?>("CreatorUserId")
-                        .HasColumnType("bigint");
+                    b.Property<long?>("CreatorUserId");
 
-                    b.Property<long?>("DeleterUserId")
-                        .HasColumnType("bigint");
+                    b.Property<long?>("DeleterUserId");
 
-                    b.Property<DateTime?>("DeletionTime")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTime?>("DeletionTime");
 
                     b.Property<string>("DisplayName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(64)")
                         .HasMaxLength(64);
 
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
+                    b.Property<bool>("IsDeleted");
 
-                    b.Property<DateTime?>("LastModificationTime")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTime?>("LastModificationTime");
 
-                    b.Property<long?>("LastModifierUserId")
-                        .HasColumnType("bigint");
+                    b.Property<long?>("LastModifierUserId");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(32)")
                         .HasMaxLength(32);
 
                     b.HasKey("Id");
@@ -62,27 +52,21 @@ namespace Piggyvault.Migrations
             modelBuilder.Entity("Abp.Application.Features.FeatureSetting", b =>
                 {
                     b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+                        .ValueGeneratedOnAdd();
 
-                    b.Property<DateTime>("CreationTime")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTime>("CreationTime");
 
-                    b.Property<long?>("CreatorUserId")
-                        .HasColumnType("bigint");
+                    b.Property<long?>("CreatorUserId");
 
                     b.Property<string>("Discriminator")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired();
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(128)")
                         .HasMaxLength(128);
 
                     b.Property<string>("Value")
                         .IsRequired()
-                        .HasColumnType("nvarchar(2000)")
                         .HasMaxLength(2000);
 
                     b.HasKey("Id");
@@ -95,58 +79,43 @@ namespace Piggyvault.Migrations
             modelBuilder.Entity("Abp.Auditing.AuditLog", b =>
                 {
                     b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+                        .ValueGeneratedOnAdd();
 
                     b.Property<string>("BrowserInfo")
-                        .HasColumnType("nvarchar(256)")
                         .HasMaxLength(256);
 
                     b.Property<string>("ClientIpAddress")
-                        .HasColumnType("nvarchar(64)")
                         .HasMaxLength(64);
 
                     b.Property<string>("ClientName")
-                        .HasColumnType("nvarchar(128)")
                         .HasMaxLength(128);
 
                     b.Property<string>("CustomData")
-                        .HasColumnType("nvarchar(2000)")
                         .HasMaxLength(2000);
 
                     b.Property<string>("Exception")
-                        .HasColumnType("nvarchar(2000)")
                         .HasMaxLength(2000);
 
-                    b.Property<int>("ExecutionDuration")
-                        .HasColumnType("int");
+                    b.Property<int>("ExecutionDuration");
 
-                    b.Property<DateTime>("ExecutionTime")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTime>("ExecutionTime");
 
-                    b.Property<int?>("ImpersonatorTenantId")
-                        .HasColumnType("int");
+                    b.Property<int?>("ImpersonatorTenantId");
 
-                    b.Property<long?>("ImpersonatorUserId")
-                        .HasColumnType("bigint");
+                    b.Property<long?>("ImpersonatorUserId");
 
                     b.Property<string>("MethodName")
-                        .HasColumnType("nvarchar(256)")
                         .HasMaxLength(256);
 
                     b.Property<string>("Parameters")
-                        .HasColumnType("nvarchar(1024)")
                         .HasMaxLength(1024);
 
                     b.Property<string>("ServiceName")
-                        .HasColumnType("nvarchar(256)")
                         .HasMaxLength(256);
 
-                    b.Property<int?>("TenantId")
-                        .HasColumnType("int");
+                    b.Property<int?>("TenantId");
 
-                    b.Property<long?>("UserId")
-                        .HasColumnType("bigint");
+                    b.Property<long?>("UserId");
 
                     b.HasKey("Id");
 
@@ -162,29 +131,22 @@ namespace Piggyvault.Migrations
             modelBuilder.Entity("Abp.Authorization.PermissionSetting", b =>
                 {
                     b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+                        .ValueGeneratedOnAdd();
 
-                    b.Property<DateTime>("CreationTime")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTime>("CreationTime");
 
-                    b.Property<long?>("CreatorUserId")
-                        .HasColumnType("bigint");
+                    b.Property<long?>("CreatorUserId");
 
                     b.Property<string>("Discriminator")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired();
 
-                    b.Property<bool>("IsGranted")
-                        .HasColumnType("bit");
+                    b.Property<bool>("IsGranted");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(128)")
                         .HasMaxLength(128);
 
-                    b.Property<int?>("TenantId")
-                        .HasColumnType("int");
+                    b.Property<int?>("TenantId");
 
                     b.HasKey("Id");
 
@@ -198,26 +160,19 @@ namespace Piggyvault.Migrations
             modelBuilder.Entity("Abp.Authorization.Roles.RoleClaim", b =>
                 {
                     b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+                        .ValueGeneratedOnAdd();
 
-                    b.Property<string>("ClaimType")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<string>("ClaimType");
 
-                    b.Property<string>("ClaimValue")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<string>("ClaimValue");
 
-                    b.Property<DateTime>("CreationTime")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTime>("CreationTime");
 
-                    b.Property<long?>("CreatorUserId")
-                        .HasColumnType("bigint");
+                    b.Property<long?>("CreatorUserId");
 
-                    b.Property<int>("RoleId")
-                        .HasColumnType("int");
+                    b.Property<int>("RoleId");
 
-                    b.Property<int?>("TenantId")
-                        .HasColumnType("int");
+                    b.Property<int?>("TenantId");
 
                     b.HasKey("Id");
 
@@ -231,47 +186,33 @@ namespace Piggyvault.Migrations
             modelBuilder.Entity("Abp.Authorization.Users.UserAccount", b =>
                 {
                     b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+                        .ValueGeneratedOnAdd();
 
-                    b.Property<DateTime>("CreationTime")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTime>("CreationTime");
 
-                    b.Property<long?>("CreatorUserId")
-                        .HasColumnType("bigint");
+                    b.Property<long?>("CreatorUserId");
 
-                    b.Property<long?>("DeleterUserId")
-                        .HasColumnType("bigint");
+                    b.Property<long?>("DeleterUserId");
 
-                    b.Property<DateTime?>("DeletionTime")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTime?>("DeletionTime");
 
-                    b.Property<string>("EmailAddress")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<string>("EmailAddress");
 
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
+                    b.Property<bool>("IsDeleted");
 
-                    b.Property<DateTime?>("LastLoginTime")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTime?>("LastLoginTime");
 
-                    b.Property<DateTime?>("LastModificationTime")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTime?>("LastModificationTime");
 
-                    b.Property<long?>("LastModifierUserId")
-                        .HasColumnType("bigint");
+                    b.Property<long?>("LastModifierUserId");
 
-                    b.Property<int?>("TenantId")
-                        .HasColumnType("int");
+                    b.Property<int?>("TenantId");
 
-                    b.Property<long>("UserId")
-                        .HasColumnType("bigint");
+                    b.Property<long>("UserId");
 
-                    b.Property<long?>("UserLinkId")
-                        .HasColumnType("bigint");
+                    b.Property<long?>("UserLinkId");
 
-                    b.Property<string>("UserName")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<string>("UserName");
 
                     b.HasKey("Id");
 
@@ -291,26 +232,19 @@ namespace Piggyvault.Migrations
             modelBuilder.Entity("Abp.Authorization.Users.UserClaim", b =>
                 {
                     b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+                        .ValueGeneratedOnAdd();
 
-                    b.Property<string>("ClaimType")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<string>("ClaimType");
 
-                    b.Property<string>("ClaimValue")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<string>("ClaimValue");
 
-                    b.Property<DateTime>("CreationTime")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTime>("CreationTime");
 
-                    b.Property<long?>("CreatorUserId")
-                        .HasColumnType("bigint");
+                    b.Property<long?>("CreatorUserId");
 
-                    b.Property<int?>("TenantId")
-                        .HasColumnType("int");
+                    b.Property<int?>("TenantId");
 
-                    b.Property<long>("UserId")
-                        .HasColumnType("bigint");
+                    b.Property<long>("UserId");
 
                     b.HasKey("Id");
 
@@ -324,24 +258,19 @@ namespace Piggyvault.Migrations
             modelBuilder.Entity("Abp.Authorization.Users.UserLogin", b =>
                 {
                     b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+                        .ValueGeneratedOnAdd();
 
                     b.Property<string>("LoginProvider")
                         .IsRequired()
-                        .HasColumnType("nvarchar(128)")
                         .HasMaxLength(128);
 
                     b.Property<string>("ProviderKey")
                         .IsRequired()
-                        .HasColumnType("nvarchar(256)")
                         .HasMaxLength(256);
 
-                    b.Property<int?>("TenantId")
-                        .HasColumnType("int");
+                    b.Property<int?>("TenantId");
 
-                    b.Property<long>("UserId")
-                        .HasColumnType("bigint");
+                    b.Property<long>("UserId");
 
                     b.HasKey("Id");
 
@@ -357,39 +286,29 @@ namespace Piggyvault.Migrations
             modelBuilder.Entity("Abp.Authorization.Users.UserLoginAttempt", b =>
                 {
                     b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+                        .ValueGeneratedOnAdd();
 
                     b.Property<string>("BrowserInfo")
-                        .HasColumnType("nvarchar(256)")
                         .HasMaxLength(256);
 
                     b.Property<string>("ClientIpAddress")
-                        .HasColumnType("nvarchar(64)")
                         .HasMaxLength(64);
 
                     b.Property<string>("ClientName")
-                        .HasColumnType("nvarchar(128)")
                         .HasMaxLength(128);
 
-                    b.Property<DateTime>("CreationTime")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTime>("CreationTime");
 
-                    b.Property<byte>("Result")
-                        .HasColumnType("tinyint");
+                    b.Property<byte>("Result");
 
                     b.Property<string>("TenancyName")
-                        .HasColumnType("nvarchar(64)")
                         .HasMaxLength(64);
 
-                    b.Property<int?>("TenantId")
-                        .HasColumnType("int");
+                    b.Property<int?>("TenantId");
 
-                    b.Property<long?>("UserId")
-                        .HasColumnType("bigint");
+                    b.Property<long?>("UserId");
 
                     b.Property<string>("UserNameOrEmailAddress")
-                        .HasColumnType("nvarchar(255)")
                         .HasMaxLength(255);
 
                     b.HasKey("Id");
@@ -404,23 +323,17 @@ namespace Piggyvault.Migrations
             modelBuilder.Entity("Abp.Authorization.Users.UserOrganizationUnit", b =>
                 {
                     b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+                        .ValueGeneratedOnAdd();
 
-                    b.Property<DateTime>("CreationTime")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTime>("CreationTime");
 
-                    b.Property<long?>("CreatorUserId")
-                        .HasColumnType("bigint");
+                    b.Property<long?>("CreatorUserId");
 
-                    b.Property<long>("OrganizationUnitId")
-                        .HasColumnType("bigint");
+                    b.Property<long>("OrganizationUnitId");
 
-                    b.Property<int?>("TenantId")
-                        .HasColumnType("int");
+                    b.Property<int?>("TenantId");
 
-                    b.Property<long>("UserId")
-                        .HasColumnType("bigint");
+                    b.Property<long>("UserId");
 
                     b.HasKey("Id");
 
@@ -434,23 +347,17 @@ namespace Piggyvault.Migrations
             modelBuilder.Entity("Abp.Authorization.Users.UserRole", b =>
                 {
                     b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+                        .ValueGeneratedOnAdd();
 
-                    b.Property<DateTime>("CreationTime")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTime>("CreationTime");
 
-                    b.Property<long?>("CreatorUserId")
-                        .HasColumnType("bigint");
+                    b.Property<long?>("CreatorUserId");
 
-                    b.Property<int>("RoleId")
-                        .HasColumnType("int");
+                    b.Property<int>("RoleId");
 
-                    b.Property<int?>("TenantId")
-                        .HasColumnType("int");
+                    b.Property<int?>("TenantId");
 
-                    b.Property<long>("UserId")
-                        .HasColumnType("bigint");
+                    b.Property<long>("UserId");
 
                     b.HasKey("Id");
 
@@ -466,23 +373,17 @@ namespace Piggyvault.Migrations
             modelBuilder.Entity("Abp.Authorization.Users.UserToken", b =>
                 {
                     b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+                        .ValueGeneratedOnAdd();
 
-                    b.Property<string>("LoginProvider")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<string>("LoginProvider");
 
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<string>("Name");
 
-                    b.Property<int?>("TenantId")
-                        .HasColumnType("int");
+                    b.Property<int?>("TenantId");
 
-                    b.Property<long>("UserId")
-                        .HasColumnType("bigint");
+                    b.Property<long>("UserId");
 
-                    b.Property<string>("Value")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<string>("Value");
 
                     b.HasKey("Id");
 
@@ -496,39 +397,29 @@ namespace Piggyvault.Migrations
             modelBuilder.Entity("Abp.BackgroundJobs.BackgroundJobInfo", b =>
                 {
                     b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+                        .ValueGeneratedOnAdd();
 
-                    b.Property<DateTime>("CreationTime")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTime>("CreationTime");
 
-                    b.Property<long?>("CreatorUserId")
-                        .HasColumnType("bigint");
+                    b.Property<long?>("CreatorUserId");
 
-                    b.Property<bool>("IsAbandoned")
-                        .HasColumnType("bit");
+                    b.Property<bool>("IsAbandoned");
 
                     b.Property<string>("JobArgs")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)")
                         .HasMaxLength(1048576);
 
                     b.Property<string>("JobType")
                         .IsRequired()
-                        .HasColumnType("nvarchar(512)")
                         .HasMaxLength(512);
 
-                    b.Property<DateTime?>("LastTryTime")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTime?>("LastTryTime");
 
-                    b.Property<DateTime>("NextTryTime")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTime>("NextTryTime");
 
-                    b.Property<byte>("Priority")
-                        .HasColumnType("tinyint");
+                    b.Property<byte>("Priority");
 
-                    b.Property<short>("TryCount")
-                        .HasColumnType("smallint");
+                    b.Property<short>("TryCount");
 
                     b.HasKey("Id");
 
@@ -540,34 +431,25 @@ namespace Piggyvault.Migrations
             modelBuilder.Entity("Abp.Configuration.Setting", b =>
                 {
                     b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+                        .ValueGeneratedOnAdd();
 
-                    b.Property<DateTime>("CreationTime")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTime>("CreationTime");
 
-                    b.Property<long?>("CreatorUserId")
-                        .HasColumnType("bigint");
+                    b.Property<long?>("CreatorUserId");
 
-                    b.Property<DateTime?>("LastModificationTime")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTime?>("LastModificationTime");
 
-                    b.Property<long?>("LastModifierUserId")
-                        .HasColumnType("bigint");
+                    b.Property<long?>("LastModifierUserId");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(256)")
                         .HasMaxLength(256);
 
-                    b.Property<int?>("TenantId")
-                        .HasColumnType("int");
+                    b.Property<int?>("TenantId");
 
-                    b.Property<long?>("UserId")
-                        .HasColumnType("bigint");
+                    b.Property<long?>("UserId");
 
                     b.Property<string>("Value")
-                        .HasColumnType("nvarchar(2000)")
                         .HasMaxLength(2000);
 
                     b.HasKey("Id");
@@ -582,49 +464,36 @@ namespace Piggyvault.Migrations
             modelBuilder.Entity("Abp.Localization.ApplicationLanguage", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .ValueGeneratedOnAdd();
 
-                    b.Property<DateTime>("CreationTime")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTime>("CreationTime");
 
-                    b.Property<long?>("CreatorUserId")
-                        .HasColumnType("bigint");
+                    b.Property<long?>("CreatorUserId");
 
-                    b.Property<long?>("DeleterUserId")
-                        .HasColumnType("bigint");
+                    b.Property<long?>("DeleterUserId");
 
-                    b.Property<DateTime?>("DeletionTime")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTime?>("DeletionTime");
 
                     b.Property<string>("DisplayName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(64)")
                         .HasMaxLength(64);
 
                     b.Property<string>("Icon")
-                        .HasColumnType("nvarchar(128)")
                         .HasMaxLength(128);
 
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
+                    b.Property<bool>("IsDeleted");
 
-                    b.Property<bool>("IsDisabled")
-                        .HasColumnType("bit");
+                    b.Property<bool>("IsDisabled");
 
-                    b.Property<DateTime?>("LastModificationTime")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTime?>("LastModificationTime");
 
-                    b.Property<long?>("LastModifierUserId")
-                        .HasColumnType("bigint");
+                    b.Property<long?>("LastModifierUserId");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(10)")
                         .HasMaxLength(10);
 
-                    b.Property<int?>("TenantId")
-                        .HasColumnType("int");
+                    b.Property<int?>("TenantId");
 
                     b.HasKey("Id");
 
@@ -636,42 +505,32 @@ namespace Piggyvault.Migrations
             modelBuilder.Entity("Abp.Localization.ApplicationLanguageText", b =>
                 {
                     b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+                        .ValueGeneratedOnAdd();
 
-                    b.Property<DateTime>("CreationTime")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTime>("CreationTime");
 
-                    b.Property<long?>("CreatorUserId")
-                        .HasColumnType("bigint");
+                    b.Property<long?>("CreatorUserId");
 
                     b.Property<string>("Key")
                         .IsRequired()
-                        .HasColumnType("nvarchar(256)")
                         .HasMaxLength(256);
 
                     b.Property<string>("LanguageName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(10)")
                         .HasMaxLength(10);
 
-                    b.Property<DateTime?>("LastModificationTime")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTime?>("LastModificationTime");
 
-                    b.Property<long?>("LastModifierUserId")
-                        .HasColumnType("bigint");
+                    b.Property<long?>("LastModifierUserId");
 
                     b.Property<string>("Source")
                         .IsRequired()
-                        .HasColumnType("nvarchar(128)")
                         .HasMaxLength(128);
 
-                    b.Property<int?>("TenantId")
-                        .HasColumnType("int");
+                    b.Property<int?>("TenantId");
 
                     b.Property<string>("Value")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)")
                         .HasMaxLength(67108864);
 
                     b.HasKey("Id");
@@ -684,53 +543,40 @@ namespace Piggyvault.Migrations
             modelBuilder.Entity("Abp.Notifications.NotificationInfo", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .ValueGeneratedOnAdd();
 
-                    b.Property<DateTime>("CreationTime")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTime>("CreationTime");
 
-                    b.Property<long?>("CreatorUserId")
-                        .HasColumnType("bigint");
+                    b.Property<long?>("CreatorUserId");
 
                     b.Property<string>("Data")
-                        .HasColumnType("nvarchar(max)")
                         .HasMaxLength(1048576);
 
                     b.Property<string>("DataTypeName")
-                        .HasColumnType("nvarchar(512)")
                         .HasMaxLength(512);
 
                     b.Property<string>("EntityId")
-                        .HasColumnType("nvarchar(96)")
                         .HasMaxLength(96);
 
                     b.Property<string>("EntityTypeAssemblyQualifiedName")
-                        .HasColumnType("nvarchar(512)")
                         .HasMaxLength(512);
 
                     b.Property<string>("EntityTypeName")
-                        .HasColumnType("nvarchar(250)")
                         .HasMaxLength(250);
 
                     b.Property<string>("ExcludedUserIds")
-                        .HasColumnType("nvarchar(max)")
                         .HasMaxLength(131072);
 
                     b.Property<string>("NotificationName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(96)")
                         .HasMaxLength(96);
 
-                    b.Property<byte>("Severity")
-                        .HasColumnType("tinyint");
+                    b.Property<byte>("Severity");
 
                     b.Property<string>("TenantIds")
-                        .HasColumnType("nvarchar(max)")
                         .HasMaxLength(131072);
 
                     b.Property<string>("UserIds")
-                        .HasColumnType("nvarchar(max)")
                         .HasMaxLength(131072);
 
                     b.HasKey("Id");
@@ -741,36 +587,27 @@ namespace Piggyvault.Migrations
             modelBuilder.Entity("Abp.Notifications.NotificationSubscriptionInfo", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .ValueGeneratedOnAdd();
 
-                    b.Property<DateTime>("CreationTime")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTime>("CreationTime");
 
-                    b.Property<long?>("CreatorUserId")
-                        .HasColumnType("bigint");
+                    b.Property<long?>("CreatorUserId");
 
                     b.Property<string>("EntityId")
-                        .HasColumnType("nvarchar(96)")
                         .HasMaxLength(96);
 
                     b.Property<string>("EntityTypeAssemblyQualifiedName")
-                        .HasColumnType("nvarchar(512)")
                         .HasMaxLength(512);
 
                     b.Property<string>("EntityTypeName")
-                        .HasColumnType("nvarchar(250)")
                         .HasMaxLength(250);
 
                     b.Property<string>("NotificationName")
-                        .HasColumnType("nvarchar(96)")
                         .HasMaxLength(96);
 
-                    b.Property<int?>("TenantId")
-                        .HasColumnType("int");
+                    b.Property<int?>("TenantId");
 
-                    b.Property<long>("UserId")
-                        .HasColumnType("bigint");
+                    b.Property<long>("UserId");
 
                     b.HasKey("Id");
 
@@ -784,45 +621,34 @@ namespace Piggyvault.Migrations
             modelBuilder.Entity("Abp.Notifications.TenantNotificationInfo", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .ValueGeneratedOnAdd();
 
-                    b.Property<DateTime>("CreationTime")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTime>("CreationTime");
 
-                    b.Property<long?>("CreatorUserId")
-                        .HasColumnType("bigint");
+                    b.Property<long?>("CreatorUserId");
 
                     b.Property<string>("Data")
-                        .HasColumnType("nvarchar(max)")
                         .HasMaxLength(1048576);
 
                     b.Property<string>("DataTypeName")
-                        .HasColumnType("nvarchar(512)")
                         .HasMaxLength(512);
 
                     b.Property<string>("EntityId")
-                        .HasColumnType("nvarchar(96)")
                         .HasMaxLength(96);
 
                     b.Property<string>("EntityTypeAssemblyQualifiedName")
-                        .HasColumnType("nvarchar(512)")
                         .HasMaxLength(512);
 
                     b.Property<string>("EntityTypeName")
-                        .HasColumnType("nvarchar(250)")
                         .HasMaxLength(250);
 
                     b.Property<string>("NotificationName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(96)")
                         .HasMaxLength(96);
 
-                    b.Property<byte>("Severity")
-                        .HasColumnType("tinyint");
+                    b.Property<byte>("Severity");
 
-                    b.Property<int?>("TenantId")
-                        .HasColumnType("int");
+                    b.Property<int?>("TenantId");
 
                     b.HasKey("Id");
 
@@ -834,23 +660,17 @@ namespace Piggyvault.Migrations
             modelBuilder.Entity("Abp.Notifications.UserNotificationInfo", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .ValueGeneratedOnAdd();
 
-                    b.Property<DateTime>("CreationTime")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTime>("CreationTime");
 
-                    b.Property<int>("State")
-                        .HasColumnType("int");
+                    b.Property<int>("State");
 
-                    b.Property<int?>("TenantId")
-                        .HasColumnType("int");
+                    b.Property<int?>("TenantId");
 
-                    b.Property<Guid>("TenantNotificationId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<Guid>("TenantNotificationId");
 
-                    b.Property<long>("UserId")
-                        .HasColumnType("bigint");
+                    b.Property<long>("UserId");
 
                     b.HasKey("Id");
 
@@ -862,45 +682,33 @@ namespace Piggyvault.Migrations
             modelBuilder.Entity("Abp.Organizations.OrganizationUnit", b =>
                 {
                     b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+                        .ValueGeneratedOnAdd();
 
                     b.Property<string>("Code")
                         .IsRequired()
-                        .HasColumnType("nvarchar(95)")
                         .HasMaxLength(95);
 
-                    b.Property<DateTime>("CreationTime")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTime>("CreationTime");
 
-                    b.Property<long?>("CreatorUserId")
-                        .HasColumnType("bigint");
+                    b.Property<long?>("CreatorUserId");
 
-                    b.Property<long?>("DeleterUserId")
-                        .HasColumnType("bigint");
+                    b.Property<long?>("DeleterUserId");
 
-                    b.Property<DateTime?>("DeletionTime")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTime?>("DeletionTime");
 
                     b.Property<string>("DisplayName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(128)")
                         .HasMaxLength(128);
 
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
+                    b.Property<bool>("IsDeleted");
 
-                    b.Property<DateTime?>("LastModificationTime")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTime?>("LastModificationTime");
 
-                    b.Property<long?>("LastModifierUserId")
-                        .HasColumnType("bigint");
+                    b.Property<long?>("LastModifierUserId");
 
-                    b.Property<long?>("ParentId")
-                        .HasColumnType("bigint");
+                    b.Property<long?>("ParentId");
 
-                    b.Property<int?>("TenantId")
-                        .HasColumnType("int");
+                    b.Property<int?>("TenantId");
 
                     b.HasKey("Id");
 
@@ -914,64 +722,47 @@ namespace Piggyvault.Migrations
             modelBuilder.Entity("Piggyvault.Authorization.Roles.Role", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .ValueGeneratedOnAdd();
 
                     b.Property<string>("ConcurrencyStamp")
-                        .IsConcurrencyToken()
-                        .HasColumnType("nvarchar(max)");
+                        .IsConcurrencyToken();
 
-                    b.Property<DateTime>("CreationTime")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTime>("CreationTime");
 
-                    b.Property<long?>("CreatorUserId")
-                        .HasColumnType("bigint");
+                    b.Property<long?>("CreatorUserId");
 
-                    b.Property<long?>("DeleterUserId")
-                        .HasColumnType("bigint");
+                    b.Property<long?>("DeleterUserId");
 
-                    b.Property<DateTime?>("DeletionTime")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTime?>("DeletionTime");
 
                     b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)")
                         .HasMaxLength(5000);
 
                     b.Property<string>("DisplayName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(64)")
                         .HasMaxLength(64);
 
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
+                    b.Property<bool>("IsActive");
 
-                    b.Property<bool>("IsDefault")
-                        .HasColumnType("bit");
+                    b.Property<bool>("IsDefault");
 
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
+                    b.Property<bool>("IsDeleted");
 
-                    b.Property<bool>("IsStatic")
-                        .HasColumnType("bit");
+                    b.Property<bool>("IsStatic");
 
-                    b.Property<DateTime?>("LastModificationTime")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTime?>("LastModificationTime");
 
-                    b.Property<long?>("LastModifierUserId")
-                        .HasColumnType("bigint");
+                    b.Property<long?>("LastModifierUserId");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(32)")
                         .HasMaxLength(32);
 
                     b.Property<string>("NormalizedName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(32)")
                         .HasMaxLength(32);
 
-                    b.Property<int?>("TenantId")
-                        .HasColumnType("int");
+                    b.Property<int?>("TenantId");
 
                     b.HasKey("Id");
 
@@ -989,112 +780,82 @@ namespace Piggyvault.Migrations
             modelBuilder.Entity("Piggyvault.Authorization.Users.User", b =>
                 {
                     b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+                        .ValueGeneratedOnAdd();
 
-                    b.Property<int>("AccessFailedCount")
-                        .HasColumnType("int");
+                    b.Property<int>("AccessFailedCount");
 
                     b.Property<string>("AuthenticationSource")
-                        .HasColumnType("nvarchar(64)")
                         .HasMaxLength(64);
 
                     b.Property<string>("ConcurrencyStamp")
-                        .IsConcurrencyToken()
-                        .HasColumnType("nvarchar(max)");
+                        .IsConcurrencyToken();
 
-                    b.Property<DateTime>("CreationTime")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTime>("CreationTime");
 
-                    b.Property<long?>("CreatorUserId")
-                        .HasColumnType("bigint");
+                    b.Property<long?>("CreatorUserId");
 
-                    b.Property<long?>("DeleterUserId")
-                        .HasColumnType("bigint");
+                    b.Property<long?>("DeleterUserId");
 
-                    b.Property<DateTime?>("DeletionTime")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTime?>("DeletionTime");
 
                     b.Property<string>("EmailAddress")
                         .IsRequired()
-                        .HasColumnType("nvarchar(256)")
                         .HasMaxLength(256);
 
                     b.Property<string>("EmailConfirmationCode")
-                        .HasColumnType("nvarchar(328)")
                         .HasMaxLength(328);
 
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
+                    b.Property<bool>("IsActive");
 
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
+                    b.Property<bool>("IsDeleted");
 
-                    b.Property<bool>("IsEmailConfirmed")
-                        .HasColumnType("bit");
+                    b.Property<bool>("IsEmailConfirmed");
 
-                    b.Property<bool>("IsLockoutEnabled")
-                        .HasColumnType("bit");
+                    b.Property<bool>("IsLockoutEnabled");
 
-                    b.Property<bool>("IsPhoneNumberConfirmed")
-                        .HasColumnType("bit");
+                    b.Property<bool>("IsPhoneNumberConfirmed");
 
-                    b.Property<bool>("IsTwoFactorEnabled")
-                        .HasColumnType("bit");
+                    b.Property<bool>("IsTwoFactorEnabled");
 
-                    b.Property<DateTime?>("LastLoginTime")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTime?>("LastLoginTime");
 
-                    b.Property<DateTime?>("LastModificationTime")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTime?>("LastModificationTime");
 
-                    b.Property<long?>("LastModifierUserId")
-                        .HasColumnType("bigint");
+                    b.Property<long?>("LastModifierUserId");
 
-                    b.Property<DateTime?>("LockoutEndDateUtc")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTime?>("LockoutEndDateUtc");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(32)")
                         .HasMaxLength(32);
 
                     b.Property<string>("NormalizedEmailAddress")
                         .IsRequired()
-                        .HasColumnType("nvarchar(256)")
                         .HasMaxLength(256);
 
                     b.Property<string>("NormalizedUserName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(32)")
                         .HasMaxLength(32);
 
                     b.Property<string>("Password")
                         .IsRequired()
-                        .HasColumnType("nvarchar(128)")
                         .HasMaxLength(128);
 
                     b.Property<string>("PasswordResetCode")
-                        .HasColumnType("nvarchar(328)")
                         .HasMaxLength(328);
 
-                    b.Property<string>("PhoneNumber")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<string>("PhoneNumber");
 
-                    b.Property<string>("SecurityStamp")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<string>("SecurityStamp");
 
                     b.Property<string>("Surname")
                         .IsRequired()
-                        .HasColumnType("nvarchar(32)")
                         .HasMaxLength(32);
 
-                    b.Property<int?>("TenantId")
-                        .HasColumnType("int");
+                    b.Property<int?>("TenantId");
 
                     b.Property<string>("UserName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(32)")
                         .HasMaxLength(32);
 
                     b.HasKey("Id");
@@ -1115,48 +876,35 @@ namespace Piggyvault.Migrations
             modelBuilder.Entity("Piggyvault.MultiTenancy.Tenant", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .ValueGeneratedOnAdd();
 
                     b.Property<string>("ConnectionString")
-                        .HasColumnType("nvarchar(1024)")
                         .HasMaxLength(1024);
 
-                    b.Property<DateTime>("CreationTime")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTime>("CreationTime");
 
-                    b.Property<long?>("CreatorUserId")
-                        .HasColumnType("bigint");
+                    b.Property<long?>("CreatorUserId");
 
-                    b.Property<long?>("DeleterUserId")
-                        .HasColumnType("bigint");
+                    b.Property<long?>("DeleterUserId");
 
-                    b.Property<DateTime?>("DeletionTime")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTime?>("DeletionTime");
 
-                    b.Property<int?>("EditionId")
-                        .HasColumnType("int");
+                    b.Property<int?>("EditionId");
 
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
+                    b.Property<bool>("IsActive");
 
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
+                    b.Property<bool>("IsDeleted");
 
-                    b.Property<DateTime?>("LastModificationTime")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTime?>("LastModificationTime");
 
-                    b.Property<long?>("LastModifierUserId")
-                        .HasColumnType("bigint");
+                    b.Property<long?>("LastModifierUserId");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(128)")
                         .HasMaxLength(128);
 
                     b.Property<string>("TenancyName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(64)")
                         .HasMaxLength(64);
 
                     b.HasKey("Id");
@@ -1178,8 +926,7 @@ namespace Piggyvault.Migrations
                 {
                     b.HasBaseType("Abp.Application.Features.FeatureSetting");
 
-                    b.Property<int>("EditionId")
-                        .HasColumnType("int");
+                    b.Property<int>("EditionId");
 
                     b.HasIndex("EditionId", "Name");
 
@@ -1192,8 +939,7 @@ namespace Piggyvault.Migrations
                 {
                     b.HasBaseType("Abp.Application.Features.FeatureSetting");
 
-                    b.Property<int>("TenantId")
-                        .HasColumnType("int");
+                    b.Property<int>("TenantId");
 
                     b.HasIndex("TenantId", "Name");
 
@@ -1206,8 +952,7 @@ namespace Piggyvault.Migrations
                 {
                     b.HasBaseType("Abp.Authorization.PermissionSetting");
 
-                    b.Property<int>("RoleId")
-                        .HasColumnType("int");
+                    b.Property<int>("RoleId");
 
                     b.HasIndex("RoleId");
 
@@ -1220,8 +965,7 @@ namespace Piggyvault.Migrations
                 {
                     b.HasBaseType("Abp.Authorization.PermissionSetting");
 
-                    b.Property<long>("UserId")
-                        .HasColumnType("bigint");
+                    b.Property<long>("UserId");
 
                     b.HasIndex("UserId");
 

@@ -2,6 +2,7 @@
 using Code.Library.Exceptions;
 using Flurl.Http;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Piggyvault.Piggy.Notifications.Dto;
 using System.Threading.Tasks;
 
@@ -12,9 +13,9 @@ namespace Piggyvault.Piggy.Notifications
         private readonly ILogger<PushNotificationSender> _logger;
         private readonly PiggySettings _settings;
 
-        public PushNotificationSender(PiggySettings settings, ILogger<PushNotificationSender> logger)
+        public PushNotificationSender(IOptions<PiggySettings> settings, ILogger<PushNotificationSender> logger)
         {
-            _settings = settings;
+            _settings = settings.Value;
             _logger = logger;
         }
 

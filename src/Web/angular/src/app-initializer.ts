@@ -1,31 +1,32 @@
-import { Injectable, Injector } from '@angular/core';
-import { PlatformLocation, registerLocaleData } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
-import * as moment from 'moment';
-import { filter as _filter, merge as _merge } from 'lodash-es';
-import { AppConsts } from '@shared/AppConsts';
-import { AppSessionService } from '@shared/session/app-session.service';
-import { environment } from './environments/environment';
+import { Injectable, Injector } from "@angular/core";
+import { PlatformLocation, registerLocaleData } from "@angular/common";
+import { HttpClient } from "@angular/common/http";
+import * as moment from "moment";
+import { filter as _filter, merge as _merge } from "lodash-es";
+import { AppConsts } from "@shared/AppConsts";
+import { AppSessionService } from "@shared/session/app-session.service";
+import { environment } from "./environments/environment";
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: "root",
 })
 export class AppInitializer {
   constructor(
     private _injector: Injector,
     private _platformLocation: PlatformLocation,
     private _httpClient: HttpClient
-  ) { }
+  ) {}
 
   init(): () => Promise<boolean> {
     return () => {
       abp.ui.setBusy();
       return new Promise<boolean>((resolve, reject) => {
         AppConsts.appBaseHref = this.getBaseHref();
+        abp.multiTenancy.tenantIdCookieName = "Piggy-TenantId";
         const appBaseUrl = this.getDocumentOrigin() + AppConsts.appBaseHref;
         this.getApplicationConfig(appBaseUrl, () => {
           this.getUserConfiguration(() => {
-            abp.event.trigger('abp.dynamicScriptsInitialized');
+            abp.event.trigger("abp.dynamicScriptsInitialized");
             // do not use constructor injection for AppSessionService
             const appSessionService = this._injector.get(AppSessionService);
             appSessionService.init().then(
@@ -63,14 +64,14 @@ export class AppInitializer {
       return baseUrl;
     }
 
-    return '/';
+    return "/";
   }
 
   private getDocumentOrigin(): string {
     if (!document.location.origin) {
-      const port = document.location.port ? ':' + document.location.port : '';
+      const port = document.location.port ? ":" + document.location.port : "";
       return (
-        document.location.protocol + '//' + document.location.hostname + port
+        document.location.protocol + "//" + document.location.hostname + port
       );
     }
 
@@ -80,7 +81,7 @@ export class AppInitializer {
   private shouldLoadLocale(): boolean {
     return (
       abp.localization.currentLanguage.name &&
-      abp.localization.currentLanguage.name !== 'en-US'
+      abp.localization.currentLanguage.name !== "en-US"
     );
   }
 
@@ -91,7 +92,7 @@ export class AppInitializer {
 
     const localeMapings = _filter(AppConsts.localeMappings, { from: locale });
     if (localeMapings && localeMapings.length) {
-      return localeMapings[0]['to'];
+      return localeMapings[0]["to"];
     }
 
     return locale;
@@ -100,11 +101,11 @@ export class AppInitializer {
   private getCurrentClockProvider(
     currentProviderName: string
   ): abp.timing.IClockProvider {
-    if (currentProviderName === 'unspecifiedClockProvider') {
+    if (currentProviderName === "unspecifiedClockProvider") {
       return abp.timing.unspecifiedClockProvider;
     }
 
-    if (currentProviderName === 'utcClockProvider') {
+    if (currentProviderName === "utcClockProvider") {
       return abp.timing.utcClockProvider;
     }
 
@@ -113,17 +114,17 @@ export class AppInitializer {
 
   private getUserConfiguration(callback: () => void): void {
     const cookieLangValue = abp.utils.getCookieValue(
-      'Abp.Localization.CultureName'
+      "Abp.Localization.CultureName"
     );
     const token = abp.auth.getToken();
 
     const requestHeaders = {
-      'Abp.TenantId': `${abp.multiTenancy.getTenantIdCookie()}`,
-      '.AspNetCore.Culture': `c=${cookieLangValue}|uic=${cookieLangValue}`,
+      "Piggy-TenantId": `${abp.multiTenancy.getTenantIdCookie()}`,
+      ".AspNetCore.Culture": `c=${cookieLangValue}|uic=${cookieLangValue}`,
     };
 
     if (token) {
-      requestHeaders['Authorization'] = `Bearer ${token}`;
+      requestHeaders["Authorization"] = `Bearer ${token}`;
     }
 
     this._httpClient
@@ -156,7 +157,7 @@ export class AppInitializer {
     this._httpClient
       .get<any>(`${appRootUrl}assets/${environment.appConfig}`, {
         headers: {
-          'Abp.TenantId': `${abp.multiTenancy.getTenantIdCookie()}`,
+          "Piggy-TenantId": `${abp.multiTenancy.getTenantIdCookie()}`,
         },
       })
       .subscribe((response) => {

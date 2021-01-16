@@ -9,7 +9,7 @@
     "hmr": "ng serve --host 0.0.0.0 --port 4200 --hmr",
     "lint": "tslint --force --project src/tsconfig.json src/**/*.ts -t verbose",
     "ng": "ng",
-    "start": "ng serve --host 0.0.0.0 --port 4200",
+    "dev": "ng serve --host 0.0.0.0 --port 4200",
     "test": "ng test"
   },
   "dependencies": {

@@ -1,21 +1,24 @@
 ﻿using Abp.AspNetCore;
 using Abp.AspNetCore.Mvc.Antiforgery;
 using Abp.AspNetCore.SignalR.Hubs;
-using Abp.Castle.Logging.Log4Net;
 using Abp.Dependency;
 using Abp.Extensions;
 using Abp.Json;
 using Castle.Facilities.Logging;
+using Castle.Services.Logging.SerilogIntegration;
 using Code.Library.AspNetCore;
+using Code.Library.AspNetCore.Helpers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json.Serialization;
 using Piggyvault.Configuration;
 using Piggyvault.Identity;
+using Serilog;
 using System;
 using System.Linq;
 using System.Reflection;
@@ -110,12 +113,26 @@ namespace Piggyvault.Web.Host.Startup
                 });
             });
 
+            var serilogConfig = new LoggerConfiguration();
+
+            // TODO(abhith): fix DI
+            var sp = services.BuildServiceProvider();
+            serilogConfig.WithSimpleConfiguration(_appConfiguration, sp);
+
             // Configure Abp and Dependency Injection
             return services.AddAbp<PiggyvaultWebHostModule>(
                 // Configure Log4Net logging
-                options => options.IocManager.IocContainer.AddFacility<LoggingFacility>(
-                    f => f.UseAbpLog4Net().WithConfig("log4net.config")
-                )
+                (options) =>
+                {
+                    //options.IocManager.IocContainer.AddFacility<LoggingFacility>(
+                    //                    f => f.UseAbpLog4Net().WithConfig("log4net.config")
+                    //                );
+
+                    options.IocManager.IocContainer.AddFacility<LoggingFacility>(
+                    f => f.LogUsing(new SerilogFactory(serilogConfig.CreateLogger()))
+                );
+                }
+
             );
         }
 

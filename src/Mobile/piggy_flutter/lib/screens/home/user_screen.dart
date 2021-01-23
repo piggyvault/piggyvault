@@ -562,7 +562,7 @@ class _SettingsItemState extends State<SettingsItem> {
             }
           },
         )
-        .scale(pressed ? 0.95 : 1.0, animate: true)
+        .scale(all: pressed ? 0.95 : 1.0, animate: true)
         .animate(const Duration(milliseconds: 150), Curves.easeOut);
 
     final Widget icon = Icon(widget.icon)

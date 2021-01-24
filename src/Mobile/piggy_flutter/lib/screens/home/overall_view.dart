@@ -105,58 +105,6 @@ class OverallView extends StatelessWidget {
                                       ),
                                     ],
                                   ),
-                                  // Column(
-                                  //   mainAxisAlignment: MainAxisAlignment.center,
-                                  //   crossAxisAlignment: CrossAxisAlignment.end,
-                                  //   children: <Widget>[
-                                  //     Row(
-                                  //       mainAxisAlignment:
-                                  //           MainAxisAlignment.center,
-                                  //       children: <Widget>[
-                                  //         Icon(
-                                  //           Icons.access_time,
-                                  //           color: PiggyAppTheme.grey
-                                  //               .withOpacity(0.5),
-                                  //           size: 16,
-                                  //         ),
-                                  //         Padding(
-                                  //           padding: const EdgeInsets.only(
-                                  //               left: 4.0),
-                                  //           child: Text(
-                                  //             'Today 8:26 AM',
-                                  //             textAlign: TextAlign.center,
-                                  //             style: TextStyle(
-                                  //               fontFamily:
-                                  //                   PiggyAppTheme.fontName,
-                                  //               fontWeight: FontWeight.w500,
-                                  //               fontSize: 14,
-                                  //               letterSpacing: 0.0,
-                                  //               color: PiggyAppTheme.grey
-                                  //                   .withOpacity(0.5),
-                                  //             ),
-                                  //           ),
-                                  //         ),
-                                  //       ],
-                                  //     ),
-                                  //     Padding(
-                                  //       padding: const EdgeInsets.only(
-                                  //           top: 4, bottom: 14),
-                                  //       child: Text(
-                                  //         'InBody SmartScale',
-                                  //         textAlign: TextAlign.center,
-                                  //         style: TextStyle(
-                                  //           fontFamily:
-                                  //               PiggyAppTheme.fontName,
-                                  //           fontWeight: FontWeight.w500,
-                                  //           fontSize: 12,
-                                  //           letterSpacing: 0.0,
-                                  //           color:
-                                  //               PiggyAppTheme.nearlyDarkBlue,
-                                  //         ),
-                                  //       ),
-                                  //     ),
-                                  //   ],
-                                  // )
                                 ],
                               )
                             ],

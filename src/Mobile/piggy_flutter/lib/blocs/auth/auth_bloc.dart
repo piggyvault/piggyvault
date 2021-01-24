@@ -74,18 +74,23 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   // Platform messages are asynchronous, so we initialize in an async method.
   void initOnesignal() {
-    // TODO(abhith) : use secrets
-    OneSignal.shared.init('9bf198c9-442b-4619-b5c9-759fc250f15b', iOSSettings: {
-      OSiOSSettings.autoPrompt: false,
-      OSiOSSettings.inAppLaunchUrl: true
-    });
-    OneSignal.shared
-        .setInFocusDisplayType(OSNotificationDisplayType.notification);
-    // OneSignal.shared.setLogLevel(OSLogLevel.warn, OSLogLevel.none);
-    OneSignal.shared
-        .setNotificationReceivedHandler((OSNotification notification) {
-      // print(
-      //     "Received notification: \n${notification.jsonRepresentation().replaceAll("\\n", "\n")}");
-    });
+    try {
+      // TODO(abhith) : use secrets
+      OneSignal.shared.init('9bf198c9-442b-4619-b5c9-759fc250f15b',
+          iOSSettings: {
+            OSiOSSettings.autoPrompt: false,
+            OSiOSSettings.inAppLaunchUrl: true
+          });
+      OneSignal.shared
+          .setInFocusDisplayType(OSNotificationDisplayType.notification);
+      // OneSignal.shared.setLogLevel(OSLogLevel.warn, OSLogLevel.none);
+      OneSignal.shared
+          .setNotificationReceivedHandler((OSNotification notification) {
+        // print(
+        //     "Received notification: \n${notification.jsonRepresentation().replaceAll("\\n", "\n")}");
+      });
+    } catch (error) {
+      print(error);
+    }
   }
 }

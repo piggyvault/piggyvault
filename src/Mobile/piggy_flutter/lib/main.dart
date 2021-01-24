@@ -45,22 +45,27 @@ Future<void> main() async {
   return runApp(MultiBlocProvider(
     providers: [
       BlocProvider<AuthBloc>(
+        lazy: false,
         create: (BuildContext context) =>
             AuthBloc(userRepository: userRepository)..add(AppStarted()),
       ),
       BlocProvider<TransactionBloc>(
+        lazy: false,
         create: (BuildContext context) =>
             TransactionBloc(transactionRepository: transactionRepository),
       ),
       BlocProvider<TransactionDetailBloc>(
+        lazy: false,
         create: (BuildContext context) =>
             TransactionDetailBloc(transactionRepository: transactionRepository),
       ),
       BlocProvider<CategoriesBloc>(
+          lazy: false,
           create: (BuildContext context) => CategoriesBloc(
               categoryRepository: categoryRepository,
               authBloc: BlocProvider.of<AuthBloc>(context))),
       BlocProvider<AccountsBloc>(
+          lazy: false,
           create: (BuildContext context) => AccountsBloc(
               accountRepository: accountRepository,
               transactionsBloc: BlocProvider.of<TransactionBloc>(context),
@@ -68,6 +73,7 @@ Future<void> main() async {
                   BlocProvider.of<TransactionDetailBloc>(context),
               authBloc: BlocProvider.of<AuthBloc>(context))),
       BlocProvider<RecentTransactionsBloc>(
+        lazy: false,
         create: (BuildContext context) => RecentTransactionsBloc(
             transactionDetailBloc:
                 BlocProvider.of<TransactionDetailBloc>(context),
@@ -76,6 +82,7 @@ Future<void> main() async {
             authBloc: BlocProvider.of<AuthBloc>(context)),
       ),
       BlocProvider<TransactionSummaryBloc>(
+        lazy: false,
         create: (BuildContext context) => TransactionSummaryBloc(
             transactionDetailBloc:
                 BlocProvider.of<TransactionDetailBloc>(context),
@@ -84,6 +91,7 @@ Future<void> main() async {
             transactionRepository: transactionRepository),
       ),
       BlocProvider<DashboardBloc>(
+          lazy: false,
           create: (BuildContext context) =>
               DashboardBloc()), // TODO(abhith): remove if not needed
     ],

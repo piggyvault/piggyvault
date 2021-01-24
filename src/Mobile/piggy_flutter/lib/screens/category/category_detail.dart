@@ -236,7 +236,7 @@ class _CategoryDetailPageState extends State<CategoryDetailPage>
                                     .backgroundColor,
                                 child: BlocBuilder<CategoryTransactionsBloc,
                                     CategoryTransactionsState>(
-                                  bloc: categoryTransactionsBloc,
+                                  cubit: categoryTransactionsBloc,
                                   builder: (BuildContext context,
                                       CategoryTransactionsState state) {
                                     if (state is CategoryTransactionsLoaded) {
@@ -610,7 +610,7 @@ class _CategoryDetailPageState extends State<CategoryDetailPage>
                           ),
                           BlocBuilder<CategoryTransactionsBloc,
                                   CategoryTransactionsState>(
-                              bloc: categoryTransactionsBloc,
+                              cubit: categoryTransactionsBloc,
                               builder: (BuildContext context,
                                   CategoryTransactionsState state) {
                                 if (state is CategoryTransactionsLoaded) {
@@ -696,7 +696,7 @@ class _CategoryDetailPageState extends State<CategoryDetailPage>
                 Expanded(
                   child: BlocBuilder<CategoryTransactionsBloc,
                           CategoryTransactionsState>(
-                      bloc: categoryTransactionsBloc,
+                      cubit: categoryTransactionsBloc,
                       builder: (context, state) {
                         if (state is CategoryTransactionsLoaded) {
                           return Padding(

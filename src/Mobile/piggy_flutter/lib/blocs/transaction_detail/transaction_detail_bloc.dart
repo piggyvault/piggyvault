@@ -9,10 +9,8 @@ class TransactionDetailBloc
   final TransactionRepository transactionRepository;
 
   TransactionDetailBloc({@required this.transactionRepository})
-      : assert(transactionRepository != null);
-
-  @override
-  TransactionDetailState get initialState => InitialTransactionDetailState();
+      : assert(transactionRepository != null),
+        super(InitialTransactionDetailState());
 
   @override
   Stream<TransactionDetailState> mapEventToState(

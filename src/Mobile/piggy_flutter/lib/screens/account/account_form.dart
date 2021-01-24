@@ -76,7 +76,7 @@ class _AccountFormScreenState extends State<AccountFormScreen> {
         ],
       ),
       body: BlocListener<AccountFormBloc, AccountFormState>(
-        bloc: accountFormBloc,
+        cubit: accountFormBloc,
         listener: (BuildContext context, AccountFormState state) {
           if (state is AccountFormSaving) {
             showProgress(context);
@@ -91,7 +91,7 @@ class _AccountFormScreenState extends State<AccountFormScreen> {
           }
         },
         child: BlocBuilder<AccountFormBloc, AccountFormState>(
-          bloc: accountFormBloc,
+          cubit: accountFormBloc,
           builder: (BuildContext context, AccountFormState state) {
             if (state is AccountFormLoaded) {
               accountFormModel = state.account;
@@ -110,7 +110,7 @@ class _AccountFormScreenState extends State<AccountFormScreen> {
                     children: <Widget>[
                       _nameField(theme),
                       BlocBuilder<CurrenciesBloc, CurrenciesState>(
-                          bloc: currenciesBloc,
+                          cubit: currenciesBloc,
                           builder: (BuildContext context,
                               CurrenciesState currenciesState) {
                             if (currenciesState is CurrenciesLoaded) {
@@ -140,7 +140,7 @@ class _AccountFormScreenState extends State<AccountFormScreen> {
                             }
                           }),
                       BlocBuilder<AccountTypesBloc, AccountTypesState>(
-                        bloc: accountTypesBloc,
+                        cubit: accountTypesBloc,
                         builder: (BuildContext context,
                             AccountTypesState accountTypestate) {
                           if (accountTypestate is AccountTypesLoaded) {

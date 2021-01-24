@@ -9,10 +9,8 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
 
   TransactionBloc({
     @required this.transactionRepository,
-  }) : assert(transactionRepository != null);
-
-  @override
-  TransactionState get initialState => InitialTransactionsState();
+  })  : assert(transactionRepository != null),
+        super(InitialTransactionsState());
 
   @override
   Stream<TransactionState> mapEventToState(

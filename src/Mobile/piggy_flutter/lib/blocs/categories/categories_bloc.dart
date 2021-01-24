@@ -10,7 +10,8 @@ import 'package:piggy_flutter/repositories/category_repository.dart';
 class CategoriesBloc extends Bloc<CategoriesEvent, CategoriesState> {
   CategoriesBloc({@required this.categoryRepository, @required this.authBloc})
       : assert(categoryRepository != null),
-        assert(authBloc != null) {
+        assert(authBloc != null),
+        super(CategoriesLoading()) {
     authBlocSubscription = authBloc.listen((AuthState state) {
       if (state is AuthAuthenticated) {
         add(CategoriesLoad());
@@ -22,9 +23,6 @@ class CategoriesBloc extends Bloc<CategoriesEvent, CategoriesState> {
   final AuthBloc authBloc;
 
   StreamSubscription<AuthState> authBlocSubscription;
-
-  @override
-  CategoriesState get initialState => CategoriesLoading();
 
   @override
   Stream<CategoriesState> mapEventToState(

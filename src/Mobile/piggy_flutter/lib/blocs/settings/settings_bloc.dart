@@ -8,12 +8,10 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
   final UserRepository userRepository;
 
   SettingsBloc({@required this.userRepository})
-      : assert(userRepository != null) {
+      : assert(userRepository != null),
+        super(SettingsLoading()) {
     add(LoadUserSettings());
   }
-
-  @override
-  SettingsState get initialState => SettingsLoading();
 
   @override
   Stream<SettingsState> mapEventToState(

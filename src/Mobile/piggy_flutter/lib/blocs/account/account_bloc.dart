@@ -14,7 +14,8 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
       @required this.transactionDetailBloc})
       : assert(accountRepository != null),
         assert(transactionsBloc != null),
-        assert(transactionDetailBloc != null) {
+        assert(transactionDetailBloc != null),
+        super(AccountEmpty(null)) {
     transactionBlocSubscription = transactionsBloc.listen((state) {
       if (state is TransactionSaved) {
         add(RefreshAccount());
@@ -35,9 +36,6 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
 
   final TransactionDetailBloc transactionDetailBloc;
   StreamSubscription transactionDetailBlocSubscription;
-
-  @override
-  AccountState get initialState => AccountEmpty(null);
 
   @override
   Stream<AccountState> mapEventToState(

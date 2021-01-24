@@ -9,10 +9,8 @@ class CurrenciesBloc extends Bloc<CurrenciesEvent, CurrenciesState> {
   final AccountRepository accountRepository;
 
   CurrenciesBloc({@required this.accountRepository})
-      : assert(accountRepository != null);
-
-  @override
-  CurrenciesState get initialState => CurrenciesLoading();
+      : assert(accountRepository != null),
+        super(CurrenciesLoading());
 
   @override
   Stream<CurrenciesState> mapEventToState(

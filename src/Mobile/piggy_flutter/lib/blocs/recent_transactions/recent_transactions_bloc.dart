@@ -30,7 +30,8 @@ class RecentTransactionsBloc
       : assert(transactionRepository != null),
         assert(authBloc != null),
         assert(transactionsBloc != null),
-        assert(transactionDetailBloc != null) {
+        assert(transactionDetailBloc != null),
+        super(RecentTransactionsEmpty(null)) {
     // TODO: DRY
     authBlocSubscription = authBloc.listen((state) {
       if (state is AuthAuthenticated) {
@@ -68,9 +69,6 @@ class RecentTransactionsBloc
       }
     });
   }
-
-  @override
-  RecentTransactionsState get initialState => RecentTransactionsEmpty(null);
 
   @override
   Stream<RecentTransactionsState> mapEventToState(

@@ -213,7 +213,7 @@ class TransactionDetailPageState extends State<TransactionDetailPage> {
 
   Widget _transactionComments() {
     return BlocBuilder(
-        bloc: transactionCommentsBloc,
+        cubit: transactionCommentsBloc,
         builder: (context, state) {
           if (state is TransactionCommentsLoaded) {
             return Card(

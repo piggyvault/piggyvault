@@ -17,7 +17,7 @@ class LoginPage extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       body: BlocProvider(
-        builder: (context) {
+        create: (context) {
           return LoginBloc(
               authBloc: BlocProvider.of<AuthBloc>(context),
               userRepository: userRepository);

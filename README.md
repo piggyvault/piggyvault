@@ -64,6 +64,16 @@ High level planned items can be viewed under organization's projects.
   <img src="images/screenshots/23-about.jpg" width="200" />
 </p>
 
+## Try it out
+
+Grab the APK from the latest [release](https://github.com/piggyvault/piggyvault/releases).
+
+### Test Credentials
+
+| Family  | Username | Password |
+| ------- | -------- | -------- |
+| Default | admin    | 123qwe   |
+
 ## Credits
 
 ### Flutter

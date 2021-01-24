@@ -18,7 +18,8 @@ class AccountsBloc extends Bloc<AccountsEvent, AccountsState> {
       : assert(accountRepository != null),
         assert(authBloc != null),
         assert(transactionsBloc != null),
-        assert(transactionDetailBloc != null) {
+        assert(transactionDetailBloc != null),
+        super(AccountsLoading()) {
     authBlocSubscription = authBloc.listen((state) {
       if (state is AuthAuthenticated) {
         add(LoadAccounts());
@@ -48,9 +49,6 @@ class AccountsBloc extends Bloc<AccountsEvent, AccountsState> {
 
   final TransactionDetailBloc transactionDetailBloc;
   StreamSubscription transactionDetailBlocSubscription;
-
-  @override
-  AccountsState get initialState => AccountsLoading();
 
   @override
   Stream<AccountsState> mapEventToState(

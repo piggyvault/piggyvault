@@ -23,26 +23,6 @@ import 'package:http/http.dart' as http;
 
 import 'login/login.dart';
 
-class PiggyBlocDelegate extends BlocDelegate {
-  @override
-  void onEvent(Bloc bloc, Object event) {
-    super.onEvent(bloc, event);
-    print(event);
-  }
-
-  @override
-  onTransition(Bloc bloc, Transition transition) {
-    super.onTransition(bloc, transition);
-    print(transition);
-  }
-
-  @override
-  void onError(Bloc bloc, Object error, StackTrace stacktrace) {
-    super.onError(bloc, error, stacktrace);
-    print(error);
-  }
-}
-
 Future<void> main() async {
   final PiggyApiClient piggyApiClient = PiggyApiClient(
     httpClient: http.Client(),
@@ -62,35 +42,34 @@ Future<void> main() async {
   final ReportRepository reportRepository =
       ReportRepository(piggyApiClient: piggyApiClient);
 
-  BlocSupervisor.delegate = PiggyBlocDelegate();
   // debugPrintRebuildDirtyWidgets = true;
   return runApp(MultiBlocProvider(
     providers: [
       BlocProvider<AuthBloc>(
-        builder: (BuildContext context) =>
+        create: (BuildContext context) =>
             AuthBloc(userRepository: userRepository)..add(AppStarted()),
       ),
       BlocProvider<TransactionBloc>(
-        builder: (BuildContext context) =>
+        create: (BuildContext context) =>
             TransactionBloc(transactionRepository: transactionRepository),
       ),
       BlocProvider<TransactionDetailBloc>(
-        builder: (BuildContext context) =>
+        create: (BuildContext context) =>
             TransactionDetailBloc(transactionRepository: transactionRepository),
       ),
       BlocProvider<CategoriesBloc>(
-          builder: (BuildContext context) => CategoriesBloc(
+          create: (BuildContext context) => CategoriesBloc(
               categoryRepository: categoryRepository,
               authBloc: BlocProvider.of<AuthBloc>(context))),
       BlocProvider<AccountsBloc>(
-          builder: (BuildContext context) => AccountsBloc(
+          create: (BuildContext context) => AccountsBloc(
               accountRepository: accountRepository,
               transactionsBloc: BlocProvider.of<TransactionBloc>(context),
               transactionDetailBloc:
                   BlocProvider.of<TransactionDetailBloc>(context),
               authBloc: BlocProvider.of<AuthBloc>(context))),
       BlocProvider<RecentTransactionsBloc>(
-        builder: (BuildContext context) => RecentTransactionsBloc(
+        create: (BuildContext context) => RecentTransactionsBloc(
             transactionDetailBloc:
                 BlocProvider.of<TransactionDetailBloc>(context),
             transactionRepository: transactionRepository,
@@ -98,7 +77,7 @@ Future<void> main() async {
             authBloc: BlocProvider.of<AuthBloc>(context)),
       ),
       BlocProvider<TransactionSummaryBloc>(
-        builder: (BuildContext context) => TransactionSummaryBloc(
+        create: (BuildContext context) => TransactionSummaryBloc(
             transactionDetailBloc:
                 BlocProvider.of<TransactionDetailBloc>(context),
             transactionsBloc: BlocProvider.of<TransactionBloc>(context),
@@ -106,7 +85,7 @@ Future<void> main() async {
             transactionRepository: transactionRepository),
       ),
       BlocProvider<DashboardBloc>(
-          builder: (BuildContext context) =>
+          create: (BuildContext context) =>
               DashboardBloc()), // TODO(abhith): remove if not needed
     ],
     child: App(
@@ -148,16 +127,16 @@ class App extends StatelessWidget {
     return MultiRepositoryProvider(
       providers: [
         RepositoryProvider<TransactionRepository>(
-          builder: (BuildContext context) => transactionRepository,
+          create: (BuildContext context) => transactionRepository,
         ),
         RepositoryProvider<AccountRepository>(
-          builder: (BuildContext context) => accountRepository,
+          create: (BuildContext context) => accountRepository,
         ),
         RepositoryProvider<UserRepository>(
-          builder: (BuildContext context) => userRepository,
+          create: (BuildContext context) => userRepository,
         ),
         RepositoryProvider<ReportRepository>(
-          builder: (BuildContext context) => reportRepository,
+          create: (BuildContext context) => reportRepository,
         )
       ],
       child: MaterialApp(

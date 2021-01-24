@@ -8,12 +8,11 @@ import 'package:piggy_flutter/models/login_information_result.dart';
 import 'package:piggy_flutter/repositories/repositories.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
-  AuthBloc({@required this.userRepository}) : assert(userRepository != null);
+  AuthBloc({@required this.userRepository})
+      : assert(userRepository != null),
+        super(AuthUninitialized());
 
   final UserRepository userRepository;
-
-  @override
-  AuthState get initialState => AuthUninitialized();
 
   @override
   Stream<AuthState> mapEventToState(

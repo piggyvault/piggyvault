@@ -9,13 +9,11 @@ import './bloc.dart';
 class AccountFormBloc extends Bloc<AccountFormEvent, AccountFormState> {
   AccountFormBloc(
       {@required this.accountsBloc, @required this.accountRepository})
-      : assert(accountRepository != null);
+      : assert(accountRepository != null),
+        super(InitialAccountFormState());
 
   final AccountRepository accountRepository;
   final AccountsBloc accountsBloc;
-
-  @override
-  AccountFormState get initialState => InitialAccountFormState();
 
   @override
   Stream<AccountFormState> mapEventToState(

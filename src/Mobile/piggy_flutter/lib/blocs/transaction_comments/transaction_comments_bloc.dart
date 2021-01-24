@@ -9,10 +9,8 @@ class TransactionCommentsBloc
   final TransactionRepository transactionRepository;
 
   TransactionCommentsBloc({@required this.transactionRepository})
-      : assert(transactionRepository != null);
-
-  @override
-  TransactionCommentsState get initialState => TransactionCommentsLoading();
+      : assert(transactionRepository != null),
+        super(TransactionCommentsLoading());
 
   @override
   Stream<TransactionCommentsState> mapEventToState(

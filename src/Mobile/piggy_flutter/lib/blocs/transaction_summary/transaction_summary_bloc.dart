@@ -30,7 +30,8 @@ class TransactionSummaryBloc
       : assert(transactionRepository != null),
         assert(authBloc != null),
         assert(transactionsBloc != null),
-        assert(transactionDetailBloc != null) {
+        assert(transactionDetailBloc != null),
+        super(TransactionSummaryEmpty()) {
     authBlocSubscription = authBloc.listen((state) {
       if (state is AuthAuthenticated) {
         add(RefreshTransactionSummary());
@@ -49,9 +50,6 @@ class TransactionSummaryBloc
       }
     });
   }
-
-  @override
-  TransactionSummaryState get initialState => TransactionSummaryEmpty();
 
   @override
   Stream<TransactionSummaryState> mapEventToState(

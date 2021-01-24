@@ -8,13 +8,10 @@ import './bloc.dart';
 class CategorywiseRecentMonthsReportBloc extends Bloc<
     CategorywiseRecentMonthsReportEvent, CategorywiseRecentMonthsReportState> {
   CategorywiseRecentMonthsReportBloc({@required this.reportRepository})
-      : assert(reportRepository != null);
+      : assert(reportRepository != null),
+        super(CategorywiseRecentMonthsReportLoading());
 
   final ReportRepository reportRepository;
-
-  @override
-  CategorywiseRecentMonthsReportState get initialState =>
-      CategorywiseRecentMonthsReportLoading();
 
   @override
   Stream<CategorywiseRecentMonthsReportState> mapEventToState(

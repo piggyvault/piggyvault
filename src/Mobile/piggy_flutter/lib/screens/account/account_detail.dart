@@ -247,7 +247,7 @@ class _AccountDetailPageState extends State<AccountDetailPage>
                                     .backgroundColor,
                                 child: BlocBuilder<AccountTransactionsBloc,
                                     AccountTransactionsState>(
-                                  bloc: accountTransactionsBloc,
+                                  cubit: accountTransactionsBloc,
                                   builder: (BuildContext context,
                                       AccountTransactionsState state) {
                                     if (state is AccountTransactionsLoaded) {
@@ -629,7 +629,7 @@ class _AccountDetailPageState extends State<AccountDetailPage>
                             height: 8,
                           ),
                           BlocBuilder<AccountBloc, AccountState>(
-                              bloc: accountBloc,
+                              cubit: accountBloc,
                               builder:
                                   (BuildContext context, AccountState state) {
                                 if (state is AccountLoaded) {
@@ -715,7 +715,7 @@ class _AccountDetailPageState extends State<AccountDetailPage>
                 Expanded(
                   child: BlocBuilder<AccountTransactionsBloc,
                           AccountTransactionsState>(
-                      bloc: accountTransactionsBloc,
+                      cubit: accountTransactionsBloc,
                       builder: (context, state) {
                         if (state is AccountTransactionsLoaded) {
                           return Padding(

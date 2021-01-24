@@ -252,7 +252,7 @@ class DashboardScreenState extends State<DashboardScreen> {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<DashboardBloc, DashboardState>(
-      bloc: widget._dashboardBloc,
+      cubit: widget._dashboardBloc,
       builder: (
         BuildContext context,
         DashboardState currentState,

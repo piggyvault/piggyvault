@@ -11,7 +11,8 @@ class CategoryTransactionsBloc
   CategoryTransactionsBloc(
       {@required this.transactionRepository, @required this.transactionBloc})
       : assert(transactionRepository != null),
-        assert(transactionBloc != null) {
+        assert(transactionBloc != null),
+        super(CategoryTransactionsEmpty(null)) {
     transactionBlocSubscription = transactionBloc.listen((state) {
       if (state is TransactionSaved) {
         if (this.state.filters != null) {
@@ -24,9 +25,6 @@ class CategoryTransactionsBloc
 
   final TransactionBloc transactionBloc;
   StreamSubscription transactionBlocSubscription;
-
-  @override
-  CategoryTransactionsState get initialState => CategoryTransactionsEmpty(null);
 
   @override
   Stream<CategoryTransactionsState> mapEventToState(

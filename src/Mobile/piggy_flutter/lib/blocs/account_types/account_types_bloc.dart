@@ -7,12 +7,10 @@ import './bloc.dart';
 
 class AccountTypesBloc extends Bloc<AccountTypesEvent, AccountTypesState> {
   AccountTypesBloc({@required this.accountRepository})
-      : assert(accountRepository != null);
+      : assert(accountRepository != null),
+        super(AccountTypesLoading());
 
   final AccountRepository accountRepository;
-
-  @override
-  AccountTypesState get initialState => AccountTypesLoading();
 
   @override
   Stream<AccountTypesState> mapEventToState(

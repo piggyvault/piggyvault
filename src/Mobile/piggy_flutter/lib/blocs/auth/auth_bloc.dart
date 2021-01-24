@@ -74,6 +74,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   // Platform messages are asynchronous, so we initialize in an async method.
   void initOnesignal() {
+    // TODO(abhith) : use secrets
     OneSignal.shared.init('9bf198c9-442b-4619-b5c9-759fc250f15b', iOSSettings: {
       OSiOSSettings.autoPrompt: false,
       OSiOSSettings.inAppLaunchUrl: true

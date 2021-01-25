@@ -89,17 +89,20 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     for (TabIconData tab in tabIconsList) {
       tab.isSelected = false;
     }
-    tabIconsList[0].isSelected = true;
 
     animationController = AnimationController(
         duration: const Duration(milliseconds: 600), vsync: this);
 
     if (widget.startpage == StartPage.Dashboard) {
       tabBody = OverviewScreen(animationController: animationController);
+      tabIconsList[0].isSelected = true;
     } else if (widget.startpage == StartPage.Accounts) {
       tabBody = AccountListPage(
         animationController: animationController,
       );
+      tabIconsList[2].isSelected = true;
+    } else {
+      tabIconsList[0].isSelected = true;
     }
 
     initPlatformState();

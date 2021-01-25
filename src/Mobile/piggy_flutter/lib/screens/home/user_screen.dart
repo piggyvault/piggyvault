@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -5,11 +7,17 @@ import 'package:piggy_flutter/blocs/accounts/accounts.dart';
 import 'package:piggy_flutter/blocs/auth/auth.dart';
 import 'package:piggy_flutter/blocs/auth/auth_bloc.dart';
 import 'package:piggy_flutter/blocs/categories/categories.dart';
+import 'package:piggy_flutter/models/models.dart';
+import 'package:piggy_flutter/screens/category/category_list.dart';
 import 'package:piggy_flutter/screens/reports/reports_screen.dart';
 import 'package:piggy_flutter/screens/settings/settings_screen.dart';
 import 'package:piggy_flutter/theme/theme.dart';
 import 'package:piggy_flutter/utils/uidata.dart';
 import 'package:styled_widget/styled_widget.dart';
+
+import 'home_screen.dart';
+
+typedef TapCallback = FutureOr<void> Function();
 
 class UserScreen extends StatefulWidget {
   const UserScreen({Key key, @required this.animationController})
@@ -246,12 +254,6 @@ class _UserScreenState extends State<UserScreen> with TickerProviderStateMixin {
                                       onTap: () {
                                         FocusScope.of(context)
                                             .requestFocus(FocusNode());
-                                        // // setState(() {
-                                        // //   isDatePopupOpen = true;
-                                        // // });
-                                        // showDemoDialog(
-                                        //     context: context,
-                                        //     bloc: recentTransactionsBloc);
                                       },
                                       child: Padding(
                                         padding: const EdgeInsets.only(
@@ -264,21 +266,7 @@ class _UserScreenState extends State<UserScreen> with TickerProviderStateMixin {
                                               MainAxisAlignment.center,
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
-                                          children: <Widget>[
-                                            // Text(
-                                            //   '${DateFormat("dd, MMM").format(startDate)} - ${DateFormat("dd, MMM").format(endDate)}',
-                                            //   textAlign: TextAlign.left,
-                                            //   style: TextStyle(
-                                            //     fontFamily:
-                                            //         PiggyAppTheme.fontName,
-                                            //     fontWeight: FontWeight.normal,
-                                            //     fontSize: 18,
-                                            //     letterSpacing: -0.2,
-                                            //     color:
-                                            //         PiggyAppTheme.darkerText,
-                                            //   ),
-                                            // ),
-                                          ],
+                                          children: <Widget>[],
                                         ),
                                       ),
                                     ),
@@ -343,29 +331,70 @@ class UserCard extends StatelessWidget {
       BlocBuilder<AccountsBloc, AccountsState>(builder: (context, state) {
         if (state is AccountsLoaded) {
           return _buildUserStatsItem(
-              state.userAccounts.length.toString(), 'Accounts');
+            value: state.userAccounts.length.toString(),
+            text: 'Accounts',
+            onTap: (() => Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => HomeScreen(
+                      startpage: StartPage.Accounts,
+                    ),
+                  ),
+                )),
+          );
         }
-        return _buildUserStatsItem('-', 'Accounts');
+        return _buildUserStatsItem(
+          value: '-',
+          text: 'Accounts',
+          onTap: (() => Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => HomeScreen(
+                    startpage: StartPage.Accounts,
+                  ),
+                ),
+              )),
+        );
       }),
       BlocBuilder<CategoriesBloc, CategoriesState>(builder: (context, state) {
         if (state is CategoriesLoaded) {
           return _buildUserStatsItem(
-              state.categories.length.toString(), 'Categories');
+            value: state.categories.length.toString(),
+            text: 'Categories',
+            onTap: (() => Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => CategoryListPage(
+                      animationController: animationController,
+                    ),
+                  ),
+                )),
+          );
         }
-        return _buildUserStatsItem('-', 'Categories');
+        return _buildUserStatsItem(
+          value: '-',
+          text: 'Categories',
+          onTap: (() => Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => CategoryListPage(
+                    animationController: animationController,
+                  ),
+                ),
+              )),
+        );
       })
-
-      // _buildUserStatsItem('267', 'Track'),
-      // _buildUserStatsItem('39', 'Coupons'),
     ]
         .toRow(mainAxisAlignment: MainAxisAlignment.spaceAround)
         .padding(vertical: 10);
   }
 
-  Widget _buildUserStatsItem(String value, String text) => <Widget>[
-        Text(value).fontSize(20).textColor(Colors.white).padding(bottom: 5),
-        Text(text).textColor(Colors.white.withOpacity(0.6)).fontSize(12),
-      ].toColumn();
+  Widget _buildUserStatsItem({String value, String text, TapCallback onTap}) {
+    return GestureDetector(
+        onTap: () async {
+          await onTap();
+        },
+        child: <Widget>[
+          Text(value).fontSize(20).textColor(Colors.white).padding(bottom: 5),
+          Text(text).textColor(Colors.white.withOpacity(0.6)).fontSize(12),
+        ].toColumn());
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -451,24 +480,6 @@ const List<SettingsItemModel> settingsItems = [
     title: UIData.settings,
     description: 'Default currency, notifications etc',
   ),
-  // SettingsItemModel(
-  //   icon: Icons.menu,
-  //   color: Color(0xffFEC85C),
-  //   title: 'General',
-  //   description: 'Basic functional settings',
-  // ),
-  // SettingsItemModel(
-  //   icon: Icons.notifications,
-  //   color: Color(0xff5FD0D3),
-  //   title: 'Notifications',
-  //   description: 'Take over the news in time',
-  // ),
-  // SettingsItemModel(
-  //   icon: Icons.question_answer,
-  //   color: Color(0xffBFACAA),
-  //   title: 'Support',
-  //   description: 'We are here to help',
-  // ),
 ];
 
 class Settings extends StatelessWidget {

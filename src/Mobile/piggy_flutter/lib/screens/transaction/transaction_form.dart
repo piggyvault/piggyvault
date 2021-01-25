@@ -24,7 +24,8 @@ class TransactionFormPage extends StatefulWidget {
       this.title,
       this.account,
       this.transaction,
-      this.isCopy = false})
+      this.isCopy = false,
+      this.description})
       : super(key: key);
 
   final TransactionBloc transactionsBloc;
@@ -32,6 +33,7 @@ class TransactionFormPage extends StatefulWidget {
   final Transaction transaction;
   final String title;
   final bool isCopy;
+  final String description;
 
   @override
   TransactionFormPageState createState() => TransactionFormPageState();
@@ -48,7 +50,6 @@ class TransactionFormPageState extends State<TransactionFormPage> {
   Account _account, _toAccount;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  bool _autoValidate = false;
   bool _formWasEdited = false;
   bool _showTransferToAmount = false;
   String _categoryErrorText, _accountErrorText, _toAccountId;
@@ -70,7 +71,11 @@ class TransactionFormPageState extends State<TransactionFormPage> {
     }
 
     if (widget.transaction == null) {
-      _descriptionFieldController = TextEditingController();
+      _descriptionFieldController = widget.description == null
+          ? TextEditingController()
+          : _descriptionFieldController =
+              TextEditingController(text: widget.description);
+
       _amountFieldController = TextEditingController();
     } else {
       _transactionService
@@ -143,7 +148,6 @@ class TransactionFormPageState extends State<TransactionFormPage> {
               bottom: false,
               child: Form(
                 key: _formKey,
-                autovalidate: _autoValidate,
                 onWillPop: _onWillPop,
                 child: ListView(
                   padding: const EdgeInsets.all(16.0),
@@ -399,7 +403,6 @@ class TransactionFormPageState extends State<TransactionFormPage> {
     final FormState form = _formKey.currentState;
 
     if (!form.validate()) {
-      _autoValidate = true; // Start validating on every change.
       showInSnackBar('Please fix the errors before submitting.');
     } else {
       if (!_isValidAccount() || !_isValidCategory()) {

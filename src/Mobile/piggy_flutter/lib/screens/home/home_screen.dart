@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
@@ -80,6 +81,9 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     color: PiggyAppTheme.background,
   );
 
+  static const platform = const MethodChannel('app.channel.shared.data');
+  String dataShared = "No data";
+
   @override
   void initState() {
     for (TabIconData tab in tabIconsList) {
@@ -101,6 +105,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     initPlatformState();
 
     super.initState();
+    getSharedText();
   }
 
   @override
@@ -135,6 +140,20 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   void dispose() {
     animationController.dispose();
     super.dispose();
+  }
+
+  getSharedText() async {
+    var sharedData = await platform.invokeMethod("getSharedText");
+    if (sharedData != null) {
+      return Navigator.of(context).push(
+        MaterialPageRoute<DismissDialogAction>(
+          builder: (_) => TransactionFormPage(
+            transactionsBloc: BlocProvider.of<TransactionBloc>(context),
+            description: sharedData,
+          ),
+        ),
+      );
+    }
   }
 
   Future<void> initPlatformState() async {

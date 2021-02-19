@@ -1,8 +1,10 @@
-using System.Threading.Tasks;
 using Abp.Configuration;
+using Abp.Extensions;
+using Abp.UI;
 using Abp.Zero.Configuration;
 using Piggyvault.Authorization.Accounts.Dto;
 using Piggyvault.Authorization.Users;
+using System.Threading.Tasks;
 
 namespace Piggyvault.Authorization.Accounts
 {
@@ -35,6 +37,21 @@ namespace Piggyvault.Authorization.Accounts
             return new IsTenantAvailableOutput(TenantAvailabilityState.Available, tenant.Id);
         }
 
+        public async Task SendPasswordResetCode(SendPasswordResetCodeInput input)
+        {
+            var user = await UserManager.FindByEmailAsync(input.EmailAddress);
+
+            if (user == null)
+            {
+                throw new UserFriendlyException("User not found!");
+            }
+
+            user.SetNewPasswordResetCode();
+
+            //Send an email to user with the below password reset code
+            /* Uri.EscapeDataString(user.PasswordResetCode) */
+        }
+
         public async Task<RegisterOutput> Register(RegisterInput input)
         {
             var user = await _userRegistrationManager.RegisterAsync(
@@ -52,6 +69,26 @@ namespace Piggyvault.Authorization.Accounts
             {
                 CanLogin = user.IsActive && (user.IsEmailConfirmed || !isEmailConfirmationRequiredForLogin)
             };
+        }
+
+        public async Task<bool> ResetPassword(ResetPasswordInput input)
+        {
+            var user = await UserManager.GetUserByIdAsync(input.UserId);
+
+            if (user == null || user.PasswordResetCode.IsNullOrEmpty() || user.PasswordResetCode != input.ResetCode)
+            {
+                throw new UserFriendlyException("Invalid password reset code");
+            }
+
+            await UserManager.InitializeOptionsAsync(AbpSession.TenantId);
+            CheckErrors(await UserManager.ChangePasswordAsync(user, input.Password));
+
+            user.PasswordResetCode = null;
+            user.IsEmailConfirmed = true;
+
+            await UserManager.UpdateAsync(user);
+
+            return true;
         }
     }
 }

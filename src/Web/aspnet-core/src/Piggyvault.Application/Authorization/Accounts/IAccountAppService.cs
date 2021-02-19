@@ -1,6 +1,6 @@
-﻿using System.Threading.Tasks;
-using Abp.Application.Services;
+﻿using Abp.Application.Services;
 using Piggyvault.Authorization.Accounts.Dto;
+using System.Threading.Tasks;
 
 namespace Piggyvault.Authorization.Accounts
 {
@@ -9,5 +9,9 @@ namespace Piggyvault.Authorization.Accounts
         Task<IsTenantAvailableOutput> IsTenantAvailable(IsTenantAvailableInput input);
 
         Task<RegisterOutput> Register(RegisterInput input);
+
+        Task SendPasswordResetCode(SendPasswordResetCodeInput input);
+
+        Task<bool> ResetPassword(ResetPasswordInput input);
     }
 }

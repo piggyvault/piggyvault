@@ -76,14 +76,15 @@ class _LoginFormState extends State<LoginForm> {
                   padding:
                       EdgeInsets.symmetric(vertical: 0.0, horizontal: 30.0),
                   width: double.infinity,
-                  child: RaisedButton(
-                    padding: EdgeInsets.all(12.0),
-                    shape: StadiumBorder(),
+                  child: ElevatedButton(
                     child: Text(
                       "SIGN IN",
                       style: TextStyle(color: Colors.white),
                     ),
-                    color: Colors.green,
+                    style: ElevatedButton.styleFrom(
+                        primary: Colors.green,
+                        padding: EdgeInsets.all(12.0),
+                        shape: StadiumBorder()),
                     onPressed:
                         state is! LoginLoading ? _onLoginButtonPressed : null,
                   ),

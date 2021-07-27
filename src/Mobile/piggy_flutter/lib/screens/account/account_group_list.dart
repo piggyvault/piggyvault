@@ -42,7 +42,7 @@ class AccountGroupList extends StatelessWidget {
         dense: true,
         leading: Icon(Icons.account_balance_wallet,
             color: Theme.of(context).disabledColor),
-        title: Text(account.name, style: Theme.of(context).textTheme.body2),
+        title: Text(account.name, style: Theme.of(context).textTheme.bodyText1),
         subtitle: Text(
           account.accountType,
         ),

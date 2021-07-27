@@ -76,7 +76,7 @@ class CategorywiseAccountsList extends StatelessWidget {
         dense: true,
         title: Text(
           account.accountName,
-          style: textTheme.body2,
+          style: textTheme.bodyText1,
         ),
         subtitle: Text(
           '${account.amountInDefaultCurrency.toMoney()}',

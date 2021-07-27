@@ -27,7 +27,6 @@ class CategoryFormPage extends StatefulWidget {
 class CategoryFormPageState extends State<CategoryFormPage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final bool _autoValidate = false;
   final bool _formWasEdited = false;
 
   TextEditingController _categorynameFieldController;
@@ -81,7 +80,7 @@ class CategoryFormPageState extends State<CategoryFormPage> {
             bottom: false,
             child: Form(
               key: _formKey,
-              autovalidate: _autoValidate,
+              autovalidateMode: AutovalidateMode.onUserInteraction,
               onWillPop: _onWillPop,
               child: ListView(
                 padding: const EdgeInsets.all(16.0),

@@ -18,25 +18,6 @@ class CategoryListPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // TODO(abhith): show recent number of transactions against categories
-    // Stream<List<CategoryListItem>> categoriesWithTransactionCount = Observable
-    //     .combineLatest2(
-    //         categoryBloc.categories, homeBloc.recentTransactionsState,
-    //         (List<Category> categories,
-    //             RecentTransactionsState recentTransactionsState) {
-    //   return categories
-    //       .map<CategoryListItem>((category) => CategoryListItem(
-    //           category: category,
-    //           noOfTransactions:
-    //               recentTransactionsState is RecentTransactionsPopulated
-    //                   ? recentTransactionsState.result.transactions
-    //                       .where((transaction) =>
-    //                           transaction.categoryName == category.name)
-    //                       .length
-    //                   : 0))
-    //       .toList();
-    // }).asBroadcastStream();
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('Categories'),

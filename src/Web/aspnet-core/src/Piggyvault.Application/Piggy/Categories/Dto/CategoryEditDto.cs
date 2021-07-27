@@ -1,7 +1,6 @@
 ﻿using Abp.AutoMapper;
 using System;
-using System.Collections.Generic;
-using System.Text;
+using System.ComponentModel.DataAnnotations;
 
 namespace Piggyvault.Piggy.Categories.Dto
 {
@@ -12,6 +11,8 @@ namespace Piggyvault.Piggy.Categories.Dto
         public virtual Guid? Id { get; set; }
 
         public virtual bool IsActive { get; set; }
+
+        [Required]
         public virtual string Name { get; set; }
     }
 }

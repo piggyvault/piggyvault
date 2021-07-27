@@ -37,7 +37,7 @@ class CategoriesBloc extends Bloc<CategoriesEvent, CategoriesState> {
         yield CategorySaved();
         add(CategoriesLoad());
       } catch (error) {
-        CategoriesNotLoaded();
+        yield CategorySaveFailure(errorMessage: error.toString());
       }
     }
   }

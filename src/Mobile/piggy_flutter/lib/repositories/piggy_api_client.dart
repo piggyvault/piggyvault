@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/cupertino.dart';
 import 'package:piggy_flutter/models/api_response.dart';
 import 'package:http/http.dart' as http;
 import 'package:meta/meta.dart';
@@ -29,10 +30,15 @@ class PiggyApiClient {
   }
 
   // CATEGORY
-  Future<void> createOrUpdateCategory(Category input) async {
-    await postAsync<dynamic>(
+  Future<bool> createOrUpdateCategory(Category input) async {
+    final response = await postAsync<dynamic>(
         '$baseUrl/api/services/app/Category/CreateOrUpdateCategory',
         {'id': input.id, 'name': input.name, 'icon': input.icon});
+    if (!response.success) {
+      throw Exception(response.error);
+    }
+
+    return true;
   }
 
   Future<IsTenantAvailableResult> isTenantAvailable(String tenancyName) async {

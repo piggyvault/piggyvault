@@ -14,7 +14,7 @@ class CategoryRepository {
     return await piggyApiClient.getTenantCategories();
   }
 
-  Future<void> createOrUpdateCategory(Category input) async {
-    await piggyApiClient.createOrUpdateCategory(input);
+  Future<bool> createOrUpdateCategory(Category input) async {
+    return await piggyApiClient.createOrUpdateCategory(input);
   }
 }

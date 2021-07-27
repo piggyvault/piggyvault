@@ -198,14 +198,14 @@ class TransactionDetailPageState extends State<TransactionDetailPage> {
           ),
         ),
       ),
-      trailing: new OutlineButton(
+      trailing: new OutlinedButton(
         onPressed: (() {
           transactionCommentsBloc.add(PostTransactionComment(
               transactionId: widget.transaction.id,
               comment: _commentController.text));
           _commentController.clear();
         }),
-        borderSide: BorderSide.none,
+        style: OutlinedButton.styleFrom(side: BorderSide.none),
         child: Text("Post", style: Theme.of(context).textTheme.button),
       ),
     );

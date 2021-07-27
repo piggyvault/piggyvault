@@ -72,7 +72,7 @@ class TransactionDetailPageState extends State<TransactionDetailPage> {
             ListTile(
               title: Text(
                 'Comments',
-                style: Theme.of(context).textTheme.headline,
+                style: Theme.of(context).textTheme.headline5,
               ),
             ),
             _commentTile(),
@@ -85,8 +85,8 @@ class TransactionDetailPageState extends State<TransactionDetailPage> {
   }
 
   Widget _bottomNavigationBar(ThemeData theme) {
-    final TextStyle dialogTextStyle =
-        theme.textTheme.subhead.copyWith(color: theme.textTheme.caption.color);
+    final TextStyle dialogTextStyle = theme.textTheme.subtitle1
+        .copyWith(color: theme.textTheme.caption.color);
     return BlocBuilder<AuthBloc, AuthState>(
       builder: (context, state) {
         if (state is AuthAuthenticated) {

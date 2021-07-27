@@ -66,7 +66,7 @@ class TransactionList extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
           Text('${item.title}',
-              style: Theme.of(context).textTheme.title.copyWith(
+              style: Theme.of(context).textTheme.headline6.copyWith(
                   fontSize: 16.0, color: Theme.of(context).accentColor)),
           Row(
             children: <Widget>[
@@ -130,7 +130,7 @@ class TransactionList extends StatelessWidget {
           groupBy == TransactionsGroupBy.Date
               ? transaction.categoryName
               : formatter.format(DateTime.parse(transaction.transactionTime)),
-          style: textTheme.body2,
+          style: textTheme.bodyText1,
         ),
         subtitle: Text(
           "${transaction.description}\n${transaction.creatorUserName}'s ${transaction.accountName}",

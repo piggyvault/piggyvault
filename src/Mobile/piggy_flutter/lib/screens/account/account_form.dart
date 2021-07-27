@@ -192,8 +192,8 @@ class _AccountFormScreenState extends State<AccountFormScreen> {
     }
 
     final ThemeData theme = Theme.of(context);
-    final TextStyle dialogTextStyle =
-        theme.textTheme.subhead.copyWith(color: theme.textTheme.caption.color);
+    final TextStyle dialogTextStyle = theme.textTheme.subtitle1
+        .copyWith(color: theme.textTheme.caption.color);
 
     return await showDialog<bool>(
           context: context,
@@ -230,7 +230,7 @@ class _AccountFormScreenState extends State<AccountFormScreen> {
           border: OutlineInputBorder(),
           // errorText: snapshot.error
         ),
-        style: theme.textTheme.headline,
+        style: theme.textTheme.headline5,
       ),
     );
   }

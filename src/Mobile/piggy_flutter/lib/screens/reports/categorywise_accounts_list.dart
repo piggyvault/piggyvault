@@ -45,7 +45,7 @@ class CategorywiseAccountsList extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
           Text('${item.categoryName}',
-              style: Theme.of(context).textTheme.title.copyWith(
+              style: Theme.of(context).textTheme.headline6.copyWith(
                   fontSize: 16.0, color: Theme.of(context).accentColor)),
           Row(
             children: <Widget>[

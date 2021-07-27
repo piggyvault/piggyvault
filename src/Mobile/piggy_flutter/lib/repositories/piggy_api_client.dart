@@ -289,7 +289,7 @@ class PiggyApiClient {
   }
 
   Future<List<TransactionComment>> getTransactionComments(String id) async {
-    var comments = List<TransactionComment>();
+    List<TransactionComment> comments = [];
     var result = await getAsync<dynamic>(
         '$baseUrl/api/services/app/transaction/GetTransactionComments?id=$id');
     if (result.success) {

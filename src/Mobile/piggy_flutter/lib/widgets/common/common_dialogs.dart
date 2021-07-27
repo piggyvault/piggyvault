@@ -9,7 +9,7 @@ showError(BuildContext context, ApiResponse snapshot) {
       title: Text(UIData.error),
       content: Text(snapshot.error),
       actions: <Widget>[
-        FlatButton(
+        TextButton(
           child: Text(UIData.ok),
           onPressed: () => Navigator.pop(context),
         )

@@ -143,13 +143,13 @@ class TransactionDetailPageState extends State<TransactionDetailPage> {
                                       'Are you sure you want to delete transaction "${widget.transaction.description}" of ${widget.transaction.amount.toMoney()}${widget.transaction.accountCurrencySymbol}',
                                       style: dialogTextStyle),
                                   actions: <Widget>[
-                                    FlatButton(
+                                    TextButton(
                                         child: const Text('CANCEL'),
                                         onPressed: () {
                                           Navigator.pop(
                                               context, DialogAction.disagree);
                                         }),
-                                    FlatButton(
+                                    TextButton(
                                         child: const Text('DELETE'),
                                         onPressed: () {
                                           Navigator.pop(

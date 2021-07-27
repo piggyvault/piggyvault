@@ -123,7 +123,7 @@ class TransactionFormPageState extends State<TransactionFormPage> {
         appBar: AppBar(
           title: Text(widget.title == null ? ' Transaction' : widget.title),
           actions: <Widget>[
-            FlatButton(
+            TextButton(
                 child: Text('SAVE', style: theme.textTheme.button),
                 onPressed: () {
                   onSave();
@@ -317,13 +317,13 @@ class TransactionFormPageState extends State<TransactionFormPage> {
             return AlertDialog(
               content: Text('Discard unsaved changes?', style: dialogTextStyle),
               actions: <Widget>[
-                FlatButton(
+                TextButton(
                     child: const Text('CANCEL'),
                     onPressed: () {
                       Navigator.of(context).pop(
                           false); // Pops the confirmation dialog but not the page.
                     }),
-                FlatButton(
+                TextButton(
                     child: const Text('DISCARD'),
                     onPressed: () {
                       Navigator.of(context).pop(

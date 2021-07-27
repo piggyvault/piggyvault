@@ -121,7 +121,7 @@ class CategoryFormPageState extends State<CategoryFormPage> {
   }
 
   Widget submitButton(ThemeData theme) {
-    return FlatButton(
+    return TextButton(
       child: Text('SAVE', style: theme.textTheme.button),
       onPressed: () {
         saveCategory();
@@ -155,13 +155,13 @@ class CategoryFormPageState extends State<CategoryFormPage> {
             return AlertDialog(
               content: Text('Discard unsaved changes?', style: dialogTextStyle),
               actions: <Widget>[
-                FlatButton(
+                TextButton(
                     child: const Text('CANCEL'),
                     onPressed: () {
                       Navigator.of(context).pop(
                           false); // Pops the confirmation dialog but not the page.
                     }),
-                FlatButton(
+                TextButton(
                     child: const Text('DISCARD'),
                     onPressed: () {
                       Navigator.of(context).pop(

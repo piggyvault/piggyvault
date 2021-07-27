@@ -34,16 +34,16 @@ class DefaultButton extends StatelessWidget {
       opacity = pageButtonViewModel.slidePercent;
     }
 
-    return FlatButton(
+    return TextButton(
       onPressed: onTap,
       child: Opacity(
         opacity: opacity,
         child: DefaultTextStyle.merge(
           style: style,
           child: child,
-        ), //Text
-      ), //Opacity
-    ); //FlatButton
+        ),
+      ),
+    );
   }
 }
 
@@ -75,7 +75,7 @@ class DoneButton extends StatelessWidget {
       opacity = 1.0 - pageButtonViewModel.slidePercent;
     }
 
-    return FlatButton(
+    return TextButton(
       onPressed: onTap,
       child: Opacity(
         opacity: opacity,
@@ -83,8 +83,8 @@ class DoneButton extends StatelessWidget {
           style: style,
           child: child, //Text
         ),
-      ), //Opacity
-    ); //FlatButton
+      ),
+    );
   }
 }
 

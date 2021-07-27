@@ -623,7 +623,7 @@ class CurvePainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    List<Color> colorsList = List<Color>();
+    List<Color> colorsList = [];
     if (colors != null) {
       colorsList = colors;
     } else {

@@ -55,6 +55,7 @@ class CategoryFormPageState extends State<CategoryFormPage> {
       body: BlocListener<CategoriesBloc, CategoriesState>(
         listener: (BuildContext context, CategoriesState state) {
           if (state is CategorySaveFailure) {
+            hideProgress(context);
             Scaffold.of(context).showSnackBar(
               SnackBar(
                 content: Text('${state.errorMessage}'),

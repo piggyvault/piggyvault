@@ -11,7 +11,6 @@ import 'package:piggy_flutter/blocs/recent_transactions/recent_transactions_bloc
 import 'package:piggy_flutter/blocs/transaction/transaction_bloc.dart';
 import 'package:piggy_flutter/blocs/transaction_detail/bloc.dart';
 import 'package:piggy_flutter/blocs/transaction_summary/transaction_summary_bloc.dart';
-import 'package:piggy_flutter/dashboard/dashboard_bloc.dart';
 import 'package:piggy_flutter/repositories/repositories.dart';
 import 'package:piggy_flutter/screens/home/home_screen.dart';
 import 'package:piggy_flutter/screens/intro_views/intro_views.dart';
@@ -118,11 +117,7 @@ Future<void> main() async {
             transactionsBloc: BlocProvider.of<TransactionBloc>(context),
             authBloc: BlocProvider.of<AuthBloc>(context),
             transactionRepository: transactionRepository),
-      ),
-      BlocProvider<DashboardBloc>(
-          lazy: false,
-          create: (BuildContext context) =>
-              DashboardBloc()), // TODO(abhith): remove if not needed
+      )
     ],
     child: App(
       transactionRepository: transactionRepository,

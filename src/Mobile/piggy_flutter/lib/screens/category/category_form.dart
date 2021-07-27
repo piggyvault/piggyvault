@@ -25,7 +25,8 @@ class CategoryFormPage extends StatefulWidget {
 }
 
 class CategoryFormPageState extends State<CategoryFormPage> {
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey =
+      GlobalKey<ScaffoldMessengerState>();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final bool _formWasEdited = false;
 
@@ -46,51 +47,53 @@ class CategoryFormPageState extends State<CategoryFormPage> {
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
-    return Scaffold(
-      key: _scaffoldKey,
-      appBar: AppBar(
-        title: Text(widget.title),
-        actions: <Widget>[submitButton(theme)],
-      ),
-      body: BlocListener<CategoriesBloc, CategoriesState>(
-        listener: (BuildContext context, CategoriesState state) {
-          if (state is CategorySaveFailure) {
-            hideProgress(context);
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text('${state.errorMessage}'),
-                backgroundColor: Colors.red,
-              ),
-            );
-          }
-          if (state is CategoriesLoading) {
-            showProgress(context);
-          }
+    return ScaffoldMessenger(
+      key: scaffoldMessengerKey,
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(widget.title),
+          actions: <Widget>[submitButton(theme)],
+        ),
+        body: BlocListener<CategoriesBloc, CategoriesState>(
+          listener: (BuildContext context, CategoriesState state) {
+            if (state is CategorySaveFailure) {
+              hideProgress(context);
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text('${state.errorMessage}'),
+                  backgroundColor: Colors.red,
+                ),
+              );
+            }
+            if (state is CategoriesLoading) {
+              showProgress(context);
+            }
 
-          if (state is CategorySaved) {
-            hideProgress(context);
-            showSuccess(
-                context: context,
-                message: UIData.success,
-                icon: MaterialCommunityIcons.check);
-          }
-        },
-        child: DropdownButtonHideUnderline(
-          child: SafeArea(
-            top: false,
-            bottom: false,
-            child: Form(
-              key: _formKey,
-              autovalidateMode: AutovalidateMode.onUserInteraction,
-              onWillPop: _onWillPop,
-              child: ListView(
-                padding: const EdgeInsets.all(16.0),
-                children: <Widget>[
-                  _categoryField(theme),
-                  const SizedBox(height: 24.0),
-                  Text('* all fields are mandatory',
-                      style: Theme.of(context).textTheme.caption),
-                ].where((child) => child != null).toList(),
+            if (state is CategorySaved) {
+              hideProgress(context);
+              showSuccess(
+                  context: context,
+                  message: UIData.success,
+                  icon: MaterialCommunityIcons.check);
+            }
+          },
+          child: DropdownButtonHideUnderline(
+            child: SafeArea(
+              top: false,
+              bottom: false,
+              child: Form(
+                key: _formKey,
+                autovalidateMode: AutovalidateMode.onUserInteraction,
+                onWillPop: _onWillPop,
+                child: ListView(
+                  padding: const EdgeInsets.all(16.0),
+                  children: <Widget>[
+                    _categoryField(theme),
+                    const SizedBox(height: 24.0),
+                    Text('* all fields are mandatory',
+                        style: Theme.of(context).textTheme.caption),
+                  ].where((child) => child != null).toList(),
+                ),
               ),
             ),
           ),
@@ -175,7 +178,7 @@ class CategoryFormPageState extends State<CategoryFormPage> {
   }
 
   void showInSnackBar(String value) {
-    _scaffoldKey.currentState.showSnackBar(SnackBar(
+    scaffoldMessengerKey.currentState.showSnackBar(SnackBar(
       content: Text(value),
       backgroundColor: Colors.red,
     ));

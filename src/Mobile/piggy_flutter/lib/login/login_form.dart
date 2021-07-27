@@ -28,7 +28,7 @@ class _LoginFormState extends State<LoginForm> {
 
     return BlocListener<LoginBloc, LoginState>(listener: (context, state) {
       if (state is LoginFailure) {
-        Scaffold.of(context).showSnackBar(
+        ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('${state.errorMessage}'),
             backgroundColor: Colors.red,

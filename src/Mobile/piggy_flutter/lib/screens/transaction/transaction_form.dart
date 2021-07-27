@@ -48,7 +48,8 @@ class TransactionFormPageState extends State<TransactionFormPage> {
       TextEditingController();
 
   Account _account, _toAccount;
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey =
+      GlobalKey<ScaffoldMessengerState>();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   bool _formWasEdited = false;
   bool _showTransferToAmount = false;
@@ -116,8 +117,9 @@ class TransactionFormPageState extends State<TransactionFormPage> {
             ? Colors.green
             : Colors.red);
 
-    return Scaffold(
-        key: _scaffoldKey,
+    return ScaffoldMessenger(
+      key: scaffoldMessengerKey,
+      child: Scaffold(
         appBar: AppBar(
           title: Text(widget.title == null ? ' Transaction' : widget.title),
           actions: <Widget>[
@@ -288,7 +290,9 @@ class TransactionFormPageState extends State<TransactionFormPage> {
               ),
             ),
           ),
-        ));
+        ),
+      ),
+    );
   }
 
   @override
@@ -393,7 +397,7 @@ class TransactionFormPageState extends State<TransactionFormPage> {
   }
 
   void showInSnackBar(String value) {
-    _scaffoldKey.currentState.showSnackBar(SnackBar(
+    scaffoldMessengerKey.currentState.showSnackBar(SnackBar(
       content: Text(value),
       backgroundColor: Colors.red,
     ));

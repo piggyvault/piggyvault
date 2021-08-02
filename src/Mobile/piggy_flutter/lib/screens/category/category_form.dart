@@ -1,6 +1,8 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_iconpicker/flutter_iconpicker.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:piggy_flutter/blocs/categories/categories.dart';
 import 'package:piggy_flutter/models/category.dart';
@@ -32,15 +34,32 @@ class CategoryFormPageState extends State<CategoryFormPage> {
 
   TextEditingController _categorynameFieldController;
 
+  Icon _icon;
+
+  _pickIcon() async {
+    IconData icon = await FlutterIconPicker.showIconPicker(context,
+        iconPackMode: IconPack.fontAwesomeIcons);
+
+    if (icon != null) {
+      _icon = Icon(icon);
+      setState(() {});
+    }
+  }
+
   @override
   void initState() {
     super.initState();
 
     if (widget.category == null) {
       _categorynameFieldController = TextEditingController();
+      _icon = Icon(deserializeIcon(Map<String, dynamic>.from(
+          json.decode('{"pack":"fontAwesomeIcons","key":"question"}'))));
+      setState(() {});
     } else {
       _categorynameFieldController =
           TextEditingController(text: widget.category.name);
+      _icon = Icon(deserializeIcon(
+          Map<String, dynamic>.from(json.decode(widget.category.icon))));
     }
   }
 
@@ -88,7 +107,32 @@ class CategoryFormPageState extends State<CategoryFormPage> {
                 child: ListView(
                   padding: const EdgeInsets.all(16.0),
                   children: <Widget>[
-                    _categoryField(theme),
+                    Container(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: <Widget>[
+                          Material(
+                            child: new Container(
+                              margin: new EdgeInsets.symmetric(horizontal: 1.0),
+                              child: new IconButton(
+                                icon: AnimatedSwitcher(
+                                  duration: Duration(milliseconds: 300),
+                                  child: _icon,
+                                ),
+                                onPressed: _pickIcon,
+                                color: Colors.blueGrey,
+                              ),
+                            ),
+                            color: Colors.white,
+                          ),
+                          const SizedBox(width: 10.0),
+                          Flexible(
+                            child: _categoryField(theme),
+                          ),
+                        ],
+                      ),
+                      width: double.infinity,
+                    ),
                     const SizedBox(height: 24.0),
                     Text('* all fields are mandatory',
                         style: Theme.of(context).textTheme.caption),
@@ -142,6 +186,9 @@ class CategoryFormPageState extends State<CategoryFormPage> {
     }
 
     category.name = _categorynameFieldController.text;
+    if (_icon != null) {
+      category.icon = json.encode(serializeIcon(_icon.icon));
+    }
     widget.categoriesBloc.add(CategorySave(category: category));
   }
 

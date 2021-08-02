@@ -10,7 +10,7 @@ class Category {
 
   String name;
   final String id;
-  final String icon;
+  String icon;
 
   @override
   String toString() {

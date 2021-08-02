@@ -3,6 +3,7 @@ class Transaction {
       {this.id,
       this.balance,
       this.categoryName,
+      this.categoryIcon,
       this.description,
       this.creatorUserName,
       this.accountName,
@@ -15,6 +16,7 @@ class Transaction {
       : id = json['id'],
         balance = json['balance'],
         categoryName = json['category']['name'],
+        categoryIcon = json['category']['icon'],
         description = json['description'],
         creatorUserName = json['creatorUserName'],
         accountName = json['account']['name'],
@@ -25,6 +27,7 @@ class Transaction {
 
   final String id,
       categoryName,
+      categoryIcon,
       description,
       creatorUserName,
       accountName,

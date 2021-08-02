@@ -1,7 +1,9 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_iconpicker/flutter_iconpicker.dart';
 import 'package:intl/intl.dart';
 import 'package:piggy_flutter/blocs/transaction_detail/bloc.dart';
 import 'package:piggy_flutter/models/transaction.dart';
@@ -96,34 +98,14 @@ class TransactionList extends StatelessWidget {
       child: ListTile(
         dense: true,
         leading: Container(
-          decoration: BoxDecoration(
-            color: transaction.amount > 0
-                ? PiggyAppTheme.nearlyDarkBlue
-                : PiggyAppTheme.grey,
-            gradient: transaction.amount > 0
-                ? LinearGradient(
-                    colors: [Colors.green, Colors.green[100]],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight)
-                : LinearGradient(colors: [
-                    Colors.red,
-                    Colors.red[100],
-                  ], begin: Alignment.topLeft, end: Alignment.bottomRight),
-            shape: BoxShape.circle,
-          ),
           child: Material(
-            color: Colors.transparent,
-            child: transaction.amount > 0
-                ? Icon(
-                    Icons.radio_button_unchecked,
-                    color: PiggyAppTheme.white,
-                    size: 32,
-                  )
-                : Icon(
-                    Icons.radio_button_unchecked,
-                    color: PiggyAppTheme.white,
-                    size: 32,
-                  ),
+            child: Icon(
+              deserializeIcon(Map<String, dynamic>.from(
+                  json.decode(transaction.categoryIcon))),
+              color: transaction.amount > 0
+                  ? PiggyAppTheme.nearlyDarkBlue
+                  : PiggyAppTheme.grey,
+            ),
           ),
         ),
         title: Text(

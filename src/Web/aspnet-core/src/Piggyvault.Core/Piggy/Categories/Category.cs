@@ -11,7 +11,6 @@ namespace Piggyvault.Piggy.Categories
     {
         public const int MaxNameLength = 100;
 
-        [MaxLength(50)]
         public virtual string Icon { get; set; }
 
         public virtual bool IsActive { get; set; }

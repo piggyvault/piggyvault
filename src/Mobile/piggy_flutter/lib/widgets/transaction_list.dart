@@ -11,6 +11,7 @@ import 'package:piggy_flutter/models/transaction_group_item.dart';
 import 'package:piggy_flutter/screens/transaction/transaction_detail.dart';
 import 'package:piggy_flutter/theme/piggy_app_theme.dart';
 import 'package:piggy_flutter/utils/common.dart';
+import 'package:flutter_gradients/flutter_gradients.dart';
 
 class TransactionList extends StatelessWidget {
   TransactionList({Key key, @required this.items, this.isLoading, bool visible})
@@ -97,16 +98,17 @@ class TransactionList extends StatelessWidget {
     return MergeSemantics(
       child: ListTile(
         dense: true,
-        leading: Container(
-          child: Material(
-            child: Icon(
+        leading: CircleAvatar(
+          radius: 25,
+          child: Icon(
               deserializeIcon(Map<String, dynamic>.from(
                   json.decode(transaction.categoryIcon))),
               color: transaction.amount > 0
-                  ? PiggyAppTheme.nearlyDarkBlue
-                  : PiggyAppTheme.grey,
-            ),
-          ),
+                  ? PiggyAppTheme.income
+                  : PiggyAppTheme.expense),
+          backgroundColor: transaction.amount > 0
+              ? PiggyAppTheme.incomeBackground
+              : PiggyAppTheme.expenseBackground,
         ),
         title: Text(
           groupBy == TransactionsGroupBy.Date

@@ -21,6 +21,13 @@ class PiggyAppTheme {
   static const Color spacer = Color(0xFFF2F2F2);
   static const String fontName = 'Roboto';
 
+  static const Color expense = Color.fromARGB(255, 255, 80, 181);
+  static const Color expenseBackground = Color.fromARGB(255, 254, 239, 249);
+  static const Color transfer = Color(0xfffdeef5);
+  static const Color transferBackground = Color(0xfffdeef5);
+  static const Color income = Color.fromARGB(255, 90, 196, 109);
+  static const Color incomeBackground = Color.fromARGB(255, 235, 251, 238);
+
   static const TextTheme textTheme = TextTheme(
     headline4: headline4,
     headline5: headline5,

@@ -73,14 +73,32 @@ class TransactionList extends StatelessWidget {
           Row(
             children: <Widget>[
               Chip(
-                label: Text('${item.totalInflow.toMoney()}Rs'),
-                backgroundColor: Colors.greenAccent.shade100,
+                backgroundColor: PiggyAppTheme.incomeBackground,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(20),
+                        bottomLeft: Radius.circular(20))),
+                label: Text(
+                  '${item.totalInflow.toMoney()}Rs',
+                  style: TextStyle(
+                    fontWeight: FontWeight.w600,
+                    color: PiggyAppTheme.income,
+                  ),
+                ),
               ),
               Chip(
+                backgroundColor: PiggyAppTheme.expenseBackground,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.only(
+                        topRight: Radius.circular(20),
+                        bottomRight: Radius.circular(20))),
                 label: Text(
                   '${item.totalOutflow.toMoney()}Rs',
+                  style: TextStyle(
+                    fontWeight: FontWeight.w600,
+                    color: PiggyAppTheme.expense,
+                  ),
                 ),
-                backgroundColor: Colors.red.shade100,
               )
             ],
           )

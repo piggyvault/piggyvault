@@ -24,6 +24,7 @@ import 'package:piggy_flutter/widgets/common/common.dart';
 import 'package:piggy_flutter/widgets/common/empty_result_widget.dart';
 import 'package:piggy_flutter/widgets/common/error_display_widget.dart';
 import 'package:piggy_flutter/widgets/common/loading_widget.dart';
+import 'package:piggy_flutter/widgets/common/search_bar.dart';
 import 'package:piggy_flutter/widgets/transaction_list.dart';
 
 import 'account_form.dart';
@@ -226,7 +227,13 @@ class _AccountDetailPageState extends State<AccountDetailPage>
                                         (BuildContext context, int index) {
                                       return Column(
                                         children: <Widget>[
-                                          getSearchBarUI(),
+                                          SearchBar(
+                                            onSearchTextChanged: (txt) {
+                                              accountTransactionsBloc.add(
+                                                  FilterAccountTransactions(
+                                                      txt));
+                                            },
+                                          ),
                                           getTimeDateUI(accountTransactionsBloc,
                                               accountBloc),
                                         ],
@@ -450,84 +457,6 @@ class _AccountDetailPageState extends State<AccountDetailPage>
           },
         )
       ],
-    );
-  }
-
-  Widget getSearchBarUI() {
-    return Padding(
-      padding: const EdgeInsets.only(left: 16, right: 16, top: 8, bottom: 8),
-      child: Row(
-        children: <Widget>[
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.only(right: 16, top: 8, bottom: 8),
-              child: Container(
-                decoration: BoxDecoration(
-                  color: PiggyAppTheme.buildLightTheme().backgroundColor,
-                  borderRadius: const BorderRadius.all(
-                    Radius.circular(38.0),
-                  ),
-                  boxShadow: <BoxShadow>[
-                    BoxShadow(
-                        color: Colors.grey.withOpacity(0.2),
-                        offset: const Offset(0, 2),
-                        blurRadius: 8.0),
-                  ],
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.only(
-                      left: 16, right: 16, top: 4, bottom: 4),
-                  child: TextField(
-                    onChanged: (String txt) {
-                      accountTransactionsBloc
-                          .add(FilterAccountTransactions(txt));
-                    },
-                    style: const TextStyle(
-                      fontSize: 18,
-                    ),
-                    cursorColor: PiggyAppTheme.buildLightTheme().primaryColor,
-                    decoration: InputDecoration(
-                      border: InputBorder.none,
-                      hintText: 'Search...',
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
-          Container(
-            decoration: BoxDecoration(
-              color: PiggyAppTheme.buildLightTheme().primaryColor,
-              borderRadius: const BorderRadius.all(
-                Radius.circular(38.0),
-              ),
-              boxShadow: <BoxShadow>[
-                BoxShadow(
-                    color: Colors.grey.withOpacity(0.4),
-                    offset: const Offset(0, 2),
-                    blurRadius: 8.0),
-              ],
-            ),
-            child: Material(
-              color: Colors.transparent,
-              child: InkWell(
-                borderRadius: const BorderRadius.all(
-                  Radius.circular(32.0),
-                ),
-                onTap: () {
-                  FocusScope.of(context).requestFocus(FocusNode());
-                },
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Icon(FontAwesome5Solid.search_dollar,
-                      size: 20,
-                      color: PiggyAppTheme.buildLightTheme().backgroundColor),
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
     );
   }
 

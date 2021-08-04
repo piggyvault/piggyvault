@@ -155,11 +155,12 @@ class _RecentTransactionsPageState extends State<RecentTransactionsPage>
                                             return Column(
                                               children: <Widget>[
                                                 SearchBar(
-                                                    onSearchTextChanged: (txt) {
-                                                  recentTransactionsBloc.add(
-                                                      FilterRecentTransactions(
-                                                          txt));
-                                                }),
+                                                  onSearchTextChanged: (txt) {
+                                                    recentTransactionsBloc.add(
+                                                        FilterRecentTransactions(
+                                                            txt));
+                                                  },
+                                                ),
                                               ],
                                             );
                                           }, childCount: 1),

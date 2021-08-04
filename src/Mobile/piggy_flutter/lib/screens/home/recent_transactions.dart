@@ -276,8 +276,7 @@ class _RecentTransactionsPageState extends State<RecentTransactionsPage>
                   ],
                 ),
                 child: Padding(
-                  padding: const EdgeInsets.only(
-                      left: 16, right: 16, top: 4, bottom: 4),
+                  padding: const EdgeInsets.only(left: 16, right: 16),
                   child: TextField(
                     onChanged: (String txt) {
                       recentTransactionsBloc.add(FilterRecentTransactions(txt));

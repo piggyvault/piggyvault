@@ -14,6 +14,7 @@ import 'package:piggy_flutter/widgets/common/common.dart';
 import 'package:piggy_flutter/widgets/common/empty_result_widget.dart';
 import 'package:piggy_flutter/widgets/common/error_display_widget.dart';
 import 'package:piggy_flutter/widgets/common/loading_widget.dart';
+import 'package:piggy_flutter/widgets/common/search_bar.dart';
 import 'package:piggy_flutter/widgets/transaction_list.dart';
 
 class RecentTransactionsPage extends StatefulWidget {
@@ -153,7 +154,12 @@ class _RecentTransactionsPageState extends State<RecentTransactionsPage>
                                                   int index) {
                                             return Column(
                                               children: <Widget>[
-                                                getSearchBarUI(),
+                                                SearchBar(
+                                                    onSearchTextChanged: (txt) {
+                                                  recentTransactionsBloc.add(
+                                                      FilterRecentTransactions(
+                                                          txt));
+                                                }),
                                               ],
                                             );
                                           }, childCount: 1),
@@ -252,51 +258,6 @@ class _RecentTransactionsPageState extends State<RecentTransactionsPage>
                 });
           }
         });
-  }
-
-  Widget getSearchBarUI() {
-    return Padding(
-      padding: const EdgeInsets.only(left: 16, right: 16, top: 8, bottom: 8),
-      child: Row(
-        children: <Widget>[
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.only(top: 8, bottom: 8),
-              child: Container(
-                decoration: BoxDecoration(
-                  color: PiggyAppTheme.buildLightTheme().backgroundColor,
-                  borderRadius: const BorderRadius.all(
-                    Radius.circular(38.0),
-                  ),
-                  boxShadow: <BoxShadow>[
-                    BoxShadow(
-                        color: Colors.grey.withOpacity(0.2),
-                        offset: const Offset(0, 2),
-                        blurRadius: 8.0),
-                  ],
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 16, right: 16),
-                  child: TextField(
-                    onChanged: (String txt) {
-                      recentTransactionsBloc.add(FilterRecentTransactions(txt));
-                    },
-                    style: const TextStyle(
-                      fontSize: 18,
-                    ),
-                    cursorColor: PiggyAppTheme.buildLightTheme().primaryColor,
-                    decoration: InputDecoration(
-                      border: InputBorder.none,
-                      hintText: 'Search...',
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
   }
 
   void showDemoDialog({BuildContext context, RecentTransactionsBloc bloc}) {

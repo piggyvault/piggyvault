@@ -47,16 +47,17 @@ High level planned items can be viewed under organization's projects.
   <img src="images/screenshots/06-account-detail-no-transactions.jpg" width="200" />
   <img src="images/screenshots/07-account-details.jpg" width="200" />
   <img src="images/screenshots/08-account-details-popup-menu.jpg" width="200" />
-  <img src="images/screenshots/09-recent.jpg" width="200" />
-  <img src="images/screenshots/10-recent-collapsed.jpg" width="200" />
+  <img src="images/screenshots/09-recent.png" width="200" />
+  <img src="images/screenshots/10-recent-collapsed.png" width="200" />
   <img src="images/screenshots/11-add-transaction.jpg" width="200" />
   <img src="images/screenshots/28-user-profile.png" width="200" />
   <img src="images/screenshots/12-push-notification.jpg" width="200" />
+  <img src="images/screenshots/29-local-reminder.png" width="200" />
   <img src="images/screenshots/13-transaction_details_with_comments.jpg" width="200" />
   <img src="images/screenshots/14-0-categories.png" width="200" />
   <img src="images/screenshots/14-1-category-details.png" width="200" />
   <img src="images/screenshots/14-2-category-edit.png" width="200" />
-  <img src="images/screenshots/15-category-add.jpg" width="200" />
+  <img src="images/screenshots/15-category-add.png" width="200" />
   <img src="images/screenshots/16-drawer.jpg" width="200" />
   <img src="images/screenshots/17-reports-screen.jpg" width="200" />
   <img src="images/screenshots/18-categorywise-accounts-report.jpg" width="200" />

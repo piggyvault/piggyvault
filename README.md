@@ -13,7 +13,9 @@
 [![Technical Debt](https://sonarcloud.io/api/project_badges/measure?project=piggyvault_piggyvault&metric=sqale_index)](https://sonarcloud.io/dashboard?id=piggyvault_piggyvault)
 [![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=piggyvault_piggyvault&metric=vulnerabilities)](https://sonarcloud.io/dashboard?id=piggyvault_piggyvault)
 
-A WORK IN PROGRESS family finance management app.
+A family finance management app.
+
+> Piggy is a side project of [Abhith Rajan](https://www.abhith.net).
 
 ## Technology Stack
 
@@ -23,14 +25,20 @@ A WORK IN PROGRESS family finance management app.
 - Angular
 - MSSQL
 
+> Previously Piggy used to have a functional website with all the features. But the evolution of its mobile app made it redundant. Hence [Abhith](https://www.abhith.net) stopped working on it 🤷, and now the website hosts the APIs only.
+
 ### Mobile
 
 - Flutter
 
+> Piggy is a side project of [Abhith Rajan](https://www.abhith.net), a full-stack dev focussed on different stacks, and flutter is not one of them yet. Hence tons of improvements can be done to the flutter project. If you are a flutter person, have a look at the code and see how you can improve it 🙏.
+
 ## Development Status
 
-Checkout the repository projects tab to see what is planned and what is going on now.
-High level planned items can be viewed under organization's projects.
+Check out the repository projects tab to see what is planned and what is going on now.
+High-level planned items can be viewed under the organization's projects.
+
+> Piggy works fine for [Abhith](https://www.abhith.net) and his family. If you are interested, we may be able to make it work for you too. Let's discuss further in the [discussions](https://github.com/Abhith/abhith.net/discussions).
 
 ## Mobile App Screenshots
 

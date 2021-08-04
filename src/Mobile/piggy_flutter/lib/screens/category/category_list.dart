@@ -57,8 +57,11 @@ class CategoryListPage extends StatelessWidget {
               return MergeSemantics(
                 child: ListTile(
                   leading: CircleAvatar(
-                    child: Icon(deserializeIcon(
-                        Map<String, dynamic>.from(json.decode(category.icon)))),
+                    child: Icon(
+                      deserializeIcon(Map<String, dynamic>.from(
+                          json.decode(category.icon))),
+                      color: PiggyAppTheme.nearlyDarkBlue,
+                    ),
                   ),
                   title: Text(category.name),
                   // subtitle: category.noOfTransactions > 0

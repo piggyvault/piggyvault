@@ -54,18 +54,7 @@ class TitleView extends StatelessWidget {
                       borderRadius: BorderRadius.all(Radius.circular(4.0)),
                       onTap: () async {
                         if (this.onPress != null) {
-                          // setState(() {
-                          //   pressed = true;
-                          // });
                           await this.onPress();
-                          // Future.delayed(
-                          //   Duration(milliseconds: 150),
-                          //   () {
-                          //     setState(() {
-                          //       pressed = false;
-                          //     });
-                          //   },
-                          // );
                         }
                       },
                       child: Padding(

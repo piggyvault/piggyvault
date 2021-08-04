@@ -23,8 +23,6 @@ class PiggyAppTheme {
 
   static const Color expense = Color.fromARGB(255, 255, 108, 109);
   static const Color expenseBackground = Color.fromARGB(255, 254, 239, 249);
-  static const Color transfer = Color(0xfffdeef5);
-  static const Color transferBackground = Color(0xfffdeef5);
   static const Color income = Color.fromARGB(255, 90, 196, 109);
   static const Color incomeBackground = Color.fromARGB(255, 235, 251, 238);
 

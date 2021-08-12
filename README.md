@@ -33,6 +33,10 @@ A family finance management app.
 
 > Piggy is a side project of [Abhith Rajan](https://www.abhith.net), a full-stack dev focussed on different stacks, and flutter is not one of them yet. Hence tons of improvements can be done to the flutter project. If you are a flutter person, have a look at the code and see how you can improve it 🙏.
 
+## Setup Guide
+
+Refer the steps [here](docs/SETUP_GUIDE.md).
+
 ## Development Status
 
 Check out the repository projects tab to see what is planned and what is going on now.

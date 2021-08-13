@@ -1,11 +1,11 @@
 ﻿using Newtonsoft.Json;
-using System.Linq;
 using System.IO;
-
+using System.Linq;
 
 namespace Piggyvault.EntityFrameworkCore.Seed.Host
 {
     using Piggyvault.Piggy.Currencies;
+    using System;
 
     public class InitialCurrenciesCreator
     {
@@ -24,8 +24,9 @@ namespace Piggyvault.EntityFrameworkCore.Seed.Host
                 return;
             }
 
-            using (StreamReader r = new StreamReader("Seed/currencies.json"))
+            try
             {
+                using StreamReader r = new StreamReader("Seed/currencies.json");
                 string json = r.ReadToEnd();
                 dynamic array = JsonConvert.DeserializeObject(json);
 
@@ -50,6 +51,11 @@ namespace Piggyvault.EntityFrameworkCore.Seed.Host
                         this._context.SaveChanges();
                     }
                 }
+            }
+            catch (DirectoryNotFoundException ex)
+            {
+                // ! json file is located under Migrator project hence will fail when seed initiated from other projects.
+                Console.WriteLine("Skipping currencies seeding since data source not found.");
             }
         }
     }

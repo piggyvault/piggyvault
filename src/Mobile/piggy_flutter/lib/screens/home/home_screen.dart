@@ -165,7 +165,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     OneSignal.shared
         .setNotificationOpenedHandler((OSNotificationOpenedResult result) {
       final Map<String, dynamic> transactionData =
-          result.notification.payload.additionalData;
+          result.notification.additionalData;
 
       try {
         final Transaction transaction = Transaction(

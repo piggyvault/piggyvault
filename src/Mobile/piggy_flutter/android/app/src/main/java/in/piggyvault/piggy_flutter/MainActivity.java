@@ -15,19 +15,6 @@ public class MainActivity extends FlutterActivity {
   private String sharedText;
   private static final String CHANNEL = "app.channel.shared.data";
 
-  @Override
-  protected void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    Intent intent = getIntent();
-    String action = intent.getAction();
-    String type = intent.getType();
-
-    if (Intent.ACTION_SEND.equals(action) && type != null) {
-      if ("text/plain".equals(type)) {
-        handleSendText(intent); // Handle text being sent
-      }
-    }
-  }
 
   @Override
   public void configureFlutterEngine(@NonNull FlutterEngine flutterEngine) {

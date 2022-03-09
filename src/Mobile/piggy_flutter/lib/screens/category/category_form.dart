@@ -38,7 +38,7 @@ class CategoryFormPageState extends State<CategoryFormPage> {
 
   _pickIcon() async {
     IconData icon = await FlutterIconPicker.showIconPicker(context,
-        iconPackMode: IconPack.fontAwesomeIcons);
+        iconPackModes: [IconPack.fontAwesomeIcons]);
 
     if (icon != null) {
       _icon = Icon(icon);

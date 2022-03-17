@@ -47,7 +47,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         await OneSignal.shared
             .sendTag('tenancyName', event.tenancyName.trim().toLowerCase());
       } catch (e) {
-        print(e);
+        // print(e);
       }
 
       final LoginInformationResult result =
@@ -65,7 +65,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       try {
         await OneSignal.shared.deleteTag('tenancyName');
       } catch (error) {
-        print(error);
+        // print(error);
       }
       await userRepository.deleteToken();
       yield AuthUnauthenticated();

@@ -35,6 +35,5 @@ jobs:
         with:
           channel: 'stable'
       - run: flutter pub get
-        working-directory: ./temp
       #- run: flutter test
       - run: flutter build apk --no-tree-shake-icons

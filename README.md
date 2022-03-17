@@ -1,7 +1,10 @@
 # Piggy
 
-[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fpiggyvault%2Fpiggyvault.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fpiggyvault%2Fpiggyvault?ref=badge_shield)
+[![Flutter](https://github.com/piggyvault/piggyvault/actions/workflows/flutter.yml/badge.svg)](https://github.com/piggyvault/piggyvault/actions/workflows/flutter.yml)
+[![.NET](https://github.com/piggyvault/piggyvault/actions/workflows/dotnet.yml/badge.svg)](https://github.com/piggyvault/piggyvault/actions/workflows/dotnet.yml)
+[![Angular CI](https://github.com/piggyvault/piggyvault/actions/workflows/angular-ci.yml/badge.svg)](https://github.com/piggyvault/piggyvault/actions/workflows/angular-ci.yml)
 ![Discord](https://img.shields.io/discord/644203940027695132)
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fpiggyvault%2Fpiggyvault.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fpiggyvault%2Fpiggyvault?ref=badge_shield)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=piggyvault_piggyvault&metric=alert_status)](https://sonarcloud.io/dashboard?id=piggyvault_piggyvault)
 [![Bugs](https://sonarcloud.io/api/project_badges/measure?project=piggyvault_piggyvault&metric=bugs)](https://sonarcloud.io/dashboard?id=piggyvault_piggyvault)
 [![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=piggyvault_piggyvault&metric=code_smells)](https://sonarcloud.io/dashboard?id=piggyvault_piggyvault)

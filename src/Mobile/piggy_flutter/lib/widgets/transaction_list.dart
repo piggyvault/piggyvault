@@ -3,7 +3,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_iconpicker/flutter_iconpicker.dart';
+// import 'package:flutter_iconpicker/flutter_iconpicker.dart';
 import 'package:intl/intl.dart';
 import 'package:piggy_flutter/blocs/transaction_detail/bloc.dart';
 import 'package:piggy_flutter/models/transaction.dart';
@@ -117,12 +117,12 @@ class TransactionList extends StatelessWidget {
         dense: true,
         leading: CircleAvatar(
           radius: 25,
-          child: Icon(
-              deserializeIcon(Map<String, dynamic>.from(
-                  json.decode(transaction.categoryIcon))),
-              color: transaction.amount > 0
-                  ? PiggyAppTheme.income
-                  : PiggyAppTheme.expense),
+          // child: Icon(
+          //     deserializeIcon(Map<String, dynamic>.from(
+          //         json.decode(transaction.categoryIcon))),
+          //     color: transaction.amount > 0
+          //         ? PiggyAppTheme.income
+          //         : PiggyAppTheme.expense),
           backgroundColor: transaction.amount > 0
               ? PiggyAppTheme.incomeBackground
               : PiggyAppTheme.expenseBackground,

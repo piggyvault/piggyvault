@@ -12,39 +12,24 @@ import io.flutter.plugins.GeneratedPluginRegistrant;
 
 public class MainActivity extends FlutterActivity {
 
-  private String sharedText;
-  private static final String CHANNEL = "app.channel.shared.data";
+    private String sharedText;
+    private static final String CHANNEL = "app.channel.shared.data";
 
-  @Override
-  protected void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    Intent intent = getIntent();
-    String action = intent.getAction();
-    String type = intent.getType();
+    @Override
+    public void configureFlutterEngine(@NonNull FlutterEngine flutterEngine) {
+        GeneratedPluginRegistrant.registerWith(flutterEngine);
 
-    if (Intent.ACTION_SEND.equals(action) && type != null) {
-      if ("text/plain".equals(type)) {
-        handleSendText(intent); // Handle text being sent
-      }
+        new MethodChannel(flutterEngine.getDartExecutor().getBinaryMessenger(), CHANNEL)
+                .setMethodCallHandler(
+                        (call, result) -> {
+                            if (call.method.contentEquals("getSharedText")) {
+                                result.success(sharedText);
+                                sharedText = null;
+                            }
+                        });
     }
-  }
 
-  @Override
-  public void configureFlutterEngine(@NonNull FlutterEngine flutterEngine) {
-      GeneratedPluginRegistrant.registerWith(flutterEngine);
-
-      new MethodChannel(flutterEngine.getDartExecutor().getBinaryMessenger(), CHANNEL)
-              .setMethodCallHandler(
-                      (call, result) -> {
-                          if (call.method.contentEquals("getSharedText")) {
-                              result.success(sharedText);
-                              sharedText = null;
-                          }
-                      }
-              );
-  }
-
-  void handleSendText(Intent intent) {
-    sharedText = intent.getStringExtra(Intent.EXTRA_TEXT);
-  }
+    void handleSendText(Intent intent) {
+        sharedText = intent.getStringExtra(Intent.EXTRA_TEXT);
+    }
 }

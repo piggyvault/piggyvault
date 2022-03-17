@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_iconpicker/flutter_iconpicker.dart';
+// import 'package:flutter_iconpicker/flutter_iconpicker.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:piggy_flutter/blocs/categories/categories.dart';
 import 'package:piggy_flutter/models/category.dart';
@@ -37,13 +37,13 @@ class CategoryFormPageState extends State<CategoryFormPage> {
   Icon _icon;
 
   _pickIcon() async {
-    IconData icon = await FlutterIconPicker.showIconPicker(context,
-        iconPackMode: IconPack.fontAwesomeIcons);
+    // IconData icon = await FlutterIconPicker.showIconPicker(context,
+    //     iconPackModes: [IconPack.fontAwesomeIcons]);
 
-    if (icon != null) {
-      _icon = Icon(icon);
-      setState(() {});
-    }
+    // if (icon != null) {
+    //   _icon = Icon(icon);
+    //   setState(() {});
+    // }
   }
 
   @override
@@ -52,14 +52,14 @@ class CategoryFormPageState extends State<CategoryFormPage> {
 
     if (widget.category == null) {
       _categorynameFieldController = TextEditingController();
-      _icon = Icon(deserializeIcon(Map<String, dynamic>.from(
-          json.decode('{"pack":"fontAwesomeIcons","key":"question"}'))));
+      // _icon = Icon(deserializeIcon(Map<String, dynamic>.from(
+      //     json.decode('{"pack":"fontAwesomeIcons","key":"question"}'))));
       setState(() {});
     } else {
       _categorynameFieldController =
           TextEditingController(text: widget.category.name);
-      _icon = Icon(deserializeIcon(
-          Map<String, dynamic>.from(json.decode(widget.category.icon))));
+      // _icon = Icon(deserializeIcon(
+      //     Map<String, dynamic>.from(json.decode(widget.category.icon))));
     }
   }
 
@@ -187,7 +187,7 @@ class CategoryFormPageState extends State<CategoryFormPage> {
 
     category.name = _categorynameFieldController.text;
     if (_icon != null) {
-      category.icon = json.encode(serializeIcon(_icon.icon));
+      // category.icon = json.encode(serializeIcon(_icon.icon));
     }
     widget.categoriesBloc.add(CategorySave(category: category));
   }

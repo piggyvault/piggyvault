@@ -36,29 +36,24 @@ if (flutterVersionName == null) {
 }
 
 apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
 android {
-    compileSdkVersion 29
+    compileSdkVersion flutter.compileSdkVersion
 
-    lintOptions {
-        disable 'InvalidPackage'
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
-
-    // TODO(abhith) : use secrets for onesignal app id
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId "in.piggyvault.piggyflutter"
-        minSdkVersion 16
-        targetSdkVersion 29
+        applicationId "in.piggyvault.piggy_flutter"
+        minSdkVersion flutter.minSdkVersion
+        targetSdkVersion flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
-        manifestPlaceholders = [
-          onesignal_app_id: '9bf198c9-442b-4619-b5c9-759fc250f15b',
-          // Project number pulled from dashboard, local value is ignored.
-          onesignal_google_project_number: 'REMOTE'
-      ]
     }
 
     buildTypes {

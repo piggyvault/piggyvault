@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_iconpicker/flutter_iconpicker.dart';
+// import 'package:flutter_iconpicker/flutter_iconpicker.dart';
 import 'package:piggy_flutter/blocs/categories/categories.dart';
 import 'package:piggy_flutter/models/category.dart';
 import 'package:piggy_flutter/repositories/repositories.dart';
@@ -57,12 +57,12 @@ class CategoryListPage extends StatelessWidget {
               return MergeSemantics(
                 child: ListTile(
                   leading: CircleAvatar(
-                    child: Icon(
-                      deserializeIcon(Map<String, dynamic>.from(
-                          json.decode(category.icon))),
-                      color: PiggyAppTheme.nearlyDarkBlue,
-                    ),
-                  ),
+                      // child: Icon(
+                      //   deserializeIcon(Map<String, dynamic>.from(
+                      //       json.decode(category.icon))),
+                      //   color: PiggyAppTheme.nearlyDarkBlue,
+                      // ),
+                      ),
                   title: Text(category.name),
                   // subtitle: category.noOfTransactions > 0
                   //     ? Text(

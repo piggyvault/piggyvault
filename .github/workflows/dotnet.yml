@@ -3,8 +3,12 @@ name: .NET
 on:
   push:
     branches: [ main ]
+    paths:
+      - './src/Web/aspnet-core/**'
   pull_request:
     branches: [ main ]
+    paths:
+      - './src/Web/aspnet-core/**'
 
 jobs:
   build:

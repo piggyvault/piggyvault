@@ -12,26 +12,24 @@ import io.flutter.plugins.GeneratedPluginRegistrant;
 
 public class MainActivity extends FlutterActivity {
 
-  private String sharedText;
-  private static final String CHANNEL = "app.channel.shared.data";
+    private String sharedText;
+    private static final String CHANNEL = "app.channel.shared.data";
 
+    @Override
+    public void configureFlutterEngine(@NonNull FlutterEngine flutterEngine) {
+        GeneratedPluginRegistrant.registerWith(flutterEngine);
 
-  @Override
-  public void configureFlutterEngine(@NonNull FlutterEngine flutterEngine) {
-      GeneratedPluginRegistrant.registerWith(flutterEngine);
+        new MethodChannel(flutterEngine.getDartExecutor().getBinaryMessenger(), CHANNEL)
+                .setMethodCallHandler(
+                        (call, result) -> {
+                            if (call.method.contentEquals("getSharedText")) {
+                                result.success(sharedText);
+                                sharedText = null;
+                            }
+                        });
+    }
 
-      new MethodChannel(flutterEngine.getDartExecutor().getBinaryMessenger(), CHANNEL)
-              .setMethodCallHandler(
-                      (call, result) -> {
-                          if (call.method.contentEquals("getSharedText")) {
-                              result.success(sharedText);
-                              sharedText = null;
-                          }
-                      }
-              );
-  }
-
-  void handleSendText(Intent intent) {
-    sharedText = intent.getStringExtra(Intent.EXTRA_TEXT);
-  }
+    void handleSendText(Intent intent) {
+        sharedText = intent.getStringExtra(Intent.EXTRA_TEXT);
+    }
 }

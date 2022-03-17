@@ -146,7 +146,7 @@ Future<void> _scheduleReminderNotification() async {
       tz.TZDateTime.now(tz.local).add(const Duration(days: 1)),
       const NotificationDetails(
           android: AndroidNotificationDetails('Reminder', 'Reminder',
-              'To remind you about saving transactions')),
+              channelDescription: 'To remind you about saving transactions')),
       androidAllowWhileIdle: true,
       uiLocalNotificationDateInterpretation:
           UILocalNotificationDateInterpretation.absoluteTime);

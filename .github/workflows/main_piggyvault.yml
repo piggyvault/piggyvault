@@ -7,6 +7,8 @@ on:
   push:
     branches:
       - main
+    paths:
+      - './src/Web/aspnet-core/**'
   workflow_dispatch:
 
 jobs:

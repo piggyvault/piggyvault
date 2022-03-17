@@ -48,7 +48,7 @@ class AccountTransactionsBloc
         yield AccountTransactionsError(event.input);
       }
     } else if (event is FilterAccountTransactions) {
-      if (this.state is AccountTransactionsLoaded) {
+      if (state is AccountTransactionsLoaded) {
         if (event.query == null || event.query == "") {
           yield AccountTransactionsLoaded(
               allAccountTransactions:

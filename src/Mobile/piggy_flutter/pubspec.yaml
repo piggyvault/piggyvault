@@ -43,7 +43,7 @@ dependencies:
   styled_widget: ^0.2.2
   flutter_local_notifications: ^6.0.0
   flutter_native_timezone: ^1.0.10
-  flutter_iconpicker: ^3.1.2
+  # flutter_iconpicker: ^3.1.2
   font_awesome_flutter: ^9.1.0
 dev_dependencies:
   flutter_test:

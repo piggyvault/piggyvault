@@ -7,11 +7,11 @@ on:
   push:
     branches: [ main ]
     paths:
-      - './src/Web/angular/**'
+      - 'src/Web/angular/**'
   pull_request:
     branches: [ main ]
     paths:
-      - './src/Web/angular/**'
+      - 'src/Web/angular/**'
 
 jobs:
   build:

@@ -8,7 +8,7 @@ on:
     branches:
       - main
     paths:
-      - './src/Web/aspnet-core/**'
+      - 'src/Web/aspnet-core/**'
   workflow_dispatch:
 
 jobs:

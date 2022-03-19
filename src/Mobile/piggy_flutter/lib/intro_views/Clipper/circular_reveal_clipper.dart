@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 /// Custom clipper for circular page reveal.
 
 class CircularRevealClipper extends CustomClipper<Rect> {
-  final double revealPercent;
+  final double? revealPercent;
 
   CircularRevealClipper({this.revealPercent});
 
@@ -18,7 +18,7 @@ class CircularRevealClipper extends CustomClipper<Rect> {
     double theta = atan(center.dy / center.dx);
     final distanceToCorner = center.dy / sin(theta);
 
-    final radius = distanceToCorner * revealPercent;
+    final radius = distanceToCorner * revealPercent!;
     final diameter = 2 * radius;
 
     return new Rect.fromLTWH(

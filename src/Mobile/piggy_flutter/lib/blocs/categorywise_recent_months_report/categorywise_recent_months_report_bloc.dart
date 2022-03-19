@@ -7,7 +7,7 @@ import './bloc.dart';
 
 class CategorywiseRecentMonthsReportBloc extends Bloc<
     CategorywiseRecentMonthsReportEvent, CategorywiseRecentMonthsReportState> {
-  CategorywiseRecentMonthsReportBloc({@required this.reportRepository})
+  CategorywiseRecentMonthsReportBloc({required this.reportRepository})
       : assert(reportRepository != null),
         super(CategorywiseRecentMonthsReportLoading());
 

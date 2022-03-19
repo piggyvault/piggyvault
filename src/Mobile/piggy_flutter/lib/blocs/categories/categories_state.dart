@@ -27,7 +27,7 @@ class CategorySaved extends CategoriesState {}
 class CategorySaveFailure extends CategoriesState {
   final String errorMessage;
 
-  CategorySaveFailure({@required this.errorMessage});
+  CategorySaveFailure({required this.errorMessage});
 
   @override
   String toString() => 'CategoriesFailure { error: $errorMessage }';

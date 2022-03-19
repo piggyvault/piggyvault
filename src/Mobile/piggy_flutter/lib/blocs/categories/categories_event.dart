@@ -12,7 +12,7 @@ abstract class CategoriesEvent extends Equatable {
 class CategoriesLoad extends CategoriesEvent {}
 
 class CategorySave extends CategoriesEvent {
-  const CategorySave({@required this.category}) : assert(category != null);
+  const CategorySave({required this.category}) : assert(category != null);
 
   final Category category;
 

@@ -5,25 +5,25 @@ import 'package:piggy_flutter/theme/theme.dart';
 import 'package:piggy_flutter/utils/common.dart';
 
 class OverallView extends StatelessWidget {
-  final AnimationController animationController;
-  final Animation animation;
+  final AnimationController? animationController;
+  final Animation? animation;
 
-  const OverallView({Key key, this.animationController, this.animation})
+  const OverallView({Key? key, this.animationController, this.animation})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return AnimatedBuilder(
-      animation: animationController,
-      builder: (BuildContext context, Widget child) {
+      animation: animationController!,
+      builder: (BuildContext context, Widget? child) {
         return BlocBuilder<TransactionSummaryBloc, TransactionSummaryState>(
             builder: (context, state) {
           if (state is TransactionSummaryLoaded) {
             return FadeTransition(
-              opacity: animation,
-              child: new Transform(
-                transform: new Matrix4.translationValues(
-                    0.0, 30 * (1.0 - animation.value), 0.0),
+              opacity: animation as Animation<double>,
+              child: Transform(
+                transform: Matrix4.translationValues(
+                    0.0, 30 * (1.0 - animation!.value), 0.0),
                 child: Padding(
                   padding: const EdgeInsets.only(
                       left: 24, right: 24, top: 16, bottom: 18),
@@ -78,9 +78,9 @@ class OverallView extends StatelessWidget {
                                         padding: const EdgeInsets.only(
                                             left: 4, bottom: 3),
                                         child: Text(
-                                          '${state.summary.userNetWorth.toMoney()}',
+                                          state.summary.userNetWorth.toMoney(),
                                           textAlign: TextAlign.center,
-                                          style: TextStyle(
+                                          style: const TextStyle(
                                             fontFamily: PiggyAppTheme.fontName,
                                             fontWeight: FontWeight.w600,
                                             fontSize: 32,
@@ -92,9 +92,9 @@ class OverallView extends StatelessWidget {
                                         padding: const EdgeInsets.only(
                                             left: 8, bottom: 8),
                                         child: Text(
-                                          state.summary.currencySymbol,
+                                          state.summary.currencySymbol!,
                                           textAlign: TextAlign.center,
-                                          style: TextStyle(
+                                          style: const TextStyle(
                                             fontFamily: PiggyAppTheme.fontName,
                                             fontWeight: FontWeight.w500,
                                             fontSize: 18,
@@ -115,7 +115,7 @@ class OverallView extends StatelessWidget {
                               left: 24, right: 24, top: 8, bottom: 8),
                           child: Container(
                             height: 2,
-                            decoration: BoxDecoration(
+                            decoration: const BoxDecoration(
                               color: PiggyAppTheme.background,
                               borderRadius:
                                   BorderRadius.all(Radius.circular(4.0)),
@@ -135,7 +135,7 @@ class OverallView extends StatelessWidget {
                                     Text(
                                       '${state.summary.tenantNetWorth.toMoney()} ${state.summary.currencySymbol}',
                                       textAlign: TextAlign.center,
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                         fontFamily: PiggyAppTheme.fontName,
                                         fontWeight: FontWeight.w500,
                                         fontSize: 16,
@@ -172,9 +172,11 @@ class OverallView extends StatelessWidget {
                                           CrossAxisAlignment.center,
                                       children: <Widget>[
                                         Text(
-                                          '${state.summary.totalFamilyTransactionsCount.toString()}',
+                                          state.summary
+                                              .totalFamilyTransactionsCount
+                                              .toString(),
                                           textAlign: TextAlign.center,
-                                          style: TextStyle(
+                                          style: const TextStyle(
                                             fontFamily: PiggyAppTheme.fontName,
                                             fontWeight: FontWeight.w500,
                                             fontSize: 16,
@@ -215,8 +217,8 @@ class OverallView extends StatelessWidget {
                                           CrossAxisAlignment.end,
                                       children: <Widget>[
                                         Text(
-                                          state.summary.networthPercentage,
-                                          style: TextStyle(
+                                          state.summary.networthPercentage!,
+                                          style: const TextStyle(
                                             fontFamily: PiggyAppTheme.fontName,
                                             fontWeight: FontWeight.w500,
                                             fontSize: 16,
@@ -256,12 +258,12 @@ class OverallView extends StatelessWidget {
             );
           }
           if (state is TransactionSummaryLoading) {
-            return Center(
+            return const Center(
               child: CircularProgressIndicator(),
             );
           }
 
-          return Center(
+          return const Center(
             child: Text('---'),
           );
         });

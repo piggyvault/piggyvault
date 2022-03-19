@@ -2,7 +2,7 @@ import 'package:flutter/widgets.dart';
 
 class AccountFormModel {
   AccountFormModel(
-      {@required this.id, this.name, this.currencyId, this.accountTypeId});
+      {required this.id, this.name, this.currencyId, this.accountTypeId});
 
   AccountFormModel.fromJson(Map<String, dynamic> json)
       : id = json['id'],
@@ -10,9 +10,9 @@ class AccountFormModel {
         currencyId = json['currencyId'],
         accountTypeId = json['accountTypeId'];
 
-  final String id;
-  String name;
-  int currencyId, accountTypeId;
+  final String? id;
+  String? name;
+  int? currencyId, accountTypeId;
 
   @override
   String toString() {

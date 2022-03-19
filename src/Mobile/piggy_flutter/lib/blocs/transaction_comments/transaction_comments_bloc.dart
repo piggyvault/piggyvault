@@ -8,7 +8,7 @@ class TransactionCommentsBloc
     extends Bloc<TransactionCommentsEvent, TransactionCommentsState> {
   final TransactionRepository transactionRepository;
 
-  TransactionCommentsBloc({@required this.transactionRepository})
+  TransactionCommentsBloc({required this.transactionRepository})
       : assert(transactionRepository != null),
         super(TransactionCommentsLoading());
 

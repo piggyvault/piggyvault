@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:piggy_flutter/blocs/auth/auth.dart';
 import 'package:piggy_flutter/blocs/transaction/transaction.dart';
 import 'package:piggy_flutter/blocs/transaction_detail/bloc.dart';
@@ -12,39 +11,36 @@ import 'package:piggy_flutter/repositories/repositories.dart';
 class TransactionSummaryBloc
     extends Bloc<TransactionSummaryEvent, TransactionSummaryState> {
   final AuthBloc authBloc;
-  StreamSubscription authBlocSubscription;
+  late StreamSubscription authBlocSubscription;
 
   final TransactionBloc transactionsBloc;
-  StreamSubscription transactionBlocSubscription;
+  late StreamSubscription transactionBlocSubscription;
 
   final TransactionDetailBloc transactionDetailBloc;
-  StreamSubscription transactionDetailBlocSubscription;
+  late StreamSubscription transactionDetailBlocSubscription;
 
   final TransactionRepository transactionRepository;
 
   TransactionSummaryBloc(
-      {@required this.transactionRepository,
-      @required this.authBloc,
-      @required this.transactionsBloc,
-      @required this.transactionDetailBloc})
-      : assert(transactionRepository != null),
-        assert(authBloc != null),
-        assert(transactionsBloc != null),
-        assert(transactionDetailBloc != null),
-        super(TransactionSummaryEmpty()) {
-    authBlocSubscription = authBloc.listen((state) {
+      {required this.transactionRepository,
+      required this.authBloc,
+      required this.transactionsBloc,
+      required this.transactionDetailBloc})
+      : super(TransactionSummaryEmpty()) {
+    authBlocSubscription = authBloc.stream.listen((state) {
       if (state is AuthAuthenticated) {
         add(RefreshTransactionSummary());
       }
     });
 
-    transactionBlocSubscription = transactionsBloc.listen((state) {
+    transactionBlocSubscription = transactionsBloc.stream.listen((state) {
       if (state is TransactionSaved) {
         add(RefreshTransactionSummary());
       }
     });
 
-    transactionDetailBlocSubscription = transactionDetailBloc.listen((state) {
+    transactionDetailBlocSubscription =
+        transactionDetailBloc.stream.listen((state) {
       if (state is TransactionDeleted) {
         add(RefreshTransactionSummary());
       }

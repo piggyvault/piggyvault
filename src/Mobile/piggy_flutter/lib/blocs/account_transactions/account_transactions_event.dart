@@ -11,7 +11,7 @@ abstract class AccountTransactionsEvent extends Equatable {
 class FetchAccountTransactions extends AccountTransactionsEvent {
   final GetTransactionsInput input;
 
-  FetchAccountTransactions({@required this.input}) : assert(input != null);
+  FetchAccountTransactions({required this.input}) : assert(input != null);
 
   @override
   List<Object> get props => [input];

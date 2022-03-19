@@ -9,7 +9,7 @@ class PostTransactionComment extends TransactionCommentsEvent {
   final String transactionId;
   final String comment;
 
-  PostTransactionComment({@required this.comment, @required this.transactionId})
+  PostTransactionComment({required this.comment, required this.transactionId})
       : assert(transactionId != null),
         assert(comment != null);
 
@@ -20,7 +20,7 @@ class PostTransactionComment extends TransactionCommentsEvent {
 class LoadTransactionComments extends TransactionCommentsEvent {
   final String transactionId;
 
-  LoadTransactionComments({@required this.transactionId})
+  LoadTransactionComments({required this.transactionId})
       : assert(transactionId != null);
 
   @override

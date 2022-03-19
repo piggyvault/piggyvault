@@ -16,7 +16,7 @@ class TransactionSummaryLoading extends TransactionSummaryState {}
 class TransactionSummaryLoaded extends TransactionSummaryState {
   final TransactionSummary summary;
 
-  const TransactionSummaryLoaded({@required this.summary})
+  const TransactionSummaryLoaded({required this.summary})
       : assert(summary != null);
   @override
   List<Object> get props => ([summary]);

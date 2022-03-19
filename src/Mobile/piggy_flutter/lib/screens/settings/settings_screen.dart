@@ -12,9 +12,9 @@ import 'package:piggy_flutter/theme/theme.dart';
 import 'package:piggy_flutter/widgets/common/common.dart';
 
 class SettingsScreen extends StatefulWidget {
-  final AnimationController animationController;
+  final AnimationController? animationController;
 
-  const SettingsScreen({Key key, @required this.animationController})
+  const SettingsScreen({Key? key, required this.animationController})
       : super(key: key);
 
   @override
@@ -23,26 +23,26 @@ class SettingsScreen extends StatefulWidget {
 
 class _SettingsScreenState extends State<SettingsScreen>
     with TickerProviderStateMixin {
-  Animation<double> topBarAnimation;
+  late Animation<double> topBarAnimation;
   double topBarOpacity = 0.0;
-  Animation<double> bodyAnimation;
+  Animation<double>? bodyAnimation;
   List<Widget> listViews = <Widget>[];
   final ScrollController scrollController = ScrollController();
 
-  SettingsBloc settingsBloc;
+  SettingsBloc? settingsBloc;
 
   @override
   void initState() {
     topBarAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(
-        parent: widget.animationController,
+        parent: widget.animationController!,
         curve: Interval(0, 0.5, curve: Curves.fastOutSlowIn),
       ),
     );
 
     bodyAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(
-        parent: widget.animationController,
+        parent: widget.animationController!,
         curve: Interval(0.5, 1.0, curve: Curves.fastOutSlowIn),
       ),
     );
@@ -108,8 +108,8 @@ class _SettingsScreenState extends State<SettingsScreen>
 
     listViews.add(
       BlocBuilder(
-        cubit: settingsBloc,
-        builder: (context, state) {
+        bloc: settingsBloc,
+        builder: (context, dynamic state) {
           return TitleView(
             titleTxt: 'Default Currency',
             subTxt: state is SettingsLoaded
@@ -117,7 +117,7 @@ class _SettingsScreenState extends State<SettingsScreen>
                 : "loading...",
             animation: Tween<double>(begin: 0.0, end: 1.0).animate(
               CurvedAnimation(
-                parent: widget.animationController,
+                parent: widget.animationController!,
                 curve:
                     Interval((1 / count) * 0, 1.0, curve: Curves.fastOutSlowIn),
               ),
@@ -146,7 +146,7 @@ class _SettingsScreenState extends State<SettingsScreen>
         titleTxt: "Notifications",
         subTxt: "Manage",
         animation: Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
-            parent: widget.animationController,
+            parent: widget.animationController!,
             curve:
                 Interval((1 / count) * 0, 1.0, curve: Curves.fastOutSlowIn))),
         animationController: widget.animationController,
@@ -178,7 +178,7 @@ class _SettingsScreenState extends State<SettingsScreen>
             itemCount: listViews.length,
             scrollDirection: Axis.vertical,
             itemBuilder: (BuildContext context, int index) {
-              widget.animationController.forward();
+              widget.animationController!.forward();
               return listViews[index];
             },
           );
@@ -191,8 +191,8 @@ class _SettingsScreenState extends State<SettingsScreen>
     return Column(
       children: <Widget>[
         AnimatedBuilder(
-          animation: widget.animationController,
-          builder: (BuildContext context, Widget child) {
+          animation: widget.animationController!,
+          builder: (BuildContext context, Widget? child) {
             return FadeTransition(
               opacity: topBarAnimation,
               child: Transform(

@@ -17,10 +17,10 @@ import 'categorywise_accounts_list.dart';
 
 class CategorywiseAccountsReportScreen extends StatefulWidget {
   const CategorywiseAccountsReportScreen(
-      {Key key, @required this.animationController})
+      {Key? key, required this.animationController})
       : super(key: key);
 
-  final AnimationController animationController;
+  final AnimationController? animationController;
 
   @override
   _CategorywiseAccountsReportScreenState createState() =>
@@ -30,15 +30,15 @@ class CategorywiseAccountsReportScreen extends StatefulWidget {
 class _CategorywiseAccountsReportScreenState
     extends State<CategorywiseAccountsReportScreen>
     with TickerProviderStateMixin {
-  Animation<double> topBarAnimation;
-  Animation<double> listAnimation;
+  late Animation<double> topBarAnimation;
+  late Animation<double> listAnimation;
 
   final ScrollController scrollController = ScrollController();
   double topBarOpacity = 0.0;
 
   List<Widget> listViews = <Widget>[];
 
-  CategorywiseAccountsReportBloc reportBloc;
+  CategorywiseAccountsReportBloc? reportBloc;
   DateTime endDate = DateTime.now();
   DateTime startDate = DateTime.utc(DateTime.now().year, 1, 1);
 
@@ -46,18 +46,18 @@ class _CategorywiseAccountsReportScreenState
   void initState() {
     reportBloc = CategorywiseAccountsReportBloc(
         reportRepository: RepositoryProvider.of<ReportRepository>(context));
-    reportBloc.add(CategorywiseAccountsReportLoad(
+    reportBloc!.add(CategorywiseAccountsReportLoad(
         input: GetCategoryReportInput(startDate: startDate, endDate: endDate)));
 
     topBarAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(
-        parent: widget.animationController,
+        parent: widget.animationController!,
         curve: Interval(0, 0.5, curve: Curves.fastOutSlowIn),
       ),
     );
 
     listAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
-        parent: widget.animationController,
+        parent: widget.animationController!,
         curve: Interval(0.5, 1.0, curve: Curves.fastOutSlowIn)));
 
     scrollController.addListener(() {
@@ -114,10 +114,10 @@ class _CategorywiseAccountsReportScreenState
         if (!snapshot.hasData) {
           return const SizedBox();
         } else {
-          widget.animationController.forward();
+          widget.animationController!.forward();
           return AnimatedBuilder(
-            animation: widget.animationController,
-            builder: (BuildContext context, Widget child) {
+            animation: widget.animationController!,
+            builder: (BuildContext context, Widget? child) {
               return FadeTransition(
                 opacity: listAnimation,
                 child: Transform(
@@ -162,7 +162,7 @@ class _CategorywiseAccountsReportScreenState
                                 child: BlocBuilder<
                                     CategorywiseAccountsReportBloc,
                                     CategorywiseAccountsReportState>(
-                                  cubit: reportBloc,
+                                  bloc: reportBloc,
                                   builder: (BuildContext context,
                                       CategorywiseAccountsReportState state) {
                                     return SafeArea(
@@ -438,7 +438,7 @@ class _CategorywiseAccountsReportScreenState
     );
   }
 
-  void showDemoDialog({BuildContext context}) {
+  void showDemoDialog({required BuildContext context}) {
     showDialog<dynamic>(
       context: context,
       builder: (BuildContext context) => CalendarPopupView(
@@ -454,7 +454,7 @@ class _CategorywiseAccountsReportScreenState
               endDate = endData;
             }
           });
-          reportBloc.add(
+          reportBloc!.add(
             CategorywiseAccountsReportLoad(
               input: GetCategoryReportInput(
                 startDate: startDate,
@@ -472,8 +472,8 @@ class _CategorywiseAccountsReportScreenState
     return Column(
       children: <Widget>[
         AnimatedBuilder(
-          animation: widget.animationController,
-          builder: (BuildContext context, Widget child) {
+          animation: widget.animationController!,
+          builder: (BuildContext context, Widget? child) {
             return FadeTransition(
               opacity: topBarAnimation,
               child: Transform(

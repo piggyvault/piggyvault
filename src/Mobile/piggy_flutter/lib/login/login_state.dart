@@ -15,7 +15,7 @@ class LoginLoading extends LoginState {}
 class LoginFailure extends LoginState {
   final String errorMessage;
 
-  LoginFailure({@required this.errorMessage});
+  LoginFailure({required this.errorMessage});
 
   @override
   String toString() => 'LoginFailure { error: $errorMessage }';

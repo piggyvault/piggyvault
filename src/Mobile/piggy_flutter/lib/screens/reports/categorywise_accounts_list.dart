@@ -5,7 +5,7 @@ import 'package:piggy_flutter/theme/piggy_app_theme.dart';
 import 'package:piggy_flutter/utils/common.dart';
 
 class CategorywiseAccountsList extends StatelessWidget {
-  CategorywiseAccountsList({Key key, @required this.items, bool visible})
+  CategorywiseAccountsList({Key? key, required this.items, bool? visible})
       : visible = visible ?? items.isNotEmpty,
         super(key: key);
 
@@ -39,13 +39,13 @@ class CategorywiseAccountsList extends StatelessWidget {
             ));
 
     return ExpansionTile(
-      key: PageStorageKey<String>(item.categoryName),
+      key: PageStorageKey<String?>(item.categoryName),
       title: Row(
         mainAxisSize: MainAxisSize.max,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
           Text('${item.categoryName}',
-              style: Theme.of(context).textTheme.headline6.copyWith(
+              style: Theme.of(context).textTheme.headline6!.copyWith(
                   fontSize: 16.0, color: Theme.of(context).accentColor)),
           Row(
             children: <Widget>[
@@ -75,7 +75,7 @@ class CategorywiseAccountsList extends StatelessWidget {
       child: ListTile(
         dense: true,
         title: Text(
-          account.accountName,
+          account.accountName!,
           style: textTheme.bodyText1,
         ),
         subtitle: Text(

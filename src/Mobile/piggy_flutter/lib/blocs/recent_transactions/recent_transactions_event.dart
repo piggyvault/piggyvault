@@ -12,7 +12,7 @@ abstract class RecentTransactionsEvent extends Equatable {
 class GroupRecentTransactions extends RecentTransactionsEvent {
   final TransactionsGroupBy groupBy;
 
-  GroupRecentTransactions({@required this.groupBy}) : assert(groupBy != null);
+  GroupRecentTransactions({required this.groupBy}) : assert(groupBy != null);
 
   @override
   List<Object> get props => [groupBy];
@@ -21,7 +21,7 @@ class GroupRecentTransactions extends RecentTransactionsEvent {
 class FetchRecentTransactions extends RecentTransactionsEvent {
   final GetTransactionsInput input;
 
-  FetchRecentTransactions({@required this.input}) : assert(input != null);
+  FetchRecentTransactions({required this.input}) : assert(input != null);
 }
 
 class FilterRecentTransactions extends RecentTransactionsEvent {

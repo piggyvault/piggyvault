@@ -1,5 +1,5 @@
 class IsTenantAvailableResult {
-  final int state, tenantId;
+  final int? state, tenantId;
 
   IsTenantAvailableResult({this.state, this.tenantId});
 

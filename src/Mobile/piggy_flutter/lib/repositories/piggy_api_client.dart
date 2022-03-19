@@ -1,15 +1,12 @@
 import 'dart:convert';
 
-import 'package:flutter/cupertino.dart';
-import 'package:piggy_flutter/models/api_response.dart';
 import 'package:http/http.dart' as http;
-import 'package:meta/meta.dart';
 import 'package:piggy_flutter/models/models.dart';
 import 'package:piggy_flutter/utils/uidata.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class PiggyApiClient {
-  PiggyApiClient({@required this.httpClient}) : assert(httpClient != null);
+  PiggyApiClient({required this.httpClient}) : assert(httpClient != null);
 
   static const String baseUrl = 'https://piggyvault.in';
   // static const baseUrl = 'http://10.0.2.2:21021';
@@ -18,11 +15,11 @@ class PiggyApiClient {
   final http.Client httpClient;
 
   // ACCOUNT
-  Future<AccountFormModel> getAccountForEdit(String id) async {
+  Future<AccountFormModel?> getAccountForEdit(String? id) async {
     final ApiResponse<dynamic> result = await getAsync<dynamic>(
         '$baseUrl/api/services/app/account/getAccountForEdit?id=$id');
 
-    if (result.success) {
+    if (result.success!) {
       return AccountFormModel.fromJson(result.result);
     }
 
@@ -34,7 +31,7 @@ class PiggyApiClient {
     final response = await postAsync<dynamic>(
         '$baseUrl/api/services/app/Category/CreateOrUpdateCategory',
         {'id': input.id, 'name': input.name, 'icon': input.icon});
-    if (!response.success) {
+    if (!response.success!) {
       throw Exception(response.error);
     }
 
@@ -46,7 +43,7 @@ class PiggyApiClient {
     final response =
         await this.postAsync<dynamic>(tenantUrl, {"tenancyName": tenancyName});
 
-    if (!response.success) {
+    if (!response.success!) {
       throw Exception('invalid credentials');
     }
 
@@ -54,8 +51,8 @@ class PiggyApiClient {
   }
 
   Future<AuthenticateResult> authenticate(
-      {@required String usernameOrEmailAddress,
-      @required String password}) async {
+      {required String usernameOrEmailAddress,
+      required String password}) async {
     final loginUrl = '$baseUrl/api/TokenAuth/Authenticate';
     final loginResult = await this.postAsync<dynamic>(loginUrl, {
       "usernameOrEmailAddress": usernameOrEmailAddress,
@@ -63,18 +60,18 @@ class PiggyApiClient {
       "rememberClient": true
     });
 
-    if (!loginResult.success) {
+    if (!loginResult.success!) {
       throw Exception(loginResult.error);
     }
     return AuthenticateResult.fromJson(loginResult.result);
   }
 
-  Future<LoginInformationResult> getCurrentLoginInformations() async {
+  Future<LoginInformationResult?> getCurrentLoginInformations() async {
     const String userUrl =
         '$baseUrl/api/services/app/session/GetCurrentLoginInformations';
     final ApiResponse<dynamic> response = await getAsync<dynamic>(userUrl);
 
-    if (response.success && response.result['user'] != null) {
+    if (response.success! && response.result['user'] != null) {
       return LoginInformationResult(
           user: User.fromJson(response.result['user']),
           tenant: Tenant.fromJson(response.result['tenant']));
@@ -87,11 +84,7 @@ class PiggyApiClient {
     var result = await getAsync<dynamic>(
         '$baseUrl/api/services/app/Transaction/GetSummary?duration=$duration');
 
-    if (result.success) {
-      return TransactionSummary.fromJson(result.result);
-    }
-
-    return null;
+    return TransactionSummary.fromJson(result.result);
   }
 
   Future<TenantAccountsResult> getTenantAccounts() async {
@@ -100,7 +93,7 @@ class PiggyApiClient {
     var result = await getAsync<dynamic>(
         '$baseUrl/api/services/app/account/GetTenantAccounts');
 
-    if (result.success) {
+    if (result.success!) {
       result.result['userAccounts']['items'].forEach((account) {
         userAccountItems.add(Account.fromJson(account));
       });
@@ -119,7 +112,7 @@ class PiggyApiClient {
     var result = await getAsync(
         '$baseUrl/api/services/app/Category/GetTenantCategories');
 
-    if (result.success) {
+    if (result.success!) {
       result.result['items'].forEach(
           (category) => tenantCategories.add(Category.fromJson(category)));
     }
@@ -183,7 +176,7 @@ class PiggyApiClient {
     final ApiResponse<dynamic> result = await getAsync<dynamic>(
         '$baseUrl/api/services/app/transaction/GetTransactions?$params');
 
-    if (result.success) {
+    if (result.success!) {
       result.result['items'].forEach((dynamic transaction) {
         transactions.add(Transaction.fromJson(transaction));
       });
@@ -195,11 +188,7 @@ class PiggyApiClient {
     var result = await getAsync<dynamic>(
         '$baseUrl/api/services/app/account/GetAccountDetails?id=$accountId');
 
-    if (result.success) {
-      return Account.fromJson(result.result);
-    }
-
-    return null;
+    return Account.fromJson(result.result);
   }
 
   Future<ApiResponse<dynamic>> createOrUpdateAccount(
@@ -218,29 +207,21 @@ class PiggyApiClient {
   }
 
   Future<List<Currency>> getCurrencies() async {
-    List<Currency> currencies = [];
     var result =
         await getAsync('$baseUrl/api/services/app/currency/GetCurrencies');
 
-    if (result.success) {
-      currencies = result.result['items']
-          .map<Currency>((currency) => Currency.fromJson(currency))
-          .toList();
-    }
-    return currencies;
+    return result.result['items']
+        .map<Currency>((currency) => Currency.fromJson(currency))
+        .toList();
   }
 
   Future<List<AccountType>> getAccountTypes() async {
-    List<AccountType> output = [];
     var result = await getAsync<dynamic>(
         '$baseUrl/api/services/app/account/GetAccountTypes');
 
-    if (result.success) {
-      output = result.result['items']
-          .map<AccountType>((item) => AccountType.fromJson(item))
-          .toList();
-    }
-    return output;
+    return result.result['items']
+        .map<AccountType>((item) => AccountType.fromJson(item))
+        .toList();
   }
 
   // Reports
@@ -250,7 +231,7 @@ class PiggyApiClient {
     var result = await getAsync(
         '$baseUrl/api/services/app/Report/GetCategoryWiseTransactionSummaryHistory?numberOfIteration=3&periodOfIteration=month&typeOfTransaction=expense');
 
-    if (result.success) {
+    if (result.success!) {
       result.result['items'].forEach((item) =>
           data.add(CategoryWiseRecentMonthsReportItem.fromJson(item)));
     }
@@ -263,7 +244,7 @@ class PiggyApiClient {
     final ApiResponse result = await getAsync<dynamic>(
         '$baseUrl/api/services/app/Report/GetCategoryReport?startDate=${input.startDate}&endDate=${input.endDate}');
 
-    if (result.success) {
+    if (result.success!) {
       result.result['items']
           .forEach((item) => data.add(CategoryReportListDto.fromJson(item)));
     }
@@ -272,10 +253,8 @@ class PiggyApiClient {
 
   // Transaction
   Future<void> deleteTransaction(String id) async {
-    final result = await deleteAsync<dynamic>(
+    await deleteAsync<dynamic>(
         '$baseUrl/api/services/app/transaction/DeleteTransaction?id=$id');
-
-    return result;
   }
 
   Future<void> createOrUpdateTransactionComment(
@@ -292,7 +271,7 @@ class PiggyApiClient {
     List<TransactionComment> comments = [];
     var result = await getAsync<dynamic>(
         '$baseUrl/api/services/app/transaction/GetTransactionComments?id=$id');
-    if (result.success) {
+    if (result.success!) {
       result.result['items'].forEach((comment) {
         comments.add(TransactionComment.fromJson(comment));
       });
@@ -306,26 +285,24 @@ class PiggyApiClient {
     var result =
         await getAsync<dynamic>('$baseUrl/api/services/app/User/GetSettings');
 
-    if (result.success) {
-      return UserSettings.fromJson(result.result);
-    }
-    return null;
+    return UserSettings.fromJson(result.result);
   }
 
   Future<void> changeDefaultCurrency(String currencyCode) async {
-    final result = await postAsync<dynamic>(
+    await postAsync<dynamic>(
         '$baseUrl/api/services/app/User/ChangeDefaultCurrency',
         {"currencyCode": currencyCode});
-    return result;
   }
 
 // utils
 
-  Future<ApiResponse<T>> getAsync<T>(String resourcePath) async {
+  Future<ApiResponse<T?>> getAsync<T>(String resourcePath) async {
     final prefs = await SharedPreferences.getInstance();
     var token = prefs.getString(UIData.authToken);
     var tenantId = prefs.getInt(UIData.tenantId);
-    var response = await this.httpClient.get(resourcePath, headers: {
+    var url = Uri.parse(resourcePath);
+
+    var response = await this.httpClient.get(url, headers: {
       'Content-type': 'application/json',
       'Accept': 'application/json',
       'Authorization': 'Bearer $token',
@@ -334,7 +311,8 @@ class PiggyApiClient {
     return processResponse<T>(response);
   }
 
-  Future<ApiResponse<T>> postAsync<T>(String resourcePath, dynamic data) async {
+  Future<ApiResponse<T?>> postAsync<T>(
+      String resourcePath, dynamic data) async {
     final prefs = await SharedPreferences.getInstance();
     var token = prefs.getString(UIData.authToken);
     var tenantId = prefs.getInt(UIData.tenantId);
@@ -357,13 +335,13 @@ class PiggyApiClient {
       };
     }
 
-    // print(content);
-    var response =
-        await http.post(resourcePath, body: content, headers: headers);
+    var url = Uri.parse(resourcePath);
+
+    var response = await http.post(url, body: content, headers: headers);
     return processResponse<T>(response);
   }
 
-  Future<ApiResponse<T>> deleteAsync<T>(String resourcePath) async {
+  Future<ApiResponse<T?>> deleteAsync<T>(String resourcePath) async {
     final prefs = await SharedPreferences.getInstance();
     var token = prefs.getString(UIData.authToken);
     var tenantId = prefs.getInt(UIData.tenantId);
@@ -386,12 +364,12 @@ class PiggyApiClient {
       };
     }
 
-    // print(content);
-    var response = await http.delete(resourcePath, headers: headers);
+    var url = Uri.parse(resourcePath);
+    var response = await http.delete(url, headers: headers);
     return processResponse<T>(response);
   }
 
-  ApiResponse<T> processResponse<T>(http.Response response) {
+  ApiResponse<T?> processResponse<T>(http.Response response) {
     try {
       // if (!((response.statusCode < 200) ||
       //     (response.statusCode >= 300) ||
@@ -401,18 +379,18 @@ class PiggyApiClient {
 
       // print(jsonResult);
 
-      var output = ApiResponse<T>(
+      var output = ApiResponse<T?>(
         result: parsedJson["result"],
         success: parsedJson["success"],
         unAuthorizedRequest: parsedJson['unAuthorizedRequest'],
       );
 
-      if (!output.success) {
+      if (!output.success!) {
         output.error = parsedJson["error"]["message"];
       }
       return output;
     } catch (e) {
-      return ApiResponse<T>(
+      return ApiResponse<T?>(
           result: null,
           success: false,
           unAuthorizedRequest: false,

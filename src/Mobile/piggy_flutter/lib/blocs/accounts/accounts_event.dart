@@ -4,7 +4,7 @@ abstract class AccountsEvent extends Equatable {
   const AccountsEvent();
 
   @override
-  List<Object> get props => [null];
+  List<Object?> get props => [null];
 }
 
 class LoadAccounts extends AccountsEvent {}

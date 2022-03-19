@@ -6,6 +6,6 @@ class CategoryReportGroupedListItemAccount {
     this.currencyCode,
   });
 
-  final String accountName, currencyCode;
-  final double amount, amountInDefaultCurrency;
+  final String? accountName, currencyCode;
+  final double? amount, amountInDefaultCurrency;
 }

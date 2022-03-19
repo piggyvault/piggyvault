@@ -10,8 +10,8 @@ class Account {
         currencyCode = json['currency']['code'],
         currentBalance = json['currentBalance'];
 
-  final String id, name, accountType, currencySymbol, currencyCode;
-  final double currentBalance;
+  final String? id, name, accountType, currencySymbol, currencyCode;
+  final double? currentBalance;
 
   @override
   String toString() {

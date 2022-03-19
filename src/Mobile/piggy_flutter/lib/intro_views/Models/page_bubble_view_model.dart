@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 // View Model for page bubble
 
 class PageBubbleViewModel {
-  final String iconAssetPath;
-  final Color iconColor;
-  final bool isHollow;
-  final double activePercent;
+  final String? iconAssetPath;
+  final Color? iconColor;
+  final bool? isHollow;
+  final double? activePercent;
   final Color bubbleBackgroundColor;
-  final Widget bubbleInner;
+  final Widget? bubbleInner;
 
   PageBubbleViewModel({
     this.bubbleInner,

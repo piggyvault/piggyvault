@@ -4,6 +4,6 @@ class GetCategoryReportInput {
     this.endDate,
   });
 
-  DateTime startDate;
-  DateTime endDate;
+  DateTime? startDate;
+  DateTime? endDate;
 }

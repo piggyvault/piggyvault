@@ -11,28 +11,29 @@ import 'package:piggy_flutter/repositories/repositories.dart';
 
 class AccountsBloc extends Bloc<AccountsEvent, AccountsState> {
   AccountsBloc(
-      {@required this.accountRepository,
-      @required this.authBloc,
-      @required this.transactionsBloc,
-      @required this.transactionDetailBloc})
+      {required this.accountRepository,
+      required this.authBloc,
+      required this.transactionsBloc,
+      required this.transactionDetailBloc})
       : assert(accountRepository != null),
         assert(authBloc != null),
         assert(transactionsBloc != null),
         assert(transactionDetailBloc != null),
         super(AccountsLoading()) {
-    authBlocSubscription = authBloc.listen((state) {
+    authBlocSubscription = authBloc.stream.listen((state) {
       if (state is AuthAuthenticated) {
         add(LoadAccounts());
       }
     });
 
-    transactionBlocSubscription = transactionsBloc.listen((state) {
+    transactionBlocSubscription = transactionsBloc.stream.listen((state) {
       if (state is TransactionSaved) {
         add(LoadAccounts());
       }
     });
 
-    transactionDetailBlocSubscription = transactionDetailBloc.listen((state) {
+    transactionDetailBlocSubscription =
+        transactionDetailBloc.stream.listen((state) {
       if (state is TransactionDeleted) {
         add(LoadAccounts());
       }
@@ -42,13 +43,13 @@ class AccountsBloc extends Bloc<AccountsEvent, AccountsState> {
   final AccountRepository accountRepository;
 
   final AuthBloc authBloc;
-  StreamSubscription authBlocSubscription;
+  late StreamSubscription authBlocSubscription;
 
   final TransactionBloc transactionsBloc;
-  StreamSubscription transactionBlocSubscription;
+  late StreamSubscription transactionBlocSubscription;
 
   final TransactionDetailBloc transactionDetailBloc;
-  StreamSubscription transactionDetailBlocSubscription;
+  late StreamSubscription transactionDetailBlocSubscription;
 
   @override
   Stream<AccountsState> mapEventToState(

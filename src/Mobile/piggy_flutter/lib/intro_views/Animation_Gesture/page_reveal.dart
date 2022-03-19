@@ -4,8 +4,8 @@ import 'package:piggy_flutter/intro_views/Clipper/circular_reveal_clipper.dart';
 /// This class reveals the next page in the circular form.
 
 class PageReveal extends StatelessWidget {
-  final double revealPercent;
-  final Widget child;
+  final double? revealPercent;
+  final Widget? child;
 
   //Constructor
   PageReveal({this.revealPercent, this.child});

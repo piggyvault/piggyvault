@@ -13,7 +13,7 @@ class SettingsLoading extends SettingsState {}
 class SettingsLoaded extends SettingsState {
   final UserSettings settings;
 
-  SettingsLoaded({@required this.settings}) : assert(settings != null);
+  SettingsLoaded({required this.settings}) : assert(settings != null);
 
   @override
   List<Object> get props => [settings];
@@ -22,7 +22,7 @@ class SettingsLoaded extends SettingsState {
 class SettingsError extends SettingsState {
   final String errorMessage;
 
-  SettingsError({@required this.errorMessage});
+  SettingsError({required this.errorMessage});
 
   @override
   String toString() => 'SettingsError { error: $errorMessage }';

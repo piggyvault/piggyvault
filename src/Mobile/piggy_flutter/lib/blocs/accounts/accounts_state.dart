@@ -5,7 +5,7 @@ abstract class AccountsState extends Equatable {
   const AccountsState();
 
   @override
-  List<Object> get props => [null];
+  List<Object?> get props => [null];
 }
 
 class AccountsLoading extends AccountsState {}
@@ -14,11 +14,11 @@ class AccountsLoaded extends AccountsState {
   const AccountsLoaded(
       [this.userAccounts = const [], this.familyAccounts = const []]);
 
-  final List<Account> userAccounts;
-  final List<Account> familyAccounts;
+  final List<Account>? userAccounts;
+  final List<Account>? familyAccounts;
 
   @override
-  List<Object> get props => [userAccounts, familyAccounts];
+  List<Object?> get props => [userAccounts, familyAccounts];
 }
 
 class AccountsNotLoaded extends AccountsState {}

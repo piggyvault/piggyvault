@@ -15,10 +15,10 @@ import 'package:piggy_flutter/widgets/primary_color_override.dart';
 
 class TransactionDetailPage extends StatefulWidget {
   final TransactionDetailBloc transactionDetailBloc;
-  final Transaction transaction;
+  final Transaction? transaction;
 
   TransactionDetailPage(
-      {Key key, this.transaction, @required this.transactionDetailBloc})
+      {Key? key, this.transaction, required this.transactionDetailBloc})
       : super(key: key);
 
   @override
@@ -32,7 +32,7 @@ class TransactionDetailPageState extends State<TransactionDetailPage> {
   final _formatter = DateFormat("EEE, MMM d, ''yy");
   final _commentTimeFormatter = DateFormat("h:mm a, EEE, MMM d, ''yy");
   final TextEditingController _commentController = new TextEditingController();
-  TransactionCommentsBloc transactionCommentsBloc;
+  TransactionCommentsBloc? transactionCommentsBloc;
 
   @override
   void initState() {
@@ -40,8 +40,8 @@ class TransactionDetailPageState extends State<TransactionDetailPage> {
         transactionRepository:
             RepositoryProvider.of<TransactionRepository>(context));
 
-    transactionCommentsBloc
-        .add(LoadTransactionComments(transactionId: widget.transaction.id));
+    transactionCommentsBloc!
+        .add(LoadTransactionComments(transactionId: widget.transaction!.id!));
     super.initState();
   }
 
@@ -85,13 +85,13 @@ class TransactionDetailPageState extends State<TransactionDetailPage> {
   }
 
   Widget _bottomNavigationBar(ThemeData theme) {
-    final TextStyle dialogTextStyle = theme.textTheme.subtitle1
-        .copyWith(color: theme.textTheme.caption.color);
+    final TextStyle dialogTextStyle = theme.textTheme.subtitle1!
+        .copyWith(color: theme.textTheme.caption!.color);
     return BlocBuilder<AuthBloc, AuthState>(
       builder: (context, state) {
         if (state is AuthAuthenticated) {
           // Hide actions if transaction created by another user
-          return widget.transaction.creatorUserName == state.user.userName
+          return widget.transaction!.creatorUserName == state.user!.userName
               ? BottomAppBar(
                   child: Row(
                     children: <Widget>[
@@ -140,7 +140,7 @@ class TransactionDetailPageState extends State<TransactionDetailPage> {
                               child: AlertDialog(
                                   title: const Text('Delete Transaction?'),
                                   content: Text(
-                                      'Are you sure you want to delete transaction "${widget.transaction.description}" of ${widget.transaction.amount.toMoney()}${widget.transaction.accountCurrencySymbol}',
+                                      'Are you sure you want to delete transaction "${widget.transaction!.description}" of ${widget.transaction!.amount.toMoney()}${widget.transaction!.accountCurrencySymbol}',
                                       style: dialogTextStyle),
                                   actions: <Widget>[
                                     TextButton(
@@ -174,15 +174,15 @@ class TransactionDetailPageState extends State<TransactionDetailPage> {
     super.dispose();
   }
 
-  void showDeleteConfirmationDialog<T>({BuildContext context, Widget child}) {
+  void showDeleteConfirmationDialog<T>({required BuildContext context, Widget? child}) {
     showDialog<T>(
       context: context,
-      builder: (BuildContext context) => child,
-    ).then<void>((T value) {
+      builder: (BuildContext context) => child!,
+    ).then<void>((T? value) {
       // The value passed to Navigator.pop() or null.
       if (value == DialogAction.agree) {
         widget.transactionDetailBloc
-            .add(DeleteTransaction(transactionId: widget.transaction.id));
+            .add(DeleteTransaction(transactionId: widget.transaction!.id!));
       }
     });
   }
@@ -200,8 +200,8 @@ class TransactionDetailPageState extends State<TransactionDetailPage> {
       ),
       trailing: new OutlinedButton(
         onPressed: (() {
-          transactionCommentsBloc.add(PostTransactionComment(
-              transactionId: widget.transaction.id,
+          transactionCommentsBloc!.add(PostTransactionComment(
+              transactionId: widget.transaction!.id!,
               comment: _commentController.text));
           _commentController.clear();
         }),
@@ -213,8 +213,8 @@ class TransactionDetailPageState extends State<TransactionDetailPage> {
 
   Widget _transactionComments() {
     return BlocBuilder(
-        cubit: transactionCommentsBloc,
-        builder: (context, state) {
+        bloc: transactionCommentsBloc,
+        builder: (context, dynamic state) {
           if (state is TransactionCommentsLoaded) {
             return Card(
               child: Column(
@@ -222,10 +222,10 @@ class TransactionDetailPageState extends State<TransactionDetailPage> {
                   children: state.comments.map((comment) {
                     return ListTile(
                       leading: const CircleAvatar(),
-                      title: Text(comment.creatorUserName),
-                      subtitle: Text(comment.content),
+                      title: Text(comment.creatorUserName!),
+                      subtitle: Text(comment.content!),
                       trailing: Text(
-                          '${_commentTimeFormatter.format(DateTime.parse(comment.creationTime))}'),
+                          '${_commentTimeFormatter.format(DateTime.parse(comment.creationTime!))}'),
                     );
                   }).toList()),
             );
@@ -243,30 +243,30 @@ class TransactionDetailPageState extends State<TransactionDetailPage> {
         children: <Widget>[
           ListTile(
             leading: const Icon(Icons.category),
-            title: Text(widget.transaction.categoryName),
+            title: Text(widget.transaction!.categoryName!),
           ),
           ListTile(
             leading: const Icon(Icons.attach_money),
             title: Text(
-                '${widget.transaction.amount.toMoney()} ${widget.transaction.accountCurrencySymbol}'),
+                '${widget.transaction!.amount.toMoney()} ${widget.transaction!.accountCurrencySymbol}'),
           ),
           ListTile(
             leading: const Icon(Icons.event_note),
-            subtitle: Text(widget.transaction.description),
+            subtitle: Text(widget.transaction!.description!),
             isThreeLine: true,
           ),
           ListTile(
             leading: const Icon(Icons.access_time),
             title: Text(
-                '${_formatter.format(DateTime.parse(widget.transaction.transactionTime))}'),
+                '${_formatter.format(DateTime.parse(widget.transaction!.transactionTime!))}'),
           ),
           ListTile(
             leading: const Icon(Icons.account_balance_wallet),
-            title: Text(widget.transaction.accountName),
+            title: Text(widget.transaction!.accountName!),
           ),
           ListTile(
             leading: const Icon(Icons.account_circle),
-            title: Text(widget.transaction.creatorUserName),
+            title: Text(widget.transaction!.creatorUserName!),
           ),
         ],
       ),

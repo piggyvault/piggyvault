@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_icons/flutter_icons.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:intl/intl.dart';
 import 'package:piggy_flutter/blocs/recent_transactions/bloc.dart';
@@ -18,10 +17,10 @@ import 'package:piggy_flutter/widgets/common/search_bar.dart';
 import 'package:piggy_flutter/widgets/transaction_list.dart';
 
 class RecentTransactionsPage extends StatefulWidget {
-  const RecentTransactionsPage({Key key, @required this.animationController})
+  const RecentTransactionsPage({Key? key, required this.animationController})
       : super(key: key);
 
-  final AnimationController animationController;
+  final AnimationController? animationController;
 
   @override
   _RecentTransactionsPageState createState() => _RecentTransactionsPageState();
@@ -29,16 +28,16 @@ class RecentTransactionsPage extends StatefulWidget {
 
 class _RecentTransactionsPageState extends State<RecentTransactionsPage>
     with TickerProviderStateMixin {
-  Animation<double> topBarAnimation;
-  Animation<double> listAnimation;
+  late Animation<double> topBarAnimation;
+  late Animation<double> listAnimation;
 
   final ScrollController scrollController = ScrollController();
   double topBarOpacity = 0.0;
 
   List<Widget> listViews = <Widget>[];
 
-  Completer<void> _refreshCompleter;
-  RecentTransactionsBloc recentTransactionsBloc;
+  Completer<void>? _refreshCompleter;
+  RecentTransactionsBloc? recentTransactionsBloc;
 
   DateTime startDate = DateTime.now().add(const Duration(days: -30));
   DateTime endDate = DateTime.now();
@@ -47,13 +46,13 @@ class _RecentTransactionsPageState extends State<RecentTransactionsPage>
   void initState() {
     topBarAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(
-        parent: widget.animationController,
+        parent: widget.animationController!,
         curve: Interval(0, 0.5, curve: Curves.fastOutSlowIn),
       ),
     );
 
     listAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
-        parent: widget.animationController,
+        parent: widget.animationController!,
         curve: Interval(0.5, 1.0, curve: Curves.fastOutSlowIn)));
 
     scrollController.addListener(() {
@@ -116,10 +115,10 @@ class _RecentTransactionsPageState extends State<RecentTransactionsPage>
           if (!snapshot.hasData) {
             return const SizedBox();
           } else {
-            widget.animationController.forward();
+            widget.animationController!.forward();
             return AnimatedBuilder(
-                animation: widget.animationController,
-                builder: (BuildContext context, Widget child) {
+                animation: widget.animationController!,
+                builder: (BuildContext context, Widget? child) {
                   return FadeTransition(
                       opacity: listAnimation,
                       child: Transform(
@@ -156,7 +155,7 @@ class _RecentTransactionsPageState extends State<RecentTransactionsPage>
                                               children: <Widget>[
                                                 SearchBar(
                                                   onSearchTextChanged: (txt) {
-                                                    recentTransactionsBloc.add(
+                                                    recentTransactionsBloc!.add(
                                                         FilterRecentTransactions(
                                                             txt));
                                                   },
@@ -179,7 +178,7 @@ class _RecentTransactionsPageState extends State<RecentTransactionsPage>
                                           .backgroundColor,
                                       child: BlocBuilder<RecentTransactionsBloc,
                                           RecentTransactionsState>(
-                                        cubit: recentTransactionsBloc,
+                                        bloc: recentTransactionsBloc,
                                         builder: (BuildContext context,
                                             RecentTransactionsState state) {
                                           if (state
@@ -191,7 +190,7 @@ class _RecentTransactionsPageState extends State<RecentTransactionsPage>
 
                                           return RefreshIndicator(
                                             onRefresh: () {
-                                              recentTransactionsBloc.add(
+                                              recentTransactionsBloc!.add(
                                                 FetchRecentTransactions(
                                                   input: GetTransactionsInput(
                                                       type: 'tenant',
@@ -203,7 +202,7 @@ class _RecentTransactionsPageState extends State<RecentTransactionsPage>
                                                               .Date),
                                                 ),
                                               );
-                                              return _refreshCompleter.future;
+                                              return _refreshCompleter!.future;
                                             },
                                             child: SafeArea(
                                               top: false,
@@ -261,7 +260,8 @@ class _RecentTransactionsPageState extends State<RecentTransactionsPage>
         });
   }
 
-  void showDemoDialog({BuildContext context, RecentTransactionsBloc bloc}) {
+  void showDemoDialog(
+      {required BuildContext context, RecentTransactionsBloc? bloc}) {
     showDialog<dynamic>(
       context: context,
       builder: (BuildContext context) => CalendarPopupView(
@@ -277,7 +277,7 @@ class _RecentTransactionsPageState extends State<RecentTransactionsPage>
               endDate = endData;
             }
           });
-          bloc.add(FetchRecentTransactions(
+          bloc!.add(FetchRecentTransactions(
               input: GetTransactionsInput(
                   type: 'tenant',
                   accountId: null,
@@ -320,14 +320,14 @@ class _RecentTransactionsPageState extends State<RecentTransactionsPage>
                 Expanded(
                   child: BlocBuilder<RecentTransactionsBloc,
                           RecentTransactionsState>(
-                      cubit: recentTransactionsBloc,
+                      bloc: recentTransactionsBloc,
                       builder: (context, state) {
                         if (state is RecentTransactionsLoaded) {
                           return Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Text(
                               '${state.filteredTransactions.transactions.length} transactions',
-                              style: TextStyle(
+                              style: const TextStyle(
                                 fontWeight: FontWeight.w100,
                                 fontSize: 16,
                               ),
@@ -335,8 +335,8 @@ class _RecentTransactionsPageState extends State<RecentTransactionsPage>
                           );
                         }
                         if (state is RecentTransactionsEmpty) {
-                          return Padding(
-                            padding: const EdgeInsets.all(8.0),
+                          return const Padding(
+                            padding: EdgeInsets.all(8.0),
                             child: Text(
                               '0 transactions found',
                               style: TextStyle(
@@ -357,8 +357,8 @@ class _RecentTransactionsPageState extends State<RecentTransactionsPage>
                             ),
                           );
                         }
-                        return Padding(
-                          padding: const EdgeInsets.all(8.0),
+                        return const Padding(
+                          padding: EdgeInsets.all(8.0),
                           child: Text(
                             '---',
                             style: TextStyle(
@@ -379,20 +379,11 @@ class _RecentTransactionsPageState extends State<RecentTransactionsPage>
                     borderRadius: const BorderRadius.all(
                       Radius.circular(4.0),
                     ),
-                    // onTap: () {
-                    //   FocusScope.of(context).requestFocus(FocusNode());
-                    //   Navigator.push<dynamic>(
-                    //     context,
-                    //     MaterialPageRoute<dynamic>(
-                    //         builder: (BuildContext context) => FiltersScreen(),
-                    //         fullscreenDialog: true),
-                    //   );
-                    // },
                     child: Padding(
                       padding: const EdgeInsets.only(left: 8),
                       child: Row(
                         children: <Widget>[
-                          Text(
+                          const Text(
                             'Filtter',
                             style: TextStyle(
                               fontWeight: FontWeight.w100,
@@ -430,8 +421,8 @@ class _RecentTransactionsPageState extends State<RecentTransactionsPage>
     return Column(
       children: <Widget>[
         AnimatedBuilder(
-          animation: widget.animationController,
-          builder: (BuildContext context, Widget child) {
+          animation: widget.animationController!,
+          builder: (BuildContext context, Widget? child) {
             return FadeTransition(
               opacity: topBarAnimation,
               child: Transform(
@@ -573,13 +564,13 @@ class _RecentTransactionsPageState extends State<RecentTransactionsPage>
             switch (value) {
               case 'TransactionsGroupBy.Category':
                 {
-                  recentTransactionsBloc.add(GroupRecentTransactions(
+                  recentTransactionsBloc!.add(GroupRecentTransactions(
                       groupBy: TransactionsGroupBy.Category));
                 }
                 break;
               case 'TransactionsGroupBy.Date':
                 {
-                  recentTransactionsBloc.add(GroupRecentTransactions(
+                  recentTransactionsBloc!.add(GroupRecentTransactions(
                       groupBy: TransactionsGroupBy.Date));
                 }
                 break;

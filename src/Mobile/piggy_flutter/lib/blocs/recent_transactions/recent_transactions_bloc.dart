@@ -12,28 +12,28 @@ import './bloc.dart';
 class RecentTransactionsBloc
     extends Bloc<RecentTransactionsEvent, RecentTransactionsState> {
   final AuthBloc authBloc;
-  StreamSubscription authBlocSubscription;
+  late StreamSubscription authBlocSubscription;
 
   final TransactionRepository transactionRepository;
 
   final TransactionBloc transactionsBloc;
-  StreamSubscription transactionBlocSubscription;
+  late StreamSubscription transactionBlocSubscription;
 
   final TransactionDetailBloc transactionDetailBloc;
-  StreamSubscription transactionDetailBlocSubscription;
+  late StreamSubscription transactionDetailBlocSubscription;
 
   RecentTransactionsBloc(
-      {@required this.transactionRepository,
-      @required this.authBloc,
-      @required this.transactionsBloc,
-      @required this.transactionDetailBloc})
+      {required this.transactionRepository,
+      required this.authBloc,
+      required this.transactionsBloc,
+      required this.transactionDetailBloc})
       : assert(transactionRepository != null),
         assert(authBloc != null),
         assert(transactionsBloc != null),
         assert(transactionDetailBloc != null),
         super(RecentTransactionsEmpty(null)) {
     // TODO: DRY
-    authBlocSubscription = authBloc.listen((state) {
+    authBlocSubscription = authBloc.stream.listen((state) {
       if (state is AuthAuthenticated) {
         add(FetchRecentTransactions(
             input: GetTransactionsInput(
@@ -45,7 +45,7 @@ class RecentTransactionsBloc
       }
     });
 
-    transactionBlocSubscription = transactionsBloc.listen((state) {
+    transactionBlocSubscription = transactionsBloc.stream.listen((state) {
       if (state is TransactionSaved) {
         add(FetchRecentTransactions(
             input: GetTransactionsInput(
@@ -57,7 +57,8 @@ class RecentTransactionsBloc
       }
     });
 
-    transactionDetailBlocSubscription = transactionDetailBloc.listen((state) {
+    transactionDetailBlocSubscription =
+        transactionDetailBloc.stream.listen((state) {
       if (state is TransactionDeleted) {
         add(FetchRecentTransactions(
             input: GetTransactionsInput(
@@ -89,7 +90,7 @@ class RecentTransactionsBloc
               filteredTransactions: result,
               filters: event.input,
               latestTransactionDate: formatter.format(
-                  DateTime.parse(result.transactions[0].transactionTime)));
+                  DateTime.parse(result.transactions[0].transactionTime!)));
         }
       } catch (e) {
         yield RecentTransactionsError(event.input);
@@ -115,7 +116,7 @@ class RecentTransactionsBloc
               filteredTransactions: result,
               filters: state.filters,
               latestTransactionDate: formatter.format(
-                  DateTime.parse(result.transactions[0].transactionTime)));
+                  DateTime.parse(result.transactions[0].transactionTime!)));
         }
       } catch (e) {
         yield RecentTransactionsError(state.filters);
@@ -135,7 +136,7 @@ class RecentTransactionsBloc
           var filteredTransactions = (state as RecentTransactionsLoaded)
               .allTransactions
               .transactions
-              .where((t) => t.description
+              .where((t) => t.description!
                   .toLowerCase()
                   .contains(event.query.toLowerCase()))
               .toList();

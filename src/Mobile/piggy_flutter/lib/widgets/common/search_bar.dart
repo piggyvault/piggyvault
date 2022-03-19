@@ -9,8 +9,8 @@ class SearchBar extends StatelessWidget {
   final SearchBarCallback onSearchTextChanged;
 
   const SearchBar({
-    Key key,
-    @required this.onSearchTextChanged,
+    Key? key,
+    required this.onSearchTextChanged,
   }) : super(key: key);
 
   @override

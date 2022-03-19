@@ -8,7 +8,7 @@ abstract class TransactionDetailEvent extends Equatable {
 class DeleteTransaction extends TransactionDetailEvent {
   final String transactionId;
 
-  DeleteTransaction({@required this.transactionId})
+  DeleteTransaction({required this.transactionId})
       : assert(transactionId != null);
 
   @override

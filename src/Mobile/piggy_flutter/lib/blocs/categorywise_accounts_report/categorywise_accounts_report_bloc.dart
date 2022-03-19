@@ -7,7 +7,7 @@ import './bloc.dart';
 
 class CategorywiseAccountsReportBloc extends Bloc<
     CategorywiseAccountsReportEvent, CategorywiseAccountsReportState> {
-  CategorywiseAccountsReportBloc({@required this.reportRepository})
+  CategorywiseAccountsReportBloc({required this.reportRepository})
       : assert(reportRepository != null),
         super(CategorywiseAccountsReportLoading());
 

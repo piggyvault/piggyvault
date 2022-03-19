@@ -42,7 +42,7 @@ Future<void> main() async {
       iOS: initializationSettingsIOS,
       macOS: initializationSettingsMacOS);
   await flutterLocalNotificationsPlugin.initialize(initializationSettings,
-      onSelectNotification: (String payload) async {
+      onSelectNotification: (String? payload) async {
     if (payload != null) {
       debugPrint('notification payload: $payload');
     }
@@ -154,11 +154,11 @@ Future<void> _scheduleReminderNotification() async {
 
 class App extends StatelessWidget {
   const App({
-    Key key,
-    @required this.userRepository,
-    @required this.transactionRepository,
-    @required this.accountRepository,
-    @required this.reportRepository,
+    Key? key,
+    required this.userRepository,
+    required this.transactionRepository,
+    required this.accountRepository,
+    required this.reportRepository,
   }) : super(key: key);
 
   final UserRepository userRepository;

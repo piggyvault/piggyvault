@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:piggy_flutter/models/models.dart';
 
 abstract class AccountState extends Equatable {
-  final String accountId;
+  final String? accountId;
 
   const AccountState(this.accountId);
 
@@ -12,7 +12,7 @@ abstract class AccountState extends Equatable {
 }
 
 class AccountEmpty extends AccountState {
-  AccountEmpty(String accountId) : super(accountId);
+  AccountEmpty(String? accountId) : super(accountId);
 }
 
 class AccountLoading extends AccountState {
@@ -22,7 +22,7 @@ class AccountLoading extends AccountState {
 class AccountLoaded extends AccountState {
   final Account account;
 
-  AccountLoaded({@required this.account}) : super(account.id);
+  AccountLoaded({required this.account}) : super(account.id);
 }
 
 class AccountFetchError extends AccountState {

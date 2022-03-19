@@ -14,9 +14,9 @@ import 'package:piggy_flutter/widgets/common/common.dart';
 import 'categorywise_recent_months_report_screen.dart';
 
 class ReportsScreen extends StatefulWidget {
-  const ReportsScreen({Key key, @required this.animationController})
+  const ReportsScreen({Key? key, required this.animationController})
       : super(key: key);
-  final AnimationController animationController;
+  final AnimationController? animationController;
 
   @override
   _ReportsScreenState createState() => _ReportsScreenState();
@@ -24,27 +24,27 @@ class ReportsScreen extends StatefulWidget {
 
 class _ReportsScreenState extends State<ReportsScreen>
     with TickerProviderStateMixin {
-  Animation<double> topBarAnimation;
+  late Animation<double> topBarAnimation;
   double topBarOpacity = 0.0;
 
-  Animation<double> bodyAnimation;
+  Animation<double>? bodyAnimation;
   List<Widget> listViews = <Widget>[];
 
-  SettingsBloc settingsBloc;
+  SettingsBloc? settingsBloc;
   final ScrollController scrollController = ScrollController();
 
   @override
   void initState() {
     topBarAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(
-        parent: widget.animationController,
+        parent: widget.animationController!,
         curve: Interval(0, 0.5, curve: Curves.fastOutSlowIn),
       ),
     );
 
     bodyAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(
-        parent: widget.animationController,
+        parent: widget.animationController!,
         curve: Interval(0.5, 1.0, curve: Curves.fastOutSlowIn),
       ),
     );
@@ -113,7 +113,7 @@ class _ReportsScreenState extends State<ReportsScreen>
         titleTxt: 'Categorywise Accounts',
         subTxt: 'Expenses',
         animation: Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
-            parent: widget.animationController,
+            parent: widget.animationController!,
             curve:
                 Interval((1 / count) * 0, 1.0, curve: Curves.fastOutSlowIn))),
         animationController: widget.animationController,
@@ -134,7 +134,7 @@ class _ReportsScreenState extends State<ReportsScreen>
         titleTxt: 'Monthly Categorywise',
         subTxt: 'Last 3 Months',
         animation: Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
-            parent: widget.animationController,
+            parent: widget.animationController!,
             curve:
                 Interval((1 / count) * 0, 1.0, curve: Curves.fastOutSlowIn))),
         animationController: widget.animationController,
@@ -173,7 +173,7 @@ class _ReportsScreenState extends State<ReportsScreen>
             itemCount: listViews.length,
             scrollDirection: Axis.vertical,
             itemBuilder: (BuildContext context, int index) {
-              widget.animationController.forward();
+              widget.animationController!.forward();
               return listViews[index];
             },
           );
@@ -186,8 +186,8 @@ class _ReportsScreenState extends State<ReportsScreen>
     return Column(
       children: <Widget>[
         AnimatedBuilder(
-          animation: widget.animationController,
-          builder: (BuildContext context, Widget child) {
+          animation: widget.animationController!,
+          builder: (BuildContext context, Widget? child) {
             return FadeTransition(
               opacity: topBarAnimation,
               child: Transform(

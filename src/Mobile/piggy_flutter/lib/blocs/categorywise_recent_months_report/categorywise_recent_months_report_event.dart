@@ -1,11 +1,6 @@
-import 'package:equatable/equatable.dart';
-
-abstract class CategorywiseRecentMonthsReportEvent extends Equatable {
+abstract class CategorywiseRecentMonthsReportEvent {
   const CategorywiseRecentMonthsReportEvent();
 }
 
 class CategorywiseRecentMonthsReportLoad
-    extends CategorywiseRecentMonthsReportEvent {
-  @override
-  List<Object> get props => null;
-}
+    extends CategorywiseRecentMonthsReportEvent {}

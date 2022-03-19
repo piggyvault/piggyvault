@@ -8,13 +8,13 @@ import 'package:piggy_flutter/utils/common.dart';
 
 class AccountGroupList extends StatelessWidget {
   const AccountGroupList(
-      {@required this.accounts,
-      @required this.title,
-      @required this.animationController});
+      {required this.accounts,
+      required this.title,
+      required this.animationController});
 
-  final List<Account> accounts;
+  final List<Account>? accounts;
   final String title;
-  final AnimationController animationController;
+  final AnimationController? animationController;
 
   @override
   Widget build(BuildContext context) {
@@ -24,12 +24,12 @@ class AccountGroupList extends StatelessWidget {
       accountTiles = [const Center(child: LinearProgressIndicator())];
     } else {
       accountTiles =
-          accounts.map((dynamic item) => buildAccountListTile(context, item));
+          accounts!.map((dynamic item) => buildAccountListTile(context, item));
     }
 
     return ExpansionTile(
         title: Text(title,
-            style: Theme.of(context).textTheme.headline6.copyWith(
+            style: Theme.of(context).textTheme.headline6!.copyWith(
                 fontSize: 16.0, color: Theme.of(context).accentColor)),
         initiallyExpanded: true,
         backgroundColor: PiggyAppTheme.white,
@@ -42,9 +42,9 @@ class AccountGroupList extends StatelessWidget {
         dense: true,
         leading: Icon(Icons.account_balance_wallet,
             color: Theme.of(context).disabledColor),
-        title: Text(account.name, style: Theme.of(context).textTheme.bodyText1),
+        title: Text(account.name!, style: Theme.of(context).textTheme.bodyText1),
         subtitle: Text(
-          account.accountType,
+          account.accountType!,
         ),
         trailing: Text(
             '${account.currentBalance.toMoney()} ${account.currencySymbol}'),

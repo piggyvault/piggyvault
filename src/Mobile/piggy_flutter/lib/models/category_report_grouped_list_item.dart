@@ -1,12 +1,10 @@
 import 'models.dart';
 
 class CategoryReportGroupedListItem {
-  CategoryReportGroupedListItem({this.categoryIcon, this.categoryName}) {
-    totalAmountInDefaultCurrency = 0;
-  }
+  CategoryReportGroupedListItem({this.categoryIcon, this.categoryName}) {}
 
   List<CategoryReportGroupedListItemAccount> accounts = [];
 
-  final String categoryIcon, categoryName;
-  double totalAmountInDefaultCurrency;
+  final String? categoryIcon, categoryName;
+  double totalAmountInDefaultCurrency = 0;
 }

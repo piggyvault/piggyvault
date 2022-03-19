@@ -10,15 +10,15 @@ import 'package:piggy_flutter/widgets/widgets.dart';
 
 class CurrencySettingsScreen extends StatefulWidget {
   const CurrencySettingsScreen(
-      {Key key,
-      @required this.selectedCurrencyCode,
-      @required this.settingsBloc,
-      @required this.animationController})
+      {Key? key,
+      required this.selectedCurrencyCode,
+      required this.settingsBloc,
+      required this.animationController})
       : super(key: key);
 
-  final AnimationController animationController;
-  final String selectedCurrencyCode;
-  final SettingsBloc settingsBloc;
+  final AnimationController? animationController;
+  final String? selectedCurrencyCode;
+  final SettingsBloc? settingsBloc;
 
   @override
   _CurrencySettingsScreenState createState() => _CurrencySettingsScreenState();
@@ -26,11 +26,11 @@ class CurrencySettingsScreen extends StatefulWidget {
 
 class _CurrencySettingsScreenState extends State<CurrencySettingsScreen>
     with TickerProviderStateMixin {
-  CurrenciesBloc currenciesBloc;
-  Animation<double> topBarAnimation;
+  CurrenciesBloc? currenciesBloc;
+  late Animation<double> topBarAnimation;
   double topBarOpacity = 0.0;
 
-  Animation<double> bodyAnimation;
+  Animation<double>? bodyAnimation;
   List<Widget> listViews = <Widget>[];
 
   final ScrollController scrollController = ScrollController();
@@ -39,18 +39,18 @@ class _CurrencySettingsScreenState extends State<CurrencySettingsScreen>
   void initState() {
     currenciesBloc = CurrenciesBloc(
         accountRepository: RepositoryProvider.of<AccountRepository>(context));
-    currenciesBloc.add(LoadCurrencies());
+    currenciesBloc!.add(LoadCurrencies());
 
     topBarAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(
-        parent: widget.animationController,
+        parent: widget.animationController!,
         curve: Interval(0, 0.5, curve: Curves.fastOutSlowIn),
       ),
     );
 
     bodyAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(
-        parent: widget.animationController,
+        parent: widget.animationController!,
         curve: Interval(0.5, 1.0, curve: Curves.fastOutSlowIn),
       ),
     );
@@ -110,13 +110,13 @@ class _CurrencySettingsScreenState extends State<CurrencySettingsScreen>
   void addAllListData() {
     listViews.add(
       BlocBuilder(
-        cubit: currenciesBloc,
-        builder: (context, state) {
+        bloc: currenciesBloc,
+        builder: (context, dynamic state) {
           if (state is CurrenciesLoaded) {
             // final steps = <SettingsItem>[];
             final steps = state.currencies
                 .map((currency) => SettingsItem(
-                    label: currency.name,
+                    label: currency.name!,
                     icon: SettingsIcon(
                       icon: Styles.checkIcon,
                       foregroundColor:
@@ -126,8 +126,8 @@ class _CurrencySettingsScreenState extends State<CurrencySettingsScreen>
                       backgroundColor: Styles.transparentColor,
                     ),
                     onPress: () {
-                      widget.settingsBloc.add(
-                          ChangeDefaultCurrency(currencyCode: currency.code));
+                      widget.settingsBloc!.add(
+                          ChangeDefaultCurrency(currencyCode: currency.code!));
                       Navigator.pop(context);
                     }))
                 .toList();
@@ -165,7 +165,7 @@ class _CurrencySettingsScreenState extends State<CurrencySettingsScreen>
             itemCount: listViews.length,
             scrollDirection: Axis.vertical,
             itemBuilder: (BuildContext context, int index) {
-              widget.animationController.forward();
+              widget.animationController!.forward();
               return listViews[index];
             },
           );
@@ -178,8 +178,8 @@ class _CurrencySettingsScreenState extends State<CurrencySettingsScreen>
     return Column(
       children: <Widget>[
         AnimatedBuilder(
-          animation: widget.animationController,
-          builder: (BuildContext context, Widget child) {
+          animation: widget.animationController!,
+          builder: (BuildContext context, Widget? child) {
             return FadeTransition(
               opacity: topBarAnimation,
               child: Transform(

@@ -6,6 +6,6 @@ class Tenant {
         name = json['name'],
         tenancyName = json['tenancyName'];
 
-  final String tenancyName, name;
-  final int id;
+  final String? tenancyName, name;
+  final int? id;
 }

@@ -7,7 +7,7 @@ showError(BuildContext context, ApiResponse snapshot) {
     context: context,
     builder: (context) => AlertDialog(
       title: Text(UIData.error),
-      content: Text(snapshot.error),
+      content: Text(snapshot.error!),
       actions: <Widget>[
         TextButton(
           child: Text(UIData.ok),
@@ -18,7 +18,7 @@ showError(BuildContext context, ApiResponse snapshot) {
   );
 }
 
-showSuccess({BuildContext context, String message, IconData icon}) {
+showSuccess({required BuildContext context, String? message, IconData? icon}) {
   showDialog(
     context: context,
     builder: (context) => Center(
@@ -40,7 +40,7 @@ showSuccess({BuildContext context, String message, IconData icon}) {
                 height: 10.0,
               ),
               Text(
-                message,
+                message!,
                 style: TextStyle(color: Colors.white),
               )
             ],

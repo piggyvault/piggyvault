@@ -11,9 +11,9 @@ class LoginButtonPressed extends LoginEvent {
   final String password;
 
   const LoginButtonPressed(
-      {@required this.tenancyName,
-      @required this.username,
-      @required this.password});
+      {required this.tenancyName,
+      required this.username,
+      required this.password});
 
   @override
   List<Object> get props => [tenancyName, username, password];

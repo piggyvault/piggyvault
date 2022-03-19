@@ -1,15 +1,13 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
-import 'package:flutter/widgets.dart';
+import 'package:piggy_flutter/models/user_settings.dart';
 import 'package:piggy_flutter/repositories/repositories.dart';
 import './bloc.dart';
 
 class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
   final UserRepository userRepository;
 
-  SettingsBloc({@required this.userRepository})
-      : assert(userRepository != null),
-        super(SettingsLoading()) {
+  SettingsBloc({required this.userRepository}) : super(SettingsLoading()) {
     add(LoadUserSettings());
   }
 

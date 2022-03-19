@@ -187,15 +187,11 @@ class PiggyApiClient {
     return transactions;
   }
 
-  Future<Account?> getAccountDetails(String accountId) async {
+  Future<Account> getAccountDetails(String accountId) async {
     var result = await getAsync<dynamic>(
         '$baseUrl/api/services/app/account/GetAccountDetails?id=$accountId');
 
-    if (result.success!) {
-      return Account.fromJson(result.result);
-    }
-
-    return null;
+    return Account.fromJson(result.result);
   }
 
   Future<ApiResponse<dynamic>> createOrUpdateAccount(
@@ -288,14 +284,11 @@ class PiggyApiClient {
   }
 
   // USER
-  Future<UserSettings?> getUserSettings() async {
+  Future<UserSettings> getUserSettings() async {
     var result =
         await getAsync<dynamic>('$baseUrl/api/services/app/User/GetSettings');
 
-    if (result.success!) {
-      return UserSettings.fromJson(result.result);
-    }
-    return null;
+    return UserSettings.fromJson(result.result);
   }
 
   Future<void> changeDefaultCurrency(String currencyCode) async {

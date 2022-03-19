@@ -12,10 +12,7 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
       {required this.accountRepository,
       required this.transactionsBloc,
       required this.transactionDetailBloc})
-      : assert(accountRepository != null),
-        assert(transactionsBloc != null),
-        assert(transactionDetailBloc != null),
-        super(AccountEmpty(null)) {
+      : super(AccountEmpty(null)) {
     transactionBlocSubscription = transactionsBloc.stream.listen((state) {
       if (state is TransactionSaved) {
         add(RefreshAccount());
@@ -47,7 +44,7 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
 
       try {
         final Account account =
-            await (accountRepository.getAccountDetails(event.accountId) as FutureOr<Account>);
+            await accountRepository.getAccountDetails(event.accountId);
 
         yield AccountLoaded(account: account);
       } catch (e) {

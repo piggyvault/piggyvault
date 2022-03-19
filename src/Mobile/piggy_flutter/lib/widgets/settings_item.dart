@@ -14,7 +14,7 @@ class SettingsNavigationIndicator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Icon(
+    return const Icon(
       CupertinoIcons.forward,
       color: Styles.settingsMediumGray,
       size: 21,

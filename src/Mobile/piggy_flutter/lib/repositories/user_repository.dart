@@ -63,7 +63,7 @@ class UserRepository {
     return;
   }
 
-  Future<UserSettings?> getUserSettings() async {
+  Future<UserSettings> getUserSettings() async {
     return await piggyApiClient.getUserSettings();
   }
 

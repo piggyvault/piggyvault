@@ -6,11 +6,7 @@ import 'package:piggy_flutter/blocs/accounts/accounts.dart';
 import 'package:piggy_flutter/blocs/categories/categories_bloc.dart';
 import 'package:piggy_flutter/blocs/categories/categories_state.dart';
 import 'package:piggy_flutter/blocs/transaction/transaction.dart';
-import 'package:piggy_flutter/models/account.dart';
-import 'package:piggy_flutter/models/category.dart';
 import 'package:piggy_flutter/models/models.dart';
-import 'package:piggy_flutter/models/transaction.dart';
-import 'package:piggy_flutter/models/transaction_edit_dto.dart';
 import 'package:piggy_flutter/services/transaction_service.dart';
 import 'package:piggy_flutter/utils/uidata.dart';
 import 'package:piggy_flutter/widgets/common/common_dialogs.dart';
@@ -101,8 +97,8 @@ class TransactionFormPageState extends State<TransactionFormPage> {
 
           _descriptionFieldController =
               TextEditingController(text: transactionEditDto!.description);
-          _amountFieldController =
-              TextEditingController(text: transactionEditDto!.amount.toString());
+          _amountFieldController = TextEditingController(
+              text: transactionEditDto!.amount.toString());
         });
       });
     }
@@ -191,17 +187,18 @@ class TransactionFormPageState extends State<TransactionFormPage> {
                     const SizedBox(height: 24.0),
                     PrimaryColorOverride(
                       child: TextFormField(
-                        keyboardType:
-                            TextInputType.numberWithOptions(decimal: true),
+                        keyboardType: const TextInputType.numberWithOptions(
+                            decimal: true),
                         decoration: InputDecoration(
-                            border: OutlineInputBorder(),
+                            border: const OutlineInputBorder(),
                             labelText: 'Amount',
                             prefixText: _account == null
                                 ? null
                                 : _account!.currencySymbol,
                             prefixStyle: _transactionTextStyle,
-                            suffixText:
-                                _account == null ? null : _account!.currencyCode,
+                            suffixText: _account == null
+                                ? null
+                                : _account!.currencyCode,
                             suffixStyle: _transactionTextStyle),
                         maxLines: 1,
                         controller: _amountFieldController,
@@ -221,7 +218,7 @@ class TransactionFormPageState extends State<TransactionFormPage> {
                     PrimaryColorOverride(
                       child: TextFormField(
                         decoration: const InputDecoration(
-                          border: const OutlineInputBorder(),
+                          border: OutlineInputBorder(),
                           hintText: 'Tell us about the transaction',
                           labelText: 'Description',
                         ),
@@ -260,10 +257,11 @@ class TransactionFormPageState extends State<TransactionFormPage> {
                     _showTransferToAmount
                         ? PrimaryColorOverride(
                             child: TextFormField(
-                              keyboardType: TextInputType.numberWithOptions(
-                                  decimal: true),
+                              keyboardType:
+                                  const TextInputType.numberWithOptions(
+                                      decimal: true),
                               decoration: InputDecoration(
-                                border: OutlineInputBorder(),
+                                border: const OutlineInputBorder(),
                                 labelText: 'Converted Amount',
                                 prefixText: _toAccount == null
                                     ? null
@@ -285,7 +283,7 @@ class TransactionFormPageState extends State<TransactionFormPage> {
                     const SizedBox(height: 24.0),
                     Text('* all fields are mandatory',
                         style: Theme.of(context).textTheme.caption),
-                  ].where((child) => child != null).toList() as List<Widget>,
+                  ].whereType<Widget>().toList(),
                 ),
               ),
             ),

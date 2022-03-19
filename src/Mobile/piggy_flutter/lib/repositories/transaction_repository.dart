@@ -13,7 +13,7 @@ class TransactionRepository {
 
   final PiggyApiClient piggyApiClient;
 
-  Future<TransactionSummary?> getTransactionSummary(String duration) async {
+  Future<TransactionSummary> getTransactionSummary(String duration) async {
     return await piggyApiClient.getTransactionSummary(duration);
   }
 
@@ -66,8 +66,8 @@ class TransactionRepository {
         key = transaction.categoryName;
       }
 
-      TransactionGroupItem? section = sections.firstWhereOrNull(
-          (TransactionGroupItem o) => o.title == key);
+      TransactionGroupItem? section =
+          sections.firstWhereOrNull((TransactionGroupItem o) => o.title == key);
 
       if (section == null) {
         section = TransactionGroupItem(title: key, groupby: groupBy);

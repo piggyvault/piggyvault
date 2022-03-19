@@ -83,15 +83,11 @@ class PiggyApiClient {
     return null;
   }
 
-  Future<TransactionSummary?> getTransactionSummary(String duration) async {
+  Future<TransactionSummary> getTransactionSummary(String duration) async {
     var result = await getAsync<dynamic>(
         '$baseUrl/api/services/app/Transaction/GetSummary?duration=$duration');
 
-    if (result.success!) {
-      return TransactionSummary.fromJson(result.result);
-    }
-
-    return null;
+    return TransactionSummary.fromJson(result.result);
   }
 
   Future<TenantAccountsResult> getTenantAccounts() async {

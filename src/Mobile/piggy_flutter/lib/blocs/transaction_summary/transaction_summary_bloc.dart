@@ -4,7 +4,6 @@ import 'package:piggy_flutter/blocs/auth/auth.dart';
 import 'package:piggy_flutter/blocs/transaction/transaction.dart';
 import 'package:piggy_flutter/blocs/transaction_detail/bloc.dart';
 import 'package:piggy_flutter/blocs/transaction_summary/transaction_summary.dart';
-import 'package:piggy_flutter/models/transaction_summary.dart';
 import 'dart:developer' as developer;
 
 import 'package:piggy_flutter/repositories/repositories.dart';
@@ -27,11 +26,7 @@ class TransactionSummaryBloc
       required this.authBloc,
       required this.transactionsBloc,
       required this.transactionDetailBloc})
-      : assert(transactionRepository != null),
-        assert(authBloc != null),
-        assert(transactionsBloc != null),
-        assert(transactionDetailBloc != null),
-        super(TransactionSummaryEmpty()) {
+      : super(TransactionSummaryEmpty()) {
     authBlocSubscription = authBloc.stream.listen((state) {
       if (state is AuthAuthenticated) {
         add(RefreshTransactionSummary());
@@ -58,8 +53,8 @@ class TransactionSummaryBloc
   ) async* {
     if (event is RefreshTransactionSummary) yield TransactionSummaryLoading();
     try {
-      final summary = await (transactionRepository
-          .getTransactionSummary('month') as FutureOr<TransactionSummary>);
+      final summary =
+          await transactionRepository.getTransactionSummary('month');
       yield TransactionSummaryLoaded(summary: summary);
     } catch (_, stackTrace) {
       developer.log('$_',

@@ -1,5 +1,6 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -13,7 +14,8 @@ import 'package:piggy_flutter/theme/piggy_app_theme.dart';
 import 'package:piggy_flutter/utils/common.dart';
 
 class TransactionList extends StatelessWidget {
-  TransactionList({Key? key, required this.items, this.isLoading, bool? visible})
+  TransactionList(
+      {Key? key, required this.items, this.isLoading, bool? visible})
       : visible = visible ?? items.isNotEmpty,
         super(key: key);
 
@@ -94,7 +96,7 @@ class TransactionList extends StatelessWidget {
                         bottomRight: Radius.circular(20))),
                 label: Text(
                   '${item.totalOutflow.toMoney()}Rs',
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontWeight: FontWeight.w600,
                     color: PiggyAppTheme.expense,
                   ),

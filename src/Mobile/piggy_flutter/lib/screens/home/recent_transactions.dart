@@ -260,7 +260,8 @@ class _RecentTransactionsPageState extends State<RecentTransactionsPage>
         });
   }
 
-  void showDemoDialog({required BuildContext context, RecentTransactionsBloc? bloc}) {
+  void showDemoDialog(
+      {required BuildContext context, RecentTransactionsBloc? bloc}) {
     showDialog<dynamic>(
       context: context,
       builder: (BuildContext context) => CalendarPopupView(
@@ -326,7 +327,7 @@ class _RecentTransactionsPageState extends State<RecentTransactionsPage>
                             padding: const EdgeInsets.all(8.0),
                             child: Text(
                               '${state.filteredTransactions.transactions.length} transactions',
-                              style: TextStyle(
+                              style: const TextStyle(
                                 fontWeight: FontWeight.w100,
                                 fontSize: 16,
                               ),
@@ -334,8 +335,8 @@ class _RecentTransactionsPageState extends State<RecentTransactionsPage>
                           );
                         }
                         if (state is RecentTransactionsEmpty) {
-                          return Padding(
-                            padding: const EdgeInsets.all(8.0),
+                          return const Padding(
+                            padding: EdgeInsets.all(8.0),
                             child: Text(
                               '0 transactions found',
                               style: TextStyle(
@@ -356,8 +357,8 @@ class _RecentTransactionsPageState extends State<RecentTransactionsPage>
                             ),
                           );
                         }
-                        return Padding(
-                          padding: const EdgeInsets.all(8.0),
+                        return const Padding(
+                          padding: EdgeInsets.all(8.0),
                           child: Text(
                             '---',
                             style: TextStyle(
@@ -378,20 +379,11 @@ class _RecentTransactionsPageState extends State<RecentTransactionsPage>
                     borderRadius: const BorderRadius.all(
                       Radius.circular(4.0),
                     ),
-                    // onTap: () {
-                    //   FocusScope.of(context).requestFocus(FocusNode());
-                    //   Navigator.push<dynamic>(
-                    //     context,
-                    //     MaterialPageRoute<dynamic>(
-                    //         builder: (BuildContext context) => FiltersScreen(),
-                    //         fullscreenDialog: true),
-                    //   );
-                    // },
                     child: Padding(
                       padding: const EdgeInsets.only(left: 8),
                       child: Row(
                         children: <Widget>[
-                          Text(
+                          const Text(
                             'Filtter',
                             style: TextStyle(
                               fontWeight: FontWeight.w100,

@@ -14,7 +14,9 @@ class RestClient {
     final prefs = await SharedPreferences.getInstance();
     var token = prefs.getString(UIData.authToken);
     var tenantId = prefs.getInt(UIData.tenantId);
-    var response = await http.get('$ApiEndpointUrl/$resourcePath', headers: {
+    var url = Uri.parse('$ApiEndpointUrl/$resourcePath');
+
+    var response = await http.get(url, headers: {
       'Content-type': 'application/json',
       'Accept': 'application/json',
       'Authorization': 'Bearer $token',
@@ -46,9 +48,9 @@ class RestClient {
       };
     }
 
-    // print(content);
-    var response = await http.post('$ApiEndpointUrl/$resourcePath',
-        body: content, headers: headers);
+    var url = Uri.parse('$ApiEndpointUrl/$resourcePath');
+
+    var response = await http.post(url, body: content, headers: headers);
     return processResponse<T>(response);
   }
 

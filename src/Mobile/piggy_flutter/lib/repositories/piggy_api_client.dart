@@ -325,7 +325,9 @@ class PiggyApiClient {
     final prefs = await SharedPreferences.getInstance();
     var token = prefs.getString(UIData.authToken);
     var tenantId = prefs.getInt(UIData.tenantId);
-    var response = await this.httpClient.get(resourcePath, headers: {
+    var url = Uri.parse(resourcePath);
+
+    var response = await this.httpClient.get(url, headers: {
       'Content-type': 'application/json',
       'Accept': 'application/json',
       'Authorization': 'Bearer $token',
@@ -357,9 +359,9 @@ class PiggyApiClient {
       };
     }
 
-    // print(content);
-    var response =
-        await http.post(resourcePath, body: content, headers: headers);
+    var url = Uri.parse(resourcePath);
+
+    var response = await http.post(url, body: content, headers: headers);
     return processResponse<T>(response);
   }
 
@@ -386,8 +388,8 @@ class PiggyApiClient {
       };
     }
 
-    // print(content);
-    var response = await http.delete(resourcePath, headers: headers);
+    var url = Uri.parse(resourcePath);
+    var response = await http.delete(url, headers: headers);
     return processResponse<T>(response);
   }
 

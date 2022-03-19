@@ -7,7 +7,7 @@ import './bloc.dart';
 class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
   final UserRepository userRepository;
 
-  SettingsBloc({@required this.userRepository})
+  SettingsBloc({required this.userRepository})
       : assert(userRepository != null),
         super(SettingsLoading()) {
     add(LoadUserSettings());
@@ -21,7 +21,7 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
       yield SettingsLoading();
 
       try {
-        var settings = await userRepository.getUserSettings();
+        var settings = await (userRepository.getUserSettings() as FutureOr<UserSettings>);
         yield SettingsLoaded(settings: settings);
       } catch (error) {
         yield SettingsError(errorMessage: error.toString());

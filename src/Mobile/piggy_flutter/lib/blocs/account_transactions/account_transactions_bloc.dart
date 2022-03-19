@@ -11,17 +11,17 @@ class AccountTransactionsBloc
   final TransactionRepository transactionRepository;
 
   final TransactionBloc transactionBloc;
-  StreamSubscription transactionBlocSubscription;
+  late StreamSubscription transactionBlocSubscription;
 
   AccountTransactionsBloc(
-      {@required this.transactionRepository, @required this.transactionBloc})
+      {required this.transactionRepository, required this.transactionBloc})
       : assert(transactionRepository != null),
         assert(transactionBloc != null),
         super(AccountTransactionsEmpty(null)) {
     transactionBlocSubscription = transactionBloc.stream.listen((state) {
       if (state is TransactionSaved) {
         if (this.state.filters != null) {
-          add(FetchAccountTransactions(input: this.state.filters));
+          add(FetchAccountTransactions(input: this.state.filters!));
         }
       }
     });
@@ -60,7 +60,7 @@ class AccountTransactionsBloc
           var filteredTransactions = (state as AccountTransactionsLoaded)
               .allAccountTransactions
               .transactions
-              .where((t) => t.description
+              .where((t) => t.description!
                   .toLowerCase()
                   .contains(event.query.toLowerCase()))
               .toList();

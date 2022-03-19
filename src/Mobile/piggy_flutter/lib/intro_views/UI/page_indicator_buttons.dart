@@ -6,11 +6,11 @@ import 'package:piggy_flutter/intro_views/Models/page_button_view_model.dart';
 
 class DefaultButton extends StatelessWidget {
   //callback for skip button
-  final VoidCallback onTap;
+  final VoidCallback? onTap;
 
   //view model
-  final PageButtonViewModel pageButtonViewModel;
-  final Widget child;
+  final PageButtonViewModel? pageButtonViewModel;
+  final Widget? child;
 
   //Constructor
   DefaultButton({
@@ -22,25 +22,25 @@ class DefaultButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     //Calculating opacity to create a fade in effect
-    double opacity = 1.0;
+    double? opacity = 1.0;
     final TextStyle style = DefaultTextStyle.of(context).style;
-    if (pageButtonViewModel.activePageIndex ==
-            pageButtonViewModel.totalPages - 2 &&
-        pageButtonViewModel.slideDirection == SlideDirection.rightToLeft) {
-      opacity = 1.0 - pageButtonViewModel.slidePercent;
-    } else if (pageButtonViewModel.activePageIndex ==
-            pageButtonViewModel.totalPages - 1 &&
-        pageButtonViewModel.slideDirection == SlideDirection.leftToRight) {
-      opacity = pageButtonViewModel.slidePercent;
+    if (pageButtonViewModel!.activePageIndex ==
+            pageButtonViewModel!.totalPages! - 2 &&
+        pageButtonViewModel!.slideDirection == SlideDirection.rightToLeft) {
+      opacity = 1.0 - pageButtonViewModel!.slidePercent!;
+    } else if (pageButtonViewModel!.activePageIndex ==
+            pageButtonViewModel!.totalPages! - 1 &&
+        pageButtonViewModel!.slideDirection == SlideDirection.leftToRight) {
+      opacity = pageButtonViewModel!.slidePercent;
     }
 
     return TextButton(
       onPressed: onTap,
       child: Opacity(
-        opacity: opacity,
+        opacity: opacity!,
         child: DefaultTextStyle.merge(
           style: style,
-          child: child,
+          child: child!,
         ),
       ),
     );
@@ -51,11 +51,11 @@ class DefaultButton extends StatelessWidget {
 
 class DoneButton extends StatelessWidget {
   //Callback
-  final VoidCallback onTap;
+  final VoidCallback? onTap;
 
   //View Model
-  final PageButtonViewModel pageButtonViewModel;
-  final Widget child;
+  final PageButtonViewModel? pageButtonViewModel;
+  final Widget? child;
 
   //Constructor
   DoneButton({
@@ -69,10 +69,10 @@ class DoneButton extends StatelessWidget {
     //Calculating opacity so as to create a fade in effect
     double opacity = 1.0;
     final TextStyle style = DefaultTextStyle.of(context).style;
-    if (pageButtonViewModel.activePageIndex ==
-            pageButtonViewModel.totalPages - 1 &&
-        pageButtonViewModel.slideDirection == SlideDirection.leftToRight) {
-      opacity = 1.0 - pageButtonViewModel.slidePercent;
+    if (pageButtonViewModel!.activePageIndex ==
+            pageButtonViewModel!.totalPages! - 1 &&
+        pageButtonViewModel!.slideDirection == SlideDirection.leftToRight) {
+      opacity = 1.0 - pageButtonViewModel!.slidePercent!;
     }
 
     return TextButton(
@@ -81,7 +81,7 @@ class DoneButton extends StatelessWidget {
         opacity: opacity,
         child: DefaultTextStyle.merge(
           style: style,
-          child: child, //Text
+          child: child!, //Text
         ),
       ),
     );
@@ -92,23 +92,23 @@ class PageIndicatorButtons extends StatelessWidget {
   //Some variables
   final int activePageIndex;
   final int totalPages;
-  final VoidCallback onPressedDoneButton; //Callback for Done Button
-  final VoidCallback onPressedNextButton;
-  final VoidCallback onPressedBackButton;
-  final VoidCallback onPressedSkipButton; //Callback for Skip Button
-  final SlideDirection slideDirection;
-  final double slidePercent;
-  final bool showSkipButton;
+  final VoidCallback? onPressedDoneButton; //Callback for Done Button
+  final VoidCallback? onPressedNextButton;
+  final VoidCallback? onPressedBackButton;
+  final VoidCallback? onPressedSkipButton; //Callback for Skip Button
+  final SlideDirection? slideDirection;
+  final double? slidePercent;
+  final bool? showSkipButton;
   final bool showNextButton;
   final bool showBackButton;
 
-  final Widget doneText;
-  final Widget skipText;
-  final Widget nextText;
-  final Widget backText;
-  final TextStyle textStyle;
+  final Widget? doneText;
+  final Widget? skipText;
+  final Widget? nextText;
+  final Widget? backText;
+  final TextStyle? textStyle;
 
-  final bool doneButtonPersist;
+  final bool? doneButtonPersist;
 
   Widget _getDoneORNextButton() {
     if ((activePageIndex < totalPages - 1 ||
@@ -129,7 +129,7 @@ class PageIndicatorButtons extends StatelessWidget {
     } else if (activePageIndex == totalPages - 1 ||
         (activePageIndex == totalPages - 2 &&
                 slideDirection == SlideDirection.rightToLeft ||
-            doneButtonPersist)) {
+            doneButtonPersist!)) {
       return DoneButton(
         child: doneText,
         onTap: onPressedDoneButton,
@@ -137,7 +137,7 @@ class PageIndicatorButtons extends StatelessWidget {
           //view Model
           activePageIndex: activePageIndex,
           totalPages: totalPages,
-          slidePercent: doneButtonPersist ? 0.0 : slidePercent,
+          slidePercent: doneButtonPersist! ? 0.0 : slidePercent,
           slideDirection: slideDirection,
         ),
       );
@@ -164,7 +164,7 @@ class PageIndicatorButtons extends StatelessWidget {
     } else if ((activePageIndex < totalPages - 1 ||
             (activePageIndex == totalPages - 1 &&
                 slideDirection == SlideDirection.leftToRight)) &&
-        showSkipButton) {
+        showSkipButton!) {
       return DefaultButton(
         child: skipText,
         onTap: onPressedSkipButton,
@@ -183,8 +183,8 @@ class PageIndicatorButtons extends StatelessWidget {
 
   //Constructor
   PageIndicatorButtons(
-      {@required this.activePageIndex,
-      @required this.totalPages,
+      {required this.activePageIndex,
+      required this.totalPages,
       this.onPressedDoneButton,
       this.slideDirection,
       this.slidePercent,
@@ -208,7 +208,7 @@ class PageIndicatorButtons extends StatelessWidget {
       right: 0.0,
       bottom: 0.0,
       child: DefaultTextStyle(
-        style: textStyle,
+        style: textStyle!,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,

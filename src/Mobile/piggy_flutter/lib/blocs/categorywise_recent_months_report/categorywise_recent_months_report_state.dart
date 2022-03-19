@@ -5,7 +5,7 @@ import 'package:piggy_flutter/models/models.dart';
 abstract class CategorywiseRecentMonthsReportState extends Equatable {
   const CategorywiseRecentMonthsReportState();
   @override
-  List<Object> get props => [null];
+  List<Object?> get props => [null];
 }
 
 class CategorywiseRecentMonthsReportLoading
@@ -13,7 +13,7 @@ class CategorywiseRecentMonthsReportLoading
 
 class CategorywiseRecentMonthsReportLoaded
     extends CategorywiseRecentMonthsReportState {
-  const CategorywiseRecentMonthsReportLoaded({@required this.result});
+  const CategorywiseRecentMonthsReportLoaded({required this.result});
 
   final List<CategoryWiseRecentMonthsReportItem> result;
 

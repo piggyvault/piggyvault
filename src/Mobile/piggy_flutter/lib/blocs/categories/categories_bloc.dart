@@ -8,7 +8,7 @@ import 'package:piggy_flutter/models/models.dart';
 import 'package:piggy_flutter/repositories/category_repository.dart';
 
 class CategoriesBloc extends Bloc<CategoriesEvent, CategoriesState> {
-  CategoriesBloc({@required this.categoryRepository, @required this.authBloc})
+  CategoriesBloc({required this.categoryRepository, required this.authBloc})
       : assert(categoryRepository != null),
         assert(authBloc != null),
         super(CategoriesLoading()) {
@@ -22,7 +22,7 @@ class CategoriesBloc extends Bloc<CategoriesEvent, CategoriesState> {
   final CategoryRepository categoryRepository;
   final AuthBloc authBloc;
 
-  StreamSubscription<AuthState> authBlocSubscription;
+  late StreamSubscription<AuthState> authBlocSubscription;
 
   @override
   Stream<CategoriesState> mapEventToState(

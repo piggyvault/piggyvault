@@ -19,19 +19,19 @@ import 'home_screen.dart';
 typedef TapCallback = FutureOr<void> Function();
 
 class UserScreen extends StatefulWidget {
-  const UserScreen({Key key, @required this.animationController})
+  const UserScreen({Key? key, required this.animationController})
       : super(key: key);
 
-  final AnimationController animationController;
+  final AnimationController? animationController;
 
   @override
   _UserScreenState createState() => _UserScreenState();
 }
 
 class _UserScreenState extends State<UserScreen> with TickerProviderStateMixin {
-  Animation<double> topBarAnimation;
+  late Animation<double> topBarAnimation;
   double topBarOpacity = 0.0;
-  Animation<double> bodyAnimation;
+  Animation<double>? bodyAnimation;
   List<Widget> listViews = <Widget>[];
   final ScrollController scrollController = ScrollController();
 
@@ -39,14 +39,14 @@ class _UserScreenState extends State<UserScreen> with TickerProviderStateMixin {
   void initState() {
     topBarAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(
-        parent: widget.animationController,
+        parent: widget.animationController!,
         curve: Interval(0, 0.5, curve: Curves.fastOutSlowIn),
       ),
     );
 
     bodyAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(
-        parent: widget.animationController,
+        parent: widget.animationController!,
         curve: Interval(0.5, 1.0, curve: Curves.fastOutSlowIn),
       ),
     );
@@ -104,7 +104,7 @@ class _UserScreenState extends State<UserScreen> with TickerProviderStateMixin {
     listViews.add(UserCard(
       animation: Tween<double>(begin: 0.0, end: 1.0).animate(
         CurvedAnimation(
-          parent: widget.animationController,
+          parent: widget.animationController!,
           curve: Interval((1 / count) * 0, 1.0, curve: Curves.fastOutSlowIn),
         ),
       ),
@@ -115,7 +115,7 @@ class _UserScreenState extends State<UserScreen> with TickerProviderStateMixin {
       animationController: widget.animationController,
       animation: Tween<double>(begin: 0.0, end: 1.0).animate(
         CurvedAnimation(
-          parent: widget.animationController,
+          parent: widget.animationController!,
           curve: Interval((1 / count) * 1, 1.0, curve: Curves.fastOutSlowIn),
         ),
       ),
@@ -145,7 +145,7 @@ class _UserScreenState extends State<UserScreen> with TickerProviderStateMixin {
             itemCount: listViews.length,
             scrollDirection: Axis.vertical,
             itemBuilder: (BuildContext context, int index) {
-              widget.animationController.forward();
+              widget.animationController!.forward();
               return listViews[index];
             },
           );
@@ -158,8 +158,8 @@ class _UserScreenState extends State<UserScreen> with TickerProviderStateMixin {
     return Column(
       children: <Widget>[
         AnimatedBuilder(
-          animation: widget.animationController,
-          builder: (BuildContext context, Widget child) {
+          animation: widget.animationController!,
+          builder: (BuildContext context, Widget? child) {
             return FadeTransition(
               opacity: topBarAnimation,
               child: Transform(
@@ -200,7 +200,7 @@ class _UserScreenState extends State<UserScreen> with TickerProviderStateMixin {
                                     (BuildContext context, AuthState state) {
                                   if (state is AuthAuthenticated) {
                                     return Text(
-                                      '${state.tenant.tenancyName}',
+                                      '${state.tenant!.tenancyName}',
                                       textAlign: TextAlign.left,
                                       style: TextStyle(
                                         fontFamily: PiggyAppTheme.fontName,
@@ -290,10 +290,10 @@ class _UserScreenState extends State<UserScreen> with TickerProviderStateMixin {
 
 class UserCard extends StatelessWidget {
   const UserCard(
-      {Key key, @required this.animationController, @required this.animation})
+      {Key? key, required this.animationController, required this.animation})
       : super(key: key);
 
-  final AnimationController animationController;
+  final AnimationController? animationController;
   final Animation<double> animation;
 
   Widget _buildUserRow() {
@@ -309,12 +309,12 @@ class UserCard extends StatelessWidget {
               .constrained(height: 50, width: 50)
               .padding(right: 10),
           <Widget>[
-            Text('${state.user.name} ${state.user.surname}')
+            Text('${state.user!.name} ${state.user!.surname}')
                 .textColor(Colors.white)
                 .fontSize(18)
                 .fontWeight(FontWeight.w600)
                 .padding(bottom: 5),
-            Text(state.user.emailAddress)
+            Text(state.user!.emailAddress!)
                 .textColor(Colors.white.withOpacity(0.6))
                 .fontSize(12),
           ].toColumn(crossAxisAlignment: CrossAxisAlignment.start),
@@ -330,7 +330,7 @@ class UserCard extends StatelessWidget {
       BlocBuilder<AccountsBloc, AccountsState>(builder: (context, state) {
         if (state is AccountsLoaded) {
           return _buildUserStatsItem(
-            value: state.userAccounts.length.toString(),
+            value: state.userAccounts!.length.toString(),
             text: 'Accounts',
             onTap: (() => Navigator.of(context).push(
                   MaterialPageRoute(
@@ -384,10 +384,10 @@ class UserCard extends StatelessWidget {
         .padding(vertical: 10);
   }
 
-  Widget _buildUserStatsItem({String value, String text, TapCallback onTap}) {
+  Widget _buildUserStatsItem({required String value, required String text, TapCallback? onTap}) {
     return GestureDetector(
         onTap: () async {
-          await onTap();
+          await onTap!();
         },
         child: <Widget>[
           Text(value).fontSize(20).textColor(Colors.white).padding(bottom: 5),
@@ -398,8 +398,8 @@ class UserCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AnimatedBuilder(
-        animation: animationController,
-        builder: (BuildContext context, Widget child) {
+        animation: animationController!,
+        builder: (BuildContext context, Widget? child) {
           return FadeTransition(
               opacity: animation,
               child: Transform(
@@ -455,10 +455,10 @@ class ActionsRow extends StatelessWidget {
 
 class SettingsItemModel {
   const SettingsItemModel(
-      {@required this.color,
-      @required this.description,
-      @required this.icon,
-      @required this.title});
+      {required this.color,
+      required this.description,
+      required this.icon,
+      required this.title});
 
   final IconData icon;
   final Color color;
@@ -483,9 +483,9 @@ const List<SettingsItemModel> settingsItems = [
 
 class Settings extends StatelessWidget {
   const Settings(
-      {Key key, @required this.animationController, @required this.animation})
+      {Key? key, required this.animationController, required this.animation})
       : super(key: key);
-  final AnimationController animationController;
+  final AnimationController? animationController;
   final Animation<double> animation;
 
   @override
@@ -493,8 +493,8 @@ class Settings extends StatelessWidget {
       .map(
         (SettingsItemModel settingsItem) {
           return AnimatedBuilder(
-            animation: animationController,
-            builder: (BuildContext context, Widget child) {
+            animation: animationController!,
+            builder: (BuildContext context, Widget? child) {
               return FadeTransition(
                 opacity: animation,
                 child: Transform(
@@ -524,7 +524,7 @@ class SettingsItem extends StatefulWidget {
   final Color iconBgColor;
   final String title;
   final String description;
-  final AnimationController animationController;
+  final AnimationController? animationController;
 
   @override
   _SettingsItemState createState() => _SettingsItemState();
@@ -535,7 +535,7 @@ class _SettingsItemState extends State<SettingsItem> {
 
   @override
   Widget build(BuildContext context) {
-    final settingsItem = ({Widget child}) => Styled.widget(child: child)
+    final Widget Function({Widget child}) settingsItem = ({Widget? child}) => Styled.widget(child: child)
         .alignment(Alignment.center)
         .borderRadius(all: 15)
         .ripple()

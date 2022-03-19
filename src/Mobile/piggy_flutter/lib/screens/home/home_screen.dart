@@ -29,9 +29,9 @@ class TabIconData {
 
   bool isSelected;
   int index;
-  IconData iconData;
+  IconData? iconData;
 
-  AnimationController animationController;
+  AnimationController? animationController;
 
   static List<TabIconData> tabIconsList = <TabIconData>[
     TabIconData(
@@ -62,7 +62,7 @@ class TabIconData {
 }
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({Key key, this.startpage = StartPage.Dashboard})
+  const HomeScreen({Key? key, this.startpage = StartPage.Dashboard})
       : super(key: key);
 
   final StartPage startpage;
@@ -72,7 +72,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
-  AnimationController animationController;
+  AnimationController? animationController;
 
   List<TabIconData> tabIconsList = TabIconData.tabIconsList;
   int _selectedNavIndex = 0;
@@ -141,7 +141,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
   @override
   void dispose() {
-    animationController.dispose();
+    animationController!.dispose();
     super.dispose();
   }
 
@@ -165,7 +165,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     OneSignal.shared
         .setNotificationOpenedHandler((OSNotificationOpenedResult result) {
       final Map<String, dynamic> transactionData =
-          result.notification.additionalData;
+          result.notification.additionalData!;
 
       try {
         final Transaction transaction = Transaction(
@@ -226,7 +226,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           },
           changeIndex: (int index) {
             if (index == 0) {
-              animationController.reverse().then<dynamic>((data) {
+              animationController!.reverse().then<dynamic>((data) {
                 if (!mounted) {
                   return;
                 }
@@ -237,7 +237,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                 });
               });
             } else if (index == 1) {
-              animationController.reverse().then<dynamic>((data) {
+              animationController!.reverse().then<dynamic>((data) {
                 if (!mounted) {
                   return;
                 }
@@ -249,7 +249,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                 });
               });
             } else if (index == 2) {
-              animationController.reverse().then<dynamic>((data) {
+              animationController!.reverse().then<dynamic>((data) {
                 if (!mounted) {
                   return;
                 }
@@ -261,7 +261,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                 });
               });
             } else if (index == 3) {
-              animationController.reverse().then<dynamic>((data) {
+              animationController!.reverse().then<dynamic>((data) {
                 if (!mounted) {
                   return;
                 }

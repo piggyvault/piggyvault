@@ -8,7 +8,7 @@ import 'package:piggy_flutter/models/login_information_result.dart';
 import 'package:piggy_flutter/repositories/repositories.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
-  AuthBloc({@required this.userRepository})
+  AuthBloc({required this.userRepository})
       : assert(userRepository != null),
         super(AuthUninitialized());
 
@@ -26,9 +26,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       } else {
         final bool hasToken = await userRepository.hasToken();
         if (hasToken) {
-          final LoginInformationResult result =
+          final LoginInformationResult? result =
               await userRepository.getCurrentLoginInformation();
-          if (result == null || result.user == null || result.user.id == null) {
+          if (result == null || result.user == null || result.user!.id == null) {
             yield AuthUnauthenticated();
           } else {
             yield AuthAuthenticated(user: result.user, tenant: result.tenant);
@@ -41,7 +41,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
     if (event is LoggedIn) {
       yield AuthLoading();
-      await userRepository.persistToken(event.token);
+      await userRepository.persistToken(event.token!);
 
       try {
         await OneSignal.shared
@@ -50,9 +50,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         // print(e);
       }
 
-      final LoginInformationResult result =
+      final LoginInformationResult? result =
           await userRepository.getCurrentLoginInformation();
-      if (result == null || result.user == null || result.user.id == null) {
+      if (result == null || result.user == null || result.user!.id == null) {
         yield AuthUnauthenticated();
       } else {
         yield AuthAuthenticated(user: result.user, tenant: result.tenant);

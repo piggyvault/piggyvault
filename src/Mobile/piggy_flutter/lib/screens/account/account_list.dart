@@ -8,9 +8,9 @@ import 'package:piggy_flutter/screens/account/account_group_list.dart';
 import 'package:piggy_flutter/theme/theme.dart';
 
 class AccountListPage extends StatefulWidget {
-  const AccountListPage({Key key, @required this.animationController})
+  const AccountListPage({Key? key, required this.animationController})
       : super(key: key);
-  final AnimationController animationController;
+  final AnimationController? animationController;
 
   @override
   _AccountListPageState createState() => _AccountListPageState();
@@ -18,26 +18,26 @@ class AccountListPage extends StatefulWidget {
 
 class _AccountListPageState extends State<AccountListPage>
     with TickerProviderStateMixin {
-  Animation<double> topBarAnimation;
-  Animation<double> listAnimation;
+  late Animation<double> topBarAnimation;
+  late Animation<double> listAnimation;
   final ScrollController scrollController = ScrollController();
   double topBarOpacity = 0.0;
 
   List<Widget> listViews = <Widget>[];
 
-  Completer<void> _refreshCompleter;
+  Completer<void>? _refreshCompleter;
 
   @override
   void initState() {
     topBarAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(
-        parent: widget.animationController,
+        parent: widget.animationController!,
         curve: Interval(0, 0.5, curve: Curves.fastOutSlowIn),
       ),
     );
 
     listAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
-        parent: widget.animationController,
+        parent: widget.animationController!,
         curve: Interval(0.5, 1.0, curve: Curves.fastOutSlowIn)));
 
     scrollController.addListener(() {
@@ -102,10 +102,10 @@ class _AccountListPageState extends State<AccountListPage>
         if (!snapshot.hasData) {
           return const SizedBox();
         } else {
-          widget.animationController.forward();
+          widget.animationController!.forward();
           return AnimatedBuilder(
-            animation: widget.animationController,
-            builder: (BuildContext context, Widget child) {
+            animation: widget.animationController!,
+            builder: (BuildContext context, Widget? child) {
               return FadeTransition(
                 opacity: listAnimation,
                 child: Transform(
@@ -141,7 +141,7 @@ class _AccountListPageState extends State<AccountListPage>
                               onRefresh: () {
                                 BlocProvider.of<AccountsBloc>(context)
                                     .add(LoadAccounts());
-                                return _refreshCompleter.future;
+                                return _refreshCompleter!.future;
                               },
                               child: ListView(
                                 controller: scrollController,
@@ -178,8 +178,8 @@ class _AccountListPageState extends State<AccountListPage>
     return Column(
       children: <Widget>[
         AnimatedBuilder(
-          animation: widget.animationController,
-          builder: (BuildContext context, Widget child) {
+          animation: widget.animationController!,
+          builder: (BuildContext context, Widget? child) {
             return FadeTransition(
               opacity: topBarAnimation,
               child: Transform(

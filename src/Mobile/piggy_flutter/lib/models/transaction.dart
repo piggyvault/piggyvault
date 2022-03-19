@@ -25,7 +25,7 @@ class Transaction {
         amount = json['amount'],
         amountInDefaultCurrency = json['amountInDefaultCurrency'];
 
-  final String id,
+  final String? id,
       categoryName,
       categoryIcon,
       description,
@@ -33,5 +33,5 @@ class Transaction {
       accountName,
       transactionTime,
       accountCurrencySymbol;
-  final double amount, amountInDefaultCurrency, balance;
+  final double? amount, amountInDefaultCurrency, balance;
 }

@@ -6,8 +6,8 @@ import 'package:piggy_flutter/intro_views/Models/page_view_model.dart';
 class PagerIndicatorViewModel {
   final List<PageViewModel> pages;
   final int activeIndex;
-  final SlideDirection slideDirection;
-  final double slidePercent;
+  final SlideDirection? slideDirection;
+  final double? slidePercent;
 
   PagerIndicatorViewModel(
     this.pages,

@@ -1,6 +1,6 @@
 class AuthenticateResult {
-  final String accessToken, encryptedAccessToken;
-  final int expireInSeconds, userId;
+  final String? accessToken, encryptedAccessToken;
+  final int? expireInSeconds, userId;
 
   AuthenticateResult(
       {this.accessToken,

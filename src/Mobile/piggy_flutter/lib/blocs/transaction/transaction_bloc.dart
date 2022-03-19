@@ -8,7 +8,7 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
   final TransactionRepository transactionRepository;
 
   TransactionBloc({
-    @required this.transactionRepository,
+    required this.transactionRepository,
   })  : assert(transactionRepository != null),
         super(InitialTransactionsState());
 

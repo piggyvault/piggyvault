@@ -12,21 +12,21 @@ import 'package:piggy_flutter/repositories/repositories.dart';
 class TransactionSummaryBloc
     extends Bloc<TransactionSummaryEvent, TransactionSummaryState> {
   final AuthBloc authBloc;
-  StreamSubscription authBlocSubscription;
+  late StreamSubscription authBlocSubscription;
 
   final TransactionBloc transactionsBloc;
-  StreamSubscription transactionBlocSubscription;
+  late StreamSubscription transactionBlocSubscription;
 
   final TransactionDetailBloc transactionDetailBloc;
-  StreamSubscription transactionDetailBlocSubscription;
+  late StreamSubscription transactionDetailBlocSubscription;
 
   final TransactionRepository transactionRepository;
 
   TransactionSummaryBloc(
-      {@required this.transactionRepository,
-      @required this.authBloc,
-      @required this.transactionsBloc,
-      @required this.transactionDetailBloc})
+      {required this.transactionRepository,
+      required this.authBloc,
+      required this.transactionsBloc,
+      required this.transactionDetailBloc})
       : assert(transactionRepository != null),
         assert(authBloc != null),
         assert(transactionsBloc != null),
@@ -59,7 +59,7 @@ class TransactionSummaryBloc
     if (event is RefreshTransactionSummary) yield TransactionSummaryLoading();
     try {
       final summary =
-          await transactionRepository.getTransactionSummary('month');
+          await (transactionRepository.getTransactionSummary('month') as FutureOr<TransactionSummary>);
       yield TransactionSummaryLoaded(summary: summary);
     } catch (_, stackTrace) {
       developer.log('$_',

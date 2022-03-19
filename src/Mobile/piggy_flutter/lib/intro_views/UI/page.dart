@@ -4,10 +4,10 @@ import 'package:piggy_flutter/intro_views/Models/page_view_model.dart';
 /// This is the class which contains the Page UI.
 class Page extends StatelessWidget {
   ///page details
-  final PageViewModel pageViewModel;
+  final PageViewModel? pageViewModel;
 
   ///percent visible of page
-  final double percentVisible;
+  final double? percentVisible;
 
   /// [MainAxisAligment]
   final MainAxisAlignment columnMainAxisAlignment;
@@ -24,10 +24,10 @@ class Page extends StatelessWidget {
     return new Container(
       padding: const EdgeInsets.all(8.0),
       width: double.infinity,
-      color: pageViewModel.pageColor,
+      color: pageViewModel!.pageColor,
       child: new Opacity(
         //Opacity is used to create fade in effect
-        opacity: percentVisible,
+        opacity: percentVisible!,
         child: new OrientationBuilder(
             builder: (BuildContext context, Orientation orientation) {
           return orientation == Orientation.portrait
@@ -113,14 +113,14 @@ class Page extends StatelessWidget {
 
 /// Body for the Page.
 class _BodyPageTransform extends StatelessWidget {
-  final double percentVisible;
+  final double? percentVisible;
 
-  final PageViewModel pageViewModel;
+  final PageViewModel? pageViewModel;
 
   const _BodyPageTransform({
-    Key key,
-    @required this.percentVisible,
-    @required this.pageViewModel,
+    Key? key,
+    required this.percentVisible,
+    required this.pageViewModel,
   }) : super(key: key);
 
   @override
@@ -128,7 +128,7 @@ class _BodyPageTransform extends StatelessWidget {
     return new Transform(
       //Used for vertical transformation
       transform:
-          new Matrix4.translationValues(0.0, 30.0 * (1 - percentVisible), 0.0),
+          new Matrix4.translationValues(0.0, 30.0 * (1 - percentVisible!), 0.0),
       child: new Padding(
         padding: const EdgeInsets.only(
           bottom: 75.0,
@@ -136,9 +136,9 @@ class _BodyPageTransform extends StatelessWidget {
           right: 10.0,
         ),
         child: DefaultTextStyle.merge(
-          style: pageViewModel.mergedBodyTextStyle,
+          style: pageViewModel!.mergedBodyTextStyle,
           textAlign: TextAlign.center,
-          child: pageViewModel.body,
+          child: pageViewModel!.body,
         ),
       ), //Padding
     );
@@ -147,14 +147,14 @@ class _BodyPageTransform extends StatelessWidget {
 
 /// Main Image of the Page
 class _ImagePageTransform extends StatelessWidget {
-  final double percentVisible;
+  final double? percentVisible;
 
-  final PageViewModel pageViewModel;
+  final PageViewModel? pageViewModel;
 
   const _ImagePageTransform({
-    Key key,
-    @required this.percentVisible,
-    @required this.pageViewModel,
+    Key? key,
+    required this.percentVisible,
+    required this.pageViewModel,
   }) : super(key: key);
 
   @override
@@ -162,14 +162,14 @@ class _ImagePageTransform extends StatelessWidget {
     return new Transform(
       //Used for vertical transformation
       transform:
-          new Matrix4.translationValues(0.0, 50.0 * (1 - percentVisible), 0.0),
+          new Matrix4.translationValues(0.0, 50.0 * (1 - percentVisible!), 0.0),
       child: new Padding(
         padding: new EdgeInsets.only(
           top: 20.0,
           bottom: 40.0,
         ),
         child: new Container(
-          child: pageViewModel.mainImage, //Loading main
+          child: pageViewModel!.mainImage, //Loading main
         ), //Container
       ), //Padding
     );
@@ -178,14 +178,14 @@ class _ImagePageTransform extends StatelessWidget {
 
 /// Title for the Page
 class _TitlePageTransform extends StatelessWidget {
-  final double percentVisible;
+  final double? percentVisible;
 
-  final PageViewModel pageViewModel;
+  final PageViewModel? pageViewModel;
 
   const _TitlePageTransform({
-    Key key,
-    @required this.percentVisible,
-    @required this.pageViewModel,
+    Key? key,
+    required this.percentVisible,
+    required this.pageViewModel,
   }) : super(key: key);
 
   @override
@@ -193,7 +193,7 @@ class _TitlePageTransform extends StatelessWidget {
     return new Transform(
       //Used for vertical transformation
       transform:
-          new Matrix4.translationValues(0.0, 30.0 * (1 - percentVisible), 0.0),
+          new Matrix4.translationValues(0.0, 30.0 * (1 - percentVisible!), 0.0),
       child: new Padding(
         padding: new EdgeInsets.only(
           top: 5.0,
@@ -202,8 +202,8 @@ class _TitlePageTransform extends StatelessWidget {
           right: 10.0,
         ),
         child: DefaultTextStyle.merge(
-          style: pageViewModel.mergedTitleTextStyle,
-          child: pageViewModel.title,
+          style: pageViewModel!.mergedTitleTextStyle,
+          child: pageViewModel!.title,
         ),
       ), //Padding
     );

@@ -14,7 +14,7 @@ class TransactionCommentsLoading extends TransactionCommentsState {
 class TransactionCommentsLoaded extends TransactionCommentsState {
   final List<TransactionComment> comments;
 
-  TransactionCommentsLoaded({@required this.comments});
+  TransactionCommentsLoaded({required this.comments});
 
   @override
   List<Object> get props => [comments];
@@ -23,7 +23,7 @@ class TransactionCommentsLoaded extends TransactionCommentsState {
 class TransactionCommentsError extends TransactionCommentsState {
   final String errorMessage;
 
-  TransactionCommentsError({@required this.errorMessage});
+  TransactionCommentsError({required this.errorMessage});
 
   @override
   String toString() => 'TransactionCommentsError { error: $errorMessage }';

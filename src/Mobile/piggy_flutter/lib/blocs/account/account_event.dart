@@ -11,7 +11,7 @@ abstract class AccountEvent extends Equatable {
 class FetchAccount extends AccountEvent {
   final String accountId;
 
-  FetchAccount({@required this.accountId}) : assert(accountId != null);
+  FetchAccount({required this.accountId}) : assert(accountId != null);
 
   @override
   List<Object> get props => [accountId];

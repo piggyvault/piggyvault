@@ -4,8 +4,8 @@ import 'package:piggy_flutter/intro_views/Constants/constants.dart';
 
 class SlideUpdate {
   final UpdateType updateType;
-  final SlideDirection direction;
-  final double slidePercent;
+  final SlideDirection? direction;
+  final double? slidePercent;
 
   SlideUpdate(
     this.direction,

@@ -13,7 +13,7 @@ class LoadUserSettings extends SettingsEvent {}
 class ChangeDefaultCurrency extends SettingsEvent {
   final String currencyCode;
 
-  ChangeDefaultCurrency({@required this.currencyCode})
+  ChangeDefaultCurrency({required this.currencyCode})
       : assert(currencyCode != null);
 
   @override

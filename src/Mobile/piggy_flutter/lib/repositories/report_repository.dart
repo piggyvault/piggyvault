@@ -1,9 +1,10 @@
+import 'package:collection/collection.dart' show IterableExtension;
 import 'package:flutter/cupertino.dart';
 import 'package:piggy_flutter/models/models.dart';
 import 'package:piggy_flutter/repositories/piggy_api_client.dart';
 
 class ReportRepository {
-  ReportRepository({@required this.piggyApiClient})
+  ReportRepository({required this.piggyApiClient})
       : assert(piggyApiClient != null);
 
   final PiggyApiClient piggyApiClient;
@@ -21,10 +22,9 @@ class ReportRepository {
     List<CategoryReportGroupedListItem> output = [];
 
     for (CategoryReportListDto item in items) {
-      CategoryReportGroupedListItem categoryGroup = output.firstWhere(
+      CategoryReportGroupedListItem? categoryGroup = output.firstWhereOrNull(
           (CategoryReportGroupedListItem i) =>
-              i.categoryName == item.categoryName,
-          orElse: () => null);
+              i.categoryName == item.categoryName);
 
       if (categoryGroup == null) {
         categoryGroup = CategoryReportGroupedListItem(
@@ -40,7 +40,7 @@ class ReportRepository {
           currencyCode: item.currencyCode));
 
       categoryGroup.totalAmountInDefaultCurrency +=
-          item.amountInDefaultCurrency;
+          item.amountInDefaultCurrency!;
     }
 
     return output;

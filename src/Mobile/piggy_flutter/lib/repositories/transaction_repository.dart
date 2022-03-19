@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:collection/collection.dart' show IterableExtension;
 import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
 import 'package:piggy_flutter/models/api_response.dart';
@@ -7,12 +8,12 @@ import 'package:piggy_flutter/models/models.dart';
 import 'package:piggy_flutter/repositories/piggy_api_client.dart';
 
 class TransactionRepository {
-  TransactionRepository({@required this.piggyApiClient})
+  TransactionRepository({required this.piggyApiClient})
       : assert(piggyApiClient != null);
 
   final PiggyApiClient piggyApiClient;
 
-  Future<TransactionSummary> getTransactionSummary(String duration) async {
+  Future<TransactionSummary?> getTransactionSummary(String duration) async {
     return await piggyApiClient.getTransactionSummary(duration);
   }
 
@@ -52,32 +53,31 @@ class TransactionRepository {
   // Utils
 
   List<TransactionGroupItem> groupTransactions(
-      {List<Transaction> transactions,
-      TransactionsGroupBy groupBy = TransactionsGroupBy.Date}) {
+      {required List<Transaction> transactions,
+      TransactionsGroupBy? groupBy = TransactionsGroupBy.Date}) {
     List<TransactionGroupItem> sections = [];
     var formatter = DateFormat("EEE, MMM d, ''yy");
-    String key;
+    String? key;
 
     transactions.forEach((Transaction transaction) {
       if (groupBy == TransactionsGroupBy.Date) {
-        key = formatter.format(DateTime.parse(transaction.transactionTime));
+        key = formatter.format(DateTime.parse(transaction.transactionTime!));
       } else if (groupBy == TransactionsGroupBy.Category) {
         key = transaction.categoryName;
       }
 
-      TransactionGroupItem section = sections.firstWhere(
-          (TransactionGroupItem o) => o.title == key,
-          orElse: () => null);
+      TransactionGroupItem? section = sections.firstWhereOrNull(
+          (TransactionGroupItem o) => o.title == key);
 
       if (section == null) {
         section = TransactionGroupItem(title: key, groupby: groupBy);
         sections.add(section);
       }
 
-      if (transaction.amountInDefaultCurrency > 0) {
-        section.totalInflow += transaction.amountInDefaultCurrency;
+      if (transaction.amountInDefaultCurrency! > 0) {
+        section.totalInflow += transaction.amountInDefaultCurrency!;
       } else {
-        section.totalOutflow += transaction.amountInDefaultCurrency;
+        section.totalOutflow += transaction.amountInDefaultCurrency!;
       }
 
       section.transactions.add(transaction);

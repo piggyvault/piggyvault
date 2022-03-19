@@ -1,6 +1,6 @@
 class AccountType {
-  final String name;
-  final int id;
+  final String? name;
+  final int? id;
 
   AccountType(this.name, this.id);
 

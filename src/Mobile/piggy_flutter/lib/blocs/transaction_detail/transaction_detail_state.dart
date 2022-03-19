@@ -23,7 +23,7 @@ class TransactionDeleted extends TransactionDetailState {
 class TransactionDetailError extends TransactionDetailState {
   final String errorMessage;
 
-  TransactionDetailError({@required this.errorMessage});
+  TransactionDetailError({required this.errorMessage});
 
   @override
   String toString() => 'TransactionDetailError { error: $errorMessage }';

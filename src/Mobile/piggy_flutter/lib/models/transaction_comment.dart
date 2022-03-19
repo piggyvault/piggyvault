@@ -1,6 +1,6 @@
 class TransactionComment {
-  final String id, content, creationTime, creatorUserName;
-  final int creatorUserId;
+  final String? id, content, creationTime, creatorUserName;
+  final int? creatorUserId;
   TransactionComment(
       {this.id,
       this.content,

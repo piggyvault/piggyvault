@@ -7,7 +7,7 @@ abstract class CategorywiseAccountsReportEvent extends Equatable {
 }
 
 class CategorywiseAccountsReportLoad extends CategorywiseAccountsReportEvent {
-  const CategorywiseAccountsReportLoad({@required this.input})
+  const CategorywiseAccountsReportLoad({required this.input})
       : assert(input != null);
 
   final GetCategoryReportInput input;

@@ -14,7 +14,7 @@ setAccess() async {
 }
 
 class IntroViews extends StatelessWidget {
-  IntroViews({Key key}) : super(key: key);
+  IntroViews({Key? key}) : super(key: key);
 
   //making list of pages needed to pass in IntroViewsFlutter constructor.
   final pages = [

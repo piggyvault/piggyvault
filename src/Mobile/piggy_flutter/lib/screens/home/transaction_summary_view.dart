@@ -6,26 +6,26 @@ import 'dart:math' as math;
 import 'package:piggy_flutter/utils/common.dart';
 
 class TransactionSummaryView extends StatelessWidget {
-  final AnimationController animationController;
-  final Animation animation;
+  final AnimationController? animationController;
+  final Animation? animation;
 
   const TransactionSummaryView(
-      {Key key, this.animationController, this.animation})
+      {Key? key, this.animationController, this.animation})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return AnimatedBuilder(
-      animation: animationController,
-      builder: (BuildContext context, Widget child) {
+      animation: animationController!,
+      builder: (BuildContext context, Widget? child) {
         return BlocBuilder<TransactionSummaryBloc, TransactionSummaryState>(
             builder: (context, state) {
           if (state is TransactionSummaryLoaded) {
             return FadeTransition(
-              opacity: animation,
+              opacity: animation as Animation<double>,
               child: new Transform(
                 transform: new Matrix4.translationValues(
-                    0.0, 30 * (1.0 - animation.value), 0.0),
+                    0.0, 30 * (1.0 - animation!.value), 0.0),
                 child: Padding(
                   padding: const EdgeInsets.only(
                       left: 24, right: 24, top: 16, bottom: 18),
@@ -114,7 +114,7 @@ class TransactionSummaryView extends StatelessWidget {
                                                               left: 4,
                                                               bottom: 3),
                                                       child: Text(
-                                                        '${(state.summary.userIncome * animation.value).toInt()}',
+                                                        '${(state.summary.userIncome! * animation!.value).toInt()}',
                                                         textAlign:
                                                             TextAlign.center,
                                                         style: TextStyle(
@@ -219,7 +219,7 @@ class TransactionSummaryView extends StatelessWidget {
                                                               left: 4,
                                                               bottom: 3),
                                                       child: Text(
-                                                        '${(state.summary.userExpense * animation.value).toInt()}',
+                                                        '${(state.summary.userExpense! * animation!.value).toInt()}',
                                                         textAlign:
                                                             TextAlign.center,
                                                         style: TextStyle(
@@ -297,7 +297,7 @@ class TransactionSummaryView extends StatelessWidget {
                                                 CrossAxisAlignment.center,
                                             children: <Widget>[
                                               Text(
-                                                '${(state.summary.userSaved * animation.value).toInt()}',
+                                                '${(state.summary.userSaved! * animation!.value).toInt()}',
                                                 textAlign: TextAlign.center,
                                                 style: TextStyle(
                                                   fontFamily:
@@ -337,7 +337,7 @@ class TransactionSummaryView extends StatelessWidget {
                                               ],
                                               angle: 140 +
                                                   (360 - 140) *
-                                                      (1.0 - animation.value)),
+                                                      (1.0 - animation!.value)),
                                           child: SizedBox(
                                             width: 108,
                                             height: 108,
@@ -399,7 +399,7 @@ class TransactionSummaryView extends StatelessWidget {
                                           children: <Widget>[
                                             Container(
                                               width: ((70 / 1.2) *
-                                                  animation.value),
+                                                  animation!.value),
                                               height: 4,
                                               decoration: BoxDecoration(
                                                 gradient:
@@ -471,7 +471,7 @@ class TransactionSummaryView extends StatelessWidget {
                                               children: <Widget>[
                                                 Container(
                                                   width: ((70 / 2) *
-                                                      animationController
+                                                      animationController!
                                                           .value),
                                                   height: 4,
                                                   decoration: BoxDecoration(
@@ -549,7 +549,7 @@ class TransactionSummaryView extends StatelessWidget {
                                               children: <Widget>[
                                                 Container(
                                                   width: ((70 / 2.5) *
-                                                      animationController
+                                                      animationController!
                                                           .value),
                                                   height: 4,
                                                   decoration: BoxDecoration(
@@ -617,13 +617,13 @@ class TransactionSummaryView extends StatelessWidget {
 
 class CurvePainter extends CustomPainter {
   final double angle;
-  final List<Color> colors;
+  final List<Color>? colors;
 
   CurvePainter({this.colors, this.angle = 140});
 
   @override
   void paint(Canvas canvas, Size size) {
-    List<Color> colorsList = [];
+    List<Color>? colorsList = [];
     if (colors != null) {
       colorsList = colors;
     } else {
@@ -677,7 +677,7 @@ class CurvePainter extends CustomPainter {
       startAngle: degreeToRadians(268),
       endAngle: degreeToRadians(270.0 + 360),
       tileMode: TileMode.repeated,
-      colors: colorsList,
+      colors: colorsList!,
     );
     final paint = new Paint()
       ..shader = gradient.createShader(rect)

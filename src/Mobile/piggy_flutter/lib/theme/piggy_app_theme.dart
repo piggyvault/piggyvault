@@ -98,18 +98,18 @@ class PiggyAppTheme {
   static TextTheme _buildTextTheme(TextTheme base) {
     const String fontName = 'WorkSans';
     return base.copyWith(
-      headline6: base.headline6.copyWith(fontFamily: fontName),
-      bodyText2: base.headline6.copyWith(fontFamily: fontName),
-      bodyText1: base.headline6.copyWith(fontFamily: fontName),
-      button: base.headline6.copyWith(fontFamily: fontName),
-      caption: base.headline6.copyWith(fontFamily: fontName),
-      headline4: base.headline6.copyWith(fontFamily: fontName),
-      headline3: base.headline6.copyWith(fontFamily: fontName),
-      headline2: base.headline6.copyWith(fontFamily: fontName),
-      headline1: base.headline6.copyWith(fontFamily: fontName),
-      headline5: base.headline6.copyWith(fontFamily: fontName),
-      overline: base.headline6.copyWith(fontFamily: fontName),
-      subtitle1: base.headline6.copyWith(fontFamily: fontName),
+      headline6: base.headline6!.copyWith(fontFamily: fontName),
+      bodyText2: base.headline6!.copyWith(fontFamily: fontName),
+      bodyText1: base.headline6!.copyWith(fontFamily: fontName),
+      button: base.headline6!.copyWith(fontFamily: fontName),
+      caption: base.headline6!.copyWith(fontFamily: fontName),
+      headline4: base.headline6!.copyWith(fontFamily: fontName),
+      headline3: base.headline6!.copyWith(fontFamily: fontName),
+      headline2: base.headline6!.copyWith(fontFamily: fontName),
+      headline1: base.headline6!.copyWith(fontFamily: fontName),
+      headline5: base.headline6!.copyWith(fontFamily: fontName),
+      overline: base.headline6!.copyWith(fontFamily: fontName),
+      subtitle1: base.headline6!.copyWith(fontFamily: fontName),
     );
   }
 

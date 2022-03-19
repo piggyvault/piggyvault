@@ -6,7 +6,7 @@ abstract class AccountFormState extends Equatable {
   const AccountFormState();
 
   @override
-  List<Object> get props => [null];
+  List<Object?> get props => [null];
 }
 
 class InitialAccountFormState extends AccountFormState {}
@@ -14,12 +14,12 @@ class InitialAccountFormState extends AccountFormState {}
 class AccountFormLoading extends AccountFormState {}
 
 class AccountFormLoaded extends AccountFormState {
-  const AccountFormLoaded({@required this.account});
+  const AccountFormLoaded({required this.account});
 
-  final AccountFormModel account;
+  final AccountFormModel? account;
 
   @override
-  List<Object> get props => [account];
+  List<Object?> get props => [account];
 }
 
 class AccountFormSaving extends AccountFormState {}

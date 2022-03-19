@@ -10,21 +10,21 @@ import 'package:piggy_flutter/intro_views/Models/slide_update_model.dart';
 /// reveal is not completed.
 
 class AnimatedPageDragger {
-  final SlideDirection slideDirection;
+  final SlideDirection? slideDirection;
 
   //This variable tells that whether we have to open or close the page reveal.
-  final TransitionGoal transitionGoal;
+  final TransitionGoal? transitionGoal;
 
   //Animation controller
-  AnimationController completionAnimationController;
+  late AnimationController completionAnimationController;
 
   //Constructor
   AnimatedPageDragger({
     this.slideDirection,
     this.transitionGoal,
-    double slidePercent,
-    StreamController<SlideUpdate> slideUpdateStream,
-    TickerProvider vsync,
+    double? slidePercent,
+    StreamController<SlideUpdate>? slideUpdateStream,
+    required TickerProvider vsync,
   }) {
     final startSlidePercent = slidePercent;
     double endSlidePercent;
@@ -34,7 +34,7 @@ class AnimatedPageDragger {
     if (transitionGoal == TransitionGoal.open) {
       endSlidePercent = 1.0;
 
-      final slideRemaining = 1.0 - slidePercent;
+      final slideRemaining = 1.0 - slidePercent!;
       //Standard value take for drag velocity to avoid complex calculations.
       duration = Duration(
           milliseconds: (slideRemaining / PERCENT_PER_MILLISECOND).round());
@@ -44,7 +44,7 @@ class AnimatedPageDragger {
       endSlidePercent = 0.0;
 
       duration = Duration(
-          milliseconds: (slidePercent / PERCENT_PER_MILLISECOND).round());
+          milliseconds: (slidePercent! / PERCENT_PER_MILLISECOND).round());
     }
 
     //Adding listener to animation controller
@@ -56,14 +56,14 @@ class AnimatedPageDragger {
             completionAnimationController.value);
 
         //Adding to slide update stream
-        slideUpdateStream.add(
+        slideUpdateStream!.add(
             SlideUpdate(slideDirection, slidePercent, UpdateType.animating));
       })
       ..addStatusListener((AnimationStatus status) {
         //When animation has done executing
         if (status == AnimationStatus.completed) {
           //Adding to slide update stream
-          slideUpdateStream.add(SlideUpdate(
+          slideUpdateStream!.add(SlideUpdate(
               slideDirection, slidePercent, UpdateType.doneAnimating));
         }
       });

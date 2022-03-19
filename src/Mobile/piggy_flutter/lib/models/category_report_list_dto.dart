@@ -16,6 +16,6 @@ class CategoryReportListDto {
         categoryName = json['categoryName'],
         currencyCode = json['currencyCode'];
 
-  final String accountName, categoryIcon, categoryName, currencyCode;
-  final double amount, amountInDefaultCurrency;
+  final String? accountName, categoryIcon, categoryName, currencyCode;
+  final double? amount, amountInDefaultCurrency;
 }

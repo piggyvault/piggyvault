@@ -8,7 +8,7 @@ class CurrenciesBloc extends Bloc<CurrenciesEvent, CurrenciesState> {
   // TODO: move to currency repo
   final AccountRepository accountRepository;
 
-  CurrenciesBloc({@required this.accountRepository})
+  CurrenciesBloc({required this.accountRepository})
       : assert(accountRepository != null),
         super(CurrenciesLoading());
 
@@ -20,7 +20,7 @@ class CurrenciesBloc extends Bloc<CurrenciesEvent, CurrenciesState> {
       yield CurrenciesLoading();
 
       try {
-        var currencies = await accountRepository.getCurrencies();
+        var currencies = await (accountRepository.getCurrencies() as FutureOr<List<Currency>>);
         yield CurrenciesLoaded(currencies: currencies);
       } catch (e) {
         yield CurrenciesError();

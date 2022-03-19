@@ -65,15 +65,15 @@ class SettingsGroupFooter extends StatelessWidget {
 
 class SettingsGroup extends StatelessWidget {
   SettingsGroup({
-    @required this.items,
+    required this.items,
     this.header,
     this.footer,
   })  : assert(items != null),
         assert(items.isNotEmpty);
 
   final List<SettingsItem> items;
-  final Widget header;
-  final Widget footer;
+  final Widget? header;
+  final Widget? footer;
 
   @override
   Widget build(BuildContext context) {
@@ -94,7 +94,7 @@ class SettingsGroup extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: dividedItems,
         ),
-        if (footer != null) footer,
+        if (footer != null) footer!,
       ],
     );
   }

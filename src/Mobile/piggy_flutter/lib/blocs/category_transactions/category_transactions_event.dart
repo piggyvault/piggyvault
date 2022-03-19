@@ -11,7 +11,7 @@ abstract class CategoryTransactionsEvent extends Equatable {
 class FetchCategoryTransactions extends CategoryTransactionsEvent {
   final GetTransactionsInput input;
 
-  FetchCategoryTransactions({@required this.input}) : assert(input != null);
+  FetchCategoryTransactions({required this.input}) : assert(input != null);
 
   @override
   List<Object> get props => [input];

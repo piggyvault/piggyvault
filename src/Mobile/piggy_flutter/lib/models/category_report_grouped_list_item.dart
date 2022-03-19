@@ -7,6 +7,6 @@ class CategoryReportGroupedListItem {
 
   List<CategoryReportGroupedListItemAccount> accounts = [];
 
-  final String categoryIcon, categoryName;
-  double totalAmountInDefaultCurrency;
+  final String? categoryIcon, categoryName;
+  double? totalAmountInDefaultCurrency;
 }

@@ -16,27 +16,27 @@ import 'package:piggy_flutter/widgets/common/common.dart';
 import 'package:piggy_flutter/widgets/primary_color_override.dart';
 
 class AccountFormScreen extends StatefulWidget {
-  const AccountFormScreen({Key key, this.title, this.account})
+  const AccountFormScreen({Key? key, this.title, this.account})
       : super(key: key);
 
-  final String title;
-  final Account account;
+  final String? title;
+  final Account? account;
 
   @override
   _AccountFormScreenState createState() => _AccountFormScreenState();
 }
 
 class _AccountFormScreenState extends State<AccountFormScreen> {
-  AccountFormModel accountFormModel;
+  AccountFormModel? accountFormModel;
   final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey =
       GlobalKey<ScaffoldMessengerState>();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final bool _formWasEdited = false;
 
-  AccountFormBloc accountFormBloc;
-  TextEditingController _nameFieldController;
-  CurrenciesBloc currenciesBloc;
-  AccountTypesBloc accountTypesBloc;
+  AccountFormBloc? accountFormBloc;
+  TextEditingController? _nameFieldController;
+  CurrenciesBloc? currenciesBloc;
+  AccountTypesBloc? accountTypesBloc;
 
   @override
   void initState() {
@@ -46,21 +46,21 @@ class _AccountFormScreenState extends State<AccountFormScreen> {
         accountRepository: RepositoryProvider.of<AccountRepository>(context));
 
     accountFormModel = AccountFormModel(id: widget.account?.id);
-    accountFormBloc.add(AccountFormLoad(accountId: widget.account?.id));
+    accountFormBloc!.add(AccountFormLoad(accountId: widget.account?.id));
 
     if (widget.account == null) {
       _nameFieldController = TextEditingController();
     } else {
-      _nameFieldController = TextEditingController(text: widget.account.name);
+      _nameFieldController = TextEditingController(text: widget.account!.name);
     }
 
     currenciesBloc = CurrenciesBloc(
         accountRepository: RepositoryProvider.of<AccountRepository>(context));
-    currenciesBloc.add(LoadCurrencies());
+    currenciesBloc!.add(LoadCurrencies());
 
     accountTypesBloc = AccountTypesBloc(
         accountRepository: RepositoryProvider.of<AccountRepository>(context));
-    accountTypesBloc.add(AccountTypesLoad());
+    accountTypesBloc!.add(AccountTypesLoad());
   }
 
   @override
@@ -70,7 +70,7 @@ class _AccountFormScreenState extends State<AccountFormScreen> {
       key: scaffoldMessengerKey,
       child: Scaffold(
         appBar: AppBar(
-          title: Text(widget.title),
+          title: Text(widget.title!),
           actions: <Widget>[
             submitButton(theme),
           ],
@@ -119,19 +119,19 @@ class _AccountFormScreenState extends State<AccountFormScreen> {
                                       hintText: 'Choose a currency',
                                     ),
                                     isEmpty:
-                                        accountFormModel.currencyId == null,
+                                        accountFormModel!.currencyId == null,
                                     child: DropdownButton<int>(
-                                      value: accountFormModel.currencyId,
-                                      onChanged: (int value) {
+                                      value: accountFormModel!.currencyId,
+                                      onChanged: (int? value) {
                                         setState(() {
-                                          accountFormModel.currencyId = value;
+                                          accountFormModel!.currencyId = value;
                                         });
                                       },
                                       items: currenciesState.currencies
                                           .map((Currency currency) {
                                         return DropdownMenuItem<int>(
                                           value: currency.id,
-                                          child: Text(currency.name),
+                                          child: Text(currency.name!),
                                         );
                                       }).toList(),
                                     ));
@@ -149,19 +149,19 @@ class _AccountFormScreenState extends State<AccountFormScreen> {
                                   labelText: 'Type',
                                   hintText: 'Choose an account type',
                                 ),
-                                isEmpty: accountFormModel.accountTypeId == null,
+                                isEmpty: accountFormModel!.accountTypeId == null,
                                 child: DropdownButton<int>(
-                                  value: accountFormModel.accountTypeId,
-                                  onChanged: (int value) {
+                                  value: accountFormModel!.accountTypeId,
+                                  onChanged: (int? value) {
                                     setState(() {
-                                      accountFormModel.accountTypeId = value;
+                                      accountFormModel!.accountTypeId = value;
                                     });
                                   },
                                   items: accountTypestate.accountTypes
                                       .map((AccountType type) {
                                     return DropdownMenuItem<int>(
                                       value: type.id,
-                                      child: Text(type.name),
+                                      child: Text(type.name!),
                                     );
                                   }).toList(),
                                 ),
@@ -192,10 +192,10 @@ class _AccountFormScreenState extends State<AccountFormScreen> {
     }
 
     final ThemeData theme = Theme.of(context);
-    final TextStyle dialogTextStyle = theme.textTheme.subtitle1
-        .copyWith(color: theme.textTheme.caption.color);
+    final TextStyle dialogTextStyle = theme.textTheme.subtitle1!
+        .copyWith(color: theme.textTheme.caption!.color);
 
-    return await showDialog<bool>(
+    return await (showDialog<bool>(
           context: context,
           builder: (BuildContext context) {
             return AlertDialog(
@@ -216,7 +216,7 @@ class _AccountFormScreenState extends State<AccountFormScreen> {
               ],
             );
           },
-        ) ??
+        ) as FutureOr<bool>?) ??
         false;
   }
 
@@ -245,19 +245,19 @@ class _AccountFormScreenState extends State<AccountFormScreen> {
   }
 
   void onSave() {
-    accountFormModel.name = _nameFieldController.text;
+    accountFormModel!.name = _nameFieldController!.text;
 
     if (_isValidAccount()) {
-      accountFormBloc.add(AccountFormSave(account: accountFormModel));
+      accountFormBloc!.add(AccountFormSave(account: accountFormModel!));
     }
   }
 
   bool _isValidAccount() {
-    if (accountFormModel.currencyId == null) {
+    if (accountFormModel!.currencyId == null) {
       const String error = 'Currency is required.';
       showInSnackBar(error);
       return false;
-    } else if (accountFormModel.accountTypeId == null) {
+    } else if (accountFormModel!.accountTypeId == null) {
       const String error = 'Account type is required.';
       showInSnackBar(error);
       return false;
@@ -266,7 +266,7 @@ class _AccountFormScreenState extends State<AccountFormScreen> {
   }
 
   void showInSnackBar(String value) {
-    scaffoldMessengerKey.currentState.showSnackBar(SnackBar(
+    scaffoldMessengerKey.currentState!.showSnackBar(SnackBar(
       content: Text(value),
       backgroundColor: Colors.red,
     ));

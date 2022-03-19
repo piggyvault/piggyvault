@@ -7,8 +7,8 @@ import 'package:piggy_flutter/theme/piggy_app_theme.dart';
 import 'package:piggy_flutter/utils/common.dart';
 
 class AddTransactionFab extends StatelessWidget {
-  const AddTransactionFab({Key key, this.account}) : super(key: key);
-  final Account account;
+  const AddTransactionFab({Key? key, this.account}) : super(key: key);
+  final Account? account;
 
   @override
   Widget build(BuildContext context) {

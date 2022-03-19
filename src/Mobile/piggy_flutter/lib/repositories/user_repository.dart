@@ -9,19 +9,19 @@ import 'package:shared_preferences/shared_preferences.dart';
 class UserRepository {
   final PiggyApiClient piggyApiClient;
 
-  UserRepository({@required this.piggyApiClient})
+  UserRepository({required this.piggyApiClient})
       : assert(piggyApiClient != null);
 
-  Future<String> authenticate(
-      {@required String tenancyName,
-      @required String usernameOrEmailAddress,
-      @required String password}) async {
+  Future<String?> authenticate(
+      {required String tenancyName,
+      required String usernameOrEmailAddress,
+      required String password}) async {
     final isTenantAvailableResult =
         await piggyApiClient.isTenantAvailable(tenancyName);
 
     if (isTenantAvailableResult.state == 1) {
       final prefs = await SharedPreferences.getInstance();
-      await prefs.setInt(UIData.tenantId, isTenantAvailableResult.tenantId);
+      await prefs.setInt(UIData.tenantId, isTenantAvailableResult.tenantId!);
 
       final authenticateResult = await piggyApiClient.authenticate(
           usernameOrEmailAddress: usernameOrEmailAddress, password: password);
@@ -33,7 +33,7 @@ class UserRepository {
     return null;
   }
 
-  Future<LoginInformationResult> getCurrentLoginInformation() async {
+  Future<LoginInformationResult?> getCurrentLoginInformation() async {
     return await piggyApiClient.getCurrentLoginInformations();
   }
 
@@ -63,7 +63,7 @@ class UserRepository {
     return;
   }
 
-  Future<UserSettings> getUserSettings() async {
+  Future<UserSettings?> getUserSettings() async {
     return await piggyApiClient.getUserSettings();
   }
 

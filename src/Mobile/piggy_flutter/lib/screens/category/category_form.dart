@@ -13,12 +13,12 @@ import 'package:piggy_flutter/widgets/primary_color_override.dart';
 class CategoryFormPage extends StatefulWidget {
   const CategoryFormPage({
     this.category,
-    Key key,
-    @required this.title,
-    @required this.categoriesBloc,
+    Key? key,
+    required this.title,
+    required this.categoriesBloc,
   }) : super(key: key);
 
-  final Category category;
+  final Category? category;
   final CategoriesBloc categoriesBloc;
   final String title;
 
@@ -32,9 +32,9 @@ class CategoryFormPageState extends State<CategoryFormPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final bool _formWasEdited = false;
 
-  TextEditingController _categorynameFieldController;
+  TextEditingController? _categorynameFieldController;
 
-  Icon _icon;
+  Icon? _icon;
 
   _pickIcon() async {
     // IconData icon = await FlutterIconPicker.showIconPicker(context,
@@ -57,7 +57,7 @@ class CategoryFormPageState extends State<CategoryFormPage> {
       setState(() {});
     } else {
       _categorynameFieldController =
-          TextEditingController(text: widget.category.name);
+          TextEditingController(text: widget.category!.name);
       // _icon = Icon(deserializeIcon(
       //     Map<String, dynamic>.from(json.decode(widget.category.icon))));
     }
@@ -177,7 +177,7 @@ class CategoryFormPageState extends State<CategoryFormPage> {
   }
 
   void saveCategory() {
-    Category category;
+    Category? category;
 
     if (widget.category == null) {
       category = Category(id: null, icon: 'icon-question');
@@ -185,7 +185,7 @@ class CategoryFormPageState extends State<CategoryFormPage> {
       category = widget.category;
     }
 
-    category.name = _categorynameFieldController.text;
+    category!.name = _categorynameFieldController!.text;
     if (_icon != null) {
       // category.icon = json.encode(serializeIcon(_icon.icon));
     }
@@ -196,10 +196,10 @@ class CategoryFormPageState extends State<CategoryFormPage> {
     if (!_formWasEdited) return true;
 
     final ThemeData theme = Theme.of(context);
-    final TextStyle dialogTextStyle = theme.textTheme.subtitle1
-        .copyWith(color: theme.textTheme.caption.color);
+    final TextStyle dialogTextStyle = theme.textTheme.subtitle1!
+        .copyWith(color: theme.textTheme.caption!.color);
 
-    return await showDialog<bool>(
+    return await (showDialog<bool>(
           context: context,
           builder: (BuildContext context) {
             return AlertDialog(
@@ -220,12 +220,12 @@ class CategoryFormPageState extends State<CategoryFormPage> {
               ],
             );
           },
-        ) ??
+        ) as FutureOr<bool>?) ??
         false;
   }
 
   void showInSnackBar(String value) {
-    scaffoldMessengerKey.currentState.showSnackBar(SnackBar(
+    scaffoldMessengerKey.currentState!.showSnackBar(SnackBar(
       content: Text(value),
       backgroundColor: Colors.red,
     ));

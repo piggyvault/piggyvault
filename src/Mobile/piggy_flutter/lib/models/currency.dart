@@ -1,6 +1,6 @@
 class Currency {
-  final String name, symbol, symbolNative, code;
-  final int id;
+  final String? name, symbol, symbolNative, code;
+  final int? id;
 
   Currency(this.name, this.id, this.symbol, this.symbolNative, this.code);
 

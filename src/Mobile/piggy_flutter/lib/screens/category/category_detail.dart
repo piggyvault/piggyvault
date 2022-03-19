@@ -28,15 +28,15 @@ import 'category_form.dart';
 
 class CategoryDetailPage extends StatefulWidget {
   const CategoryDetailPage(
-      {Key key,
-      @required this.category,
-      @required this.transactionRepository,
-      @required this.animationController})
+      {Key? key,
+      required this.category,
+      required this.transactionRepository,
+      required this.animationController})
       : super(key: key);
 
   final Category category;
   final TransactionRepository transactionRepository;
-  final AnimationController animationController;
+  final AnimationController? animationController;
 
   @override
   _CategoryDetailPageState createState() => _CategoryDetailPageState();
@@ -44,16 +44,16 @@ class CategoryDetailPage extends StatefulWidget {
 
 class _CategoryDetailPageState extends State<CategoryDetailPage>
     with TickerProviderStateMixin {
-  AnimationController _hideFabAnimation;
-  Animation<double> topBarAnimation;
-  Animation<double> listAnimation;
+  late AnimationController _hideFabAnimation;
+  late Animation<double> topBarAnimation;
+  late Animation<double> listAnimation;
   final ScrollController scrollController = ScrollController();
   double topBarOpacity = 0.0;
 
   List<Widget> listViews = <Widget>[];
-  Completer<void> _refreshCompleter;
+  Completer<void>? _refreshCompleter;
 
-  CategoryTransactionsBloc categoryTransactionsBloc;
+  CategoryTransactionsBloc? categoryTransactionsBloc;
 
   DateTime startDate = DateTime.now().add(const Duration(days: -30));
   DateTime endDate = DateTime.now();
@@ -65,13 +65,13 @@ class _CategoryDetailPageState extends State<CategoryDetailPage>
     _hideFabAnimation.forward();
     topBarAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(
-        parent: widget.animationController,
+        parent: widget.animationController!,
         curve: Interval(0, 0.5, curve: Curves.fastOutSlowIn),
       ),
     );
 
     listAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
-        parent: widget.animationController,
+        parent: widget.animationController!,
         curve: Interval(0.5, 1.0, curve: Curves.fastOutSlowIn)));
 
     scrollController.addListener(() {
@@ -103,7 +103,7 @@ class _CategoryDetailPageState extends State<CategoryDetailPage>
         transactionRepository: widget.transactionRepository,
         transactionBloc: BlocProvider.of<TransactionBloc>(context));
 
-    categoryTransactionsBloc.add(
+    categoryTransactionsBloc!.add(
       FetchCategoryTransactions(
         input: GetTransactionsInput(
             type: 'category',
@@ -180,10 +180,10 @@ class _CategoryDetailPageState extends State<CategoryDetailPage>
         if (!snapshot.hasData) {
           return const SizedBox();
         } else {
-          widget.animationController.forward();
+          widget.animationController!.forward();
           return AnimatedBuilder(
-            animation: widget.animationController,
-            builder: (BuildContext context, Widget child) {
+            animation: widget.animationController!,
+            builder: (BuildContext context, Widget? child) {
               return FadeTransition(
                 opacity: listAnimation,
                 child: Transform(
@@ -217,7 +217,7 @@ class _CategoryDetailPageState extends State<CategoryDetailPage>
                                         children: <Widget>[
                                           SearchBar(
                                             onSearchTextChanged: (txt) {
-                                              categoryTransactionsBloc.add(
+                                              categoryTransactionsBloc!.add(
                                                   FilterCategoryTransactions(
                                                       txt));
                                             },
@@ -257,7 +257,7 @@ class _CategoryDetailPageState extends State<CategoryDetailPage>
 
                                     return RefreshIndicator(
                                       onRefresh: () {
-                                        categoryTransactionsBloc.add(
+                                        categoryTransactionsBloc!.add(
                                           FetchCategoryTransactions(
                                             input: GetTransactionsInput(
                                                 type: 'category',
@@ -268,7 +268,7 @@ class _CategoryDetailPageState extends State<CategoryDetailPage>
                                                     TransactionsGroupBy.Date),
                                           ),
                                         );
-                                        return _refreshCompleter.future;
+                                        return _refreshCompleter!.future;
                                       },
                                       child: SafeArea(
                                         top: false,
@@ -333,8 +333,8 @@ class _CategoryDetailPageState extends State<CategoryDetailPage>
     return Column(
       children: <Widget>[
         AnimatedBuilder(
-          animation: widget.animationController,
-          builder: (BuildContext context, Widget child) {
+          animation: widget.animationController!,
+          builder: (BuildContext context, Widget? child) {
             return FadeTransition(
               opacity: topBarAnimation,
               child: Transform(
@@ -372,7 +372,7 @@ class _CategoryDetailPageState extends State<CategoryDetailPage>
                               child: Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: AutoSizeText(
-                                  widget.category.name,
+                                  widget.category.name!,
                                   textAlign: TextAlign.left,
                                   style: TextStyle(
                                     fontFamily: PiggyAppTheme.fontName,
@@ -440,7 +440,7 @@ class _CategoryDetailPageState extends State<CategoryDetailPage>
     );
   }
 
-  Widget getTimeDateUI(CategoryTransactionsBloc categoryTransactionsBloc) {
+  Widget getTimeDateUI(CategoryTransactionsBloc? categoryTransactionsBloc) {
     return Padding(
       padding: const EdgeInsets.only(left: 18, bottom: 16),
       child: Row(
@@ -730,7 +730,7 @@ class _CategoryDetailPageState extends State<CategoryDetailPage>
     );
   }
 
-  void showDemoDialog({BuildContext context, CategoryTransactionsBloc bloc}) {
+  void showDemoDialog({required BuildContext context, CategoryTransactionsBloc? bloc}) {
     showDialog<dynamic>(
       context: context,
       builder: (BuildContext context) => CalendarPopupView(
@@ -746,7 +746,7 @@ class _CategoryDetailPageState extends State<CategoryDetailPage>
               endDate = endData;
             }
           });
-          bloc.add(FetchCategoryTransactions(
+          bloc!.add(FetchCategoryTransactions(
               input: GetTransactionsInput(
                   type: 'category',
                   categoryId: widget.category.id,

@@ -1,5 +1,5 @@
 class LoginResult {
-  final String accessToken;
+  final String? accessToken;
 
   const LoginResult({this.accessToken});
 

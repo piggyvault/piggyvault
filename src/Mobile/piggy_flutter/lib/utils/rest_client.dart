@@ -10,7 +10,7 @@ class RestClient {
   // static const ApiEndpointUrl = "http://10.0.2.2:21021/api";
   // static const ApiEndpointUrl = "http://localhost:21021/api";
 
-  Future<ApiResponse<T>> getAsync<T>(String resourcePath) async {
+  Future<ApiResponse<T?>> getAsync<T>(String resourcePath) async {
     final prefs = await SharedPreferences.getInstance();
     var token = prefs.getString(UIData.authToken);
     var tenantId = prefs.getInt(UIData.tenantId);
@@ -25,7 +25,7 @@ class RestClient {
     return processResponse<T>(response);
   }
 
-  Future<ApiResponse<T>> postAsync<T>(String resourcePath, dynamic data) async {
+  Future<ApiResponse<T?>> postAsync<T>(String resourcePath, dynamic data) async {
     final prefs = await SharedPreferences.getInstance();
     var token = prefs.getString(UIData.authToken);
     var tenantId = prefs.getInt(UIData.tenantId);
@@ -54,7 +54,7 @@ class RestClient {
     return processResponse<T>(response);
   }
 
-  ApiResponse<T> processResponse<T>(http.Response response) {
+  ApiResponse<T?> processResponse<T>(http.Response response) {
     try {
       // if (!((response.statusCode < 200) ||
       //     (response.statusCode >= 300) ||
@@ -64,18 +64,18 @@ class RestClient {
 
       // print(jsonResult);
 
-      var output = ApiResponse<T>(
+      var output = ApiResponse<T?>(
         result: resultClass["result"],
         success: resultClass["success"],
         unAuthorizedRequest: resultClass['unAuthorizedRequest'],
       );
 
-      if (!output.success) {
+      if (!output.success!) {
         output.error = resultClass["error"]["message"];
       }
       return output;
     } catch (e) {
-      return ApiResponse<T>(
+      return ApiResponse<T?>(
           result: null,
           success: false,
           unAuthorizedRequest: false,

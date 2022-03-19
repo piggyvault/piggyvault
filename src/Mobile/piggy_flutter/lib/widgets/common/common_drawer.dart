@@ -15,9 +15,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class CommonDrawer extends StatelessWidget {
   final TextStyle menuTextStyle =
       const TextStyle(fontWeight: FontWeight.w700, fontSize: 18.0);
-  final AnimationController animationController;
+  final AnimationController? animationController;
 
-  const CommonDrawer({Key key, @required this.animationController})
+  const CommonDrawer({Key? key, required this.animationController})
       : super(key: key);
 
   @override
@@ -60,7 +60,7 @@ class CommonDrawer extends StatelessWidget {
               if (state is AccountsLoaded) {
                 return Chip(
                   backgroundColor: Colors.green,
-                  label: Text(state.userAccounts.length.toString()),
+                  label: Text(state.userAccounts!.length.toString()),
                 );
               }
               return Chip(
@@ -157,10 +157,10 @@ class CommonDrawer extends StatelessWidget {
       if (state is AuthAuthenticated) {
         return UserAccountsDrawerHeader(
           accountName: Text(
-            '${state.user.name} ${state.user.surname}',
+            '${state.user!.name} ${state.user!.surname}',
           ),
           accountEmail: Text(
-            state.user.emailAddress,
+            state.user!.emailAddress!,
           ),
           currentAccountPicture: CircleAvatar(
 //              backgroundImage: new AssetImage(UIData.pkImage),

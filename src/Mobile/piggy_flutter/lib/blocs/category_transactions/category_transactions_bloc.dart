@@ -9,14 +9,14 @@ import './bloc.dart';
 class CategoryTransactionsBloc
     extends Bloc<CategoryTransactionsEvent, CategoryTransactionsState> {
   CategoryTransactionsBloc(
-      {@required this.transactionRepository, @required this.transactionBloc})
+      {required this.transactionRepository, required this.transactionBloc})
       : assert(transactionRepository != null),
         assert(transactionBloc != null),
         super(CategoryTransactionsEmpty(null)) {
     transactionBlocSubscription = transactionBloc.stream.listen((state) {
       if (state is TransactionSaved) {
         if (this.state.filters != null) {
-          add(FetchCategoryTransactions(input: this.state.filters));
+          add(FetchCategoryTransactions(input: this.state.filters!));
         }
       }
     });
@@ -24,7 +24,7 @@ class CategoryTransactionsBloc
   final TransactionRepository transactionRepository;
 
   final TransactionBloc transactionBloc;
-  StreamSubscription transactionBlocSubscription;
+  late StreamSubscription transactionBlocSubscription;
 
   @override
   Stream<CategoryTransactionsState> mapEventToState(
@@ -61,7 +61,7 @@ class CategoryTransactionsBloc
               (state as CategoryTransactionsLoaded)
                   .allCategoryTransactions
                   .transactions
-                  .where((Transaction t) => t.description
+                  .where((Transaction t) => t.description!
                       .toLowerCase()
                       .contains(event.query.toLowerCase()))
                   .toList();

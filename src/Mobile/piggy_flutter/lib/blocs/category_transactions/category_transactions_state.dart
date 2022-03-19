@@ -4,15 +4,15 @@ import 'package:piggy_flutter/models/models.dart';
 
 // TODO(abhith): need to re-visit filters handling in states
 abstract class CategoryTransactionsState extends Equatable {
-  final GetTransactionsInput filters;
+  final GetTransactionsInput? filters;
 
   const CategoryTransactionsState(this.filters);
   @override
-  List<Object> get props => [];
+  List<Object?> get props => [];
 }
 
 class CategoryTransactionsEmpty extends CategoryTransactionsState {
-  CategoryTransactionsEmpty(GetTransactionsInput filters) : super(filters);
+  CategoryTransactionsEmpty(GetTransactionsInput? filters) : super(filters);
 }
 
 class CategoryTransactionsLoading extends CategoryTransactionsState {
@@ -22,16 +22,16 @@ class CategoryTransactionsLoading extends CategoryTransactionsState {
 class CategoryTransactionsLoaded extends CategoryTransactionsState {
   final TransactionsResult allCategoryTransactions;
   final TransactionsResult filterdCategoryTransactions;
-  final GetTransactionsInput filters;
+  final GetTransactionsInput? filters;
 
   CategoryTransactionsLoaded(
-      {@required this.allCategoryTransactions,
-      @required this.filterdCategoryTransactions,
-      @required this.filters})
+      {required this.allCategoryTransactions,
+      required this.filterdCategoryTransactions,
+      required this.filters})
       : super(filters);
 
   @override
-  List<Object> get props =>
+  List<Object?> get props =>
       [allCategoryTransactions, filterdCategoryTransactions, filters];
 }
 

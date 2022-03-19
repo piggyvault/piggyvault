@@ -4,12 +4,12 @@ import 'package:piggy_flutter/models/transaction_group_item.dart';
 import 'package:piggy_flutter/utils/common.dart';
 
 class TransactionsResult {
-  TransactionsResult({@required this.sections, @required this.transactions}) {
+  TransactionsResult({required this.sections, required this.transactions}) {
     transactions.forEach((t) {
-      if (t.amount > 0) {
-        _totalIncome += t.amountInDefaultCurrency;
+      if (t.amount! > 0) {
+        _totalIncome += t.amountInDefaultCurrency!;
       } else {
-        _totalExpense += t.amountInDefaultCurrency;
+        _totalExpense += t.amountInDefaultCurrency!;
       }
     });
   }

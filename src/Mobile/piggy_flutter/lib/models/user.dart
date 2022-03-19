@@ -15,6 +15,6 @@ class User {
         emailAddress = json['emailAddress'],
         profilePictureId = json['profilePictureId'];
 
-  final String name, surname, userName, emailAddress, profilePictureId;
-  final int id;
+  final String? name, surname, userName, emailAddress, profilePictureId;
+  final int? id;
 }

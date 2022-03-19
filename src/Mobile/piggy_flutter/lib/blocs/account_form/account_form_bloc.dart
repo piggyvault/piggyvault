@@ -8,7 +8,7 @@ import './bloc.dart';
 
 class AccountFormBloc extends Bloc<AccountFormEvent, AccountFormState> {
   AccountFormBloc(
-      {@required this.accountsBloc, @required this.accountRepository})
+      {required this.accountsBloc, required this.accountRepository})
       : assert(accountRepository != null),
         super(InitialAccountFormState());
 
@@ -23,7 +23,7 @@ class AccountFormBloc extends Bloc<AccountFormEvent, AccountFormState> {
       if (event.accountId != null) {
         yield AccountFormLoading();
         try {
-          final AccountFormModel account =
+          final AccountFormModel? account =
               await accountRepository.getAccountForEdit(event.accountId);
           yield AccountFormLoaded(account: account);
         } catch (e) {

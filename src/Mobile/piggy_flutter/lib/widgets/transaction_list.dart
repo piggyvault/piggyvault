@@ -13,12 +13,12 @@ import 'package:piggy_flutter/theme/piggy_app_theme.dart';
 import 'package:piggy_flutter/utils/common.dart';
 
 class TransactionList extends StatelessWidget {
-  TransactionList({Key key, @required this.items, this.isLoading, bool visible})
+  TransactionList({Key? key, required this.items, this.isLoading, bool? visible})
       : visible = visible ?? items.isNotEmpty,
         super(key: key);
 
   final List<TransactionGroupItem> items;
-  final Stream<bool> isLoading;
+  final Stream<bool>? isLoading;
   final DateFormat formatter = DateFormat("EEE, MMM d, ''yy");
   final bool visible;
 
@@ -42,11 +42,11 @@ class TransactionList extends StatelessWidget {
     );
   }
 
-  Widget _loadingInfo(Stream<bool> isLoading) {
+  Widget _loadingInfo(Stream<bool>? isLoading) {
     return StreamBuilder<bool>(
       stream: isLoading,
       builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
-        if (snapshot.hasData && snapshot.data) {
+        if (snapshot.hasData && snapshot.data!) {
           return const LinearProgressIndicator();
         } else {
           return Container();
@@ -62,13 +62,13 @@ class TransactionList extends StatelessWidget {
             buildTransactionList(context, transaction, item.groupby));
 
     return ExpansionTile(
-      key: PageStorageKey<String>(item.title),
+      key: PageStorageKey<String?>(item.title),
       title: Row(
         mainAxisSize: MainAxisSize.max,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
           Text('${item.title}',
-              style: Theme.of(context).textTheme.headline6.copyWith(
+              style: Theme.of(context).textTheme.headline6!.copyWith(
                   fontSize: 16.0, color: Theme.of(context).accentColor)),
           Row(
             children: <Widget>[
@@ -110,7 +110,7 @@ class TransactionList extends StatelessWidget {
   }
 
   MergeSemantics buildTransactionList(BuildContext context,
-      Transaction transaction, TransactionsGroupBy groupBy) {
+      Transaction transaction, TransactionsGroupBy? groupBy) {
     final TextTheme textTheme = Theme.of(context).textTheme;
     return MergeSemantics(
       child: ListTile(
@@ -123,14 +123,14 @@ class TransactionList extends StatelessWidget {
           //     color: transaction.amount > 0
           //         ? PiggyAppTheme.income
           //         : PiggyAppTheme.expense),
-          backgroundColor: transaction.amount > 0
+          backgroundColor: transaction.amount! > 0
               ? PiggyAppTheme.incomeBackground
               : PiggyAppTheme.expenseBackground,
         ),
         title: Text(
           groupBy == TransactionsGroupBy.Date
-              ? transaction.categoryName
-              : formatter.format(DateTime.parse(transaction.transactionTime)),
+              ? transaction.categoryName!
+              : formatter.format(DateTime.parse(transaction.transactionTime!)),
           style: textTheme.bodyText1,
         ),
         subtitle: Text(

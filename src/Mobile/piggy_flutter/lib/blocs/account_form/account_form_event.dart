@@ -7,7 +7,7 @@ abstract class AccountFormEvent extends Equatable {
 }
 
 class AccountFormSave extends AccountFormEvent {
-  const AccountFormSave({@required this.account}) : assert(account != null);
+  const AccountFormSave({required this.account}) : assert(account != null);
 
   final AccountFormModel account;
 
@@ -18,8 +18,8 @@ class AccountFormSave extends AccountFormEvent {
 class AccountFormLoad extends AccountFormEvent {
   const AccountFormLoad({this.accountId});
 
-  final String accountId;
+  final String? accountId;
 
   @override
-  List<Object> get props => [accountId];
+  List<Object?> get props => [accountId];
 }

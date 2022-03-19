@@ -10,7 +10,7 @@ import 'package:piggy_flutter/theme/settings_styles.dart';
 typedef SettingsItemCallback = FutureOr<void> Function();
 
 class SettingsNavigationIndicator extends StatelessWidget {
-  const SettingsNavigationIndicator({Key key}) : super(key: key);
+  const SettingsNavigationIndicator({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -24,10 +24,10 @@ class SettingsNavigationIndicator extends StatelessWidget {
 
 class SettingsIcon extends StatelessWidget {
   const SettingsIcon({
-    @required this.icon,
+    required this.icon,
     this.foregroundColor = CupertinoColors.white,
     this.backgroundColor = CupertinoColors.black,
-    Key key,
+    Key? key,
   })  : assert(icon != null),
         super(key: key);
 
@@ -55,20 +55,20 @@ class SettingsIcon extends StatelessWidget {
 
 class SettingsItem extends StatefulWidget {
   const SettingsItem({
-    @required this.label,
+    required this.label,
     this.icon,
     this.content,
     this.subtitle,
     this.onPress,
-    Key key,
+    Key? key,
   })  : assert(label != null),
         super(key: key);
 
   final String label;
-  final Widget icon;
-  final Widget content;
-  final String subtitle;
-  final SettingsItemCallback onPress;
+  final Widget? icon;
+  final Widget? content;
+  final String? subtitle;
+  final SettingsItemCallback? onPress;
 
   @override
   State<StatefulWidget> createState() => SettingsItemState();
@@ -89,7 +89,7 @@ class SettingsItemState extends State<SettingsItem> {
             setState(() {
               pressed = true;
             });
-            await widget.onPress();
+            await widget.onPress!();
             Future.delayed(
               Duration(milliseconds: 150),
               () {
@@ -129,7 +129,7 @@ class SettingsItemState extends State<SettingsItem> {
                             Text(widget.label),
                             SizedBox(height: 4),
                             Text(
-                              widget.subtitle,
+                              widget.subtitle!,
                               style: TextStyle(
                                 fontSize: 12,
                                 letterSpacing: -0.2,

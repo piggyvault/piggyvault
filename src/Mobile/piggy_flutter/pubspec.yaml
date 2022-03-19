@@ -18,7 +18,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 0.30.1+46
 
 environment:
-  sdk: ">=2.11.0 <3.0.0"
+  sdk: '>=2.12.0 <3.0.0'
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
@@ -50,6 +50,7 @@ dependencies:
   flutter_native_timezone: ^1.0.10
   # flutter_iconpicker: ^3.1.2
   font_awesome_flutter: ^9.1.0
+  collection: ^1.15.0-nullsafety.4
 
 dev_dependencies:
   flutter_test:

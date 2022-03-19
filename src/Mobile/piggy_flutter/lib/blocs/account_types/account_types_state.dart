@@ -8,11 +8,11 @@ abstract class AccountTypesState extends Equatable {
 
 class AccountTypesLoading extends AccountTypesState {
   @override
-  List<Object> get props => [null];
+  List<Object?> get props => [null];
 }
 
 class AccountTypesLoaded extends AccountTypesState {
-  const AccountTypesLoaded({@required this.accountTypes})
+  const AccountTypesLoaded({required this.accountTypes})
       : assert(accountTypes != null);
 
   final List<AccountType> accountTypes;
@@ -23,5 +23,5 @@ class AccountTypesLoaded extends AccountTypesState {
 
 class AccountTypesError extends AccountTypesState {
   @override
-  List<Object> get props => [null];
+  List<Object?> get props => [null];
 }

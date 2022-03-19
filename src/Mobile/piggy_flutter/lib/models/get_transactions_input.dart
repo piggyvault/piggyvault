@@ -9,11 +9,11 @@ class GetTransactionsInput {
       this.endDate,
       this.groupBy}); // where the data is showing
 
-  String type;
-  String accountId;
-  String categoryId;
-  DateTime startDate;
-  DateTime endDate;
-  String query;
-  TransactionsGroupBy groupBy;
+  String? type;
+  String? accountId;
+  String? categoryId;
+  DateTime? startDate;
+  DateTime? endDate;
+  String? query;
+  TransactionsGroupBy? groupBy;
 }

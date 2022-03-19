@@ -6,7 +6,7 @@ import 'package:piggy_flutter/repositories/account_repository.dart';
 import './bloc.dart';
 
 class AccountTypesBloc extends Bloc<AccountTypesEvent, AccountTypesState> {
-  AccountTypesBloc({@required this.accountRepository})
+  AccountTypesBloc({required this.accountRepository})
       : assert(accountRepository != null),
         super(AccountTypesLoading());
 
@@ -20,7 +20,7 @@ class AccountTypesBloc extends Bloc<AccountTypesEvent, AccountTypesState> {
       yield AccountTypesLoading();
       try {
         final List<AccountType> accountTypes =
-            await accountRepository.getAccountTypes();
+            await (accountRepository.getAccountTypes() as FutureOr<List<AccountType>>);
         yield AccountTypesLoaded(accountTypes: accountTypes);
       } catch (error) {
         yield AccountTypesError();

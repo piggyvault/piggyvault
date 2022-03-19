@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_icons/flutter_icons.dart';
+import 'package:flutter_font_icons/flutter_font_icons.dart';
 import 'package:piggy_flutter/blocs/account_form/bloc.dart';
 import 'package:piggy_flutter/blocs/account_types/bloc.dart';
 import 'package:piggy_flutter/blocs/accounts/accounts.dart';

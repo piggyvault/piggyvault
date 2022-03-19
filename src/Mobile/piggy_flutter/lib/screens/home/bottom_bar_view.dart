@@ -1,6 +1,6 @@
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
-import 'package:flutter_icons/flutter_icons.dart';
+import 'package:flutter_font_icons/flutter_font_icons.dart';
 import 'package:piggy_flutter/theme/piggy_app_theme.dart';
 
 import 'home_screen.dart';
@@ -256,10 +256,10 @@ class _TabIconsState extends State<TabIcons> with TickerProviderStateMixin {
                     ),
                   ),
                   child: IconToggle(
-                    activeColor: PiggyAppTheme.nearlyDarkBlue,
-                    selectedIconData: widget.tabIconData.iconData,
-                    unselectedIconData: widget.tabIconData.iconData,
-                    value: widget.tabIconData.isSelected,
+                    selectedColor: PiggyAppTheme.nearlyDarkBlue,
+                    selectedIcon: widget.tabIconData.iconData,
+                    unselectedIcon: widget.tabIconData.iconData,
+                    selected: widget.tabIconData.isSelected,
                   ),
                 ),
                 Positioned(

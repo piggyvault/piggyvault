@@ -1,11 +1,5 @@
-import 'package:equatable/equatable.dart';
-import 'package:flutter/cupertino.dart';
-
-abstract class AccountEvent extends Equatable {
+abstract class AccountEvent {
   const AccountEvent();
-
-  @override
-  List<Object> get props => null;
 }
 
 class FetchAccount extends AccountEvent {

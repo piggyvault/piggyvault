@@ -272,10 +272,8 @@ class PiggyApiClient {
 
   // Transaction
   Future<void> deleteTransaction(String id) async {
-    final result = await deleteAsync<dynamic>(
+    await deleteAsync<dynamic>(
         '$baseUrl/api/services/app/transaction/DeleteTransaction?id=$id');
-
-    return result;
   }
 
   Future<void> createOrUpdateTransactionComment(
@@ -313,10 +311,9 @@ class PiggyApiClient {
   }
 
   Future<void> changeDefaultCurrency(String currencyCode) async {
-    final result = await postAsync<dynamic>(
+    await postAsync<dynamic>(
         '$baseUrl/api/services/app/User/ChangeDefaultCurrency',
         {"currencyCode": currencyCode});
-    return result;
   }
 
 // utils
@@ -336,7 +333,8 @@ class PiggyApiClient {
     return processResponse<T>(response);
   }
 
-  Future<ApiResponse<T?>> postAsync<T>(String resourcePath, dynamic data) async {
+  Future<ApiResponse<T?>> postAsync<T>(
+      String resourcePath, dynamic data) async {
     final prefs = await SharedPreferences.getInstance();
     var token = prefs.getString(UIData.authToken);
     var tenantId = prefs.getInt(UIData.tenantId);

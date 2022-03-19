@@ -17,7 +17,7 @@ class CustomCalendarView extends StatefulWidget {
   final DateTime? initialStartDate;
   final DateTime? initialEndDate;
 
-  final Function(DateTime?, DateTime?)? startEndDateChange;
+  final Function(DateTime, DateTime)? startEndDateChange;
 
   @override
   _CustomCalendarViewState createState() => _CustomCalendarViewState();
@@ -435,7 +435,7 @@ class _CustomCalendarViewState extends State<CustomCalendarView> {
     }
     if (startDate != null && endDate != null) {
       if (!endDate!.isAfter(startDate!)) {
-        final DateTime? d = startDate;
+        final DateTime d = startDate!;
         startDate = endDate;
         endDate = d;
       }
@@ -448,7 +448,7 @@ class _CustomCalendarViewState extends State<CustomCalendarView> {
     }
     setState(() {
       try {
-        widget.startEndDateChange!(startDate, endDate);
+        widget.startEndDateChange!(startDate!, endDate!);
       } catch (_) {}
     });
   }

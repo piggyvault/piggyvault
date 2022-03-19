@@ -23,16 +23,16 @@ class CalendarPopupView extends StatefulWidget {
   final bool barrierDismissible;
   final DateTime? initialStartDate;
   final DateTime? initialEndDate;
-  final Function(DateTime?, DateTime?)? onApplyClick;
+  final Function(DateTime, DateTime)? onApplyClick;
 
-  final Function? onCancelClick;
+  final Function()? onCancelClick;
   @override
   _CalendarPopupViewState createState() => _CalendarPopupViewState();
 }
 
 class _CalendarPopupViewState extends State<CalendarPopupView>
     with TickerProviderStateMixin {
-  late AnimationController animationController;
+  AnimationController? animationController;
   DateTime? startDate;
   DateTime? endDate;
 
@@ -46,13 +46,13 @@ class _CalendarPopupViewState extends State<CalendarPopupView>
     if (widget.initialEndDate != null) {
       endDate = widget.initialEndDate;
     }
-    animationController.forward();
+    animationController?.forward();
     super.initState();
   }
 
   @override
   void dispose() {
-    animationController.dispose();
+    animationController?.dispose();
     super.dispose();
   }
 
@@ -62,11 +62,11 @@ class _CalendarPopupViewState extends State<CalendarPopupView>
       child: Scaffold(
         backgroundColor: Colors.transparent,
         body: AnimatedBuilder(
-          animation: animationController,
+          animation: animationController!,
           builder: (BuildContext context, Widget? child) {
             return AnimatedOpacity(
               duration: const Duration(milliseconds: 100),
-              opacity: animationController.value,
+              opacity: animationController!.value,
               child: InkWell(
                 splashColor: Colors.transparent,
                 focusColor: Colors.transparent,
@@ -216,7 +216,8 @@ class _CalendarPopupViewState extends State<CalendarPopupView>
                                         // animationController.reverse().then((f) {
 
                                         // });
-                                        widget.onApplyClick!(startDate, endDate);
+                                        widget.onApplyClick!(
+                                            startDate!, endDate!);
                                         Navigator.pop(context);
                                       } catch (_) {}
                                     },

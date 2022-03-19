@@ -1,10 +1,10 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:piggy_flutter/blocs/auth/auth.dart';
 import 'package:piggy_flutter/blocs/transaction/transaction.dart';
 import 'package:piggy_flutter/blocs/transaction_detail/bloc.dart';
 import 'package:piggy_flutter/blocs/transaction_summary/transaction_summary.dart';
+import 'package:piggy_flutter/models/transaction_summary.dart';
 import 'dart:developer' as developer;
 
 import 'package:piggy_flutter/repositories/repositories.dart';
@@ -58,8 +58,8 @@ class TransactionSummaryBloc
   ) async* {
     if (event is RefreshTransactionSummary) yield TransactionSummaryLoading();
     try {
-      final summary =
-          await (transactionRepository.getTransactionSummary('month') as FutureOr<TransactionSummary>);
+      final summary = await (transactionRepository
+          .getTransactionSummary('month') as FutureOr<TransactionSummary>);
       yield TransactionSummaryLoaded(summary: summary);
     } catch (_, stackTrace) {
       developer.log('$_',

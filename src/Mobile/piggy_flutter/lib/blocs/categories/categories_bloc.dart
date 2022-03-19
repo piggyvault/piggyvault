@@ -12,7 +12,7 @@ class CategoriesBloc extends Bloc<CategoriesEvent, CategoriesState> {
       : assert(categoryRepository != null),
         assert(authBloc != null),
         super(CategoriesLoading()) {
-    authBlocSubscription = authBloc.listen((AuthState state) {
+    authBlocSubscription = authBloc.stream.listen((AuthState state) {
       if (state is AuthAuthenticated) {
         add(CategoriesLoad());
       }

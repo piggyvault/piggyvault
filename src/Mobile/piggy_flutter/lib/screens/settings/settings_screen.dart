@@ -108,7 +108,7 @@ class _SettingsScreenState extends State<SettingsScreen>
 
     listViews.add(
       BlocBuilder(
-        cubit: settingsBloc,
+        bloc: settingsBloc,
         builder: (context, state) {
           return TitleView(
             titleTxt: 'Default Currency',

@@ -33,7 +33,7 @@ class RecentTransactionsBloc
         assert(transactionDetailBloc != null),
         super(RecentTransactionsEmpty(null)) {
     // TODO: DRY
-    authBlocSubscription = authBloc.listen((state) {
+    authBlocSubscription = authBloc.stream.listen((state) {
       if (state is AuthAuthenticated) {
         add(FetchRecentTransactions(
             input: GetTransactionsInput(
@@ -45,7 +45,7 @@ class RecentTransactionsBloc
       }
     });
 
-    transactionBlocSubscription = transactionsBloc.listen((state) {
+    transactionBlocSubscription = transactionsBloc.stream.listen((state) {
       if (state is TransactionSaved) {
         add(FetchRecentTransactions(
             input: GetTransactionsInput(
@@ -57,7 +57,8 @@ class RecentTransactionsBloc
       }
     });
 
-    transactionDetailBlocSubscription = transactionDetailBloc.listen((state) {
+    transactionDetailBlocSubscription =
+        transactionDetailBloc.stream.listen((state) {
       if (state is TransactionDeleted) {
         add(FetchRecentTransactions(
             input: GetTransactionsInput(

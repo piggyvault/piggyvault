@@ -162,7 +162,7 @@ class _CategorywiseAccountsReportScreenState
                                 child: BlocBuilder<
                                     CategorywiseAccountsReportBloc,
                                     CategorywiseAccountsReportState>(
-                                  cubit: reportBloc,
+                                  bloc: reportBloc,
                                   builder: (BuildContext context,
                                       CategorywiseAccountsReportState state) {
                                     return SafeArea(

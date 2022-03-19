@@ -13,7 +13,7 @@ class CategoryTransactionsBloc
       : assert(transactionRepository != null),
         assert(transactionBloc != null),
         super(CategoryTransactionsEmpty(null)) {
-    transactionBlocSubscription = transactionBloc.listen((state) {
+    transactionBlocSubscription = transactionBloc.stream.listen((state) {
       if (state is TransactionSaved) {
         if (this.state.filters != null) {
           add(FetchCategoryTransactions(input: this.state.filters));

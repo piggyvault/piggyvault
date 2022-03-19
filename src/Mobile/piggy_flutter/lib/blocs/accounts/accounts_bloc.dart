@@ -20,19 +20,20 @@ class AccountsBloc extends Bloc<AccountsEvent, AccountsState> {
         assert(transactionsBloc != null),
         assert(transactionDetailBloc != null),
         super(AccountsLoading()) {
-    authBlocSubscription = authBloc.listen((state) {
+    authBlocSubscription = authBloc.stream.listen((state) {
       if (state is AuthAuthenticated) {
         add(LoadAccounts());
       }
     });
 
-    transactionBlocSubscription = transactionsBloc.listen((state) {
+    transactionBlocSubscription = transactionsBloc.stream.listen((state) {
       if (state is TransactionSaved) {
         add(LoadAccounts());
       }
     });
 
-    transactionDetailBlocSubscription = transactionDetailBloc.listen((state) {
+    transactionDetailBlocSubscription =
+        transactionDetailBloc.stream.listen((state) {
       if (state is TransactionDeleted) {
         add(LoadAccounts());
       }

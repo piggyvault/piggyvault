@@ -179,7 +179,7 @@ class _RecentTransactionsPageState extends State<RecentTransactionsPage>
                                           .backgroundColor,
                                       child: BlocBuilder<RecentTransactionsBloc,
                                           RecentTransactionsState>(
-                                        cubit: recentTransactionsBloc,
+                                        bloc: recentTransactionsBloc,
                                         builder: (BuildContext context,
                                             RecentTransactionsState state) {
                                           if (state
@@ -320,7 +320,7 @@ class _RecentTransactionsPageState extends State<RecentTransactionsPage>
                 Expanded(
                   child: BlocBuilder<RecentTransactionsBloc,
                           RecentTransactionsState>(
-                      cubit: recentTransactionsBloc,
+                      bloc: recentTransactionsBloc,
                       builder: (context, state) {
                         if (state is RecentTransactionsLoaded) {
                           return Padding(

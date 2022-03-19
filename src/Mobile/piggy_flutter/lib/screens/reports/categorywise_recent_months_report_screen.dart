@@ -42,7 +42,7 @@ class _CategoryWiseRecentMonthsReportScreenState
       appBar: AppBar(title: const Text('Categorywise Recent Months')),
       body: BlocBuilder<CategorywiseRecentMonthsReportBloc,
           CategorywiseRecentMonthsReportState>(
-        cubit: _bloc,
+        bloc: _bloc,
         builder:
             (BuildContext context, CategorywiseRecentMonthsReportState state) {
           if (state is CategorywiseRecentMonthsReportLoaded) {

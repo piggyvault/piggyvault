@@ -32,19 +32,20 @@ class TransactionSummaryBloc
         assert(transactionsBloc != null),
         assert(transactionDetailBloc != null),
         super(TransactionSummaryEmpty()) {
-    authBlocSubscription = authBloc.listen((state) {
+    authBlocSubscription = authBloc.stream.listen((state) {
       if (state is AuthAuthenticated) {
         add(RefreshTransactionSummary());
       }
     });
 
-    transactionBlocSubscription = transactionsBloc.listen((state) {
+    transactionBlocSubscription = transactionsBloc.stream.listen((state) {
       if (state is TransactionSaved) {
         add(RefreshTransactionSummary());
       }
     });
 
-    transactionDetailBlocSubscription = transactionDetailBloc.listen((state) {
+    transactionDetailBlocSubscription =
+        transactionDetailBloc.stream.listen((state) {
       if (state is TransactionDeleted) {
         add(RefreshTransactionSummary());
       }

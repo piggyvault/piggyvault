@@ -18,7 +18,7 @@ class AccountTransactionsBloc
       : assert(transactionRepository != null),
         assert(transactionBloc != null),
         super(AccountTransactionsEmpty(null)) {
-    transactionBlocSubscription = transactionBloc.listen((state) {
+    transactionBlocSubscription = transactionBloc.stream.listen((state) {
       if (state is TransactionSaved) {
         if (this.state.filters != null) {
           add(FetchAccountTransactions(input: this.state.filters));

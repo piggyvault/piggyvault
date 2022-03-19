@@ -16,13 +16,14 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
         assert(transactionsBloc != null),
         assert(transactionDetailBloc != null),
         super(AccountEmpty(null)) {
-    transactionBlocSubscription = transactionsBloc.listen((state) {
+    transactionBlocSubscription = transactionsBloc.stream.listen((state) {
       if (state is TransactionSaved) {
         add(RefreshAccount());
       }
     });
 
-    transactionDetailBlocSubscription = transactionDetailBloc.listen((state) {
+    transactionDetailBlocSubscription =
+        transactionDetailBloc.stream.listen((state) {
       if (state is TransactionDeleted) {
         add(RefreshAccount());
       }

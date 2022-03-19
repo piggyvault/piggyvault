@@ -110,7 +110,7 @@ class _CurrencySettingsScreenState extends State<CurrencySettingsScreen>
   void addAllListData() {
     listViews.add(
       BlocBuilder(
-        cubit: currenciesBloc,
+        bloc: currenciesBloc,
         builder: (context, state) {
           if (state is CurrenciesLoaded) {
             // final steps = <SettingsItem>[];

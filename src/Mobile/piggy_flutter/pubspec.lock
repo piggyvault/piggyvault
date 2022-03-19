@@ -233,6 +233,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.6.3"
+  lint:
+    dependency: transitive
+    description:
+      name: lint
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.8.2"
   lints:
     dependency: transitive
     description:
@@ -433,7 +440,7 @@ packages:
       name: styled_widget
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.2.2"
+    version: "0.4.0+3"
   term_glyph:
     dependency: transitive
     description:

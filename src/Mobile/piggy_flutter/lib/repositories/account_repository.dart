@@ -23,11 +23,11 @@ class AccountRepository {
     return await piggyApiClient.createOrUpdateAccount(input);
   }
 
-  Future<List<Currency>?> getCurrencies() async {
+  Future<List<Currency>> getCurrencies() async {
     return await piggyApiClient.getCurrencies();
   }
 
-  Future<List<AccountType>?> getAccountTypes() async {
+  Future<List<AccountType>> getAccountTypes() async {
     return await piggyApiClient.getAccountTypes();
   }
 

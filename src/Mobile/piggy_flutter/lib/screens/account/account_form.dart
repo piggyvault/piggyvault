@@ -149,7 +149,8 @@ class _AccountFormScreenState extends State<AccountFormScreen> {
                                   labelText: 'Type',
                                   hintText: 'Choose an account type',
                                 ),
-                                isEmpty: accountFormModel!.accountTypeId == null,
+                                isEmpty:
+                                    accountFormModel!.accountTypeId == null,
                                 child: DropdownButton<int>(
                                   value: accountFormModel!.accountTypeId,
                                   onChanged: (int? value) {

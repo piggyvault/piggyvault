@@ -213,30 +213,22 @@ class PiggyApiClient {
     return result;
   }
 
-  Future<List<Currency>?> getCurrencies() async {
-    List<Currency>? currencies = [];
+  Future<List<Currency>> getCurrencies() async {
     var result =
         await getAsync('$baseUrl/api/services/app/currency/GetCurrencies');
 
-    if (result.success!) {
-      currencies = result.result['items']
-          .map<Currency>((currency) => Currency.fromJson(currency))
-          .toList();
-    }
-    return currencies;
+    return result.result['items']
+        .map<Currency>((currency) => Currency.fromJson(currency))
+        .toList();
   }
 
-  Future<List<AccountType>?> getAccountTypes() async {
-    List<AccountType>? output = [];
+  Future<List<AccountType>> getAccountTypes() async {
     var result = await getAsync<dynamic>(
         '$baseUrl/api/services/app/account/GetAccountTypes');
 
-    if (result.success!) {
-      output = result.result['items']
-          .map<AccountType>((item) => AccountType.fromJson(item))
-          .toList();
-    }
-    return output;
+    return result.result['items']
+        .map<AccountType>((item) => AccountType.fromJson(item))
+        .toList();
   }
 
   // Reports

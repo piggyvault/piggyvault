@@ -225,7 +225,7 @@ class _IntroViewsFlutterState extends State<IntroViewsFlutter>
   @override
   Widget build(BuildContext context) {
     TextStyle textStyle = TextStyle(
-            fontSize: widget.pageButtonTextSize ?? 18.0,
+            fontSize: widget.pageButtonTextSize,
             color: widget.pageButtonsColor ?? const Color(0x88FFFFFF),
             fontFamily: widget.pageButtonFontFamily)
         .merge(widget.pageButtonTextStyles);

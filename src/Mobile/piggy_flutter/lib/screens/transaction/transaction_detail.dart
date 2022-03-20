@@ -4,7 +4,6 @@ import 'package:intl/intl.dart';
 import 'package:piggy_flutter/blocs/auth/auth.dart';
 import 'package:piggy_flutter/blocs/transaction/transaction.dart';
 import 'package:piggy_flutter/blocs/transaction_comments/bloc.dart';
-import 'package:piggy_flutter/blocs/transaction_comments/transaction_comments_bloc.dart';
 import 'package:piggy_flutter/blocs/transaction_detail/bloc.dart';
 import 'package:piggy_flutter/models/transaction.dart';
 import 'package:piggy_flutter/repositories/repositories.dart';
@@ -17,13 +16,13 @@ class TransactionDetailPage extends StatefulWidget {
   final TransactionDetailBloc transactionDetailBloc;
   final Transaction? transaction;
 
-  TransactionDetailPage(
+  const TransactionDetailPage(
       {Key? key, this.transaction, required this.transactionDetailBloc})
       : super(key: key);
 
   @override
   TransactionDetailPageState createState() {
-    return new TransactionDetailPageState();
+    return TransactionDetailPageState();
   }
 }
 
@@ -31,7 +30,7 @@ class TransactionDetailPageState extends State<TransactionDetailPage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final _formatter = DateFormat("EEE, MMM d, ''yy");
   final _commentTimeFormatter = DateFormat("h:mm a, EEE, MMM d, ''yy");
-  final TextEditingController _commentController = new TextEditingController();
+  final TextEditingController _commentController = TextEditingController();
   TransactionCommentsBloc? transactionCommentsBloc;
 
   @override
@@ -52,7 +51,7 @@ class TransactionDetailPageState extends State<TransactionDetailPage> {
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
-        title: Text('Transaction Details'),
+        title: const Text('Transaction Details'),
       ),
       body: BlocListener<TransactionDetailBloc, TransactionDetailState>(
         listener: (context, state) {
@@ -163,18 +162,19 @@ class TransactionDetailPageState extends State<TransactionDetailPage> {
                 )
               : const SizedBox.shrink();
         } else {
-          return new Container();
+          return Container();
         }
       },
     );
   }
 
   void dispose() {
-    _commentController?.dispose();
+    _commentController.dispose();
     super.dispose();
   }
 
-  void showDeleteConfirmationDialog<T>({required BuildContext context, Widget? child}) {
+  void showDeleteConfirmationDialog<T>(
+      {required BuildContext context, Widget? child}) {
     showDialog<T>(
       context: context,
       builder: (BuildContext context) => child!,
@@ -192,13 +192,13 @@ class TransactionDetailPageState extends State<TransactionDetailPage> {
       title: PrimaryColorOverride(
         child: TextField(
           controller: _commentController,
-          decoration: new InputDecoration(
+          decoration: const InputDecoration(
             labelText: 'Write a comment...',
             // errorText: snapshot.error
           ),
         ),
       ),
-      trailing: new OutlinedButton(
+      trailing: OutlinedButton(
         onPressed: (() {
           transactionCommentsBloc!.add(PostTransactionComment(
               transactionId: widget.transaction!.id!,
@@ -224,13 +224,13 @@ class TransactionDetailPageState extends State<TransactionDetailPage> {
                       leading: const CircleAvatar(),
                       title: Text(comment.creatorUserName!),
                       subtitle: Text(comment.content!),
-                      trailing: Text(
-                          '${_commentTimeFormatter.format(DateTime.parse(comment.creationTime!))}'),
+                      trailing: Text(_commentTimeFormatter
+                          .format(DateTime.parse(comment.creationTime!))),
                     );
                   }).toList()),
             );
           } else {
-            return LinearProgressIndicator();
+            return const LinearProgressIndicator();
           }
           // TODO: handle transaction comments error
         });
@@ -257,8 +257,8 @@ class TransactionDetailPageState extends State<TransactionDetailPage> {
           ),
           ListTile(
             leading: const Icon(Icons.access_time),
-            title: Text(
-                '${_formatter.format(DateTime.parse(widget.transaction!.transactionTime!))}'),
+            title: Text(_formatter
+                .format(DateTime.parse(widget.transaction!.transactionTime!))),
           ),
           ListTile(
             leading: const Icon(Icons.account_balance_wallet),

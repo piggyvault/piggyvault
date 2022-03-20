@@ -217,7 +217,7 @@ class App extends StatelessWidget {
           UIData.loginRoute: (BuildContext context) => LoginPage(
                 userRepository: userRepository,
               ),
-          UIData.dashboardRoute: (BuildContext context) => HomeScreen(),
+          UIData.dashboardRoute: (BuildContext context) => const HomeScreen(),
         },
       ),
     );

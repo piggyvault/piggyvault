@@ -352,7 +352,7 @@ class TransactionFormPageState extends State<TransactionFormPage> {
             }).toList(),
           );
         }
-        return LinearProgressIndicator();
+        return const LinearProgressIndicator();
       });
 
   Widget buildAccountList([bool isToAccount = false]) {
@@ -388,7 +388,7 @@ class TransactionFormPageState extends State<TransactionFormPage> {
             }).toList(),
           );
         } else {
-          return LinearProgressIndicator();
+          return const LinearProgressIndicator();
         }
       },
     );

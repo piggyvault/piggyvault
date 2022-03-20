@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 // TODO(abhith): refactor
 class PiggyAppTheme {
   PiggyAppTheme._();
-  static const Color nearlyWhite = Color(0xFFFAFAFA);
+  static const Color notWhite = Color(0xFFEDF0F2);
+  static const Color nearlyWhite = Color(0xFFFEFEFE);
   static const Color white = Color(0xFFFFFFFF);
   static const Color background = Color(0xFFF2F3F8);
   static const Color nearlyDarkBlue = Color(0xFF2633C5);
@@ -18,6 +19,7 @@ class PiggyAppTheme {
   static const Color lightText = Color(0xFF4A6572);
   static const Color deactivatedText = Color(0xFF767676);
   static const Color dismissibleBackground = Color(0xFF364A54);
+  static const Color chipBackground = Color(0xFFEEF1F3);
   static const Color spacer = Color(0xFFF2F2F2);
   static const String fontName = 'Roboto';
 
@@ -27,16 +29,17 @@ class PiggyAppTheme {
   static const Color incomeBackground = Color.fromARGB(255, 235, 251, 238);
 
   static const TextTheme textTheme = TextTheme(
-    headline4: headline4,
-    headline5: headline5,
-    headline6: headline6,
-    subtitle2: subtitle2,
-    bodyText1: bodyText1,
-    bodyText2: bodyText2,
+    headline4: display1,
+    headline5: headline,
+    headline6: title,
+    subtitle2: subtitle,
+    bodyText2: body2,
+    bodyText1: body1,
     caption: caption,
   );
 
-  static const TextStyle headline4 = TextStyle(
+  static const TextStyle display1 = TextStyle(
+    // h4 -> display1
     fontFamily: fontName,
     fontWeight: FontWeight.bold,
     fontSize: 36,
@@ -45,7 +48,8 @@ class PiggyAppTheme {
     color: darkerText,
   );
 
-  static const TextStyle headline5 = TextStyle(
+  static const TextStyle headline = TextStyle(
+    // h5 -> headline
     fontFamily: fontName,
     fontWeight: FontWeight.bold,
     fontSize: 24,
@@ -53,7 +57,8 @@ class PiggyAppTheme {
     color: darkerText,
   );
 
-  static const TextStyle headline6 = TextStyle(
+  static const TextStyle title = TextStyle(
+    // h6 -> title
     fontFamily: fontName,
     fontWeight: FontWeight.bold,
     fontSize: 16,
@@ -61,7 +66,8 @@ class PiggyAppTheme {
     color: darkerText,
   );
 
-  static const TextStyle subtitle2 = TextStyle(
+  static const TextStyle subtitle = TextStyle(
+    // subtitle2 -> subtitle
     fontFamily: fontName,
     fontWeight: FontWeight.w400,
     fontSize: 14,
@@ -69,7 +75,8 @@ class PiggyAppTheme {
     color: darkText,
   );
 
-  static const TextStyle bodyText1 = TextStyle(
+  static const TextStyle body2 = TextStyle(
+    // body1 -> body2
     fontFamily: fontName,
     fontWeight: FontWeight.w400,
     fontSize: 14,
@@ -77,7 +84,8 @@ class PiggyAppTheme {
     color: darkText,
   );
 
-  static const TextStyle bodyText2 = TextStyle(
+  static const TextStyle body1 = TextStyle(
+    // body2 -> body1
     fontFamily: fontName,
     fontWeight: FontWeight.w400,
     fontSize: 16,
@@ -86,6 +94,7 @@ class PiggyAppTheme {
   );
 
   static const TextStyle caption = TextStyle(
+    // Caption -> caption
     fontFamily: fontName,
     fontWeight: FontWeight.w400,
     fontSize: 12,
@@ -98,18 +107,19 @@ class PiggyAppTheme {
   static TextTheme _buildTextTheme(TextTheme base) {
     const String fontName = 'WorkSans';
     return base.copyWith(
-      headline6: base.headline6!.copyWith(fontFamily: fontName),
-      bodyText2: base.headline6!.copyWith(fontFamily: fontName),
-      bodyText1: base.headline6!.copyWith(fontFamily: fontName),
-      button: base.headline6!.copyWith(fontFamily: fontName),
-      caption: base.headline6!.copyWith(fontFamily: fontName),
-      headline4: base.headline6!.copyWith(fontFamily: fontName),
-      headline3: base.headline6!.copyWith(fontFamily: fontName),
-      headline2: base.headline6!.copyWith(fontFamily: fontName),
-      headline1: base.headline6!.copyWith(fontFamily: fontName),
-      headline5: base.headline6!.copyWith(fontFamily: fontName),
-      overline: base.headline6!.copyWith(fontFamily: fontName),
-      subtitle1: base.headline6!.copyWith(fontFamily: fontName),
+      headline1: base.headline1?.copyWith(fontFamily: fontName),
+      headline2: base.headline2?.copyWith(fontFamily: fontName),
+      headline3: base.headline3?.copyWith(fontFamily: fontName),
+      headline4: base.headline4?.copyWith(fontFamily: fontName),
+      headline5: base.headline5?.copyWith(fontFamily: fontName),
+      headline6: base.headline6?.copyWith(fontFamily: fontName),
+      button: base.button?.copyWith(fontFamily: fontName),
+      caption: base.caption?.copyWith(fontFamily: fontName),
+      bodyText1: base.bodyText1?.copyWith(fontFamily: fontName),
+      bodyText2: base.bodyText2?.copyWith(fontFamily: fontName),
+      subtitle1: base.subtitle1?.copyWith(fontFamily: fontName),
+      subtitle2: base.subtitle2?.copyWith(fontFamily: fontName),
+      overline: base.overline?.copyWith(fontFamily: fontName),
     );
   }
 

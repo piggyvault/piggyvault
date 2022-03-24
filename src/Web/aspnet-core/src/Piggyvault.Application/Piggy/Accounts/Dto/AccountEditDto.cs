@@ -35,5 +35,8 @@ namespace Piggyvault.Piggy.Accounts.Dto
         [Required]
         [MaxLength(Account.MaxNameLength)]
         public virtual string Name { get; set; }
+
+        public virtual bool IsArchived { get; set; }
+
     }
 }

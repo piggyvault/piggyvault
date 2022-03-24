@@ -49,5 +49,7 @@ namespace Piggyvault.Piggy.Accounts
         /// Gets or sets the tenant id.
         /// </summary>
         public virtual int TenantId { get; set; }
+
+        public virtual bool IsArchived { get; set; }
     }
 }

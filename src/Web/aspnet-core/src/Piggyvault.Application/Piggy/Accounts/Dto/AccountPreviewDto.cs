@@ -43,5 +43,8 @@ namespace Piggyvault.Piggy.Accounts.Dto
         /// Gets or sets a value indicating whether own account.
         /// </summary>
         public virtual bool OwnAccount { get; set; }
+
+        public bool IsArchived { get; set; }
+
     }
 }

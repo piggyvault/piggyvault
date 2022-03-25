@@ -199,7 +199,8 @@ class PiggyApiClient {
         "id": input.id,
         "name": input.name,
         "currencyId": input.currencyId,
-        "accountTypeId": input.accountTypeId
+        "accountTypeId": input.accountTypeId,
+        "isArchived": input.isArchived
       }
     });
 

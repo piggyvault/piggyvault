@@ -44,8 +44,9 @@ class _AccountFormScreenState extends State<AccountFormScreen> {
     accountFormBloc = AccountFormBloc(
         accountsBloc: BlocProvider.of<AccountsBloc>(context),
         accountRepository: RepositoryProvider.of<AccountRepository>(context));
+    accountFormModel =
+        AccountFormModel(id: widget.account?.id, isArchived: false);
 
-    accountFormModel = AccountFormModel(id: widget.account?.id);
     accountFormBloc!.add(AccountFormLoad(accountId: widget.account?.id));
 
     if (widget.account == null) {
@@ -106,7 +107,7 @@ class _AccountFormScreenState extends State<AccountFormScreen> {
                     onWillPop: _onWillPop,
                     child: ListView(
                       padding: const EdgeInsets.all(16.0),
-                      children: <Widget>[
+                      children: <Widget?>[
                         _nameField(theme),
                         BlocBuilder<CurrenciesBloc, CurrenciesState>(
                             bloc: currenciesBloc,
@@ -142,8 +143,8 @@ class _AccountFormScreenState extends State<AccountFormScreen> {
                         BlocBuilder<AccountTypesBloc, AccountTypesState>(
                           bloc: accountTypesBloc,
                           builder: (BuildContext context,
-                              AccountTypesState accountTypestate) {
-                            if (accountTypestate is AccountTypesLoaded) {
+                              AccountTypesState accountTypeState) {
+                            if (accountTypeState is AccountTypesLoaded) {
                               return InputDecorator(
                                 decoration: const InputDecoration(
                                   labelText: 'Type',
@@ -158,7 +159,7 @@ class _AccountFormScreenState extends State<AccountFormScreen> {
                                       accountFormModel!.accountTypeId = value;
                                     });
                                   },
-                                  items: accountTypestate.accountTypes
+                                  items: accountTypeState.accountTypes
                                       .map((AccountType type) {
                                     return DropdownMenuItem<int>(
                                       value: type.id,
@@ -172,10 +173,26 @@ class _AccountFormScreenState extends State<AccountFormScreen> {
                             }
                           },
                         ),
+                        const SizedBox(height: 8.0),
+                        accountFormModel?.id == null
+                            ? null
+                            : CheckboxListTile(
+                                title: const Text("Archived"), //    <-- label
+                                value: accountFormModel!.isArchived,
+                                secondary: const Icon(Icons.archive),
+                                subtitle: const Text('Freeze this account.'),
+                                controlAffinity:
+                                    ListTileControlAffinity.leading,
+                                onChanged: (newValue) {
+                                  setState(() {
+                                    accountFormModel!.isArchived = newValue!;
+                                  });
+                                },
+                              ),
                         const SizedBox(height: 24.0),
                         Text('* all fields are mandatory',
                             style: Theme.of(context).textTheme.caption),
-                      ],
+                      ].whereType<Widget>().toList(),
                     ),
                   ),
                 ),

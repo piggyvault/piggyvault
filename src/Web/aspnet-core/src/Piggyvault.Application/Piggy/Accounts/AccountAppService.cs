@@ -205,49 +205,16 @@ namespace Piggyvault.Piggy.Accounts
                 .Include(a => a.AccountType)
                 .Where(a => a.TenantId == tenantId);
 
-            var accounts = await query.OrderBy(a => a.Name).ToListAsync();
+            var accounts = await query.OrderBy(a => a.IsArchived).ThenBy(a => a.Name).ToListAsync();
 
-            var userAccounts = new List<Account>();
-            var otherMembersAccounts = new List<Account>();
+            var userAccounts = _mapper.Map<List<AccountPreviewDto>>(accounts.Where(a => a.CreatorUserId == AbpSession.UserId));
+            var othersAccounts = _mapper.Map<List<AccountPreviewDto>>(accounts.Where(a => a.CreatorUserId != AbpSession.UserId));
 
-            foreach (var account in accounts)
-            {
-                if (account.CreatorUserId == AbpSession.UserId)
-                {
-                    userAccounts.Add(account);
-                }
-                else
-                {
-                    otherMembersAccounts.Add(account);
-                }
-            }
+            await UpdateAccountsBalanceAsync(userAccounts);
+            await UpdateAccountsBalanceAsync(othersAccounts);
 
-            var userAccountDtos = userAccounts.Select(prop => new AccountPreviewDto()
-            {
-                AccountType = prop.AccountType.Name,
-                //AccountTypeId = prop.AccountTypeId,
-                CreatorUserName = prop.CreatorUser.FullName,
-                Currency = _mapper.Map<CurrencyInAccountPreviewDto>(prop.Currency),
-                //CurrencyId = prop.CurrencyId,
-                Id = prop.Id,
-                Name = prop.Name
-            }).ToList();
-
-            var otherMembersAccountDtos = otherMembersAccounts.Select(prop => new AccountPreviewDto()
-            {
-                AccountType = prop.AccountType.Name,
-                //AccountTypeId = prop.AccountTypeId,
-                CreatorUserName = prop.CreatorUser.FullName,
-                Currency = _mapper.Map<CurrencyInAccountPreviewDto>(prop.Currency),
-                //CurrencyId = prop.CurrencyId,
-                Id = prop.Id,
-                Name = prop.Name
-            }).ToList();
-            await UpdateAccountsBalanceAsync(userAccountDtos);
-            await UpdateAccountsBalanceAsync(otherMembersAccountDtos);
-
-            output.OtherMembersAccounts = new ListResultDto<AccountPreviewDto>(otherMembersAccountDtos);
-            output.UserAccounts = new ListResultDto<AccountPreviewDto>(userAccountDtos);
+            output.OtherMembersAccounts = new ListResultDto<AccountPreviewDto>(othersAccounts);
+            output.UserAccounts = new ListResultDto<AccountPreviewDto>(userAccounts);
             return output;
         }
 

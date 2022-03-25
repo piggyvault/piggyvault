@@ -28,9 +28,13 @@ class AccountGroupList extends StatelessWidget {
     }
 
     return ExpansionTile(
-        title: Text(title,
-            style: Theme.of(context).textTheme.headline6!.copyWith(
-                fontSize: 16.0, color: Theme.of(context).accentColor)),
+        title: Text(
+          title,
+          style: Theme.of(context)
+              .textTheme
+              .headline6!
+              .copyWith(fontSize: 16.0, color: Theme.of(context).accentColor),
+        ),
         initiallyExpanded: true,
         backgroundColor: PiggyAppTheme.white,
         children: accountTiles.toList());
@@ -40,14 +44,29 @@ class AccountGroupList extends StatelessWidget {
     return MergeSemantics(
       child: ListTile(
         dense: true,
-        leading: Icon(Icons.account_balance_wallet,
-            color: Theme.of(context).disabledColor),
-        title: Text(account.name!, style: Theme.of(context).textTheme.bodyText1),
+        leading: Icon(
+          Icons.account_balance_wallet,
+          color: Theme.of(context).disabledColor,
+        ),
+        title:
+            Text(account.name!, style: Theme.of(context).textTheme.bodyText1),
         subtitle: Text(
           account.accountType!,
         ),
-        trailing: Text(
-            '${account.currentBalance.toMoney()} ${account.currencySymbol}'),
+        trailing: account.isArchived
+            ? const Chip(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(10))),
+                label: Text(
+                  "ARCHIVED",
+                  style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              )
+            : Text(
+                '${account.currentBalance.toMoney()} ${account.currencySymbol}'),
         onTap: () => Navigator.of(context).push(
           MaterialPageRoute<AccountDetailPage>(
             builder: (BuildContext context) => AccountDetailPage(

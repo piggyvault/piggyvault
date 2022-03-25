@@ -2,8 +2,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:piggy_flutter/blocs/accounts/accounts.dart';
-import 'package:piggy_flutter/blocs/accounts/accounts_bloc.dart';
-import 'package:piggy_flutter/blocs/accounts/accounts_state.dart';
 import 'package:piggy_flutter/screens/account/account_group_list.dart';
 import 'package:piggy_flutter/theme/theme.dart';
 
@@ -32,13 +30,13 @@ class _AccountListPageState extends State<AccountListPage>
     topBarAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(
         parent: widget.animationController!,
-        curve: Interval(0, 0.5, curve: Curves.fastOutSlowIn),
+        curve: const Interval(0, 0.5, curve: Curves.fastOutSlowIn),
       ),
     );
 
     listAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
         parent: widget.animationController!,
-        curve: Interval(0.5, 1.0, curve: Curves.fastOutSlowIn)));
+        curve: const Interval(0.5, 1.0, curve: Curves.fastOutSlowIn)));
 
     scrollController.addListener(() {
       if (scrollController.offset >= 24) {

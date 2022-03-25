@@ -10,19 +10,13 @@ import 'package:piggy_flutter/blocs/account/bloc.dart';
 import 'package:piggy_flutter/blocs/account_transactions/bloc.dart';
 import 'package:piggy_flutter/blocs/transaction/transaction.dart';
 import 'package:piggy_flutter/blocs/transaction_detail/bloc.dart';
-import 'package:piggy_flutter/models/account.dart';
-import 'package:piggy_flutter/models/get_transactions_input.dart';
 import 'package:piggy_flutter/models/models.dart';
 import 'package:piggy_flutter/repositories/repositories.dart';
 import 'package:piggy_flutter/theme/piggy_app_theme.dart';
 import 'package:piggy_flutter/utils/common.dart';
 import 'package:piggy_flutter/utils/uidata.dart';
 import 'package:piggy_flutter/widgets/add_transaction_fab.dart';
-import 'package:piggy_flutter/widgets/common/calendar_popup_view.dart';
 import 'package:piggy_flutter/widgets/common/common.dart';
-import 'package:piggy_flutter/widgets/common/empty_result_widget.dart';
-import 'package:piggy_flutter/widgets/common/error_display_widget.dart';
-import 'package:piggy_flutter/widgets/common/loading_widget.dart';
 import 'package:piggy_flutter/widgets/common/search_bar.dart';
 import 'package:piggy_flutter/widgets/transaction_list.dart';
 
@@ -71,13 +65,13 @@ class _AccountDetailPageState extends State<AccountDetailPage>
     topBarAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(
         parent: widget.animationController!,
-        curve: Interval(0, 0.5, curve: Curves.fastOutSlowIn),
+        curve: const Interval(0, 0.5, curve: Curves.fastOutSlowIn),
       ),
     );
 
     listAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
         parent: widget.animationController!,
-        curve: Interval(0.5, 1.0, curve: Curves.fastOutSlowIn)));
+        curve: const Interval(0.5, 1.0, curve: Curves.fastOutSlowIn)));
 
     scrollController.addListener(() {
       if (scrollController.offset >= 24) {
@@ -142,13 +136,15 @@ class _AccountDetailPageState extends State<AccountDetailPage>
               getAppBarUI(),
             ],
           ),
-          floatingActionButton: ScaleTransition(
-            scale: _hideFabAnimation,
-            alignment: Alignment.bottomCenter,
-            child: AddTransactionFab(
-              account: widget.account,
-            ),
-          ),
+          floatingActionButton: widget.account.isArchived
+              ? Container()
+              : ScaleTransition(
+                  scale: _hideFabAnimation,
+                  alignment: Alignment.bottomCenter,
+                  child: AddTransactionFab(
+                    account: widget.account,
+                  ),
+                ),
         ),
       ),
     );
@@ -502,7 +498,7 @@ class _AccountDetailPageState extends State<AccountDetailPage>
                           ),
                           Text(
                             '${DateFormat("dd, MMM").format(startDate)} - ${DateFormat("dd, MMM").format(endDate)}',
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontWeight: FontWeight.w100,
                               fontSize: 16,
                             ),
@@ -563,7 +559,7 @@ class _AccountDetailPageState extends State<AccountDetailPage>
                                 if (state is AccountLoaded) {
                                   return Text(
                                     ' ${state.account.currentBalance} ${state.account.currencySymbol}',
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                       fontWeight: FontWeight.w100,
                                       fontSize: 16,
                                     ),
@@ -592,7 +588,7 @@ class _AccountDetailPageState extends State<AccountDetailPage>
                                     ],
                                   );
                                 }
-                                return Text(
+                                return const Text(
                                   '---',
                                   style: TextStyle(
                                     fontWeight: FontWeight.w100,
@@ -650,7 +646,7 @@ class _AccountDetailPageState extends State<AccountDetailPage>
                             padding: const EdgeInsets.all(8.0),
                             child: Text(
                               '${state.filterdAccountTransactions.transactions.length} transactions found',
-                              style: TextStyle(
+                              style: const TextStyle(
                                 fontWeight: FontWeight.w100,
                                 fontSize: 16,
                               ),
@@ -658,8 +654,8 @@ class _AccountDetailPageState extends State<AccountDetailPage>
                           );
                         }
                         if (state is AccountTransactionsEmpty) {
-                          return Padding(
-                            padding: const EdgeInsets.all(8.0),
+                          return const Padding(
+                            padding: EdgeInsets.all(8.0),
                             child: Text(
                               '0 transactions found',
                               style: TextStyle(
@@ -680,8 +676,8 @@ class _AccountDetailPageState extends State<AccountDetailPage>
                             ),
                           );
                         }
-                        return Padding(
-                          padding: const EdgeInsets.all(8.0),
+                        return const Padding(
+                          padding: EdgeInsets.all(8.0),
                           child: Text(
                             '---',
                             style: TextStyle(
@@ -715,8 +711,8 @@ class _AccountDetailPageState extends State<AccountDetailPage>
                       padding: const EdgeInsets.only(left: 8),
                       child: Row(
                         children: <Widget>[
-                          Text(
-                            'Filtter',
+                          const Text(
+                            'Filter',
                             style: TextStyle(
                               fontWeight: FontWeight.w100,
                               fontSize: 16,
@@ -749,7 +745,8 @@ class _AccountDetailPageState extends State<AccountDetailPage>
     );
   }
 
-  void showDemoDialog({required BuildContext context, AccountTransactionsBloc? bloc}) {
+  void showDemoDialog(
+      {required BuildContext context, AccountTransactionsBloc? bloc}) {
     showDialog<dynamic>(
       context: context,
       builder: (BuildContext context) => CalendarPopupView(

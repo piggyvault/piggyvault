@@ -41,23 +41,22 @@ class TransactionFormPageState extends State<TransactionFormPage> {
   TransactionEditDto? transactionEditDto = TransactionEditDto();
   TextEditingController? _descriptionFieldController;
 
-  final TextEditingController _convertedAmountFieldController =
-      TextEditingController();
-
   Account? _account, _toAccount;
   final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey =
       GlobalKey<ScaffoldMessengerState>();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   bool _formWasEdited = false;
-  bool _showTransferToAmount = false;
+  bool _showReceivingAmount = false;
   String? _categoryErrorText, _accountErrorText, _toAccountId;
   DateTime _transactionDate = DateTime.now();
   TimeOfDay? _transactionTime;
   String? _transactionType = UIData.transaction_type_expense;
   double _amount = 0;
+  double _receivingAmount = 0;
 
   final TransactionService _transactionService = TransactionService();
   Object redrawAmountObject = Object();
+  Object redrawReceivingAmountObject = Object();
 
   @override
   void initState() {
@@ -261,31 +260,19 @@ class TransactionFormPageState extends State<TransactionFormPage> {
                             child: buildAccountList(true),
                           )
                         : null,
-                    _showTransferToAmount ? const SizedBox(height: 24.0) : null,
-                    _showTransferToAmount
-                        ? PrimaryColorOverride(
-                            child: TextFormField(
-                              keyboardType:
-                                  const TextInputType.numberWithOptions(
-                                      decimal: true),
-                              decoration: InputDecoration(
-                                border: const OutlineInputBorder(),
-                                labelText: 'Converted Amount',
-                                prefixText: _toAccount == null
-                                    ? null
-                                    : _toAccount!.currencySymbol,
-                                prefixStyle:
-                                    const TextStyle(color: Colors.green),
-                                suffixText: _toAccount == null
-                                    ? null
-                                    : _toAccount!.currencyCode,
-                                suffixStyle:
-                                    const TextStyle(color: Colors.green),
-                              ),
-                              maxLines: 1,
-                              controller: _convertedAmountFieldController,
-                              validator: _validateAmount,
-                            ),
+                    _showReceivingAmount ? const SizedBox(height: 24.0) : null,
+                    _showReceivingAmount
+                        ? CalculatorTextFormField(
+                            key: ValueKey<Object>(redrawReceivingAmountObject),
+                            initialValue: _receivingAmount,
+                            validator: _validateAmount,
+                            valueFormat: valueFormat,
+                            style: const TextStyle(color: Colors.green),
+                            onSubmitted: (value) {
+                              setState(() {
+                                _receivingAmount = value!;
+                              });
+                            },
                           )
                         : null,
                     const SizedBox(height: 24.0),
@@ -305,7 +292,6 @@ class TransactionFormPageState extends State<TransactionFormPage> {
   void dispose() {
     // Clean up the controller when the Widget is removed from the Widget tree
     _descriptionFieldController!.dispose();
-    _convertedAmountFieldController.dispose();
     super.dispose();
   }
 
@@ -428,8 +414,8 @@ class TransactionFormPageState extends State<TransactionFormPage> {
         } else {
           double toAmount;
 
-          if (_showTransferToAmount) {
-            toAmount = double.parse(_convertedAmountFieldController.text);
+          if (_showReceivingAmount) {
+            toAmount = _receivingAmount;
           } else {
             toAmount = amount;
           }
@@ -481,11 +467,11 @@ class TransactionFormPageState extends State<TransactionFormPage> {
       // check whether both accounts currency is same or not
       if (_account!.currencyCode == _toAccount!.currencyCode) {
         setState(() {
-          _showTransferToAmount = false;
+          _showReceivingAmount = false;
         });
       } else {
         // if not same, show converted amount field
-        _showTransferToAmount = true;
+        _showReceivingAmount = true;
       }
     }
   }

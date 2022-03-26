@@ -10,6 +10,7 @@ import 'package:piggy_flutter/blocs/categories/categories_state.dart';
 import 'package:piggy_flutter/blocs/transaction/transaction.dart';
 import 'package:piggy_flutter/models/models.dart';
 import 'package:piggy_flutter/services/transaction_service.dart';
+import 'package:piggy_flutter/theme/piggy_app_theme.dart';
 import 'package:piggy_flutter/utils/uidata.dart';
 import 'package:piggy_flutter/widgets/common/common_dialogs.dart';
 import 'package:piggy_flutter/widgets/date_time_picker.dart';
@@ -205,6 +206,18 @@ class TransactionFormPageState extends State<TransactionFormPage> {
                       validator: _validateAmount,
                       valueFormat: valueFormat,
                       style: _transactionTextStyle,
+                      appBarBackgroundColor: PiggyAppTheme.nearlyWhite,
+                      title: 'Amount',
+                      inputDecoration: InputDecoration(
+                          border: const OutlineInputBorder(),
+                          labelText: 'Amount',
+                          prefixText: _account == null
+                              ? null
+                              : _account!.currencySymbol,
+                          prefixStyle: _transactionTextStyle,
+                          suffixText:
+                              _account == null ? null : _account!.currencyCode,
+                          suffixStyle: _transactionTextStyle),
                       onSubmitted: (value) {
                         setState(() {
                           _amount = value!;
@@ -267,7 +280,18 @@ class TransactionFormPageState extends State<TransactionFormPage> {
                             initialValue: _receivingAmount,
                             validator: _validateAmount,
                             valueFormat: valueFormat,
-                            style: const TextStyle(color: Colors.green),
+                            inputDecoration: InputDecoration(
+                              border: const OutlineInputBorder(),
+                              labelText: 'Converted Amount',
+                              prefixText: _toAccount == null
+                                  ? null
+                                  : _toAccount!.currencySymbol,
+                              prefixStyle: const TextStyle(color: Colors.green),
+                              suffixText: _toAccount == null
+                                  ? null
+                                  : _toAccount!.currencyCode,
+                              suffixStyle: const TextStyle(color: Colors.green),
+                            ),
                             onSubmitted: (value) {
                               setState(() {
                                 _receivingAmount = value!;

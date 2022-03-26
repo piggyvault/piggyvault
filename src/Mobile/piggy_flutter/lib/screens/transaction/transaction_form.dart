@@ -387,7 +387,9 @@ class TransactionFormPageState extends State<TransactionFormPage> {
               });
               manageTransferView();
             },
-            items: state.userAccounts!.map((Account account) {
+            items: state.userAccounts!
+                .where((a) => a.isArchived == false)
+                .map((Account account) {
               return DropdownMenuItem<String>(
                 value: account.id,
                 child: Text(account.name!),

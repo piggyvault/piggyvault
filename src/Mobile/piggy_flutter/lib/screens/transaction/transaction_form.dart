@@ -109,6 +109,9 @@ class TransactionFormPageState extends State<TransactionFormPage> {
             _transactionType = UIData.transaction_type_expense;
           }
 
+          _selectedTransactionTypeIndex =
+              _transactionTypes.indexOf(_transactionType!);
+
           _descriptionFieldController =
               TextEditingController(text: transactionEditDto!.description);
         });

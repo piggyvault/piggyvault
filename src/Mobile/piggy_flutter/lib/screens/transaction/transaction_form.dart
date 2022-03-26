@@ -2,12 +2,15 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_font_icons/flutter_font_icons.dart';
+import 'package:input_calculator/input_calculator.dart';
+import 'package:intl/intl.dart';
 import 'package:piggy_flutter/blocs/accounts/accounts.dart';
 import 'package:piggy_flutter/blocs/categories/categories_bloc.dart';
 import 'package:piggy_flutter/blocs/categories/categories_state.dart';
 import 'package:piggy_flutter/blocs/transaction/transaction.dart';
 import 'package:piggy_flutter/models/models.dart';
 import 'package:piggy_flutter/services/transaction_service.dart';
+import 'package:piggy_flutter/theme/piggy_app_theme.dart';
 import 'package:piggy_flutter/utils/uidata.dart';
 import 'package:piggy_flutter/widgets/common/common_dialogs.dart';
 import 'package:piggy_flutter/widgets/date_time_picker.dart';
@@ -38,27 +41,28 @@ class TransactionFormPage extends StatefulWidget {
 class TransactionFormPageState extends State<TransactionFormPage> {
   TransactionEditDto? transactionEditDto = TransactionEditDto();
   TextEditingController? _descriptionFieldController;
-  TextEditingController? _amountFieldController;
-
-  final TextEditingController _convertedAmountFieldController =
-      TextEditingController();
 
   Account? _account, _toAccount;
   final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey =
       GlobalKey<ScaffoldMessengerState>();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   bool _formWasEdited = false;
-  bool _showTransferToAmount = false;
+  bool _showReceivingAmount = false;
   String? _categoryErrorText, _accountErrorText, _toAccountId;
   DateTime _transactionDate = DateTime.now();
   TimeOfDay? _transactionTime;
   String? _transactionType = UIData.transaction_type_expense;
+  double _amount = 0;
+  double _receivingAmount = 0;
 
   final TransactionService _transactionService = TransactionService();
+  Object redrawAmountObject = Object();
+  Object redrawReceivingAmountObject = Object();
 
   @override
   void initState() {
     super.initState();
+
     _transactionTime =
         TimeOfDay(hour: _transactionDate.hour, minute: _transactionDate.minute);
 
@@ -72,14 +76,16 @@ class TransactionFormPageState extends State<TransactionFormPage> {
           ? TextEditingController()
           : _descriptionFieldController =
               TextEditingController(text: widget.description);
-
-      _amountFieldController = TextEditingController();
     } else {
       _transactionService
           .getTransactionForEdit(widget.transaction!.id)
           .then((result) {
         setState(() {
           transactionEditDto = result;
+
+          _amount = transactionEditDto!.amount!;
+          redrawAmountObject = Object(); // fix to show amount in case of edit
+
           if (widget.isCopy) {
             transactionEditDto!.id = null;
           } else {
@@ -97,11 +103,20 @@ class TransactionFormPageState extends State<TransactionFormPage> {
 
           _descriptionFieldController =
               TextEditingController(text: transactionEditDto!.description);
-          _amountFieldController = TextEditingController(
-              text: transactionEditDto!.amount.toString());
         });
       });
     }
+  }
+
+  static String format(double value, {String? symbol}) {
+    return NumberFormat.simpleCurrency(
+      name: symbol,
+      decimalDigits: 2,
+    ).format(value);
+  }
+
+  String valueFormat(double? value) {
+    return format(value!, symbol: '');
   }
 
   @override
@@ -185,25 +200,29 @@ class TransactionFormPageState extends State<TransactionFormPage> {
                       child: buildAccountList(),
                     ),
                     const SizedBox(height: 24.0),
-                    PrimaryColorOverride(
-                      child: TextFormField(
-                        keyboardType: const TextInputType.numberWithOptions(
-                            decimal: true),
-                        decoration: InputDecoration(
-                            border: const OutlineInputBorder(),
-                            labelText: 'Amount',
-                            prefixText: _account == null
-                                ? null
-                                : _account!.currencySymbol,
-                            prefixStyle: _transactionTextStyle,
-                            suffixText: _account == null
-                                ? null
-                                : _account!.currencyCode,
-                            suffixStyle: _transactionTextStyle),
-                        maxLines: 1,
-                        controller: _amountFieldController,
-                        validator: _validateAmount,
-                      ),
+                    CalculatorTextFormField(
+                      key: ValueKey<Object>(redrawAmountObject),
+                      initialValue: _amount,
+                      validator: _validateAmount,
+                      valueFormat: valueFormat,
+                      style: _transactionTextStyle,
+                      appBarBackgroundColor: PiggyAppTheme.nearlyWhite,
+                      title: 'Amount',
+                      inputDecoration: InputDecoration(
+                          border: const OutlineInputBorder(),
+                          labelText: 'Amount',
+                          prefixText: _account == null
+                              ? null
+                              : _account!.currencySymbol,
+                          prefixStyle: _transactionTextStyle,
+                          suffixText:
+                              _account == null ? null : _account!.currencyCode,
+                          suffixStyle: _transactionTextStyle),
+                      onSubmitted: (value) {
+                        setState(() {
+                          _amount = value!;
+                        });
+                      },
                     ),
                     InputDecorator(
                       decoration: InputDecoration(
@@ -226,6 +245,7 @@ class TransactionFormPageState extends State<TransactionFormPage> {
                         keyboardType: TextInputType.multiline,
                         controller: _descriptionFieldController,
                         validator: _validateDescription,
+                        textCapitalization: TextCapitalization.sentences,
                       ),
                     ),
                     DateTimePicker(
@@ -253,31 +273,30 @@ class TransactionFormPageState extends State<TransactionFormPage> {
                             child: buildAccountList(true),
                           )
                         : null,
-                    _showTransferToAmount ? const SizedBox(height: 24.0) : null,
-                    _showTransferToAmount
-                        ? PrimaryColorOverride(
-                            child: TextFormField(
-                              keyboardType:
-                                  const TextInputType.numberWithOptions(
-                                      decimal: true),
-                              decoration: InputDecoration(
-                                border: const OutlineInputBorder(),
-                                labelText: 'Converted Amount',
-                                prefixText: _toAccount == null
-                                    ? null
-                                    : _toAccount!.currencySymbol,
-                                prefixStyle:
-                                    const TextStyle(color: Colors.green),
-                                suffixText: _toAccount == null
-                                    ? null
-                                    : _toAccount!.currencyCode,
-                                suffixStyle:
-                                    const TextStyle(color: Colors.green),
-                              ),
-                              maxLines: 1,
-                              controller: _convertedAmountFieldController,
-                              validator: _validateAmount,
+                    _showReceivingAmount ? const SizedBox(height: 24.0) : null,
+                    _showReceivingAmount
+                        ? CalculatorTextFormField(
+                            key: ValueKey<Object>(redrawReceivingAmountObject),
+                            initialValue: _receivingAmount,
+                            validator: _validateAmount,
+                            valueFormat: valueFormat,
+                            inputDecoration: InputDecoration(
+                              border: const OutlineInputBorder(),
+                              labelText: 'Converted Amount',
+                              prefixText: _toAccount == null
+                                  ? null
+                                  : _toAccount!.currencySymbol,
+                              prefixStyle: const TextStyle(color: Colors.green),
+                              suffixText: _toAccount == null
+                                  ? null
+                                  : _toAccount!.currencyCode,
+                              suffixStyle: const TextStyle(color: Colors.green),
                             ),
+                            onSubmitted: (value) {
+                              setState(() {
+                                _receivingAmount = value!;
+                              });
+                            },
                           )
                         : null,
                     const SizedBox(height: 24.0),
@@ -297,8 +316,6 @@ class TransactionFormPageState extends State<TransactionFormPage> {
   void dispose() {
     // Clean up the controller when the Widget is removed from the Widget tree
     _descriptionFieldController!.dispose();
-    _amountFieldController!.dispose();
-    _convertedAmountFieldController.dispose();
     super.dispose();
   }
 
@@ -330,7 +347,7 @@ class TransactionFormPageState extends State<TransactionFormPage> {
               ],
             );
           },
-        ) as FutureOr<bool>?) ??
+        )) ??
         false;
   }
 
@@ -413,15 +430,16 @@ class TransactionFormPageState extends State<TransactionFormPage> {
         return;
       }
 
+      double amount = _amount;
+
       if (_transactionType == UIData.transaction_type_transfer) {
         if (!_isValidToAccount()) {
           return;
         } else {
-          double amount = double.parse(_amountFieldController!.text);
           double toAmount;
 
-          if (_showTransferToAmount) {
-            toAmount = double.parse(_convertedAmountFieldController.text);
+          if (_showReceivingAmount) {
+            toAmount = _receivingAmount;
           } else {
             toAmount = amount;
           }
@@ -444,7 +462,6 @@ class TransactionFormPageState extends State<TransactionFormPage> {
                   _toAccountId)));
         }
       } else {
-        double amount = double.parse(_amountFieldController!.text);
         if (_transactionType == UIData.transaction_type_expense && amount > 0) {
           amount *= -1;
         }
@@ -474,11 +491,11 @@ class TransactionFormPageState extends State<TransactionFormPage> {
       // check whether both accounts currency is same or not
       if (_account!.currencyCode == _toAccount!.currencyCode) {
         setState(() {
-          _showTransferToAmount = false;
+          _showReceivingAmount = false;
         });
       } else {
         // if not same, show converted amount field
-        _showTransferToAmount = true;
+        _showReceivingAmount = true;
       }
     }
   }
@@ -486,9 +503,6 @@ class TransactionFormPageState extends State<TransactionFormPage> {
   String? _validateAmount(String? value) {
     _formWasEdited = true;
     if (value!.isEmpty) return 'Amount is required.';
-    if (double.tryParse(value) == null) {
-      return 'Please enter a valid amount.';
-    }
     return null;
   }
 

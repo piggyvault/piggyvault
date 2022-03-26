@@ -23,8 +23,8 @@ class DateTimePicker extends StatelessWidget {
     final DateTime? picked = await showDatePicker(
         context: context,
         initialDate: selectedDate!,
-        firstDate: new DateTime(2015, 8),
-        lastDate: new DateTime(2101));
+        firstDate: DateTime(2015, 8),
+        lastDate: DateTime(2101));
     if (picked != null && picked != selectedDate) selectDate!(picked);
   }
 

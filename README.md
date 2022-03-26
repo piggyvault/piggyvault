@@ -106,3 +106,4 @@ Grab the APK from the latest [release](https://github.com/piggyvault/piggyvault/
 - [ReinBentdal/styled_widget](https://github.com/ReinBentdal/styled_widget)
 - [Ahmadre/FlutterIconPicker](https://github.com/Ahmadre/FlutterIconPicker)
 - [Gperez88/input_calculator](https://github.com/Gperez88/input_calculator)
+- [Idean/Flutter-Neumorphic](https://github.com/Idean/Flutter-Neumorphic)

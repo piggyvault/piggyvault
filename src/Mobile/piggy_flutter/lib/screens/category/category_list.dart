@@ -1,8 +1,5 @@
-import 'dart:convert';
-
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 // import 'package:flutter_iconpicker/flutter_iconpicker.dart';
 import 'package:piggy_flutter/blocs/categories/categories.dart';
 import 'package:piggy_flutter/models/category.dart';
@@ -21,30 +18,44 @@ class CategoryListPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Categories'),
+    return NeumorphicTheme(
+      themeMode: ThemeMode.light,
+      theme: const NeumorphicThemeData(
+        lightSource: LightSource.topLeft,
+        accentColor: NeumorphicColors.accent,
+        appBarTheme: NeumorphicAppBarThemeData(
+          buttonStyle: NeumorphicStyle(boxShape: NeumorphicBoxShape.circle()),
+          textStyle: TextStyle(color: Colors.black54),
+          iconTheme: IconThemeData(color: Colors.black54, size: 30),
+        ),
+        depth: 4,
+        intensity: 0.9,
       ),
-      body: _categoryListBuilder(),
-      drawer: CommonDrawer(
-        animationController: animationController,
+      child: Scaffold(
+        appBar: NeumorphicAppBar(
+          title: const Text('Categories'),
+        ),
+        body: _categoryListBuilder(),
+        drawer: CommonDrawer(
+          animationController: animationController,
+        ),
+        floatingActionButton: FloatingActionButton(
+            key: ValueKey<Color>(Theme.of(context).buttonColor),
+            tooltip: 'Add new category',
+            backgroundColor: PiggyAppTheme.nearlyDarkBlue,
+            child: Icon(Icons.add, color: Theme.of(context).primaryColor),
+            onPressed: () async {
+              await Navigator.push(
+                  context,
+                  MaterialPageRoute<DismissDialogAction>(
+                    builder: (BuildContext context) => CategoryFormPage(
+                      title: 'Add Category',
+                      categoriesBloc: BlocProvider.of<CategoriesBloc>(context),
+                    ),
+                    fullscreenDialog: true,
+                  ));
+            }),
       ),
-      floatingActionButton: FloatingActionButton(
-          key: ValueKey<Color>(Theme.of(context).buttonColor),
-          tooltip: 'Add new category',
-          backgroundColor: PiggyAppTheme.nearlyDarkBlue,
-          child: Icon(Icons.add, color: Theme.of(context).primaryColor),
-          onPressed: () async {
-            await Navigator.push(
-                context,
-                MaterialPageRoute<DismissDialogAction>(
-                  builder: (BuildContext context) => CategoryFormPage(
-                    title: 'Add Category',
-                    categoriesBloc: BlocProvider.of<CategoriesBloc>(context),
-                  ),
-                  fullscreenDialog: true,
-                ));
-          }),
     );
   }
 

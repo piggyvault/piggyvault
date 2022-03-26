@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:intl/intl.dart';
 import 'package:piggy_flutter/blocs/auth/auth.dart';
 import 'package:piggy_flutter/blocs/transaction/transaction.dart';
@@ -48,38 +48,52 @@ class TransactionDetailPageState extends State<TransactionDetailPage> {
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
 
-    return Scaffold(
-      key: _scaffoldKey,
-      appBar: AppBar(
-        title: const Text('Transaction Details'),
-      ),
-      body: BlocListener<TransactionDetailBloc, TransactionDetailState>(
-        listener: (context, state) {
-          if (state is TransactionDeleting) {
-            showProgress(context);
-          }
-
-          if (state is TransactionDeleted) {
-            hideProgress(context);
-            Navigator.of(context).pop();
-          }
-        },
-        child: ListView(
-          padding: const EdgeInsets.only(top: 8.0, left: 8.0, right: 8.0),
-          children: <Widget>[
-            _transactionDetails(),
-            ListTile(
-              title: Text(
-                'Comments',
-                style: Theme.of(context).textTheme.headline5,
-              ),
-            ),
-            _commentTile(),
-            _transactionComments(),
-          ],
+    return NeumorphicTheme(
+      themeMode: ThemeMode.light,
+      theme: const NeumorphicThemeData(
+        lightSource: LightSource.topLeft,
+        accentColor: NeumorphicColors.accent,
+        appBarTheme: NeumorphicAppBarThemeData(
+          buttonStyle: NeumorphicStyle(boxShape: NeumorphicBoxShape.circle()),
+          textStyle: TextStyle(color: Colors.black54),
+          iconTheme: IconThemeData(color: Colors.black54, size: 30),
         ),
+        depth: 4,
+        intensity: 0.9,
       ),
-      bottomNavigationBar: _bottomNavigationBar(theme),
+      child: Scaffold(
+        key: _scaffoldKey,
+        appBar: NeumorphicAppBar(
+          title: const Text('Transaction Details'),
+        ),
+        body: BlocListener<TransactionDetailBloc, TransactionDetailState>(
+          listener: (context, state) {
+            if (state is TransactionDeleting) {
+              showProgress(context);
+            }
+
+            if (state is TransactionDeleted) {
+              hideProgress(context);
+              Navigator.of(context).pop();
+            }
+          },
+          child: ListView(
+            padding: const EdgeInsets.only(top: 8.0, left: 8.0, right: 8.0),
+            children: <Widget>[
+              _transactionDetails(),
+              ListTile(
+                title: Text(
+                  'Comments',
+                  style: Theme.of(context).textTheme.headline5,
+                ),
+              ),
+              _commentTile(),
+              _transactionComments(),
+            ],
+          ),
+        ),
+        bottomNavigationBar: _bottomNavigationBar(theme),
+      ),
     );
   }
 

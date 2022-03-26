@@ -1,7 +1,7 @@
 import 'dart:async';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_font_icons/flutter_font_icons.dart';
+import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:input_calculator/input_calculator.dart';
 import 'package:intl/intl.dart';
 import 'package:piggy_flutter/blocs/accounts/accounts.dart';
@@ -58,6 +58,14 @@ class TransactionFormPageState extends State<TransactionFormPage> {
   final TransactionService _transactionService = TransactionService();
   Object redrawAmountObject = Object();
   Object redrawReceivingAmountObject = Object();
+
+  int _selectedTransactionTypeIndex = 0;
+
+  final List<String> _transactionTypes = [
+    UIData.transaction_type_expense,
+    UIData.transaction_type_income,
+    UIData.transaction_type_transfer
+  ];
 
   @override
   void initState() {
@@ -165,32 +173,69 @@ class TransactionFormPageState extends State<TransactionFormPage> {
                 child: ListView(
                   padding: const EdgeInsets.all(16.0),
                   children: <Widget?>[
-                    InputDecorator(
-                        decoration: const InputDecoration(
-                          labelText: 'Transaction Type',
-                          hintText: 'Choose the type of transaction',
+                    Expanded(
+                      child: NeumorphicToggle(
+                        height: 50,
+                        style: const NeumorphicToggleStyle(
+                            //backgroundColor: Colors.red,
+                            ),
+                        selectedIndex: _selectedTransactionTypeIndex,
+                        displayForegroundOnlyIfSelected: true,
+                        children: [
+                          ToggleElement(
+                            background: const Center(
+                                child: Text(
+                              UIData.transaction_type_expense,
+                              style: TextStyle(fontWeight: FontWeight.w500),
+                            )),
+                            foreground: Center(
+                                child: Text(
+                              UIData.transaction_type_expense,
+                              style: _transactionTextStyle.copyWith(
+                                  fontWeight: FontWeight.w700),
+                            )),
+                          ),
+                          ToggleElement(
+                            background: const Center(
+                                child: Text(
+                              UIData.transaction_type_income,
+                              style: TextStyle(fontWeight: FontWeight.w500),
+                            )),
+                            foreground: Center(
+                                child: Text(
+                              UIData.transaction_type_income,
+                              style: _transactionTextStyle.copyWith(
+                                  fontWeight: FontWeight.w700),
+                            )),
+                          ),
+                          ToggleElement(
+                            background: const Center(
+                                child: Text(
+                              UIData.transaction_type_transfer,
+                              style: TextStyle(fontWeight: FontWeight.w500),
+                            )),
+                            foreground: Center(
+                                child: Text(
+                              UIData.transaction_type_transfer,
+                              style: _transactionTextStyle.copyWith(
+                                  fontWeight: FontWeight.w700),
+                            )),
+                          )
+                        ],
+                        thumb: Neumorphic(
+                          style: NeumorphicStyle(
+                            boxShape: NeumorphicBoxShape.roundRect(
+                                const BorderRadius.all(Radius.circular(12))),
+                          ),
                         ),
-                        isEmpty: _transactionType == null,
-                        child: DropdownButton<String>(
-                          value: _transactionType,
-                          isDense: true,
-                          onChanged: (String? value) {
-                            setState(() {
-                              _transactionType = value;
-                              manageTransferView();
-                            });
-                          },
-                          items: <String>[
-                            UIData.transaction_type_expense,
-                            UIData.transaction_type_income,
-                            UIData.transaction_type_transfer
-                          ].map((String value) {
-                            return DropdownMenuItem<String>(
-                              value: value,
-                              child: Text(value),
-                            );
-                          }).toList(),
-                        )),
+                        onChanged: (value) {
+                          setState(() {
+                            _selectedTransactionTypeIndex = value;
+                            _transactionType = _transactionTypes[value];
+                          });
+                        },
+                      ),
+                    ),
                     InputDecorator(
                       decoration: const InputDecoration(
                         labelText: 'Account',

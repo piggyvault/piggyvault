@@ -151,16 +151,9 @@ class TransactionFormPageState extends State<TransactionFormPage> {
           child: ScaffoldMessenger(
             key: scaffoldMessengerKey,
             child: Scaffold(
-              appBar: AppBar(
+              appBar: NeumorphicAppBar(
                 title:
                     Text(widget.title == null ? ' Transaction' : widget.title!),
-                actions: <Widget>[
-                  TextButton(
-                      child: Text('SAVE', style: theme.textTheme.button),
-                      onPressed: () {
-                        onSave();
-                      })
-                ],
               ),
               body: BlocListener<TransactionBloc, TransactionState>(
                 listener: (context, state) {
@@ -367,6 +360,24 @@ class TransactionFormPageState extends State<TransactionFormPage> {
                                   },
                                 )
                               : null,
+                          const SizedBox(height: 24.0),
+                          NeumorphicButton(
+                            style: NeumorphicStyle(
+                              shape: NeumorphicShape.flat,
+                              boxShape: NeumorphicBoxShape.roundRect(
+                                  BorderRadius.circular(12)),
+                            ),
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 18, horizontal: 18),
+                            child: const Center(
+                              child: Text("SAVE",
+                                  style:
+                                      TextStyle(fontWeight: FontWeight.w800)),
+                            ),
+                            onPressed: () {
+                              onSave();
+                            },
+                          ),
                           const SizedBox(height: 24.0),
                           Text('* all fields are mandatory',
                               style: Theme.of(context).textTheme.caption),

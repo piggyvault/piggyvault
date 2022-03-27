@@ -1,8 +1,7 @@
 import 'dart:async';
-import 'dart:convert';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_font_icons/flutter_font_icons.dart';
+import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 // import 'package:flutter_iconpicker/flutter_iconpicker.dart';
 import 'package:piggy_flutter/blocs/categories/categories.dart';
 import 'package:piggy_flutter/models/category.dart';
@@ -66,77 +65,109 @@ class CategoryFormPageState extends State<CategoryFormPage> {
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
-    return ScaffoldMessenger(
-      key: scaffoldMessengerKey,
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text(widget.title),
-          actions: <Widget>[submitButton(theme)],
-        ),
-        body: BlocListener<CategoriesBloc, CategoriesState>(
-          listener: (BuildContext context, CategoriesState state) {
-            if (state is CategorySaveFailure) {
-              hideProgress(context);
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text('${state.errorMessage}'),
-                  backgroundColor: Colors.red,
-                ),
-              );
-            }
-            if (state is CategoriesLoading) {
-              showProgress(context);
-            }
 
-            if (state is CategorySaved) {
-              hideProgress(context);
-              showSuccess(
-                  context: context,
-                  message: UIData.success,
-                  icon: MaterialCommunityIcons.check);
-            }
-          },
-          child: DropdownButtonHideUnderline(
-            child: SafeArea(
-              top: false,
-              bottom: false,
-              child: Form(
-                key: _formKey,
-                autovalidateMode: AutovalidateMode.onUserInteraction,
-                onWillPop: _onWillPop,
-                child: ListView(
-                  padding: const EdgeInsets.all(16.0),
-                  children: <Widget>[
-                    Container(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: <Widget>[
-                          Material(
-                            child: new Container(
-                              margin: new EdgeInsets.symmetric(horizontal: 1.0),
-                              child: new IconButton(
-                                icon: AnimatedSwitcher(
-                                  duration: Duration(milliseconds: 300),
-                                  child: _icon,
+    return NeumorphicTheme(
+      themeMode: ThemeMode.light,
+      theme: const NeumorphicThemeData(
+        lightSource: LightSource.topLeft,
+        accentColor: NeumorphicColors.accent,
+        appBarTheme: NeumorphicAppBarThemeData(
+          buttonStyle: NeumorphicStyle(boxShape: NeumorphicBoxShape.circle()),
+          textStyle: TextStyle(color: Colors.black54),
+          iconTheme: IconThemeData(color: Colors.black54, size: 30),
+        ),
+        depth: 4,
+        intensity: 0.9,
+      ),
+      child: ScaffoldMessenger(
+        key: scaffoldMessengerKey,
+        child: Scaffold(
+          appBar: NeumorphicAppBar(
+            title: Text(widget.title),
+          ),
+          body: BlocListener<CategoriesBloc, CategoriesState>(
+            listener: (BuildContext context, CategoriesState state) {
+              if (state is CategorySaveFailure) {
+                hideProgress(context);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(state.errorMessage),
+                    backgroundColor: Colors.red,
+                  ),
+                );
+              }
+              if (state is CategoriesLoading) {
+                showProgress(context);
+              }
+
+              if (state is CategorySaved) {
+                hideProgress(context);
+                showSuccess(
+                    context: context,
+                    message: UIData.success,
+                    icon: MaterialCommunityIcons.check);
+              }
+            },
+            child: DropdownButtonHideUnderline(
+              child: SafeArea(
+                top: false,
+                bottom: false,
+                child: Form(
+                  key: _formKey,
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                  onWillPop: _onWillPop,
+                  child: ListView(
+                    padding: const EdgeInsets.all(16.0),
+                    children: <Widget>[
+                      SizedBox(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: <Widget>[
+                            Material(
+                              child: Container(
+                                margin:
+                                    const EdgeInsets.symmetric(horizontal: 1.0),
+                                child: IconButton(
+                                  icon: AnimatedSwitcher(
+                                    duration: const Duration(milliseconds: 300),
+                                    child: _icon,
+                                  ),
+                                  onPressed: _pickIcon,
+                                  color: Colors.blueGrey,
                                 ),
-                                onPressed: _pickIcon,
-                                color: Colors.blueGrey,
                               ),
+                              color: Colors.white,
                             ),
-                            color: Colors.white,
-                          ),
-                          const SizedBox(width: 10.0),
-                          Flexible(
-                            child: _categoryField(theme),
-                          ),
-                        ],
+                            const SizedBox(width: 10.0),
+                            Flexible(
+                              child: _categoryField(theme),
+                            ),
+                          ],
+                        ),
+                        width: double.infinity,
                       ),
-                      width: double.infinity,
-                    ),
-                    const SizedBox(height: 24.0),
-                    Text('* all fields are mandatory',
-                        style: Theme.of(context).textTheme.caption),
-                  ].where((child) => child != null).toList(),
+                      const SizedBox(height: 24.0),
+                      NeumorphicButton(
+                        style: NeumorphicStyle(
+                          shape: NeumorphicShape.flat,
+                          boxShape: NeumorphicBoxShape.roundRect(
+                              BorderRadius.circular(12)),
+                        ),
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 18, horizontal: 18),
+                        child: const Center(
+                          child: Text("SAVE",
+                              style: TextStyle(fontWeight: FontWeight.w800)),
+                        ),
+                        onPressed: () {
+                          saveCategory();
+                        },
+                      ),
+                      const SizedBox(height: 24.0),
+                      Text('* all fields are mandatory',
+                          style: Theme.of(context).textTheme.caption),
+                    ].toList(),
+                  ),
                 ),
               ),
             ),
@@ -164,15 +195,6 @@ class CategoryFormPageState extends State<CategoryFormPage> {
         ),
         style: theme.textTheme.headline5,
       ),
-    );
-  }
-
-  Widget submitButton(ThemeData theme) {
-    return TextButton(
-      child: Text('SAVE', style: theme.textTheme.button),
-      onPressed: () {
-        saveCategory();
-      },
     );
   }
 

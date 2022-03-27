@@ -1,14 +1,12 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_font_icons/flutter_font_icons.dart';
+import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:piggy_flutter/blocs/account_form/bloc.dart';
 import 'package:piggy_flutter/blocs/account_types/bloc.dart';
 import 'package:piggy_flutter/blocs/accounts/accounts.dart';
 import 'package:piggy_flutter/blocs/currencies/bloc.dart';
-import 'package:piggy_flutter/models/account.dart';
-import 'package:piggy_flutter/models/currency.dart';
 import 'package:piggy_flutter/models/models.dart';
 import 'package:piggy_flutter/repositories/repositories.dart';
 import 'package:piggy_flutter/utils/uidata.dart';
@@ -67,137 +65,167 @@ class _AccountFormScreenState extends State<AccountFormScreen> {
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
-    return ScaffoldMessenger(
-      key: scaffoldMessengerKey,
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text(widget.title!),
-          actions: <Widget>[
-            submitButton(theme),
-          ],
+    return NeumorphicTheme(
+      themeMode: ThemeMode.light,
+      theme: const NeumorphicThemeData(
+        lightSource: LightSource.topLeft,
+        accentColor: NeumorphicColors.accent,
+        appBarTheme: NeumorphicAppBarThemeData(
+          buttonStyle: NeumorphicStyle(boxShape: NeumorphicBoxShape.circle()),
+          textStyle: TextStyle(color: Colors.black54),
+          iconTheme: IconThemeData(color: Colors.black54, size: 30),
         ),
-        body: BlocListener<AccountFormBloc, AccountFormState>(
-          bloc: accountFormBloc,
-          listener: (BuildContext context, AccountFormState state) {
-            if (state is AccountFormSaving) {
-              showProgress(context);
-            }
-
-            if (state is AccountFormSaved) {
-              hideProgress(context);
-              showSuccess(
-                  context: context,
-                  message: UIData.success,
-                  icon: MaterialCommunityIcons.check);
-            }
-          },
-          child: BlocBuilder<AccountFormBloc, AccountFormState>(
+        depth: 4,
+        intensity: 0.9,
+      ),
+      child: ScaffoldMessenger(
+        key: scaffoldMessengerKey,
+        child: Scaffold(
+          appBar: NeumorphicAppBar(
+            title: Text(widget.title!),
+          ),
+          body: BlocListener<AccountFormBloc, AccountFormState>(
             bloc: accountFormBloc,
-            builder: (BuildContext context, AccountFormState state) {
-              if (state is AccountFormLoaded) {
-                accountFormModel = state.account;
+            listener: (BuildContext context, AccountFormState state) {
+              if (state is AccountFormSaving) {
+                showProgress(context);
               }
-              return DropdownButtonHideUnderline(
-                child: SafeArea(
-                  top: false,
-                  bottom: false,
-                  child: Form(
-                    key: _formKey,
-                    autovalidateMode: AutovalidateMode.onUserInteraction,
-                    onWillPop: _onWillPop,
-                    child: ListView(
-                      padding: const EdgeInsets.all(16.0),
-                      children: <Widget?>[
-                        _nameField(theme),
-                        BlocBuilder<CurrenciesBloc, CurrenciesState>(
-                            bloc: currenciesBloc,
+
+              if (state is AccountFormSaved) {
+                hideProgress(context);
+                showSuccess(
+                    context: context,
+                    message: UIData.success,
+                    icon: MaterialCommunityIcons.check);
+              }
+            },
+            child: BlocBuilder<AccountFormBloc, AccountFormState>(
+              bloc: accountFormBloc,
+              builder: (BuildContext context, AccountFormState state) {
+                if (state is AccountFormLoaded) {
+                  accountFormModel = state.account;
+                }
+                return DropdownButtonHideUnderline(
+                  child: SafeArea(
+                    top: false,
+                    bottom: false,
+                    child: Form(
+                      key: _formKey,
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                      onWillPop: _onWillPop,
+                      child: ListView(
+                        padding: const EdgeInsets.all(16.0),
+                        children: <Widget?>[
+                          _nameField(theme),
+                          BlocBuilder<CurrenciesBloc, CurrenciesState>(
+                              bloc: currenciesBloc,
+                              builder: (BuildContext context,
+                                  CurrenciesState currenciesState) {
+                                if (currenciesState is CurrenciesLoaded) {
+                                  return InputDecorator(
+                                      decoration: const InputDecoration(
+                                        labelText: 'Currency',
+                                        hintText: 'Choose a currency',
+                                      ),
+                                      isEmpty:
+                                          accountFormModel!.currencyId == null,
+                                      child: DropdownButton<int>(
+                                        value: accountFormModel!.currencyId,
+                                        onChanged: (int? value) {
+                                          setState(() {
+                                            accountFormModel!.currencyId =
+                                                value;
+                                          });
+                                        },
+                                        items: currenciesState.currencies
+                                            .map((Currency currency) {
+                                          return DropdownMenuItem<int>(
+                                            value: currency.id,
+                                            child: Text(currency.name!),
+                                          );
+                                        }).toList(),
+                                      ));
+                                } else {
+                                  return const LinearProgressIndicator();
+                                }
+                              }),
+                          BlocBuilder<AccountTypesBloc, AccountTypesState>(
+                            bloc: accountTypesBloc,
                             builder: (BuildContext context,
-                                CurrenciesState currenciesState) {
-                              if (currenciesState is CurrenciesLoaded) {
+                                AccountTypesState accountTypeState) {
+                              if (accountTypeState is AccountTypesLoaded) {
                                 return InputDecorator(
-                                    decoration: const InputDecoration(
-                                      labelText: 'Currency',
-                                      hintText: 'Choose a currency',
-                                    ),
-                                    isEmpty:
-                                        accountFormModel!.currencyId == null,
-                                    child: DropdownButton<int>(
-                                      value: accountFormModel!.currencyId,
-                                      onChanged: (int? value) {
-                                        setState(() {
-                                          accountFormModel!.currencyId = value;
-                                        });
-                                      },
-                                      items: currenciesState.currencies
-                                          .map((Currency currency) {
-                                        return DropdownMenuItem<int>(
-                                          value: currency.id,
-                                          child: Text(currency.name!),
-                                        );
-                                      }).toList(),
-                                    ));
+                                  decoration: const InputDecoration(
+                                    labelText: 'Type',
+                                    hintText: 'Choose an account type',
+                                  ),
+                                  isEmpty:
+                                      accountFormModel!.accountTypeId == null,
+                                  child: DropdownButton<int>(
+                                    value: accountFormModel!.accountTypeId,
+                                    onChanged: (int? value) {
+                                      setState(() {
+                                        accountFormModel!.accountTypeId = value;
+                                      });
+                                    },
+                                    items: accountTypeState.accountTypes
+                                        .map((AccountType type) {
+                                      return DropdownMenuItem<int>(
+                                        value: type.id,
+                                        child: Text(type.name!),
+                                      );
+                                    }).toList(),
+                                  ),
+                                );
                               } else {
                                 return const LinearProgressIndicator();
                               }
-                            }),
-                        BlocBuilder<AccountTypesBloc, AccountTypesState>(
-                          bloc: accountTypesBloc,
-                          builder: (BuildContext context,
-                              AccountTypesState accountTypeState) {
-                            if (accountTypeState is AccountTypesLoaded) {
-                              return InputDecorator(
-                                decoration: const InputDecoration(
-                                  labelText: 'Type',
-                                  hintText: 'Choose an account type',
-                                ),
-                                isEmpty:
-                                    accountFormModel!.accountTypeId == null,
-                                child: DropdownButton<int>(
-                                  value: accountFormModel!.accountTypeId,
-                                  onChanged: (int? value) {
+                            },
+                          ),
+                          const SizedBox(height: 8.0),
+                          accountFormModel?.id == null
+                              ? null
+                              : CheckboxListTile(
+                                  title: const Text("Archived"), //    <-- label
+                                  value: accountFormModel!.isArchived,
+                                  secondary: const Icon(Icons.archive),
+                                  subtitle: const Text('Freeze this account.'),
+                                  controlAffinity:
+                                      ListTileControlAffinity.leading,
+                                  onChanged: (newValue) {
                                     setState(() {
-                                      accountFormModel!.accountTypeId = value;
+                                      accountFormModel!.isArchived = newValue!;
                                     });
                                   },
-                                  items: accountTypeState.accountTypes
-                                      .map((AccountType type) {
-                                    return DropdownMenuItem<int>(
-                                      value: type.id,
-                                      child: Text(type.name!),
-                                    );
-                                  }).toList(),
                                 ),
-                              );
-                            } else {
-                              return const LinearProgressIndicator();
-                            }
-                          },
-                        ),
-                        const SizedBox(height: 8.0),
-                        accountFormModel?.id == null
-                            ? null
-                            : CheckboxListTile(
-                                title: const Text("Archived"), //    <-- label
-                                value: accountFormModel!.isArchived,
-                                secondary: const Icon(Icons.archive),
-                                subtitle: const Text('Freeze this account.'),
-                                controlAffinity:
-                                    ListTileControlAffinity.leading,
-                                onChanged: (newValue) {
-                                  setState(() {
-                                    accountFormModel!.isArchived = newValue!;
-                                  });
-                                },
-                              ),
-                        const SizedBox(height: 24.0),
-                        Text('* all fields are mandatory',
-                            style: Theme.of(context).textTheme.caption),
-                      ].whereType<Widget>().toList(),
+                          const SizedBox(height: 24.0),
+                          NeumorphicButton(
+                            style: NeumorphicStyle(
+                              shape: NeumorphicShape.flat,
+                              boxShape: NeumorphicBoxShape.roundRect(
+                                  BorderRadius.circular(12)),
+                            ),
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 18, horizontal: 18),
+                            child: const Center(
+                              child: Text("SAVE",
+                                  style:
+                                      TextStyle(fontWeight: FontWeight.w800)),
+                            ),
+                            onPressed: () {
+                              onSave();
+                            },
+                          ),
+                          const SizedBox(height: 24.0),
+                          Text('* all fields are mandatory',
+                              style: Theme.of(context).textTheme.caption),
+                        ].whereType<Widget>().toList(),
+                      ),
                     ),
                   ),
-                ),
-              );
-            },
+                );
+              },
+            ),
           ),
         ),
       ),
@@ -250,15 +278,6 @@ class _AccountFormScreenState extends State<AccountFormScreen> {
         ),
         style: theme.textTheme.headline5,
       ),
-    );
-  }
-
-  Widget submitButton(ThemeData theme) {
-    return TextButton(
-      child: Text('SAVE', style: theme.textTheme.button),
-      onPressed: () {
-        onSave();
-      },
     );
   }
 

@@ -132,23 +132,24 @@ class TransactionFormPageState extends State<TransactionFormPage> {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
-
     final _transactionTextStyle = TextStyle(
         color: _transactionType == UIData.transaction_type_income
             ? Colors.green
             : Colors.red);
 
     return NeumorphicTheme(
-      theme: const NeumorphicThemeData(
-          defaultTextColor: Color(0xFF303E57),
-          accentColor: Color(0xFF7B79FC),
-          variantColor: Colors.black38,
-          baseColor: Color(0xFFF8F9FC),
-          depth: 8,
-          intensity: 0.5,
-          lightSource: LightSource.topLeft),
       themeMode: ThemeMode.light,
+      theme: const NeumorphicThemeData(
+        lightSource: LightSource.topLeft,
+        accentColor: NeumorphicColors.accent,
+        appBarTheme: NeumorphicAppBarThemeData(
+          buttonStyle: NeumorphicStyle(boxShape: NeumorphicBoxShape.circle()),
+          textStyle: TextStyle(color: Colors.black54),
+          iconTheme: IconThemeData(color: Colors.black54, size: 30),
+        ),
+        depth: 4,
+        intensity: 0.9,
+      ),
       child: Material(
         child: NeumorphicBackground(
           child: ScaffoldMessenger(
@@ -182,72 +183,67 @@ class TransactionFormPageState extends State<TransactionFormPage> {
                       child: ListView(
                         padding: const EdgeInsets.all(16.0),
                         children: <Widget?>[
-                          Expanded(
-                            child: NeumorphicToggle(
-                              height: 50,
-                              style: const NeumorphicToggleStyle(
-                                  //backgroundColor: Colors.red,
-                                  ),
-                              selectedIndex: _selectedTransactionTypeIndex,
-                              displayForegroundOnlyIfSelected: true,
-                              children: [
-                                ToggleElement(
-                                  background: const Center(
-                                      child: Text(
-                                    UIData.transaction_type_expense,
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.w500),
-                                  )),
-                                  foreground: Center(
-                                      child: Text(
-                                    UIData.transaction_type_expense,
-                                    style: _transactionTextStyle.copyWith(
-                                        fontWeight: FontWeight.w700),
-                                  )),
+                          NeumorphicToggle(
+                            height: 50,
+                            style: const NeumorphicToggleStyle(
+                                //backgroundColor: Colors.red,
                                 ),
-                                ToggleElement(
-                                  background: const Center(
-                                      child: Text(
-                                    UIData.transaction_type_income,
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.w500),
-                                  )),
-                                  foreground: Center(
-                                      child: Text(
-                                    UIData.transaction_type_income,
-                                    style: _transactionTextStyle.copyWith(
-                                        fontWeight: FontWeight.w700),
-                                  )),
-                                ),
-                                ToggleElement(
-                                  background: const Center(
-                                      child: Text(
-                                    UIData.transaction_type_transfer,
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.w500),
-                                  )),
-                                  foreground: Center(
-                                      child: Text(
-                                    UIData.transaction_type_transfer,
-                                    style: _transactionTextStyle.copyWith(
-                                        fontWeight: FontWeight.w700),
-                                  )),
-                                )
-                              ],
-                              thumb: Neumorphic(
-                                style: NeumorphicStyle(
-                                  boxShape: NeumorphicBoxShape.roundRect(
-                                      const BorderRadius.all(
-                                          Radius.circular(12))),
-                                ),
+                            selectedIndex: _selectedTransactionTypeIndex,
+                            displayForegroundOnlyIfSelected: true,
+                            children: [
+                              ToggleElement(
+                                background: const Center(
+                                    child: Text(
+                                  UIData.transaction_type_expense,
+                                  style: TextStyle(fontWeight: FontWeight.w500),
+                                )),
+                                foreground: Center(
+                                    child: Text(
+                                  UIData.transaction_type_expense,
+                                  style: _transactionTextStyle.copyWith(
+                                      fontWeight: FontWeight.w700),
+                                )),
                               ),
-                              onChanged: (value) {
-                                setState(() {
-                                  _selectedTransactionTypeIndex = value;
-                                  _transactionType = _transactionTypes[value];
-                                });
-                              },
+                              ToggleElement(
+                                background: const Center(
+                                    child: Text(
+                                  UIData.transaction_type_income,
+                                  style: TextStyle(fontWeight: FontWeight.w500),
+                                )),
+                                foreground: Center(
+                                    child: Text(
+                                  UIData.transaction_type_income,
+                                  style: _transactionTextStyle.copyWith(
+                                      fontWeight: FontWeight.w700),
+                                )),
+                              ),
+                              ToggleElement(
+                                background: const Center(
+                                    child: Text(
+                                  UIData.transaction_type_transfer,
+                                  style: TextStyle(fontWeight: FontWeight.w500),
+                                )),
+                                foreground: Center(
+                                    child: Text(
+                                  UIData.transaction_type_transfer,
+                                  style: _transactionTextStyle.copyWith(
+                                      fontWeight: FontWeight.w700),
+                                )),
+                              )
+                            ],
+                            thumb: Neumorphic(
+                              style: NeumorphicStyle(
+                                boxShape: NeumorphicBoxShape.roundRect(
+                                    const BorderRadius.all(
+                                        Radius.circular(12))),
+                              ),
                             ),
+                            onChanged: (value) {
+                              setState(() {
+                                _selectedTransactionTypeIndex = value;
+                                _transactionType = _transactionTypes[value];
+                              });
+                            },
                           ),
                           InputDecorator(
                             decoration: const InputDecoration(

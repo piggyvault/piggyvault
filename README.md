@@ -59,16 +59,20 @@ High-level planned items can be viewed under the organization's projects.
   <img src="images/screenshots/02-overview.jpg" width="200" /> 
   <img src="images/screenshots/03-accounts.jpg" width="200" />
   <img src="images/screenshots/04-accounts-collapsed.jpg" width="200" />
-  <img src="images/screenshots/05-account-add.jpg" width="200" />
+  <img src="images/screenshots/archived-accounts.png" width="200" />
+  <img src="images/screenshots/05-account-add.png" width="200" />
+  <img src="images/screenshots/account-edit.png" width="200" />
   <img src="images/screenshots/06-account-detail-no-transactions.jpg" width="200" />
   <img src="images/screenshots/07-account-details.jpg" width="200" />
   <img src="images/screenshots/08-account-details-popup-menu.jpg" width="200" />
   <img src="images/screenshots/09-recent.png" width="200" />
   <img src="images/screenshots/10-recent-collapsed.png" width="200" />
-  <img src="images/screenshots/11-add-transaction.jpg" width="200" />
+  <img src="images/screenshots/11-add-transaction.png" width="200" />
+  <img src="images/screenshots/11-add-transaction-calc.png" width="200" />
   <img src="images/screenshots/28-user-profile.png" width="200" />
   <img src="images/screenshots/12-push-notification.jpg" width="200" />
   <img src="images/screenshots/29-local-reminder.png" width="200" />
+  <img src="images/screenshots/13-transaction_details.png" width="200" />
   <img src="images/screenshots/13-transaction_details_with_comments.jpg" width="200" />
   <img src="images/screenshots/14-0-categories.png" width="200" />
   <img src="images/screenshots/14-1-category-details.png" width="200" />

@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:intl/intl.dart';
@@ -266,8 +267,10 @@ class TransactionDetailPageState extends State<TransactionDetailPage> {
           ),
           ListTile(
             leading: const Icon(Icons.event_note),
-            subtitle: Text(widget.transaction!.description!),
-            isThreeLine: true,
+            title: AutoSizeText(
+              widget.transaction!.description!,
+              maxLines: 3,
+            ),
           ),
           ListTile(
             leading: const Icon(Icons.access_time),

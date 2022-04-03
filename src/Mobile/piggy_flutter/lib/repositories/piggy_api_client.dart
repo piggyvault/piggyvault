@@ -8,9 +8,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class PiggyApiClient {
   PiggyApiClient({required this.httpClient}) : assert(httpClient != null);
 
-  static const String baseUrl = 'https://piggyvault.in';
-  // static const baseUrl = 'http://10.0.2.2:21021';
-  // static const baseUrl = 'http://localhost:21021';
+  static const String baseUrl = 'https://piggyvault.abhith.net';
 
   final http.Client httpClient;
 

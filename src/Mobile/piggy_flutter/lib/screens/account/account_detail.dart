@@ -309,7 +309,7 @@ class _AccountDetailPageState extends State<AccountDetailPage>
                                                     items: state
                                                             is AccountTransactionsLoaded
                                                         ? state
-                                                            .filterdAccountTransactions
+                                                            .filteredAccountTransactions
                                                             .sections
                                                         : [],
                                                   ),
@@ -645,7 +645,7 @@ class _AccountDetailPageState extends State<AccountDetailPage>
                           return Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Text(
-                              '${state.filterdAccountTransactions.transactions.length} transactions found',
+                              '${state.filteredAccountTransactions.transactions.length} transactions found',
                               style: const TextStyle(
                                 fontWeight: FontWeight.w100,
                                 fontSize: 16,

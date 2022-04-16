@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:piggy_flutter/blocs/transaction/transaction.dart';
 import 'package:piggy_flutter/models/models.dart';
 import 'package:piggy_flutter/repositories/repositories.dart';
@@ -15,9 +14,7 @@ class AccountTransactionsBloc
 
   AccountTransactionsBloc(
       {required this.transactionRepository, required this.transactionBloc})
-      : assert(transactionRepository != null),
-        assert(transactionBloc != null),
-        super(AccountTransactionsEmpty(null)) {
+      : super(AccountTransactionsEmpty(null)) {
     transactionBlocSubscription = transactionBloc.stream.listen((state) {
       if (state is TransactionSaved) {
         if (this.state.filters != null) {
@@ -41,7 +38,7 @@ class AccountTransactionsBloc
         } else {
           yield AccountTransactionsLoaded(
               allAccountTransactions: result,
-              filterdAccountTransactions: result,
+              filteredAccountTransactions: result,
               filters: event.input);
         }
       } catch (e) {
@@ -49,11 +46,11 @@ class AccountTransactionsBloc
       }
     } else if (event is FilterAccountTransactions) {
       if (state is AccountTransactionsLoaded) {
-        if (event.query == null || event.query == "") {
+        if (event.query == "") {
           yield AccountTransactionsLoaded(
               allAccountTransactions:
                   (state as AccountTransactionsLoaded).allAccountTransactions,
-              filterdAccountTransactions:
+              filteredAccountTransactions:
                   (state as AccountTransactionsLoaded).allAccountTransactions,
               filters: state.filters);
         } else {
@@ -73,7 +70,7 @@ class AccountTransactionsBloc
           yield AccountTransactionsLoaded(
               allAccountTransactions:
                   (state as AccountTransactionsLoaded).allAccountTransactions,
-              filterdAccountTransactions: filteredTransactionsResult,
+              filteredAccountTransactions: filteredTransactionsResult,
               filters: state.filters);
         }
       }

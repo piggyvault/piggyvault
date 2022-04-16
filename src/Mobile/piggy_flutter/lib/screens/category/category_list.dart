@@ -1,6 +1,8 @@
+import 'dart:convert';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_iconpicker/flutter_iconpicker.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
-// import 'package:flutter_iconpicker/flutter_iconpicker.dart';
 import 'package:piggy_flutter/blocs/categories/categories.dart';
 import 'package:piggy_flutter/models/category.dart';
 import 'package:piggy_flutter/repositories/repositories.dart';
@@ -67,19 +69,18 @@ class CategoryListPage extends StatelessWidget {
                 state.categories.map((Category category) {
               return MergeSemantics(
                 child: ListTile(
-                  leading: CircleAvatar(
-                      // child: Icon(
-                      //   deserializeIcon(Map<String, dynamic>.from(
-                      //       json.decode(category.icon))),
-                      //   color: PiggyAppTheme.nearlyDarkBlue,
-                      // ),
+                  leading: Padding(
+                    padding: const EdgeInsets.all(18.0),
+                    child: NeumorphicIcon(
+                      deserializeIcon(Map<String, dynamic>.from(
+                          json.decode(category.icon!)))!,
+                      style: const NeumorphicStyle(
+                        shape: NeumorphicShape.convex,
+                        surfaceIntensity: 1.0,
                       ),
+                    ),
+                  ),
                   title: Text(category.name!),
-                  // subtitle: category.noOfTransactions > 0
-                  //     ? Text(
-                  //         '${category.noOfTransactions} transactions recently')
-                  //     : null,
-
                   onTap: () async {
                     await Navigator.of(context)
                         .push(MaterialPageRoute<CategoryDetailPage>(

@@ -1,10 +1,8 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:piggy_flutter/blocs/accounts/accounts.dart';
 import 'package:piggy_flutter/blocs/auth/auth.dart';
-import 'package:piggy_flutter/blocs/auth/auth_bloc.dart';
 import 'package:piggy_flutter/blocs/categories/categories.dart';
 import 'package:piggy_flutter/models/models.dart';
 import 'package:piggy_flutter/screens/category/category_list.dart';
@@ -40,14 +38,14 @@ class _UserScreenState extends State<UserScreen> with TickerProviderStateMixin {
     topBarAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(
         parent: widget.animationController!,
-        curve: Interval(0, 0.5, curve: Curves.fastOutSlowIn),
+        curve: const Interval(0, 0.5, curve: Curves.fastOutSlowIn),
       ),
     );
 
     bodyAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(
         parent: widget.animationController!,
-        curve: Interval(0.5, 1.0, curve: Curves.fastOutSlowIn),
+        curve: const Interval(0.5, 1.0, curve: Curves.fastOutSlowIn),
       ),
     );
 
@@ -105,7 +103,8 @@ class _UserScreenState extends State<UserScreen> with TickerProviderStateMixin {
       animation: Tween<double>(begin: 0.0, end: 1.0).animate(
         CurvedAnimation(
           parent: widget.animationController!,
-          curve: Interval((1 / count) * 0, 1.0, curve: Curves.fastOutSlowIn),
+          curve:
+              const Interval((1 / count) * 0, 1.0, curve: Curves.fastOutSlowIn),
         ),
       ),
       animationController: widget.animationController,
@@ -116,7 +115,8 @@ class _UserScreenState extends State<UserScreen> with TickerProviderStateMixin {
       animation: Tween<double>(begin: 0.0, end: 1.0).animate(
         CurvedAnimation(
           parent: widget.animationController!,
-          curve: Interval((1 / count) * 1, 1.0, curve: Curves.fastOutSlowIn),
+          curve:
+              const Interval((1 / count) * 1, 1.0, curve: Curves.fastOutSlowIn),
         ),
       ),
     ));
@@ -232,13 +232,8 @@ class _UserScreenState extends State<UserScreen> with TickerProviderStateMixin {
                               ),
                               child: Row(
                                 children: <Widget>[
-                                  Padding(
-                                    padding: const EdgeInsets.only(right: 8),
-                                    // child: Icon(
-                                    //   Icons.calendar_today,
-                                    //   color: PiggyAppTheme.grey,
-                                    //   size: 18,
-                                    // ),
+                                  const Padding(
+                                    padding: EdgeInsets.only(right: 8),
                                   ),
                                   Material(
                                     color: Colors.transparent,
@@ -301,7 +296,7 @@ class UserCard extends StatelessWidget {
         builder: (BuildContext context, AuthState state) {
       if (state is AuthAuthenticated) {
         return <Widget>[
-          Icon(Icons.account_circle)
+          const Icon(Icons.account_circle)
               .decorated(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(30),
@@ -334,7 +329,7 @@ class UserCard extends StatelessWidget {
             text: 'Accounts',
             onTap: (() => Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (context) => HomeScreen(
+                    builder: (context) => const HomeScreen(
                       startpage: StartPage.Accounts,
                     ),
                   ),
@@ -346,7 +341,7 @@ class UserCard extends StatelessWidget {
           text: 'Accounts',
           onTap: (() => Navigator.of(context).push(
                 MaterialPageRoute(
-                  builder: (context) => HomeScreen(
+                  builder: (context) => const HomeScreen(
                     startpage: StartPage.Accounts,
                   ),
                 ),
@@ -384,7 +379,8 @@ class UserCard extends StatelessWidget {
         .padding(vertical: 10);
   }
 
-  Widget _buildUserStatsItem({required String value, required String text, TapCallback? onTap}) {
+  Widget _buildUserStatsItem(
+      {required String value, required String text, TapCallback? onTap}) {
     return GestureDetector(
         onTap: () async {
           await onTap!();
@@ -410,11 +406,11 @@ class UserCard extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceAround)
                       .padding(horizontal: 20, vertical: 10)
                       .decorated(
-                          color: Color(0xff3977ff),
+                          color: const Color(0xff3977ff),
                           borderRadius: BorderRadius.circular(20))
                       .elevation(
                         5,
-                        shadowColor: Color(0xff3977ff),
+                        shadowColor: const Color(0xff3977ff),
                         borderRadius: BorderRadius.circular(20),
                       )
                       .height(175)
@@ -427,11 +423,11 @@ class ActionsRow extends StatelessWidget {
   Widget _buildActionItem(String name, IconData icon) {
     final Widget actionIcon = Icon(icon)
         .iconSize(20)
-        .iconColor(Color(0xFF42526F))
+        .iconColor(const Color(0xFF42526F))
         .alignment(Alignment.center)
         .ripple()
         .constrained(width: 50, height: 50)
-        .backgroundColor(Color(0xfff6f5f8))
+        .backgroundColor(const Color(0xfff6f5f8))
         .clipOval()
         .padding(bottom: 5);
 
@@ -535,45 +531,46 @@ class _SettingsItemState extends State<SettingsItem> {
 
   @override
   Widget build(BuildContext context) {
-    final Widget Function({Widget child}) settingsItem = ({Widget? child}) => Styled.widget(child: child)
-        .alignment(Alignment.center)
-        .borderRadius(all: 15)
-        .ripple()
-        .backgroundColor(Colors.white, animate: true)
-        .clipRRect(all: 25) // clip ripple
-        .borderRadius(all: 25, animate: true)
-        .elevation(
-          pressed ? 0 : 20,
-          borderRadius: BorderRadius.circular(25),
-          shadowColor: Color(0x30000000),
-        ) // shadow borderRadius
-        .constrained(height: 80)
-        .padding(vertical: 12) // margin
-        .gestures(
-          onTapChange: (tapStatus) => setState(() => pressed = tapStatus),
-          onTapDown: (details) => print('tapDown'),
-          onTap: () async {
-            if (widget.title == UIData.reports) {
-              Navigator.of(context).push<void>(
-                MaterialPageRoute<ReportsScreen>(
-                  builder: (BuildContext context) => ReportsScreen(
-                    animationController: widget.animationController,
-                  ),
-                ),
-              );
-            }
-            if (widget.title == UIData.settings) {
-              Navigator.of(context).push(
-                MaterialPageRoute<SettingsScreen>(
-                  builder: (BuildContext context) => SettingsScreen(
-                      animationController: widget.animationController),
-                ),
-              );
-            }
-          },
-        )
-        .scale(all: pressed ? 0.95 : 1.0, animate: true)
-        .animate(const Duration(milliseconds: 150), Curves.easeOut);
+    final Widget Function({Widget child}) settingsItem =
+        ({Widget? child}) => Styled.widget(child: child)
+            .alignment(Alignment.center)
+            .borderRadius(all: 15)
+            .ripple()
+            .backgroundColor(Colors.white, animate: true)
+            .clipRRect(all: 25) // clip ripple
+            .borderRadius(all: 25, animate: true)
+            .elevation(
+              pressed ? 0 : 20,
+              borderRadius: BorderRadius.circular(25),
+              shadowColor: Color(0x30000000),
+            ) // shadow borderRadius
+            .constrained(height: 80)
+            .padding(vertical: 12) // margin
+            .gestures(
+              onTapChange: (tapStatus) => setState(() => pressed = tapStatus),
+              onTapDown: (details) => print('tapDown'),
+              onTap: () async {
+                if (widget.title == UIData.reports) {
+                  Navigator.of(context).push<void>(
+                    MaterialPageRoute<ReportsScreen>(
+                      builder: (BuildContext context) => ReportsScreen(
+                        animationController: widget.animationController,
+                      ),
+                    ),
+                  );
+                }
+                if (widget.title == UIData.settings) {
+                  Navigator.of(context).push(
+                    MaterialPageRoute<SettingsScreen>(
+                      builder: (BuildContext context) => SettingsScreen(
+                          animationController: widget.animationController),
+                    ),
+                  );
+                }
+              },
+            )
+            .scale(all: pressed ? 0.95 : 1.0, animate: true)
+            .animate(const Duration(milliseconds: 150), Curves.easeOut);
 
     final Widget icon = Icon(widget.icon)
         .iconColor(Colors.white)

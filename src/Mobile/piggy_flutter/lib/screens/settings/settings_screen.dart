@@ -2,7 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 import 'package:app_settings/app_settings.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:piggy_flutter/blocs/settings/bloc.dart';
@@ -36,14 +35,14 @@ class _SettingsScreenState extends State<SettingsScreen>
     topBarAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(
         parent: widget.animationController!,
-        curve: Interval(0, 0.5, curve: Curves.fastOutSlowIn),
+        curve: const Interval(0, 0.5, curve: Curves.fastOutSlowIn),
       ),
     );
 
     bodyAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(
         parent: widget.animationController!,
-        curve: Interval(0.5, 1.0, curve: Curves.fastOutSlowIn),
+        curve: const Interval(0.5, 1.0, curve: Curves.fastOutSlowIn),
       ),
     );
 
@@ -118,8 +117,8 @@ class _SettingsScreenState extends State<SettingsScreen>
             animation: Tween<double>(begin: 0.0, end: 1.0).animate(
               CurvedAnimation(
                 parent: widget.animationController!,
-                curve:
-                    Interval((1 / count) * 0, 1.0, curve: Curves.fastOutSlowIn),
+                curve: const Interval((1 / count) * 0, 1.0,
+                    curve: Curves.fastOutSlowIn),
               ),
             ),
             animationController: widget.animationController,
@@ -147,8 +146,8 @@ class _SettingsScreenState extends State<SettingsScreen>
         subTxt: "Manage",
         animation: Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
             parent: widget.animationController!,
-            curve:
-                Interval((1 / count) * 0, 1.0, curve: Curves.fastOutSlowIn))),
+            curve: const Interval((1 / count) * 0, 1.0,
+                curve: Curves.fastOutSlowIn))),
         animationController: widget.animationController,
         onPress: () => AppSettings.openAppSettings(),
       ),
@@ -249,13 +248,8 @@ class _SettingsScreenState extends State<SettingsScreen>
                               ),
                               child: Row(
                                 children: <Widget>[
-                                  Padding(
-                                    padding: const EdgeInsets.only(right: 8),
-                                    // child: Icon(
-                                    //   Icons.calendar_today,
-                                    //   color: PiggyAppTheme.grey,
-                                    //   size: 18,
-                                    // ),
+                                  const Padding(
+                                    padding: EdgeInsets.only(right: 8),
                                   ),
                                   Material(
                                     color: Colors.transparent,
@@ -270,12 +264,6 @@ class _SettingsScreenState extends State<SettingsScreen>
                                       onTap: () {
                                         FocusScope.of(context)
                                             .requestFocus(FocusNode());
-                                        // // setState(() {
-                                        // //   isDatePopupOpen = true;
-                                        // // });
-                                        // showDemoDialog(
-                                        //     context: context,
-                                        //     bloc: recentTransactionsBloc);
                                       },
                                       child: Padding(
                                         padding: const EdgeInsets.only(
@@ -288,21 +276,7 @@ class _SettingsScreenState extends State<SettingsScreen>
                                               MainAxisAlignment.center,
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
-                                          children: <Widget>[
-                                            // Text(
-                                            //   '${DateFormat("dd, MMM").format(startDate)} - ${DateFormat("dd, MMM").format(endDate)}',
-                                            //   textAlign: TextAlign.left,
-                                            //   style: TextStyle(
-                                            //     fontFamily:
-                                            //         PiggyAppTheme.fontName,
-                                            //     fontWeight: FontWeight.normal,
-                                            //     fontSize: 18,
-                                            //     letterSpacing: -0.2,
-                                            //     color:
-                                            //         PiggyAppTheme.darkerText,
-                                            //   ),
-                                            // ),
-                                          ],
+                                          children: <Widget>[],
                                         ),
                                       ),
                                     ),

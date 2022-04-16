@@ -1,5 +1,4 @@
 import 'package:equatable/equatable.dart';
-import 'package:flutter/widgets.dart';
 import 'package:piggy_flutter/models/account_form_model.dart';
 
 abstract class AccountFormState extends Equatable {

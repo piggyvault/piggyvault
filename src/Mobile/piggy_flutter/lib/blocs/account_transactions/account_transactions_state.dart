@@ -21,18 +21,18 @@ class AccountTransactionsLoading extends AccountTransactionsState {
 
 class AccountTransactionsLoaded extends AccountTransactionsState {
   final TransactionsResult allAccountTransactions;
-  final TransactionsResult filterdAccountTransactions;
+  final TransactionsResult filteredAccountTransactions;
   final GetTransactionsInput? filters;
 
   AccountTransactionsLoaded(
       {required this.allAccountTransactions,
-      required this.filterdAccountTransactions,
+      required this.filteredAccountTransactions,
       required this.filters})
       : super(filters);
 
   @override
   List<Object?> get props =>
-      [allAccountTransactions, filterdAccountTransactions, filters];
+      [allAccountTransactions, filteredAccountTransactions, filters];
 }
 
 class AccountTransactionsError extends AccountTransactionsState {

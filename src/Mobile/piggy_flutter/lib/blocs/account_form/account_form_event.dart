@@ -1,5 +1,4 @@
 import 'package:equatable/equatable.dart';
-import 'package:flutter/widgets.dart';
 import 'package:piggy_flutter/models/models.dart';
 
 abstract class AccountFormEvent extends Equatable {
@@ -7,7 +6,7 @@ abstract class AccountFormEvent extends Equatable {
 }
 
 class AccountFormSave extends AccountFormEvent {
-  const AccountFormSave({required this.account}) : assert(account != null);
+  const AccountFormSave({required this.account});
 
   final AccountFormModel account;
 

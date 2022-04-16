@@ -1,8 +1,9 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_font_icons/flutter_font_icons.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
-// import 'package:flutter_iconpicker/flutter_iconpicker.dart';
+import 'package:flutter_iconpicker/flutter_iconpicker.dart';
 import 'package:piggy_flutter/blocs/categories/categories.dart';
 import 'package:piggy_flutter/models/category.dart';
 import 'package:piggy_flutter/utils/uidata.dart';
@@ -31,18 +32,18 @@ class CategoryFormPageState extends State<CategoryFormPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final bool _formWasEdited = false;
 
-  TextEditingController? _categorynameFieldController;
+  TextEditingController? _categoryNameFieldController;
 
   Icon? _icon;
 
   _pickIcon() async {
-    // IconData icon = await FlutterIconPicker.showIconPicker(context,
-    //     iconPackModes: [IconPack.fontAwesomeIcons]);
+    IconData? icon = await FlutterIconPicker.showIconPicker(context,
+        iconPackModes: [IconPack.fontAwesomeIcons]);
 
-    // if (icon != null) {
-    //   _icon = Icon(icon);
-    //   setState(() {});
-    // }
+    if (icon != null) {
+      _icon = Icon(icon);
+      setState(() {});
+    }
   }
 
   @override
@@ -50,15 +51,15 @@ class CategoryFormPageState extends State<CategoryFormPage> {
     super.initState();
 
     if (widget.category == null) {
-      _categorynameFieldController = TextEditingController();
-      // _icon = Icon(deserializeIcon(Map<String, dynamic>.from(
-      //     json.decode('{"pack":"fontAwesomeIcons","key":"question"}'))));
+      _categoryNameFieldController = TextEditingController();
+      _icon = Icon(deserializeIcon(Map<String, dynamic>.from(
+          json.decode('{"pack":"fontAwesomeIcons","key":"question"}'))));
       setState(() {});
     } else {
-      _categorynameFieldController =
+      _categoryNameFieldController =
           TextEditingController(text: widget.category!.name);
-      // _icon = Icon(deserializeIcon(
-      //     Map<String, dynamic>.from(json.decode(widget.category.icon))));
+      _icon = Icon(deserializeIcon(
+          Map<String, dynamic>.from(json.decode(widget.category!.icon!))));
     }
   }
 
@@ -180,14 +181,14 @@ class CategoryFormPageState extends State<CategoryFormPage> {
   @override
   void dispose() {
     // Clean up the controller when the Widget is removed from the Widget tree
-    _categorynameFieldController?.dispose();
+    _categoryNameFieldController?.dispose();
     super.dispose();
   }
 
   Widget _categoryField(ThemeData theme) {
     return PrimaryColorOverride(
       child: TextField(
-        controller: _categorynameFieldController,
+        controller: _categoryNameFieldController,
         decoration: const InputDecoration(
           labelText: 'Category name',
           border: OutlineInputBorder(),
@@ -202,14 +203,15 @@ class CategoryFormPageState extends State<CategoryFormPage> {
     Category? category;
 
     if (widget.category == null) {
-      category = Category(id: null, icon: 'icon-question');
+      category = Category(
+          id: null, icon: '{"pack":"fontAwesomeIcons","key":"question"}');
     } else {
       category = widget.category;
     }
 
-    category!.name = _categorynameFieldController!.text;
+    category!.name = _categoryNameFieldController!.text;
     if (_icon != null) {
-      // category.icon = json.encode(serializeIcon(_icon.icon));
+      category.icon = json.encode(serializeIcon(_icon!.icon!));
     }
     widget.categoriesBloc.add(CategorySave(category: category));
   }

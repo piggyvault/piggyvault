@@ -109,6 +109,9 @@ class TransactionFormPageState extends State<TransactionFormPage> {
             _transactionType = UIData.transaction_type_expense;
           }
 
+          _selectedTransactionTypeIndex =
+              _transactionTypes.indexOf(_transactionType!);
+
           _descriptionFieldController =
               TextEditingController(text: transactionEditDto!.description);
         });
@@ -129,225 +132,258 @@ class TransactionFormPageState extends State<TransactionFormPage> {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
-
     final _transactionTextStyle = TextStyle(
         color: _transactionType == UIData.transaction_type_income
             ? Colors.green
             : Colors.red);
 
-    return ScaffoldMessenger(
-      key: scaffoldMessengerKey,
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text(widget.title == null ? ' Transaction' : widget.title!),
-          actions: <Widget>[
-            TextButton(
-                child: Text('SAVE', style: theme.textTheme.button),
-                onPressed: () {
-                  onSave();
-                })
-          ],
+    return NeumorphicTheme(
+      themeMode: ThemeMode.light,
+      theme: const NeumorphicThemeData(
+        lightSource: LightSource.topLeft,
+        accentColor: NeumorphicColors.accent,
+        appBarTheme: NeumorphicAppBarThemeData(
+          buttonStyle: NeumorphicStyle(boxShape: NeumorphicBoxShape.circle()),
+          textStyle: TextStyle(color: Colors.black54),
+          iconTheme: IconThemeData(color: Colors.black54, size: 30),
         ),
-        body: BlocListener<TransactionBloc, TransactionState>(
-          listener: (context, state) {
-            if (state is SavingTransaction) {
-              showProgress(context);
-            }
+        depth: 4,
+        intensity: 0.9,
+      ),
+      child: Material(
+        child: NeumorphicBackground(
+          child: ScaffoldMessenger(
+            key: scaffoldMessengerKey,
+            child: Scaffold(
+              appBar: NeumorphicAppBar(
+                title:
+                    Text(widget.title == null ? ' Transaction' : widget.title!),
+              ),
+              body: BlocListener<TransactionBloc, TransactionState>(
+                listener: (context, state) {
+                  if (state is SavingTransaction) {
+                    showProgress(context);
+                  }
 
-            if (state is TransactionSaved) {
-              hideProgress(context);
-              showSuccess(
-                  context: context,
-                  message: UIData.success,
-                  icon: MaterialCommunityIcons.check);
-            }
-          },
-          child: DropdownButtonHideUnderline(
-            child: SafeArea(
-              top: false,
-              bottom: false,
-              child: Form(
-                key: _formKey,
-                onWillPop: _onWillPop,
-                child: ListView(
-                  padding: const EdgeInsets.all(16.0),
-                  children: <Widget?>[
-                    Expanded(
-                      child: NeumorphicToggle(
-                        height: 50,
-                        style: const NeumorphicToggleStyle(
-                            //backgroundColor: Colors.red,
+                  if (state is TransactionSaved) {
+                    hideProgress(context);
+                    showSuccess(
+                        context: context,
+                        message: UIData.success,
+                        icon: MaterialCommunityIcons.check);
+                  }
+                },
+                child: DropdownButtonHideUnderline(
+                  child: SafeArea(
+                    top: false,
+                    bottom: false,
+                    child: Form(
+                      key: _formKey,
+                      onWillPop: _onWillPop,
+                      child: ListView(
+                        padding: const EdgeInsets.all(16.0),
+                        children: <Widget?>[
+                          NeumorphicToggle(
+                            height: 50,
+                            style: const NeumorphicToggleStyle(
+                                //backgroundColor: Colors.red,
+                                ),
+                            selectedIndex: _selectedTransactionTypeIndex,
+                            displayForegroundOnlyIfSelected: true,
+                            children: [
+                              ToggleElement(
+                                background: const Center(
+                                    child: Text(
+                                  UIData.transaction_type_expense,
+                                  style: TextStyle(fontWeight: FontWeight.w500),
+                                )),
+                                foreground: Center(
+                                    child: Text(
+                                  UIData.transaction_type_expense,
+                                  style: _transactionTextStyle.copyWith(
+                                      fontWeight: FontWeight.w700),
+                                )),
+                              ),
+                              ToggleElement(
+                                background: const Center(
+                                    child: Text(
+                                  UIData.transaction_type_income,
+                                  style: TextStyle(fontWeight: FontWeight.w500),
+                                )),
+                                foreground: Center(
+                                    child: Text(
+                                  UIData.transaction_type_income,
+                                  style: _transactionTextStyle.copyWith(
+                                      fontWeight: FontWeight.w700),
+                                )),
+                              ),
+                              ToggleElement(
+                                background: const Center(
+                                    child: Text(
+                                  UIData.transaction_type_transfer,
+                                  style: TextStyle(fontWeight: FontWeight.w500),
+                                )),
+                                foreground: Center(
+                                    child: Text(
+                                  UIData.transaction_type_transfer,
+                                  style: _transactionTextStyle.copyWith(
+                                      fontWeight: FontWeight.w700),
+                                )),
+                              )
+                            ],
+                            thumb: Neumorphic(
+                              style: NeumorphicStyle(
+                                boxShape: NeumorphicBoxShape.roundRect(
+                                    const BorderRadius.all(
+                                        Radius.circular(12))),
+                              ),
                             ),
-                        selectedIndex: _selectedTransactionTypeIndex,
-                        displayForegroundOnlyIfSelected: true,
-                        children: [
-                          ToggleElement(
-                            background: const Center(
-                                child: Text(
-                              UIData.transaction_type_expense,
-                              style: TextStyle(fontWeight: FontWeight.w500),
-                            )),
-                            foreground: Center(
-                                child: Text(
-                              UIData.transaction_type_expense,
-                              style: _transactionTextStyle.copyWith(
-                                  fontWeight: FontWeight.w700),
-                            )),
-                          ),
-                          ToggleElement(
-                            background: const Center(
-                                child: Text(
-                              UIData.transaction_type_income,
-                              style: TextStyle(fontWeight: FontWeight.w500),
-                            )),
-                            foreground: Center(
-                                child: Text(
-                              UIData.transaction_type_income,
-                              style: _transactionTextStyle.copyWith(
-                                  fontWeight: FontWeight.w700),
-                            )),
-                          ),
-                          ToggleElement(
-                            background: const Center(
-                                child: Text(
-                              UIData.transaction_type_transfer,
-                              style: TextStyle(fontWeight: FontWeight.w500),
-                            )),
-                            foreground: Center(
-                                child: Text(
-                              UIData.transaction_type_transfer,
-                              style: _transactionTextStyle.copyWith(
-                                  fontWeight: FontWeight.w700),
-                            )),
-                          )
-                        ],
-                        thumb: Neumorphic(
-                          style: NeumorphicStyle(
-                            boxShape: NeumorphicBoxShape.roundRect(
-                                const BorderRadius.all(Radius.circular(12))),
-                          ),
-                        ),
-                        onChanged: (value) {
-                          setState(() {
-                            _selectedTransactionTypeIndex = value;
-                            _transactionType = _transactionTypes[value];
-                          });
-                        },
-                      ),
-                    ),
-                    InputDecorator(
-                      decoration: const InputDecoration(
-                        labelText: 'Account',
-                        hintText: 'Choose an account',
-                      ),
-                      isEmpty: transactionEditDto!.accountId == null,
-                      child: buildAccountList(),
-                    ),
-                    const SizedBox(height: 24.0),
-                    CalculatorTextFormField(
-                      key: ValueKey<Object>(redrawAmountObject),
-                      initialValue: _amount,
-                      validator: _validateAmount,
-                      valueFormat: valueFormat,
-                      style: _transactionTextStyle,
-                      appBarBackgroundColor: PiggyAppTheme.nearlyWhite,
-                      title: 'Amount',
-                      inputDecoration: InputDecoration(
-                          border: const OutlineInputBorder(),
-                          labelText: 'Amount',
-                          prefixText: _account == null
-                              ? null
-                              : _account!.currencySymbol,
-                          prefixStyle: _transactionTextStyle,
-                          suffixText:
-                              _account == null ? null : _account!.currencyCode,
-                          suffixStyle: _transactionTextStyle),
-                      onSubmitted: (value) {
-                        setState(() {
-                          _amount = value!;
-                        });
-                      },
-                    ),
-                    InputDecorator(
-                      decoration: InputDecoration(
-                        labelText: 'Category',
-                        hintText: 'Choose a category',
-                        errorText: _categoryErrorText,
-                      ),
-                      isEmpty: transactionEditDto!.categoryId == null,
-                      child: buildCategoryList(),
-                    ),
-                    const SizedBox(height: 24.0),
-                    PrimaryColorOverride(
-                      child: TextFormField(
-                        decoration: const InputDecoration(
-                          border: OutlineInputBorder(),
-                          hintText: 'Tell us about the transaction',
-                          labelText: 'Description',
-                        ),
-                        maxLines: 2,
-                        keyboardType: TextInputType.multiline,
-                        controller: _descriptionFieldController,
-                        validator: _validateDescription,
-                        textCapitalization: TextCapitalization.sentences,
-                      ),
-                    ),
-                    DateTimePicker(
-                      labelText: 'Date',
-                      selectedDate: _transactionDate,
-                      selectedTime: _transactionTime,
-                      selectDate: (DateTime date) {
-                        setState(() {
-                          _transactionDate = date;
-                        });
-                      },
-                      selectTime: (TimeOfDay time) {
-                        setState(() {
-                          _transactionTime = time;
-                        });
-                      },
-                    ),
-                    _transactionType == UIData.transaction_type_transfer
-                        ? InputDecorator(
-                            decoration: const InputDecoration(
-                              labelText: 'To Account',
-                              hintText: 'Choose an account',
-                            ),
-                            isEmpty: _toAccount == null,
-                            child: buildAccountList(true),
-                          )
-                        : null,
-                    _showReceivingAmount ? const SizedBox(height: 24.0) : null,
-                    _showReceivingAmount
-                        ? CalculatorTextFormField(
-                            key: ValueKey<Object>(redrawReceivingAmountObject),
-                            initialValue: _receivingAmount,
-                            validator: _validateAmount,
-                            valueFormat: valueFormat,
-                            inputDecoration: InputDecoration(
-                              border: const OutlineInputBorder(),
-                              labelText: 'Converted Amount',
-                              prefixText: _toAccount == null
-                                  ? null
-                                  : _toAccount!.currencySymbol,
-                              prefixStyle: const TextStyle(color: Colors.green),
-                              suffixText: _toAccount == null
-                                  ? null
-                                  : _toAccount!.currencyCode,
-                              suffixStyle: const TextStyle(color: Colors.green),
-                            ),
-                            onSubmitted: (value) {
+                            onChanged: (value) {
                               setState(() {
-                                _receivingAmount = value!;
+                                _selectedTransactionTypeIndex = value;
+                                _transactionType = _transactionTypes[value];
                               });
                             },
-                          )
-                        : null,
-                    const SizedBox(height: 24.0),
-                    Text('* all fields are mandatory',
-                        style: Theme.of(context).textTheme.caption),
-                  ].whereType<Widget>().toList(),
+                          ),
+                          InputDecorator(
+                            decoration: const InputDecoration(
+                              labelText: 'Account',
+                              hintText: 'Choose an account',
+                            ),
+                            isEmpty: transactionEditDto!.accountId == null,
+                            child: buildAccountList(),
+                          ),
+                          const SizedBox(height: 24.0),
+                          CalculatorTextFormField(
+                            key: ValueKey<Object>(redrawAmountObject),
+                            initialValue: _amount,
+                            validator: _validateAmount,
+                            valueFormat: valueFormat,
+                            style: _transactionTextStyle,
+                            appBarBackgroundColor: PiggyAppTheme.nearlyWhite,
+                            title: 'Amount',
+                            inputDecoration: InputDecoration(
+                                border: const OutlineInputBorder(),
+                                labelText: 'Amount',
+                                prefixText: _account == null
+                                    ? null
+                                    : _account!.currencySymbol,
+                                prefixStyle: _transactionTextStyle,
+                                suffixText: _account == null
+                                    ? null
+                                    : _account!.currencyCode,
+                                suffixStyle: _transactionTextStyle),
+                            onSubmitted: (value) {
+                              setState(() {
+                                _amount = value!;
+                              });
+                            },
+                          ),
+                          InputDecorator(
+                            decoration: InputDecoration(
+                              labelText: 'Category',
+                              hintText: 'Choose a category',
+                              errorText: _categoryErrorText,
+                            ),
+                            isEmpty: transactionEditDto!.categoryId == null,
+                            child: buildCategoryList(),
+                          ),
+                          const SizedBox(height: 24.0),
+                          PrimaryColorOverride(
+                            child: TextFormField(
+                              decoration: const InputDecoration(
+                                border: OutlineInputBorder(),
+                                hintText: 'Tell us about the transaction',
+                                labelText: 'Description',
+                              ),
+                              maxLines: 2,
+                              keyboardType: TextInputType.multiline,
+                              controller: _descriptionFieldController,
+                              validator: _validateDescription,
+                              textCapitalization: TextCapitalization.sentences,
+                            ),
+                          ),
+                          DateTimePicker(
+                            labelText: 'Date',
+                            selectedDate: _transactionDate,
+                            selectedTime: _transactionTime,
+                            selectDate: (DateTime date) {
+                              setState(() {
+                                _transactionDate = date;
+                              });
+                            },
+                            selectTime: (TimeOfDay time) {
+                              setState(() {
+                                _transactionTime = time;
+                              });
+                            },
+                          ),
+                          _transactionType == UIData.transaction_type_transfer
+                              ? InputDecorator(
+                                  decoration: const InputDecoration(
+                                    labelText: 'To Account',
+                                    hintText: 'Choose an account',
+                                  ),
+                                  isEmpty: _toAccount == null,
+                                  child: buildAccountList(true),
+                                )
+                              : null,
+                          _showReceivingAmount
+                              ? const SizedBox(height: 24.0)
+                              : null,
+                          _showReceivingAmount
+                              ? CalculatorTextFormField(
+                                  key: ValueKey<Object>(
+                                      redrawReceivingAmountObject),
+                                  initialValue: _receivingAmount,
+                                  validator: _validateAmount,
+                                  valueFormat: valueFormat,
+                                  inputDecoration: InputDecoration(
+                                    border: const OutlineInputBorder(),
+                                    labelText: 'Converted Amount',
+                                    prefixText: _toAccount == null
+                                        ? null
+                                        : _toAccount!.currencySymbol,
+                                    prefixStyle:
+                                        const TextStyle(color: Colors.green),
+                                    suffixText: _toAccount == null
+                                        ? null
+                                        : _toAccount!.currencyCode,
+                                    suffixStyle:
+                                        const TextStyle(color: Colors.green),
+                                  ),
+                                  onSubmitted: (value) {
+                                    setState(() {
+                                      _receivingAmount = value!;
+                                    });
+                                  },
+                                )
+                              : null,
+                          const SizedBox(height: 24.0),
+                          NeumorphicButton(
+                            style: NeumorphicStyle(
+                              shape: NeumorphicShape.flat,
+                              boxShape: NeumorphicBoxShape.roundRect(
+                                  BorderRadius.circular(12)),
+                            ),
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 18, horizontal: 18),
+                            child: const Center(
+                              child: Text("SAVE",
+                                  style:
+                                      TextStyle(fontWeight: FontWeight.w800)),
+                            ),
+                            onPressed: () {
+                              onSave();
+                            },
+                          ),
+                          const SizedBox(height: 24.0),
+                          Text('* all fields are mandatory',
+                              style: Theme.of(context).textTheme.caption),
+                        ].whereType<Widget>().toList(),
+                      ),
+                    ),
+                  ),
                 ),
               ),
             ),

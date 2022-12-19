@@ -46,7 +46,7 @@ A family finance management app.
 Check out the repository projects tab to see what is planned and what is going on now.
 High-level planned items can be viewed under the organization's projects.
 
-> Piggy works fine for [Abhith](https://www.abhith.net) and his family. If you are interested, we may be able to make it work for you too. Let's discuss further in the [discussions](https://github.com/Abhith/abhith.net/discussions).
+> Piggy works fine for [Abhith](https://www.abhith.net) and his family. If you are interested, we may be able to make it work for you too. Let's discuss further in the [discussions](https://github.com/piggyvault/piggyvault/discussions).
 
 ## Mobile App Screenshots
 

@@ -32,21 +32,12 @@ Future<void> main() async {
 
   const AndroidInitializationSettings initializationSettingsAndroid =
       AndroidInitializationSettings('@mipmap/ic_launcher');
-
-  final IOSInitializationSettings initializationSettingsIOS =
-      IOSInitializationSettings();
-  const MacOSInitializationSettings initializationSettingsMacOS =
-      MacOSInitializationSettings();
+  final DarwinInitializationSettings initializationSettingsDarwin =
+      DarwinInitializationSettings();
   final InitializationSettings initializationSettings = InitializationSettings(
       android: initializationSettingsAndroid,
-      iOS: initializationSettingsIOS,
-      macOS: initializationSettingsMacOS);
-  await flutterLocalNotificationsPlugin.initialize(initializationSettings,
-      onSelectNotification: (String? payload) async {
-    if (payload != null) {
-      debugPrint('notification payload: $payload');
-    }
-  });
+      iOS: initializationSettingsDarwin);
+  await flutterLocalNotificationsPlugin.initialize(initializationSettings);
 
   await _cancelAllNotifications();
   await _scheduleReminderNotification();

@@ -72,8 +72,7 @@ class CategoryListPage extends StatelessWidget {
                   leading: Padding(
                     padding: const EdgeInsets.all(18.0),
                     child: NeumorphicIcon(
-                      deserializeIcon(Map<String, dynamic>.from(
-                          json.decode(category.icon!)))!,
+                      getIconOrDefault(category.icon!),
                       style: const NeumorphicStyle(
                         shape: NeumorphicShape.convex,
                         surfaceIntensity: 1.0,

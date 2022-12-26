@@ -3,7 +3,7 @@ description: Family finance management app.
 
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
-publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+publish_to: "none" # Remove this line if you wish to publish to pub.dev
 
 # The following defines the version and build number for your application.
 # A version number is three numbers separated by dots, like 1.2.43
@@ -15,10 +15,10 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 0.34.0+51
+version: 0.34.1+52
 
 environment:
-  sdk: '>=2.12.0 <3.0.0'
+  sdk: ">=2.17.5 <3.0.0"
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
@@ -29,7 +29,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  
+
   auto_size_text: ^3.0.0
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -37,10 +37,11 @@ dependencies:
   equatable: ^2.0.3
   flutter_bloc: ^7.2.0
   flutter_font_icons: ^2.2.4
-  flutter_iconpicker: ^3.1.3
-  flutter_local_notifications: ^9.4.0
+  flutter_iconpicker: ^3.2.2
+  flutter_local_notifications: ^13.0.0
   flutter_neumorphic: ^3.2.0
   flutter_spinkit: ^5.1.0
+  font_awesome_flutter: ^10.3.0
   http: ^0.13.4
   input_calculator: ^2.0.0
   intl: ^0.17.0
@@ -51,7 +52,6 @@ dependencies:
   flutter_sparkline: ^0.1.0
   app_settings: ^4.0.4
   flutter_native_timezone: ^1.0.10
-  font_awesome_flutter: ^9.1.0
   collection: ^1.15.0-nullsafety.4
 
 dev_dependencies:
@@ -70,7 +70,6 @@ dev_dependencies:
 
 # The following section is specific to Flutter.
 flutter:
-
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.

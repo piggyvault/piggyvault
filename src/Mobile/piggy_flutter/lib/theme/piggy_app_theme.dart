@@ -27,6 +27,7 @@ class PiggyAppTheme {
   static const Color expenseBackground = Color.fromARGB(255, 254, 239, 249);
   static const Color income = Color.fromARGB(255, 90, 196, 109);
   static const Color incomeBackground = Color.fromARGB(255, 235, 251, 238);
+  static const Color neumorphicDefault = Color.fromARGB(255, 214, 227, 228);
 
   static const TextTheme textTheme = TextTheme(
     headline4: display1,

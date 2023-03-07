@@ -261,6 +261,10 @@ class TransactionFormPageState extends State<TransactionFormPage> {
                             valueFormat: valueFormat,
                             style: _transactionTextStyle,
                             appBarBackgroundColor: PiggyAppTheme.nearlyWhite,
+                            operatorButtonColor:
+                                PiggyAppTheme.neumorphicDefault,
+                            operatorTextButtonColor: PiggyAppTheme.grey,
+                            doneButtonColor: PiggyAppTheme.nearlyDarkBlue,
                             title: 'Amount',
                             inputDecoration: InputDecoration(
                                 border: const OutlineInputBorder(),
@@ -338,6 +342,12 @@ class TransactionFormPageState extends State<TransactionFormPage> {
                                   initialValue: _receivingAmount,
                                   validator: _validateAmount,
                                   valueFormat: valueFormat,
+                                  appBarBackgroundColor:
+                                      PiggyAppTheme.nearlyWhite,
+                                  operatorButtonColor:
+                                      PiggyAppTheme.neumorphicDefault,
+                                  operatorTextButtonColor: PiggyAppTheme.grey,
+                                  doneButtonColor: PiggyAppTheme.nearlyDarkBlue,
                                   inputDecoration: InputDecoration(
                                     border: const OutlineInputBorder(),
                                     labelText: 'Converted Amount',

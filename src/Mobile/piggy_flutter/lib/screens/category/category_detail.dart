@@ -558,17 +558,20 @@ class _CategoryDetailPageState extends State<CategoryDetailPage>
                                       SpinKitWave(
                                           size: 16,
                                           color: PiggyAppTheme.buildLightTheme()
-                                              .accentColor,
+                                              .colorScheme
+                                              .secondary,
                                           type: SpinKitWaveType.start),
                                       SpinKitWave(
                                           size: 16,
                                           color: PiggyAppTheme.buildLightTheme()
-                                              .accentColor,
+                                              .colorScheme
+                                              .secondary,
                                           type: SpinKitWaveType.center),
                                       SpinKitWave(
                                           size: 16,
                                           color: PiggyAppTheme.buildLightTheme()
-                                              .accentColor,
+                                              .colorScheme
+                                              .secondary,
                                           type: SpinKitWaveType.end),
                                     ],
                                   );
@@ -730,7 +733,8 @@ class _CategoryDetailPageState extends State<CategoryDetailPage>
     );
   }
 
-  void showDemoDialog({required BuildContext context, CategoryTransactionsBloc? bloc}) {
+  void showDemoDialog(
+      {required BuildContext context, CategoryTransactionsBloc? bloc}) {
     showDialog<dynamic>(
       context: context,
       builder: (BuildContext context) => CalendarPopupView(

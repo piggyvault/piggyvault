@@ -69,7 +69,8 @@ class TransactionList extends StatelessWidget {
         children: <Widget>[
           Text('${item.title}',
               style: Theme.of(context).textTheme.headline6!.copyWith(
-                  fontSize: 16.0, color: Theme.of(context).accentColor)),
+                  fontSize: 16.0,
+                  color: Theme.of(context).colorScheme.secondary)),
           Row(
             children: <Widget>[
               Chip(

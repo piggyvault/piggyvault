@@ -68,7 +68,7 @@ class DateTimePicker extends StatelessWidget {
         ),
       ),
       data: Theme.of(context)
-          .copyWith(primaryColor: Theme.of(context).accentColor),
+          .copyWith(primaryColor: Theme.of(context).colorScheme.secondary),
     );
   }
 }

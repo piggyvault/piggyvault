@@ -42,7 +42,7 @@ class CategoryListPage extends StatelessWidget {
           animationController: animationController,
         ),
         floatingActionButton: FloatingActionButton(
-            key: ValueKey<Color>(Theme.of(context).buttonColor),
+            key: ValueKey<Color>(Theme.of(context).colorScheme.primary),
             tooltip: 'Add new category',
             backgroundColor: PiggyAppTheme.nearlyDarkBlue,
             child: Icon(Icons.add, color: Theme.of(context).primaryColor),

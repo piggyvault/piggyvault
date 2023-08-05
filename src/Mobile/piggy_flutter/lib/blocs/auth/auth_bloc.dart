@@ -28,7 +28,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         if (hasToken) {
           final LoginInformationResult? result =
               await userRepository.getCurrentLoginInformation();
-          if (result == null || result.user == null || result.user!.id == null) {
+          if (result == null ||
+              result.user == null ||
+              result.user!.id == null) {
             yield AuthUnauthenticated();
           } else {
             yield AuthAuthenticated(user: result.user, tenant: result.tenant);
@@ -77,6 +79,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     try {
       // TODO(abhith) : use secrets
       OneSignal.shared.setAppId('9bf198c9-442b-4619-b5c9-759fc250f15b');
+
+      // The promptForPushNotificationsWithUserResponse function will show the iOS or Android push notification prompt. We recommend removing the following code and instead using an In-App Message to prompt for notification permission
+      OneSignal.shared
+          .promptUserForPushNotificationPermission()
+          .then((accepted) {});
     } catch (error) {
       print(error);
     }

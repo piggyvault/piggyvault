@@ -54,7 +54,7 @@ dependencies:
   flutter_staggered_grid_view: ^0.3.3
   flutter_sparkline: ^0.1.0
   app_settings: ^4.0.4
-  flutter_native_timezone: ^1.0.10
+  flutter_timezone: ^1.0.7
   collection: ^1.15.0-nullsafety.4
 
 dev_dependencies:

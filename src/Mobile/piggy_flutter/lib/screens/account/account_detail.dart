@@ -573,17 +573,20 @@ class _AccountDetailPageState extends State<AccountDetailPage>
                                       SpinKitWave(
                                           size: 16,
                                           color: PiggyAppTheme.buildLightTheme()
-                                              .accentColor,
+                                              .colorScheme
+                                              .secondary,
                                           type: SpinKitWaveType.start),
                                       SpinKitWave(
                                           size: 16,
                                           color: PiggyAppTheme.buildLightTheme()
-                                              .accentColor,
+                                              .colorScheme
+                                              .secondary,
                                           type: SpinKitWaveType.center),
                                       SpinKitWave(
                                           size: 16,
                                           color: PiggyAppTheme.buildLightTheme()
-                                              .accentColor,
+                                              .colorScheme
+                                              .secondary,
                                           type: SpinKitWaveType.end),
                                     ],
                                   );

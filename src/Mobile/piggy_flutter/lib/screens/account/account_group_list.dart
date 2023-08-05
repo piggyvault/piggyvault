@@ -30,10 +30,8 @@ class AccountGroupList extends StatelessWidget {
     return ExpansionTile(
         title: Text(
           title,
-          style: Theme.of(context)
-              .textTheme
-              .headline6!
-              .copyWith(fontSize: 16.0, color: Theme.of(context).accentColor),
+          style: Theme.of(context).textTheme.headline6!.copyWith(
+              fontSize: 16.0, color: Theme.of(context).colorScheme.secondary),
         ),
         initiallyExpanded: true,
         backgroundColor: PiggyAppTheme.white,

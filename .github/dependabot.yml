@@ -7,5 +7,14 @@ version: 2
 updates:
   - package-ecosystem: "nuget" # See documentation for possible values
     directory: "/src/Web/aspnet-core/" # Location of package manifests
+    labels:
+      - "dependencies"
     schedule:
-      interval: "daily"
+      interval: "weekly"
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    labels:
+      - "dependencies"
+    open-pull-requests-limit: 10
+    schedule:
+      interval: "weekly"

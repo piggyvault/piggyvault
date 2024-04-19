@@ -18,7 +18,7 @@ import 'package:piggy_flutter/splash/splash.dart';
 import 'package:piggy_flutter/theme/piggy_app_theme.dart';
 import 'package:piggy_flutter/utils/uidata.dart';
 import 'package:http/http.dart' as http;
-import 'package:timezone/data/latest.dart' as tz;
+import 'package:timezone/data/latest_all.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 import 'login/login.dart';
 import 'package:flutter_timezone/flutter_timezone.dart';

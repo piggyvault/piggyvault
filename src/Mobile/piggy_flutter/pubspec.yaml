@@ -38,7 +38,6 @@ dependencies:
   flutter_bloc: ^7.2.0
   flutter_font_icons: ^2.2.4
   flutter_iconpicker: ^3.2.4
-  flutter_local_notifications: ^15.1.0+1
   flutter_neumorphic:
     git:
       url: https://github.com/den0206/Flutter-Neumorphic.git
@@ -50,6 +49,7 @@ dependencies:
   intl: ^0.17.0
   shared_preferences: ^2.0.6
   styled_widget: ^0.4.0+3
+  timezone: ^0.9.4
   onesignal_flutter: ^3.5.0
   app_settings: ^4.0.4
   flutter_timezone: ^1.0.7

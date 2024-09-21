@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:piggy_flutter/blocs/accounts/accounts_bloc.dart';
 import 'package:piggy_flutter/blocs/auth/auth.dart';
 import 'package:piggy_flutter/blocs/categories/categories_bloc.dart';
@@ -23,24 +22,10 @@ import 'package:timezone/timezone.dart' as tz;
 import 'login/login.dart';
 import 'package:flutter_timezone/flutter_timezone.dart';
 
-final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-    FlutterLocalNotificationsPlugin();
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await _configureLocalTimeZone();
-
-  const AndroidInitializationSettings initializationSettingsAndroid =
-      AndroidInitializationSettings('@mipmap/ic_launcher');
-  final DarwinInitializationSettings initializationSettingsDarwin =
-      DarwinInitializationSettings();
-  final InitializationSettings initializationSettings = InitializationSettings(
-      android: initializationSettingsAndroid,
-      iOS: initializationSettingsDarwin);
-  await flutterLocalNotificationsPlugin.initialize(initializationSettings);
-
-  await _cancelAllNotifications();
-  await _scheduleReminderNotification();
 
   final PiggyApiClient piggyApiClient = PiggyApiClient(
     httpClient: http.Client(),
@@ -123,24 +108,6 @@ Future<void> _configureLocalTimeZone() async {
   tz.initializeTimeZones();
   final String timeZoneName = await FlutterTimezone.getLocalTimezone();
   tz.setLocalLocation(tz.getLocation(timeZoneName));
-}
-
-Future<void> _cancelAllNotifications() async {
-  await flutterLocalNotificationsPlugin.cancelAll();
-}
-
-Future<void> _scheduleReminderNotification() async {
-  await flutterLocalNotificationsPlugin.zonedSchedule(
-      0,
-      'Forget something to add?',
-      "Looks like it's been awhile...",
-      tz.TZDateTime.now(tz.local).add(const Duration(days: 1)),
-      const NotificationDetails(
-          android: AndroidNotificationDetails('Reminder', 'Reminder',
-              channelDescription: 'To remind you about saving transactions')),
-      androidAllowWhileIdle: true,
-      uiLocalNotificationDateInterpretation:
-          UILocalNotificationDateInterpretation.absoluteTime);
 }
 
 class App extends StatelessWidget {

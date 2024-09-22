@@ -2,6 +2,10 @@
 
 ## Build APK
 
+### Prerequisites
+
+- [OpenJDK 17](https://learn.microsoft.com/en-us/java/openjdk/download#openjdk-17)
+
 ```bash
 flutter build apk --no-tree-shake-icons
 ```

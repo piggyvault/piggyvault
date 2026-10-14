@@ -26,7 +26,7 @@
     </PackageReference>
     <PackageReference Include="Abp.TestBase" Version="6.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="5.0.0" />
-    <PackageReference Include="Castle.Core" Version="4.4.1" />
+    <PackageReference Include="Castle.Core" Version="5.2.1" />
   </ItemGroup>
   <ItemGroup>
     <None Update="appsettings.json">
